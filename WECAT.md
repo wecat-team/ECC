@@ -33,11 +33,35 @@ Thêm `--dry-run` để xem trước danh sách file sẽ được chép. Gỡ c
 
 ## Cập nhật từ upstream
 
+`main` chứa bản tiếng Việt (đã merge từ `vi`), nên cập nhật bằng cách merge `upstream/main` vào `main`.
+`vi` là branch mặc định trên GitHub và luôn được giữ trùng với `main`.
+
 ```bash
+git remote add upstream https://github.com/affaan-m/ECC.git   # chỉ cần làm một lần
 git fetch upstream
-git switch main && git merge --ff-only upstream/main && git push origin main
-git switch vi && git merge main   # file nào upstream sửa sẽ conflict -> dịch lại phần thay đổi
+git switch main
+git merge upstream/main
 ```
+
+Nếu có conflict: đó là file upstream vừa sửa mà mình đã dịch. Với mỗi file conflict:
+
+1. Xem upstream đổi gì: `git diff main...upstream/main -- <file>`
+2. Giữ bản tiếng Việt, rồi dịch thêm phần upstream mới thay đổi theo đúng quy ước trong phần "Đã dịch"
+   (frontmatter chỉ dịch `description`, giữ nguyên code block).
+3. `git add <file>`, rồi `git commit` khi đã xử lý hết.
+
+File upstream mới thêm sẽ vào thẳng bằng tiếng Anh; dịch dần nếu cần.
+
+Sau đó chạy validator, push `main` và đồng bộ `vi`:
+
+```bash
+node scripts/ci/validate-agents.js && node scripts/ci/validate-commands.js \
+  && node scripts/ci/validate-skills.js && node scripts/ci/validate-rules.js
+git push origin main
+git switch vi && git merge --ff-only main && git push origin vi
+```
+
+Cuối cùng cài lại để máy nhận bản mới (chạy lại đúng lệnh ở phần "Cài đặt").
 
 ## Lưu ý
 
