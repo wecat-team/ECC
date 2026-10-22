@@ -5,14 +5,14 @@ paths:
   - "**/*.js"
   - "**/*.jsx"
 ---
-# TypeScript/JavaScript Testing
+# Kiểm thử TypeScript/JavaScript
 
-> This file extends [common/testing.md](../common/testing.md) with TypeScript/JavaScript specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung riêng cho TypeScript/JavaScript.
 
-## E2E Testing
+## Kiểm thử E2E
 
-Use **Playwright** as the E2E testing framework for critical user flows.
+Dùng **Playwright** làm framework kiểm thử E2E cho các luồng người dùng quan trọng.
 
-## Agent Support
+## Hỗ trợ từ Agent
 
-- **e2e-runner** - Playwright E2E testing specialist
+- **e2e-runner** - Chuyên gia kiểm thử E2E bằng Playwright

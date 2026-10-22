@@ -1,37 +1,37 @@
 ---
-description: Comprehensive PR review using specialized agents (code-reviewer, comment-analyzer, pr-test-analyzer, silent-failure-hunter, type-design-analyzer, code-simplifier). Use for a multi-agent PR review pass; for the adversarially-verified Workflow pass use /orch-review, and for the standalone step-by-step checklist review use /code-review.
+description: Review PR toàn diện bằng các agent chuyên biệt (code-reviewer, comment-analyzer, pr-test-analyzer, silent-failure-hunter, type-design-analyzer, code-simplifier). Dùng cho một lượt review PR đa agent; với lượt Workflow được xác minh đối kháng hãy dùng /orch-review, và với review checklist từng bước độc lập hãy dùng /code-review.
 ---
 
-Run a comprehensive multi-perspective review of a pull request.
+Chạy một lượt review đa góc nhìn toàn diện cho một pull request.
 
-## Usage
+## Cách dùng
 
 `/review-pr [PR-number-or-URL] [--focus=comments|tests|errors|types|code|simplify]`
 
-If no PR is specified, review the current branch's PR. If no focus is specified, run the full review stack.
+Nếu không chỉ định PR, review PR của branch hiện tại. Nếu không chỉ định focus, chạy toàn bộ stack review.
 
-## Steps
+## Các bước
 
-1. Identify the PR:
-   - use `gh pr view` to get PR details, changed files, and diff
-2. Find project guidance:
-   - look for `CLAUDE.md`, lint config, TypeScript config, repo conventions
-3. Run specialized review agents:
+1. Xác định PR:
+   - dùng `gh pr view` để lấy chi tiết PR, các file đã thay đổi và diff
+2. Tìm hướng dẫn của project:
+   - tìm `CLAUDE.md`, cấu hình lint, cấu hình TypeScript, quy ước của repo
+3. Chạy các agent review chuyên biệt:
    - `code-reviewer`
    - `comment-analyzer`
    - `pr-test-analyzer`
    - `silent-failure-hunter`
    - `type-design-analyzer`
    - `code-simplifier`
-4. Aggregate results:
-   - dedupe overlapping findings
-   - rank by severity
-5. Report findings grouped by severity
+4. Tổng hợp kết quả:
+   - loại bỏ các phát hiện trùng lặp
+   - xếp hạng theo mức độ nghiêm trọng
+5. Báo cáo các phát hiện được nhóm theo mức độ nghiêm trọng
 
-## Confidence Rule
+## Quy tắc về độ tin cậy (Confidence)
 
-Only report issues with confidence >= 80:
+Chỉ báo cáo các vấn đề có confidence >= 80:
 
-- Critical: bugs, security, data loss
-- Important: missing tests, quality problems, style violations
-- Advisory: suggestions only when explicitly requested
+- Critical: bug, bảo mật, mất dữ liệu
+- Important: thiếu test, vấn đề chất lượng, vi phạm style
+- Advisory: chỉ đưa ra gợi ý khi được yêu cầu tường minh

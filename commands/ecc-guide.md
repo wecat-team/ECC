@@ -1,12 +1,12 @@
 ---
-description: Navigate ECC's current agents, skills, commands, hooks, install profiles, and docs from the live repository surface. This is the slash-command entrypoint for that navigation; the ecc-guide skill covers the same map for on-demand use in conversation.
+description: Điều hướng các agent, skill, command, hook, install profile và tài liệu hiện có của ECC từ bề mặt repo thực tế. Đây là điểm vào dạng slash command cho việc điều hướng; skill ecc-guide cung cấp cùng bản đồ này để dùng theo yêu cầu trong hội thoại.
 ---
 
 # /ecc-guide
 
-Use this command as a conversational map of ECC. It should help the user discover the right ECC surface for their task without dumping the entire README or stale catalog counts.
+Dùng command này như một bản đồ hội thoại về ECC. Nó giúp người dùng tìm đúng bề mặt ECC cho tác vụ của họ mà không phải đổ nguyên README hay các con số catalog đã lỗi thời.
 
-## Usage
+## Cách dùng
 
 ```text
 /ecc-guide
@@ -19,75 +19,75 @@ Use this command as a conversational map of ECC. It should help the user discove
 /ecc-guide <feature-or-file-name>
 ```
 
-## Operating Rules
+## Quy tắc vận hành
 
-1. Read current repository files before answering when the checkout is available.
-2. Prefer current filesystem/catalog data over hard-coded counts.
-3. Keep the first answer short, then offer specific drill-down paths.
-4. Link users to canonical files instead of copying long sections.
-5. Do not invent commands, skills, agents, or install profiles that are not present.
+1. Đọc các file hiện tại của repo trước khi trả lời khi có checkout.
+2. Ưu tiên dữ liệu filesystem/catalog hiện tại hơn các con số hard-code.
+3. Giữ câu trả lời đầu tiên ngắn gọn, sau đó đề xuất các hướng đi sâu cụ thể.
+4. Dẫn người dùng tới các file chuẩn (canonical) thay vì sao chép các đoạn dài.
+5. Không bịa ra command, skill, agent hoặc install profile không tồn tại.
 
-## What To Inspect
+## Cần kiểm tra những gì
 
-Use these files as the canonical map:
+Dùng các file sau làm bản đồ chuẩn:
 
-- `README.md` for install paths, reset/uninstall guidance, and high-level positioning
-- `AGENTS.md` for contributor and project-structure guidance
-- `agent.yaml` for exported agent and command surface
-- `commands/` for maintained slash-command shims
-- `skills/*/SKILL.md` for reusable skill workflows
-- `agents/*.md` for delegated agent roles
-- `hooks/README.md` and `hooks/hooks.json` for hook behavior
-- `manifests/install-*.json` for selective install modules, components, and profiles
-- `scripts/ci/catalog.js --json` for live catalog counts when running inside ECC
+- `README.md` cho đường dẫn cài đặt, hướng dẫn reset/gỡ cài đặt và định vị tổng quan
+- `AGENTS.md` cho hướng dẫn dành cho contributor và cấu trúc dự án
+- `agent.yaml` cho bề mặt agent và command được export
+- `commands/` cho các shim slash-command đang được bảo trì
+- `skills/*/SKILL.md` cho các workflow skill tái sử dụng
+- `agents/*.md` cho các vai trò agent được ủy quyền
+- `hooks/README.md` và `hooks/hooks.json` cho hành vi của hook
+- `manifests/install-*.json` cho các module cài đặt chọn lọc, component và profile
+- `scripts/ci/catalog.js --json` cho số liệu catalog trực tiếp khi chạy bên trong ECC
 
-## Response Patterns
+## Mẫu phản hồi
 
-### No Arguments
+### Không có đối số
 
-Give a compact menu:
+Đưa ra một menu gọn:
 
-- setup and install
-- choosing skills
-- command compatibility shims
-- agents and delegation
-- hooks and safety
-- troubleshooting an install
-- finding a specific feature
+- setup và cài đặt
+- chọn skill
+- các shim tương thích command
+- agent và ủy quyền
+- hook và an toàn
+- xử lý sự cố cài đặt
+- tìm một tính năng cụ thể
 
-Then ask what they want to do next.
+Sau đó hỏi người dùng muốn làm gì tiếp theo.
 
-### Topic Lookup
+### Tra cứu theo chủ đề
 
-For topics like `skills`, `commands`, `hooks`, `install`, or `agents`:
+Với các chủ đề như `skills`, `commands`, `hooks`, `install` hoặc `agents`:
 
-1. Summarize the current surface in 3-6 bullets.
-2. Point to the canonical directories/files.
-3. Suggest one or two commands that can verify the state.
-4. Avoid exhaustive lists unless the user asks for one.
+1. Tóm tắt bề mặt hiện tại trong 3-6 gạch đầu dòng.
+2. Chỉ tới các thư mục/file chuẩn.
+3. Gợi ý một hoặc hai command có thể dùng để xác minh trạng thái.
+4. Tránh liệt kê đầy đủ trừ khi người dùng yêu cầu.
 
-### Search Mode
+### Chế độ tìm kiếm
 
-For `find: <query>`:
+Với `find: <query>`:
 
-1. Search the relevant files with `rg`.
-2. Group results by surface: skills, commands, agents, rules, docs, hooks.
-3. Return the strongest matches first with file paths.
-4. Recommend the next action for each match.
+1. Tìm trong các file liên quan bằng `rg`.
+2. Nhóm kết quả theo bề mặt: skills, commands, agents, rules, docs, hooks.
+3. Trả về các kết quả khớp mạnh nhất trước, kèm đường dẫn file.
+4. Đề xuất hành động tiếp theo cho mỗi kết quả khớp.
 
-### Feature Lookup
+### Tra cứu tính năng
 
-For a specific feature name:
+Với một tên tính năng cụ thể:
 
-1. Check exact paths first, such as `skills/<name>/SKILL.md`, `commands/<name>.md`, and `agents/<name>.md`.
-2. If exact lookup fails, search with `rg`.
-3. Explain what the feature does, when to use it, and what file is canonical.
-4. Mention adjacent features only when they reduce confusion.
+1. Kiểm tra các đường dẫn chính xác trước, như `skills/<name>/SKILL.md`, `commands/<name>.md` và `agents/<name>.md`.
+2. Nếu tra cứu chính xác thất bại, tìm bằng `rg`.
+3. Giải thích tính năng làm gì, khi nào dùng và file nào là file chuẩn.
+4. Chỉ nhắc tới các tính năng liên quan khi điều đó giúp giảm nhầm lẫn.
 
-## Related Commands
+## Các command liên quan
 
-- `/project-init` for stack-aware ECC onboarding of a target project
-- `/harness-audit` for deterministic repo readiness scoring
-- `/skill-health` for skill quality checks
-- `/skill-create` for extracting a new skill from local git history
-- `/security-scan` for Claude/OpenCode configuration security review
+- `/project-init` để onboarding ECC theo stack cho một dự án đích
+- `/harness-audit` để chấm điểm mức độ sẵn sàng của repo một cách xác định
+- `/skill-health` để kiểm tra chất lượng skill
+- `/skill-create` để trích xuất một skill mới từ lịch sử git cục bộ
+- `/security-scan` để review bảo mật cấu hình Claude/OpenCode

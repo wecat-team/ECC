@@ -1,24 +1,24 @@
-# Git Workflow
+# Quy trình Git
 
-## Commit Message Format
+## Định dạng Commit Message
 ```
 <type>: <description>
 
 <optional body>
 ```
 
-Types: feat, fix, refactor, docs, test, chore, perf, ci
+Type: feat, fix, refactor, docs, test, chore, perf, ci
 
-Note: ECC-managed installs set `"includeCoAuthoredBy": false` in `~/.claude/settings.json`, so commits carry no `Co-Authored-By` trailer by default. To keep Claude attribution, set `"includeCoAuthoredBy": true` or configure `attribution`; ECC never overwrites an explicit choice.
+Lưu ý: Các bản cài đặt do ECC quản lý đặt `"includeCoAuthoredBy": false` trong `~/.claude/settings.json`, nên commit mặc định không có trailer `Co-Authored-By`. Để giữ attribution của Claude, đặt `"includeCoAuthoredBy": true` hoặc cấu hình `attribution`; ECC không bao giờ ghi đè lựa chọn tường minh.
 
-## Pull Request Workflow
+## Quy trình Pull Request
 
-When creating PRs:
-1. Analyze full commit history (not just latest commit)
-2. Use `git diff [base-branch]...HEAD` to see all changes
-3. Draft comprehensive PR summary
-4. Include test plan with TODOs
-5. Push with `-u` flag if new branch
+Khi tạo PR:
+1. Phân tích toàn bộ lịch sử commit (không chỉ commit mới nhất)
+2. Dùng `git diff [base-branch]...HEAD` để xem mọi thay đổi
+3. Soạn tóm tắt PR đầy đủ
+4. Bao gồm test plan kèm các TODO
+5. Push với flag `-u` nếu là branch mới
 
-> For the full development process (planning, TDD, code review) before git operations,
-> see [development-workflow.md](./development-workflow.md).
+> Để xem quy trình phát triển đầy đủ (lập kế hoạch, TDD, code review) trước các thao tác git,
+> xem [development-workflow.md](./development-workflow.md).

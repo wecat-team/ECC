@@ -1,20 +1,20 @@
-# Router Lifecycle and Events
+# Vòng đời và Event của Router
 
-Angular Router emits events through the `Router.events` observable, allowing you to track the navigation lifecycle from start to finish.
+Angular Router phát ra các event thông qua observable `Router.events`, cho phép bạn theo dõi vòng đời điều hướng từ đầu đến cuối.
 
-## Common Router Events (Chronological)
+## Các Router Event phổ biến (Theo thứ tự thời gian)
 
-1. **`NavigationStart`**: Navigation begins.
-2. **`RoutesRecognized`**: Router matches the URL to a route.
-3. **`GuardsCheckStart` / `End`**: Evaluation of `canActivate`, `canMatch`, etc.
-4. **`ResolveStart` / `End`**: Data resolution phase (fetching data via resolvers).
-5. **`NavigationEnd`**: Navigation completed successfully.
-6. **`NavigationCancel`**: Navigation canceled (e.g., guard returned `false`).
-7. **`NavigationError`**: Navigation failed (e.g., error in resolver).
+1. **`NavigationStart`**: Điều hướng bắt đầu.
+2. **`RoutesRecognized`**: Router khớp URL với một route.
+3. **`GuardsCheckStart` / `End`**: Đánh giá `canActivate`, `canMatch`, v.v.
+4. **`ResolveStart` / `End`**: Pha resolve dữ liệu (lấy dữ liệu qua resolver).
+5. **`NavigationEnd`**: Điều hướng hoàn tất thành công.
+6. **`NavigationCancel`**: Điều hướng bị hủy (ví dụ: guard trả về `false`).
+7. **`NavigationError`**: Điều hướng thất bại (ví dụ: lỗi trong resolver).
 
-## Subscribing to Events
+## Subscribe vào Event
 
-Inject the `Router` and filter the `events` observable.
+Inject `Router` và lọc observable `events`.
 
 ```ts
 import {Router, NavigationStart, NavigationEnd} from '@angular/router';
@@ -30,16 +30,16 @@ export class MyService {
 }
 ```
 
-## Debugging
+## Debug
 
-Enable detailed console logging of all routing events during application bootstrap.
+Bật log chi tiết trên console cho mọi routing event trong quá trình bootstrap ứng dụng.
 
 ```ts
 provideRouter(routes, withDebugTracing());
 ```
 
-## Common Use Cases
+## Các trường hợp dùng phổ biến
 
-- **Loading Indicators**: Show a spinner when `NavigationStart` fires and hide it on `NavigationEnd`/`Cancel`/`Error`.
-- **Analytics**: Track page views by listening for `NavigationEnd`.
-- **Scroll Management**: Respond to `Scroll` events for custom scroll behavior.
+- **Loading Indicator**: Hiển thị spinner khi `NavigationStart` được phát và ẩn nó khi `NavigationEnd`/`Cancel`/`Error`.
+- **Analytics**: Theo dõi lượt xem trang bằng cách lắng nghe `NavigationEnd`.
+- **Quản lý Scroll**: Phản hồi các event `Scroll` để có hành vi cuộn tùy chỉnh.

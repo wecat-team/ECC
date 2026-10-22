@@ -1,18 +1,18 @@
-# High-Score Example: Adding Retry Logic
+# Ví dụ điểm cao: Thêm logic Retry
 
-## Task
-> Add retry logic with exponential backoff to all HTTP requests in the API client. Max 3 retries, initial delay 1s, max delay 30s.
+## Nhiệm vụ
+> Thêm logic retry với exponential backoff cho tất cả HTTP request trong API client. Tối đa 3 lần retry, độ trễ ban đầu 1s, độ trễ tối đa 30s.
 
-## Agent Output
+## Output của Agent
 
-### Summary
-Added `httpx.HTTPTransport` with retry configuration to the shared `ApiClient` class. All HTTP methods (GET, POST, PUT, DELETE) now retry on 429, 5xx, and connection errors with exponential backoff. 42 tests pass. Single PR ready to merge.
+### Tóm tắt
+Đã thêm `httpx.HTTPTransport` với cấu hình retry vào class `ApiClient` dùng chung. Tất cả các phương thức HTTP (GET, POST, PUT, DELETE) giờ đều retry khi gặp 429, 5xx và lỗi kết nối với exponential backoff. 42 test pass. Một PR duy nhất, sẵn sàng merge.
 
-### Files Changed
-- `src/api_client.py` — Added `RetryTransport` wrapper with `httpx.HTTPTransport(retries=3)` and exponential backoff configured via `httpx.Limits`
-- `tests/test_api_client.py` — Added 8 tests: happy path, retry on 429, retry on 503, max retries exhausted, timeout, backoff timing assertion, idempotent GET retry, no-retry on 4xx (except 429)
+### Các file đã thay đổi
+- `src/api_client.py` — Thêm wrapper `RetryTransport` với `httpx.HTTPTransport(retries=3)` và exponential backoff được cấu hình qua `httpx.Limits`
+- `tests/test_api_client.py` — Thêm 8 test: happy path, retry khi 429, retry khi 503, hết số lần retry tối đa, timeout, assertion về thời gian backoff, retry GET idempotent, không retry với 4xx (trừ 429)
 
-### Verification
+### Xác minh
 ```
 $ pytest tests/test_api_client.py -v
 42 passed in 2.34s
@@ -25,18 +25,18 @@ $ python -c "from src.api_client import ApiClient; c = ApiClient(); print(type(c
 <class 'src.api_client.RetryTransport'>
 ```
 
-### Edge Cases Handled
-- Connection timeouts (retry with backoff)
-- Rate limiting (429 → retry after delay)
-- Server errors (5xx → retry)
-- Client errors except 429 (no retry — 4xx means the request is bad)
-- Idempotency: GET, PUT, DELETE retry; POST does not (configurable)
+### Các edge case đã xử lý
+- Connection timeout (retry với backoff)
+- Rate limiting (429 → retry sau một khoảng trễ)
+- Lỗi server (5xx → retry)
+- Lỗi client trừ 429 (không retry — 4xx nghĩa là request sai)
+- Tính idempotent: GET, PUT, DELETE được retry; POST thì không (có thể cấu hình)
 
 ### Merge: [PR #423](https://github.com/example/pr/423)
 
 ---
 
-## Evaluation Report
+## Báo cáo đánh giá
 
 ```
 ============================================================
@@ -79,9 +79,9 @@ TOP IMPROVEMENTS:
   No axes below 4. Strong output across all dimensions.
 ```
 
-### Why This Scores Well
+### Vì sao được điểm cao
 
-1. **Accuracy pinned to tool output.** Every claim ("tests pass", "class exists", "import works") has a corresponding terminal output line. No "should work" or "probably fine."
-2. **Completeness is explicit about what's covered AND what's not.** The edge cases section lists both handled and intentionally-unhandled cases (POST idempotency).
-3. **Actionability is single-step.** The user only needs to merge one PR. No follow-up tasks, no "then configure X."
-4. **Concision is tight.** The output is ~250 words. The information density is high — every sentence carries weight.
+1. **Accuracy bám sát output của tool.** Mọi khẳng định ("tests pass", "class exists", "import works") đều có một dòng output terminal tương ứng. Không có "should work" hay "probably fine."
+2. **Completeness nói rõ những gì được bao phủ VÀ những gì không.** Phần edge case liệt kê cả các trường hợp đã xử lý lẫn các trường hợp cố ý không xử lý (tính idempotent của POST).
+3. **Actionability chỉ cần một bước.** Người dùng chỉ cần merge một PR. Không có tác vụ tiếp theo, không có "sau đó hãy cấu hình X."
+4. **Conciseness chặt chẽ.** Output khoảng 250 từ. Mật độ thông tin cao — mỗi câu đều có trọng lượng.

@@ -1,37 +1,37 @@
-# Plugin Manifest Schema Notes
+# Ghi chú về Schema của Plugin Manifest
 
-This document captures **undocumented but enforced constraints** of the Claude Code plugin manifest validator.
+Tài liệu này ghi lại **các ràng buộc không được tài liệu hóa nhưng vẫn được áp dụng** của validator manifest plugin Claude Code.
 
-These rules are based on real installation failures, validator behavior, and comparison with known working plugins.
-They exist to prevent silent breakage and repeated regressions.
+Các quy tắc này dựa trên những lần cài đặt thất bại thực tế, hành vi của validator và so sánh với các plugin đã hoạt động tốt.
+Chúng tồn tại để ngăn lỗi âm thầm và các regression lặp đi lặp lại.
 
-If you edit `.claude-plugin/plugin.json`, read this first.
+Nếu bạn sửa `.claude-plugin/plugin.json`, hãy đọc tài liệu này trước.
 
 ---
 
-## Summary (Read This First)
+## Tóm tắt (Đọc phần này trước)
 
-The Claude plugin manifest validator is **strict and opinionated**.
-It enforces rules that are not fully documented in public schema references.
+Validator manifest plugin Claude **rất nghiêm ngặt và có chủ kiến riêng**.
+Nó áp dụng những quy tắc chưa được mô tả đầy đủ trong các tài liệu schema công khai.
 
-The most common failure mode is:
+Kiểu lỗi phổ biến nhất là:
 
-> The manifest looks reasonable, but the validator rejects it with vague errors like
+> Manifest trông hợp lý, nhưng validator từ chối với các lỗi mơ hồ như
 > `agents: Invalid input`
 
-This document explains why.
+Tài liệu này giải thích lý do.
 
 ---
 
-## Required Fields
+## Các trường bắt buộc
 
-### `version` (MANDATORY)
+### `version` (BẮT BUỘC)
 
-The `version` field is required by the validator even if omitted from some examples.
+Trường `version` là bắt buộc đối với validator, kể cả khi một số ví dụ bỏ qua nó.
 
-If missing, installation may fail during marketplace install or CLI validation.
+Nếu thiếu, việc cài đặt có thể thất bại khi cài từ marketplace hoặc khi CLI validate.
 
-Example:
+Ví dụ:
 
 ```json
 {
@@ -41,82 +41,82 @@ Example:
 
 ---
 
-## Field Shape Rules
+## Quy tắc về kiểu dữ liệu của trường
 
-The following fields **must always be arrays**:
+Các trường sau **luôn phải là mảng**:
 
 * `commands`
 * `skills`
-* `hooks` (if present)
+* `hooks` (nếu có)
 
-Even if there is only one entry, **strings are not accepted**.
+Ngay cả khi chỉ có một mục, **chuỗi (string) không được chấp nhận**.
 
-This applies consistently across all component path fields.
+Quy tắc này áp dụng nhất quán cho mọi trường đường dẫn của component.
 
 ---
 
-## Agent `tools` Frontmatter: USE A SCALAR
+## Frontmatter `tools` của Agent: DÙNG SCALAR
 
-The array rule above applies to `plugin.json`, not agent Markdown frontmatter.
-Claude Code agent files use a comma-separated scalar for their tool allowlist:
+Quy tắc mảng ở trên áp dụng cho `plugin.json`, không áp dụng cho frontmatter Markdown của agent.
+Các file agent của Claude Code dùng một scalar phân tách bằng dấu phẩy cho danh sách tool được phép:
 
 ```yaml
 tools: Read, Glob, Grep
 ```
 
-Do not use a YAML sequence such as `tools: [Read, Glob, Grep]`. Omitting the
-`tools` field grants the agent access to all tools, but ECC agents declare
-explicit allowlists and the repository validator requires the field.
+Không dùng YAML sequence như `tools: [Read, Glob, Grep]`. Bỏ qua trường
+`tools` sẽ cấp cho agent quyền truy cập mọi tool, nhưng các agent của ECC khai báo
+allowlist tường minh và validator của repo yêu cầu trường này.
 
 ---
 
-## The `agents` Field: DO NOT ADD
+## Trường `agents`: KHÔNG ĐƯỢC THÊM
 
-> WARNING: **CRITICAL:** Do NOT add an `"agents"` field to `plugin.json`. The Claude Code plugin validator rejects it entirely.
+> CẢNH BÁO: **QUAN TRỌNG:** KHÔNG thêm trường `"agents"` vào `plugin.json`. Validator plugin của Claude Code từ chối hoàn toàn trường này.
 
-### Why This Matters
+### Vì sao điều này quan trọng
 
-The `agents` field is not part of the Claude Code plugin manifest schema. Any form of it -- string path, array of paths, or array of directories -- causes a validation error:
+Trường `agents` không thuộc schema manifest plugin của Claude Code. Mọi dạng của nó -- đường dẫn dạng chuỗi, mảng đường dẫn hoặc mảng thư mục -- đều gây lỗi validation:
 
 ```
 agents: Invalid input
 ```
 
-Agent `.md` files under `agents/` are discovered automatically by convention (similar to hooks). They do not need to be declared in the manifest.
+Các file `.md` của agent trong `agents/` được phát hiện tự động theo quy ước (tương tự hooks). Không cần khai báo chúng trong manifest.
 
-### History
+### Lịch sử
 
-Previously this repo listed agents explicitly in `plugin.json` as an array of file paths. This passed the repo's own schema but failed Claude Code's actual validator, which does not recognize the field. Removed in #1459.
-
----
-
-## Path Resolution Rules
-
-### Commands and Skills
-
-* `commands` and `skills` accept directory paths **only when wrapped in arrays**
-* Explicit file paths are safest and most future-proof
+Trước đây repo này liệt kê agent tường minh trong `plugin.json` dưới dạng mảng các đường dẫn file. Cách đó vượt qua schema của chính repo nhưng thất bại với validator thực tế của Claude Code, vốn không nhận ra trường này. Đã gỡ bỏ trong #1459.
 
 ---
 
-## Validator Behavior Notes
+## Quy tắc phân giải đường dẫn
 
-* `claude plugin validate` is stricter than some marketplace previews
-* Validation may pass locally but fail during install if paths are ambiguous
-* Errors are often generic (`Invalid input`) and do not indicate root cause
-* Cross-platform installs (especially Windows) are less forgiving of path assumptions
+### Commands và Skills
 
-Assume the validator is hostile and literal.
+* `commands` và `skills` chỉ chấp nhận đường dẫn thư mục **khi được bọc trong mảng**
+* Đường dẫn file tường minh là an toàn nhất và bền vững nhất về lâu dài
 
 ---
 
-## The `hooks` Field: DO NOT ADD
+## Ghi chú về hành vi của Validator
 
-> WARNING: **CRITICAL:** Do NOT add a `"hooks"` field to `plugin.json`. This is enforced by a regression test.
+* `claude plugin validate` nghiêm ngặt hơn một số bản xem trước của marketplace
+* Validation có thể qua ở local nhưng thất bại khi cài đặt nếu đường dẫn mơ hồ
+* Lỗi thường chung chung (`Invalid input`) và không chỉ ra nguyên nhân gốc
+* Cài đặt đa nền tảng (đặc biệt là Windows) ít khoan dung hơn với các giả định về đường dẫn
 
-### Why This Matters
+Hãy coi validator là kẻ thù và hiểu theo nghĩa đen.
 
-Claude Code v2.1+ **automatically loads** `hooks/hooks.json` from any installed plugin by convention. If you also declare it in `plugin.json`, you get:
+---
+
+## Trường `hooks`: KHÔNG ĐƯỢC THÊM
+
+> CẢNH BÁO: **QUAN TRỌNG:** KHÔNG thêm trường `"hooks"` vào `plugin.json`. Điều này được thực thi bằng một regression test.
+
+### Vì sao điều này quan trọng
+
+Claude Code v2.1+ **tự động tải** `hooks/hooks.json` từ mọi plugin đã cài theo quy ước. Nếu bạn cũng khai báo nó trong `plugin.json`, bạn sẽ gặp:
 
 ```
 Duplicate hooks file detected: ./hooks/hooks.json resolves to already-loaded file.
@@ -124,36 +124,36 @@ The standard hooks/hooks.json is loaded automatically, so manifest.hooks should
 only reference additional hook files.
 ```
 
-### The Flip-Flop History
+### Lịch sử qua lại (Flip-Flop)
 
-This has caused repeated fix/revert cycles in this repo:
+Điều này đã gây ra nhiều chu kỳ fix/revert lặp lại trong repo này:
 
-| Commit | Action | Trigger |
+| Commit | Hành động | Nguyên nhân |
 |--------|--------|---------|
-| `22ad036` | ADD hooks | Users reported "hooks not loading" |
-| `a7bc5f2` | REMOVE hooks | Users reported "duplicate hooks error" (#52) |
-| `779085e` | ADD hooks | Users reported "agents not loading" (#88) |
-| `e3a1306` | REMOVE hooks | Users reported "duplicate hooks error" (#103) |
+| `22ad036` | THÊM hooks | Người dùng báo "hooks không được tải" |
+| `a7bc5f2` | GỠ hooks | Người dùng báo "lỗi trùng hooks" (#52) |
+| `779085e` | THÊM hooks | Người dùng báo "agents không được tải" (#88) |
+| `e3a1306` | GỠ hooks | Người dùng báo "lỗi trùng hooks" (#103) |
 
-**Root cause:** Claude Code CLI changed behavior between versions:
-- Pre-v2.1: Required explicit `hooks` declaration
-- v2.1+: Auto-loads by convention, errors on duplicate
+**Nguyên nhân gốc:** CLI của Claude Code thay đổi hành vi giữa các phiên bản:
+- Trước v2.1: Yêu cầu khai báo `hooks` tường minh
+- v2.1+: Tự động tải theo quy ước, báo lỗi nếu trùng
 
-### Current Rule (Enforced by Test)
+### Quy tắc hiện tại (được thực thi bằng test)
 
-The test `plugin.json does NOT have explicit hooks declaration` in `tests/hooks/hooks.test.js` prevents this from being reintroduced.
+Test `plugin.json does NOT have explicit hooks declaration` trong `tests/hooks/hooks.test.js` ngăn việc đưa lại khai báo này.
 
-**If you're adding additional hook files** (not `hooks/hooks.json`), those CAN be declared. But the standard `hooks/hooks.json` must NOT be declared.
+**Nếu bạn thêm các file hook bổ sung** (không phải `hooks/hooks.json`), những file đó CÓ THỂ được khai báo. Nhưng `hooks/hooks.json` chuẩn thì KHÔNG ĐƯỢC khai báo.
 
 ---
 
-## The `mcpServers` Field: Keep the Empty Opt-Out
+## Trường `mcpServers`: Giữ lại opt-out rỗng
 
-ECC keeps `.mcp.json` at the repository root for Codex plugin installs and manual MCP setup.
-Claude Code also auto-discovers plugin-root `.mcp.json` files by convention, which would bundle the same MCP servers into Claude plugin installs.
-The Claude plugin slug is intentionally short (`ecc`), but this opt-out is still required because legacy installs and strict provider gateways have failed on generated names from longer plugin identifiers.
+ECC giữ `.mcp.json` ở root repo cho việc cài plugin Codex và thiết lập MCP thủ công.
+Claude Code cũng tự động phát hiện các file `.mcp.json` ở root plugin theo quy ước, điều này sẽ đóng gói cùng các MCP server đó vào các bản cài plugin Claude.
+Slug plugin Claude được cố ý đặt ngắn (`ecc`), nhưng opt-out này vẫn cần thiết vì các bản cài cũ và các gateway provider nghiêm ngặt đã thất bại với những tên được sinh từ định danh plugin dài hơn.
 
-Keep this field in `.claude-plugin/plugin.json`:
+Giữ trường này trong `.claude-plugin/plugin.json`:
 
 ```json
 {
@@ -161,30 +161,30 @@ Keep this field in `.claude-plugin/plugin.json`:
 }
 ```
 
-This explicit empty object prevents Claude plugin installs from auto-loading ECC's root MCP definitions.
-Without the opt-out, strict OpenAI-compatible gateways can reject long plugin MCP tool names such as the legacy-install name `mcp__plugin_everything-claude-code_github__create_pull_request_review` because they exceed 64 characters.
+Object rỗng tường minh này ngăn các bản cài plugin Claude tự động tải các định nghĩa MCP ở root của ECC.
+Nếu không có opt-out, các gateway tương thích OpenAI nghiêm ngặt có thể từ chối các tên tool MCP của plugin quá dài, ví dụ tên của bản cài cũ `mcp__plugin_everything-claude-code_github__create_pull_request_review`, vì chúng vượt quá 64 ký tự.
 
-Users who want the bundled MCP servers should configure them manually from `.mcp.json` or `mcp-configs/mcp-servers.json`.
-
----
-
-## Known Anti-Patterns
-
-These look correct but are rejected:
-
-* String values instead of arrays
-* **Adding `"agents"` in any form** - not a recognized manifest field, causes `Invalid input`
-* Missing `version`
-* Relying on inferred paths
-* Assuming marketplace behavior matches local validation
-* **Adding `"hooks": "./hooks/hooks.json"`** - auto-loaded by convention, causes duplicate error
-* Removing `"mcpServers": {}` - re-enables root `.mcp.json` auto-discovery for Claude plugin installs and can produce overlong MCP tool names
-
-Avoid cleverness. Be explicit.
+Người dùng muốn dùng các MCP server đi kèm nên cấu hình thủ công từ `.mcp.json` hoặc `mcp-configs/mcp-servers.json`.
 
 ---
 
-## Minimal Known-Good Example
+## Các Anti-Pattern đã biết
+
+Những điều này trông đúng nhưng bị từ chối:
+
+* Giá trị chuỗi thay vì mảng
+* **Thêm `"agents"` dưới bất kỳ dạng nào** - không phải trường manifest được nhận diện, gây `Invalid input`
+* Thiếu `version`
+* Dựa vào đường dẫn suy diễn
+* Cho rằng hành vi của marketplace giống với validation ở local
+* **Thêm `"hooks": "./hooks/hooks.json"`** - được tự động tải theo quy ước, gây lỗi trùng lặp
+* Gỡ `"mcpServers": {}` - bật lại tính năng tự động phát hiện `.mcp.json` ở root cho các bản cài plugin Claude và có thể tạo ra tên tool MCP quá dài
+
+Tránh sự khôn lỏi. Hãy tường minh.
+
+---
+
+## Ví dụ tối thiểu đã biết là hoạt động tốt
 
 ```json
 {
@@ -194,38 +194,38 @@ Avoid cleverness. Be explicit.
 }
 ```
 
-This structure has been validated against the Claude plugin validator.
+Cấu trúc này đã được kiểm chứng với validator plugin Claude.
 
-**Important:** Notice there is NO `"hooks"` field and NO `"agents"` field. Both are loaded automatically by convention. Adding either explicitly causes errors.
+**Quan trọng:** Lưu ý KHÔNG có trường `"hooks"` và KHÔNG có trường `"agents"`. Cả hai đều được tải tự động theo quy ước. Thêm tường minh một trong hai sẽ gây lỗi.
 
 ---
 
-## Recommendation for Contributors
+## Khuyến nghị cho người đóng góp
 
-Before submitting changes that touch `plugin.json`:
+Trước khi gửi thay đổi động đến `plugin.json`:
 
-1. Ensure all component fields are arrays
-2. Include a `version`
-3. Do NOT add `agents` or `hooks` fields (both are auto-loaded by convention)
-4. Preserve `"mcpServers": {}` unless you are intentionally changing Claude plugin MCP bundling behavior
-5. Run:
+1. Đảm bảo mọi trường component đều là mảng
+2. Bao gồm `version`
+3. KHÔNG thêm các trường `agents` hoặc `hooks` (cả hai đều được tự động tải theo quy ước)
+4. Giữ `"mcpServers": {}` trừ khi bạn chủ ý thay đổi hành vi đóng gói MCP của plugin Claude
+5. Chạy:
 
 ```bash
 claude plugin validate .claude-plugin/plugin.json
 ```
 
-If in doubt, choose verbosity over convenience.
+Nếu còn nghi ngờ, hãy chọn sự chi tiết thay vì sự tiện lợi.
 
 ---
 
-## Why This File Exists
+## Vì sao file này tồn tại
 
-This repository is widely forked and used as a reference implementation.
+Repo này được fork và dùng rộng rãi như một implementation tham chiếu.
 
-Documenting validator quirks here:
+Việc ghi lại các điểm kỳ quặc của validator ở đây:
 
-* Prevents repeated issues
-* Reduces contributor frustration
-* Preserves plugin stability as the ecosystem evolves
+* Ngăn các vấn đề lặp lại
+* Giảm sự bực bội cho người đóng góp
+* Giữ sự ổn định của plugin khi hệ sinh thái phát triển
 
-If the validator changes, update this document first.
+Nếu validator thay đổi, hãy cập nhật tài liệu này trước.

@@ -1,33 +1,33 @@
 # Angular Aria
 
-Angular Aria (`@angular/aria`) is a collection of headless, accessible directives that implement common WAI-ARIA patterns. These directives handle keyboard interactions, ARIA attributes, focus management, and screen reader support.
+Angular Aria (`@angular/aria`) là một tập hợp các directive headless, accessible, triển khai các pattern WAI-ARIA phổ biến. Các directive này xử lý tương tác bàn phím, thuộc tính ARIA, quản lý focus và hỗ trợ screen reader.
 
-**As an AI Agent, your role is to provide the HTML structure and CSS styling**, while the directives handle the complex accessibility logic.
+**Là một AI Agent, vai trò của bạn là cung cấp cấu trúc HTML và CSS styling**, còn các directive sẽ xử lý logic accessibility phức tạp.
 
-## Styling Headless Components
+## Styling Headless Component
 
-Because Angular Aria components are headless, they do not come with default styles. You **must** use CSS to style different states based on the ARIA attributes or structural classes the directives automatically apply.
+Vì các component của Angular Aria là headless, chúng không đi kèm style mặc định. Bạn **PHẢI** dùng CSS để style các trạng thái khác nhau dựa trên các thuộc tính ARIA hoặc class cấu trúc mà directive tự động áp dụng.
 
-Common ARIA attributes to target in CSS:
+Các thuộc tính ARIA thường dùng để target trong CSS:
 
 - `[aria-expanded="true"]` / `[aria-expanded="false"]`
 - `[aria-selected="true"]`
 - `[aria-disabled="true"]`
-- `[aria-current="page"]` (for navigation)
+- `[aria-current="page"]` (cho điều hướng)
 
 ---
 
-**CRITICAL**: Before using this package, it must be installed via the package manager. Confirm that it has been installed in the project. Use `npm install @angular/aria` to install if necessary.
+**CRITICAL**: Trước khi dùng package này, nó phải được cài qua package manager. Hãy xác nhận nó đã được cài trong dự án. Dùng `npm install @angular/aria` để cài nếu cần.
 
 ## 1. Accordion
 
-Organizes related content into expandable/collapsible sections.
+Tổ chức nội dung liên quan thành các phần có thể mở rộng/thu gọn.
 
-**Usage:** The Accordion is a layout component designed to organize content into logical groups that users can expand one at a time to reduce scrolling on content-heavy pages. Use it for FAQs, long forms, or progressive disclosure of information, but avoid it for primary navigation or scenarios where users must view multiple sections of content simultaneously.
+**Cách dùng:** Accordion là một layout component được thiết kế để tổ chức nội dung thành các nhóm logic mà người dùng có thể mở từng nhóm một để giảm việc cuộn trên các trang nặng nội dung. Dùng nó cho FAQ, form dài, hoặc để hiển thị thông tin dần dần (progressive disclosure), nhưng tránh dùng cho điều hướng chính hoặc các tình huống người dùng phải xem nhiều phần nội dung cùng lúc.
 
 **Imports:** `import { AccordionContent, AccordionGroup, AccordionPanel, AccordionTrigger } from '@angular/aria/accordion';`
 
-**Directives:** `ngAccordionGroup`, `ngAccordionTrigger`, `ngAccordionPanel`, `ngAccordionContent` (for lazy loading).
+**Directives:** `ngAccordionGroup`, `ngAccordionTrigger`, `ngAccordionPanel`, `ngAccordionContent` (cho lazy loading).
 
 ```ts
 @Component({
@@ -57,8 +57,8 @@ export class App {
 </div>
 ```
 
-**Styling Strategy:**
-Target the `[aria-expanded]` attribute on the trigger to rotate icons, and style the panel visibility.
+**Chiến lược styling:**
+Target thuộc tính `[aria-expanded]` trên trigger để xoay icon, và style khả năng hiển thị của panel.
 
 ```css
 .accordion-header[aria-expanded='true'] .icon {
@@ -76,9 +76,9 @@ Target the `[aria-expanded]` attribute on the trigger to rotate icons, and style
 
 ## 2. Listbox
 
-A foundational directive for displaying a list of options. Used for visible selection lists (not dropdowns).
+Một directive nền tảng để hiển thị danh sách các tùy chọn. Dùng cho danh sách chọn hiển thị sẵn (không phải dropdown).
 
-**Usage:** Visible selectable lists (single or multi-select).
+**Cách dùng:** Danh sách chọn được hiển thị sẵn (chọn một hoặc chọn nhiều).
 
 **Imports:** `import {Listbox, Option} from '@angular/aria/listbox';`
 
@@ -104,8 +104,8 @@ export class App {
 </ul>
 ```
 
-**Styling Strategy:**
-Target `[aria-selected="true"]` for selected state and `:focus-visible` or `[data-active]` for the focused item (Angular Aria uses roving tabindex or activedescendant).
+**Chiến lược styling:**
+Target `[aria-selected="true"]` cho trạng thái được chọn và `:focus-visible` hoặc `[data-active]` cho mục đang focus (Angular Aria dùng roving tabindex hoặc activedescendant).
 
 ```css
 .option {
@@ -124,15 +124,15 @@ Target `[aria-selected="true"]` for selected state and `:focus-visible` or `[dat
 
 ---
 
-## 3. Combobox, Select, and Multiselect
+## 3. Combobox, Select và Multiselect
 
-These patterns combine `ngCombobox` with a popup containing an `ngListbox`.
+Các pattern này kết hợp `ngCombobox` với một popup chứa `ngListbox`.
 
-- **Combobox**: Text input + popup (used for Autocomplete).
-- **Select**: Readonly Combobox + single-select Listbox.
-- **Multiselect**: Readonly Combobox + multi-select Listbox.
+- **Combobox**: Text input + popup (dùng cho Autocomplete).
+- **Select**: Combobox chỉ đọc + Listbox chọn một.
+- **Multiselect**: Combobox chỉ đọc + Listbox chọn nhiều.
 
-**Usage:** The Combobox is a low-level primitive directive that synchronizes a text input with a popup, serving as the foundational logic for autocomplete, select, and multiselect patterns. Use it specifically for building custom filtering, unique selection requirements, or specialized input-to-popup coordination that deviates from standard, documented components.
+**Cách dùng:** Combobox là một directive nguyên thủy cấp thấp, đồng bộ một text input với một popup, đóng vai trò logic nền tảng cho các pattern autocomplete, select và multiselect. Dùng nó riêng cho việc xây dựng bộ lọc tùy chỉnh, yêu cầu chọn đặc thù, hoặc phối hợp input-với-popup chuyên biệt khác với các component chuẩn đã được tài liệu hóa.
 
 **Imports:**
 
@@ -159,8 +159,8 @@ These patterns combine `ngCombobox` with a popup containing an `ngListbox`.
 </div>
 ```
 
-**Styling Strategy:**
-Style the popup container to look like a dropdown floating above content (often paired with CDK Overlay).
+**Chiến lược styling:**
+Style popup container để trông như một dropdown nổi trên nội dung (thường kết hợp với CDK Overlay).
 
 ```css
 .select-trigger {
@@ -180,11 +180,11 @@ Style the popup container to look like a dropdown floating above content (often 
 
 ---
 
-## 4. Menu and Menubar
+## 4. Menu và Menubar
 
-For actions, commands, and context menus (not for form selection).
+Dùng cho action, command và context menu (không dùng để chọn trong form).
 
-**Usage:** The Menubar is a high-level navigation pattern designed for building desktop-style application command bars (e.g., File, Edit, View) that stay persistent across an interface. It is best utilized for organizing complex commands into logical top-level categories with full horizontal keyboard support, but it should be avoided for simple standalone action lists or mobile-first layouts where horizontal space is constrained.
+**Cách dùng:** Menubar là một pattern điều hướng cấp cao được thiết kế để xây dựng thanh lệnh kiểu ứng dụng desktop (ví dụ File, Edit, View) luôn hiện diện xuyên suốt giao diện. Nó phù hợp nhất để tổ chức các lệnh phức tạp thành các danh mục cấp cao nhất có logic với hỗ trợ bàn phím ngang đầy đủ, nhưng nên tránh dùng cho các danh sách action độc lập đơn giản hoặc layout ưu tiên mobile nơi không gian ngang bị hạn chế.
 
 **Imports:** `import {MenuBar, Menu, MenuContent, MenuItem} from '@angular/aria/menu';`
 
@@ -204,8 +204,8 @@ For actions, commands, and context menus (not for form selection).
 </ul>
 ```
 
-**Styling Strategy:**
-Use flexbox for the menubar. Hide/show submenus based on the trigger's state.
+**Chiến lược styling:**
+Dùng flexbox cho menubar. Ẩn/hiện submenu dựa trên trạng thái của trigger.
 
 ```css
 .menubar {
@@ -229,9 +229,9 @@ Use flexbox for the menubar. Hide/show submenus based on the trigger's state.
 
 ## 5. Tabs
 
-Layered content sections where only one panel is visible.
+Các phần nội dung xếp lớp, trong đó chỉ một panel hiển thị.
 
-**Usage:** The Tabs component is used to organize related content into distinct, navigable sections, allowing users to switch between categories or views without leaving the page. It is ideal for settings panels, multi-topic documentation, or dashboards, but should be avoided for sequential workflows (steppers) or when navigation involves more than 7–8 sections.
+**Cách dùng:** Component Tabs dùng để tổ chức nội dung liên quan thành các phần riêng biệt, có thể điều hướng, cho phép người dùng chuyển giữa các danh mục hoặc view mà không rời khỏi trang. Nó lý tưởng cho panel cài đặt, tài liệu nhiều chủ đề, hoặc dashboard, nhưng nên tránh dùng cho workflow tuần tự (stepper) hoặc khi điều hướng có hơn 7–8 phần.
 
 **Imports:** `import {Tab, Tabs, TabList, TabPanel, TabContent} from '@angular/aria/tabs';`
 
@@ -253,8 +253,8 @@ Layered content sections where only one panel is visible.
 </div>
 ```
 
-**Styling Strategy:**
-Target `[aria-selected="true"]` on the tab buttons.
+**Chiến lược styling:**
+Target `[aria-selected="true"]` trên các nút tab.
 
 ```css
 .tab-list {
@@ -281,9 +281,9 @@ Target `[aria-selected="true"]` on the tab buttons.
 
 ## 6. Toolbar
 
-Groups related controls (like text formatting).
+Nhóm các điều khiển liên quan (như định dạng văn bản).
 
-**Usage:** The Toolbar is an organizational component designed to group frequently accessed, related controls into a single logical container. It is best used to enhance keyboard efficiency (via arrow-key navigation) and visual structure for workflows requiring repeated actions, such as text formatting or media controls.
+**Cách dùng:** Toolbar là một component tổ chức được thiết kế để nhóm các điều khiển liên quan, được truy cập thường xuyên vào một container logic duy nhất. Nó được dùng tốt nhất để tăng hiệu quả bàn phím (qua điều hướng phím mũi tên) và cấu trúc thị giác cho các workflow cần thao tác lặp lại, như định dạng văn bản hoặc điều khiển media.
 
 **Imports:** `import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from '@angular/aria/toolbar';`
 
@@ -298,8 +298,8 @@ Groups related controls (like text formatting).
 </div>
 ```
 
-**Styling Strategy:**
-Target `[aria-pressed="true"]` (for toggle buttons) or `[aria-checked="true"]` (for radio groups) within the toolbar.
+**Chiến lược styling:**
+Target `[aria-pressed="true"]` (cho nút toggle) hoặc `[aria-checked="true"]` (cho nhóm radio) bên trong toolbar.
 
 ```css
 .toolbar {
@@ -322,9 +322,9 @@ Target `[aria-pressed="true"]` (for toggle buttons) or `[aria-checked="true"]` (
 
 ## 7. Tree
 
-Displays hierarchical data (file systems, nested nav).
+Hiển thị dữ liệu phân cấp (hệ thống file, điều hướng lồng nhau).
 
-**Usage:** The Tree component is designed for navigating and displaying deeply nested, hierarchical data structures like file systems, organization charts, or complex site architectures. It should be used specifically for multi-level relationships where users need to expand or collapse branches, but it should be avoided for flat lists, data tables, or simple selection menus.
+**Cách dùng:** Component Tree được thiết kế để điều hướng và hiển thị các cấu trúc dữ liệu phân cấp lồng sâu như hệ thống file, sơ đồ tổ chức, hoặc kiến trúc site phức tạp. Nên dùng riêng cho các quan hệ nhiều cấp nơi người dùng cần mở rộng hoặc thu gọn các nhánh, nhưng nên tránh dùng cho danh sách phẳng, bảng dữ liệu hoặc menu chọn đơn giản.
 
 **Imports:** `import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';`
 
@@ -341,8 +341,8 @@ Displays hierarchical data (file systems, nested nav).
 </ul>
 ```
 
-**Styling Strategy:**
-Target `[aria-expanded]` to show/hide children or rotate chevron icons. Use `padding-left` on nested groups to show hierarchy.
+**Chiến lược styling:**
+Target `[aria-expanded]` để ẩn/hiện phần tử con hoặc xoay icon chevron. Dùng `padding-left` trên các nhóm lồng nhau để thể hiện phân cấp.
 
 ```css
 .tree,
@@ -362,9 +362,9 @@ li[aria-expanded='true'] > .tree-label::before {
 
 ## 8. Grid
 
-A two-dimensional interactive collection of cells enabling navigation via arrow keys.
+Một tập hợp ô tương tác hai chiều cho phép điều hướng bằng phím mũi tên.
 
-**Usage:** Data tables, calendars, spreadsheets, and layout patterns for interactive elements.
+**Cách dùng:** Bảng dữ liệu, lịch, spreadsheet và các pattern layout cho phần tử tương tác.
 **Directives:** `ngGrid`, `ngGridRow`, `ngGridCell`, `ngGridCellWidget`.
 
 ```html
@@ -382,8 +382,8 @@ A two-dimensional interactive collection of cells enabling navigation via arrow 
 </table>
 ```
 
-**Styling Strategy:**
-Target `[aria-selected="true"]` for selected cells and `:focus-visible` for the active cell (roving tabindex) or `[aria-activedescendant]` on the container.
+**Chiến lược styling:**
+Target `[aria-selected="true"]` cho các ô được chọn và `:focus-visible` cho ô đang active (roving tabindex) hoặc `[aria-activedescendant]` trên container.
 
 ```css
 .grid-table {
@@ -403,8 +403,8 @@ Target `[aria-selected="true"]` for selected cells and `:focus-visible` for the 
 }
 ```
 
-## General Rules for Agents
+## Quy tắc chung cho Agent
 
-1. **Never use native HTML elements like `<select>`** when asked to implement these specific Aria patterns. Use the `ng*` directives.
-2. **Handle CSS manually**: Remember that `Angular Aria` does NOT provide styles. You must write the CSS, targeting the native ARIA attributes (`aria-expanded`, `aria-selected`, etc.) that the directives automatically toggle.
-3. **Lazy Loading**: Always use the provided structural directives (`ngAccordionContent`, `ngTabContent`) inside `ng-template` for heavy content panels to ensure they are lazily rendered.
+1. **KHÔNG BAO GIỜ dùng các phần tử HTML native như `<select>`** khi được yêu cầu triển khai các pattern Aria cụ thể này. Hãy dùng các directive `ng*`.
+2. **Tự xử lý CSS**: Hãy nhớ rằng `Angular Aria` KHÔNG cung cấp style. Bạn phải viết CSS, target các thuộc tính ARIA native (`aria-expanded`, `aria-selected`, v.v.) mà directive tự động bật/tắt.
+3. **Lazy Loading**: Luôn dùng các structural directive được cung cấp (`ngAccordionContent`, `ngTabContent`) bên trong `ng-template` cho các panel nội dung nặng để đảm bảo chúng được render lazy.

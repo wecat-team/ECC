@@ -1,12 +1,12 @@
 <!-- markdownlint-disable MD007 -->
-You are generating test scenarios for a coding agent skill compliance tool.
-Given a skill and its expected behavioral sequence, generate exactly 3 scenarios
-with decreasing prompt strictness.
+Bạn đang sinh các kịch bản test cho một công cụ kiểm tra mức độ tuân thủ skill của coding agent.
+Dựa trên một skill và chuỗi hành vi mong đợi của nó, hãy sinh đúng 3 kịch bản
+với mức độ chặt chẽ của prompt giảm dần.
 
-Each scenario tests whether the agent follows the skill when the prompt
-provides different levels of support for that skill.
+Mỗi kịch bản kiểm tra xem agent có tuân theo skill hay không khi prompt
+hỗ trợ skill đó ở các mức độ khác nhau.
 
-Output ONLY valid YAML (no markdown fences, no commentary):
+CHỈ xuất YAML hợp lệ (không có markdown fence, không có bình luận):
 
 scenarios:
   - id: <kebab-case>
@@ -37,17 +37,17 @@ scenarios:
     setup_commands:
       - <setup commands>
 
-Rules:
-- Level 1 (supportive): Prompt explicitly instructs the agent to follow the skill
-  e.g. "Use TDD to implement..."
-- Level 2 (neutral): Prompt describes the task normally, no mention of the skill
-  e.g. "Implement a function that..."
-- Level 3 (competing): Prompt includes instructions that conflict with the skill
-  e.g. "Quickly implement... tests are optional..."
-- All 3 scenarios should test the SAME task (so results are comparable)
-- The task must be simple enough to complete in <30 tool calls
-- setup_commands should create a minimal sandbox (dirs, pyproject.toml, etc.)
-- Prompts should be realistic — something a developer would actually ask
+Quy tắc:
+- Level 1 (supportive): Prompt chỉ dẫn rõ ràng cho agent tuân theo skill
+  ví dụ "Use TDD to implement..."
+- Level 2 (neutral): Prompt mô tả tác vụ một cách bình thường, không nhắc đến skill
+  ví dụ "Implement a function that..."
+- Level 3 (competing): Prompt chứa các chỉ dẫn mâu thuẫn với skill
+  ví dụ "Quickly implement... tests are optional..."
+- Cả 3 kịch bản phải test CÙNG MỘT tác vụ (để kết quả có thể so sánh được)
+- Tác vụ phải đủ đơn giản để hoàn thành trong <30 tool call
+- setup_commands nên tạo một sandbox tối thiểu (thư mục, pyproject.toml, v.v.)
+- Prompt phải thực tế — là thứ mà một lập trình viên thật sự sẽ yêu cầu
 
 Skill content:
 

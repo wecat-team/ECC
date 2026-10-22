@@ -8,37 +8,37 @@ paths:
   - "**/*.h"
   - "**/CMakeLists.txt"
 ---
-# C++ Coding Style
+# Phong cách code C++
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with C++ specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho C++.
 
-## Modern C++ (C++17/20/23)
+## C++ hiện đại (C++17/20/23)
 
-- Prefer **modern C++ features** over C-style constructs
-- Use `auto` when the type is obvious from context
-- Use `constexpr` for compile-time constants
-- Use structured bindings: `auto [key, value] = map_entry;`
+- Ưu tiên **tính năng C++ hiện đại** hơn các cấu trúc kiểu C
+- Dùng `auto` khi kiểu đã rõ ràng từ ngữ cảnh
+- Dùng `constexpr` cho hằng số compile-time
+- Dùng structured binding: `auto [key, value] = map_entry;`
 
-## Resource Management
+## Quản lý tài nguyên
 
-- **RAII everywhere** — no manual `new`/`delete`
-- Use `std::unique_ptr` for exclusive ownership
-- Use `std::shared_ptr` only when shared ownership is truly needed
-- Use `std::make_unique` / `std::make_shared` over raw `new`
+- **RAII ở mọi nơi** — không dùng `new`/`delete` thủ công
+- Dùng `std::unique_ptr` cho quyền sở hữu độc quyền
+- Chỉ dùng `std::shared_ptr` khi thực sự cần quyền sở hữu chia sẻ
+- Dùng `std::make_unique` / `std::make_shared` thay cho `new` thuần
 
-## Naming Conventions
+## Quy ước đặt tên
 
-- Types/Classes: `PascalCase`
-- Functions/Methods: `snake_case` or `camelCase` (follow project convention)
-- Constants: `kPascalCase` or `UPPER_SNAKE_CASE`
-- Namespaces: `lowercase`
-- Member variables: `snake_case_` (trailing underscore) or `m_` prefix
+- Type/Class: `PascalCase`
+- Hàm/Method: `snake_case` hoặc `camelCase` (theo quy ước của dự án)
+- Hằng số: `kPascalCase` hoặc `UPPER_SNAKE_CASE`
+- Namespace: `lowercase`
+- Biến thành viên: `snake_case_` (có dấu gạch dưới ở cuối) hoặc tiền tố `m_`
 
-## Formatting
+## Định dạng
 
-- Use **clang-format** — no style debates
-- Run `clang-format -i <file>` before committing
+- Dùng **clang-format** — không tranh cãi về style
+- Chạy `clang-format -i <file>` trước khi commit
 
-## Reference
+## Tham chiếu
 
-See skill: `cpp-coding-standards` for comprehensive C++ coding standards and guidelines.
+Xem skill: `cpp-coding-standards` để có các tiêu chuẩn và hướng dẫn code C++ toàn diện.

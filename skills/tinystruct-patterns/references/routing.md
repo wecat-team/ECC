@@ -1,36 +1,36 @@
-# tinystruct @Action Routing Reference
+# Tham chiếu routing @Action của tinystruct
 
-## When to Use
+## Khi nào dùng
 
-Use the `@Action` annotation in your applications to define routes for both CLI commands and HTTP endpoints. It is appropriate whenever you need to map logic to a specific path, handle parameterized requests, or restrict execution to specific HTTP methods while maintaining a consistent command structure across environments.
+Dùng annotation `@Action` trong ứng dụng để định nghĩa route cho cả lệnh CLI và endpoint HTTP. Phù hợp khi cần ánh xạ logic tới một đường dẫn cụ thể, xử lý request có tham số, hoặc giới hạn việc thực thi theo từng phương thức HTTP mà vẫn giữ cấu trúc lệnh nhất quán giữa các môi trường.
 
-## How It Works
+## Cách hoạt động
 
-The `ActionRegistry` parses `@Action` annotations to build a routing table. For parameterized methods, the framework automatically maps Java parameter types to corresponding regex segments.
+`ActionRegistry` phân tích các annotation `@Action` để xây dựng bảng routing. Với các method có tham số, framework tự động ánh xạ kiểu tham số Java sang các đoạn regex tương ứng.
 
-### Regex Generation Rules
+### Quy tắc sinh regex
 - `getUser(int id)` → pattern: `^/?user/(-?\d+)$`
 - `search(String query)` → pattern: `^/?search/([^/]+)$`
 
-Supported parameter types: `String`, `int/Integer`, `long/Long`, `float/Float`, `double/Double`, `boolean/Boolean`, `char/Character`, `short/Short`, `byte/Byte`, `Date` (parsed as `yyyy-MM-dd HH:mm:ss`).
+Các kiểu tham số được hỗ trợ: `String`, `int/Integer`, `long/Long`, `float/Float`, `double/Double`, `boolean/Boolean`, `char/Character`, `short/Short`, `byte/Byte`, `Date` (được parse theo định dạng `yyyy-MM-dd HH:mm:ss`).
 
-### Mode Values
+### Các giá trị Mode
 
-| Mode | When it triggers |
+| Mode | Khi nào kích hoạt |
 |---|---|
-| `DEFAULT` | Both CLI and HTTP (GET, POST, etc.) |
-| `CLI` | CLI dispatcher only |
-| `HTTP_GET` | HTTP GET only |
-| `HTTP_POST` | HTTP POST only |
-| `HTTP_PUT` | HTTP PUT only |
-| `HTTP_DELETE` | HTTP DELETE only |
-| `HTTP_PATCH` | HTTP PATCH only |
+| `DEFAULT` | Cả CLI và HTTP (GET, POST, v.v.) |
+| `CLI` | Chỉ CLI dispatcher |
+| `HTTP_GET` | Chỉ HTTP GET |
+| `HTTP_POST` | Chỉ HTTP POST |
+| `HTTP_PUT` | Chỉ HTTP PUT |
+| `HTTP_DELETE` | Chỉ HTTP DELETE |
+| `HTTP_PATCH` | Chỉ HTTP PATCH |
 
-> **Note:** You can map HTTP method names to `Mode` using `Action.Mode.fromName(String methodName)`. Unknown or null values return `Mode.DEFAULT`.
+> **Lưu ý:** Có thể ánh xạ tên phương thức HTTP sang `Mode` bằng `Action.Mode.fromName(String methodName)`. Giá trị không xác định hoặc null trả về `Mode.DEFAULT`.
 
-## Examples
+## Ví dụ
 
-### Basic Action Declaration
+### Khai báo Action cơ bản
 ```java
 @Action(
     value = "path/subpath",          // required: URI segment or CLI command
@@ -41,7 +41,7 @@ Supported parameter types: `String`, `int/Integer`, `long/Long`, `float/Float`, 
 public String myAction(int id) { ... }
 ```
 
-### Parameterized Paths
+### Đường dẫn có tham số
 ```java
 @Action("user/{id}")
 public String getUser(int id) { ... }
@@ -50,7 +50,7 @@ public String getUser(int id) { ... }
 ```
 
 ### Dependency Injection
-`ActionRegistry` automatically injects `Request` and/or `Response` from `Context` if they are parameters:
+`ActionRegistry` tự động inject `Request` và/hoặc `Response` từ `Context` nếu chúng là tham số:
 
 ```java
 @Action(value = "upload", mode = Mode.HTTP_POST)
@@ -60,5 +60,5 @@ public String upload(Request<?, ?> req, Response<?, ?> res) throws ApplicationEx
 }
 ```
 
-### Path Matching Priority
-If two methods share the same path, the framework uses the first match in the `ActionRegistry`. Use explicit `Mode` values to disambiguate (e.g., separating a GET for a form and a POST for submission).
+### Thứ tự ưu tiên khi khớp đường dẫn
+Nếu hai method dùng chung một đường dẫn, framework dùng kết quả khớp đầu tiên trong `ActionRegistry`. Hãy dùng giá trị `Mode` tường minh để phân biệt (ví dụ: tách GET cho form và POST cho việc submit).

@@ -1,93 +1,93 @@
 ---
 name: context-budget
-description: Routes live context checks to the native Codex or Claude Code meter without scanning files, and performs a bounded static component audit only when explicitly requested. Use for context-budget requests about remaining capacity or installed context overhead.
+description: Định tuyến các kiểm tra context trực tiếp tới bộ đo gốc của Codex hoặc Claude Code mà không quét file, và chỉ thực hiện audit tĩnh các component có giới hạn khi được yêu cầu rõ ràng. Dùng cho các yêu cầu context-budget về dung lượng còn lại hoặc chi phí context của các thành phần đã cài.
 metadata:
   origin: ECC
 ---
 
 # Context Budget
 
-Use the provider's native meter for live session usage. Keep the separate,
-estimated installation audit behind an explicit opt-in.
+Dùng bộ đo gốc của nhà cung cấp để xem mức sử dụng session trực tiếp. Giữ
+audit cài đặt ước tính riêng biệt, chỉ chạy khi người dùng chủ động chọn (opt-in) rõ ràng.
 
-## Default: Live Context
+## Mặc định: Context trực tiếp
 
-Treat an invocation with no audit request as a live-context request. This
-includes requests for the current window, remaining capacity, headroom, token
-usage, or a context breakdown.
+Coi một lần gọi không có yêu cầu audit là yêu cầu về context trực tiếp. Điều này
+bao gồm các yêu cầu về cửa sổ hiện tại, dung lượng còn lại, headroom, mức sử dụng
+token, hoặc bảng phân tích context.
 
-For this default path:
+Với đường mặc định này:
 
-- Do not call or use tools.
-- Do not scan or read files.
-- Do not run shell commands, provider CLIs, debug logging, or MCP discovery.
-- Reply with only the native command and one short explanation.
+- KHÔNG gọi hoặc dùng tool.
+- KHÔNG quét hoặc đọc file.
+- KHÔNG chạy lệnh shell, CLI của nhà cung cấp, debug logging hoặc khám phá MCP.
+- Chỉ trả lời bằng lệnh gốc và một lời giải thích ngắn.
 
-Route by the active harness:
+Định tuyến theo harness đang hoạt động:
 
-| Harness | Native command | Guidance |
+| Harness | Lệnh gốc | Hướng dẫn |
 | --- | --- | --- |
-| Codex CLI | `/status` | Shows current token usage and remaining context capacity. Use `/statusline` and enable **Context stats** plus **Token counters** for a persistent footer meter. |
-| Codex app | `/status` | Shows current thread context usage and rate limits. |
-| Claude Code | `/context` | Shows the live context breakdown. Use `/context all` for expanded items. |
-| Other or unknown | None verified | State that ECC cannot read live provider state and ask which harness is active. |
+| Codex CLI | `/status` | Hiển thị mức sử dụng token hiện tại và dung lượng context còn lại. Dùng `/statusline` và bật **Context stats** cùng **Token counters** để có bộ đo cố định ở footer. |
+| Codex app | `/status` | Hiển thị mức sử dụng context của thread hiện tại và các giới hạn tốc độ (rate limit). |
+| Claude Code | `/context` | Hiển thị bảng phân tích context trực tiếp. Dùng `/context all` để xem các mục mở rộng. |
+| Khác hoặc không rõ | Chưa xác minh | Nêu rõ rằng ECC không thể đọc trạng thái trực tiếp của nhà cung cấp và hỏi harness nào đang hoạt động. |
 
-These commands are documented in the [Codex command reference](https://developers.openai.com/codex/cli/slash-commands) and [Claude Code command reference](https://code.claude.com/docs/en/commands).
+Các lệnh này được ghi trong [tài liệu tham chiếu lệnh của Codex](https://developers.openai.com/codex/cli/slash-commands) và [tài liệu tham chiếu lệnh của Claude Code](https://code.claude.com/docs/en/commands).
 
-A skill cannot invoke a TUI slash command on the user's behalf. Never replace
-the native command with an estimated scan and never infer an audit request from
-phrases such as “context is heavy” or “how much is left.”
+Một skill không thể gọi slash command của TUI thay cho người dùng. KHÔNG BAO GIỜ thay thế
+lệnh gốc bằng một lần quét ước tính và KHÔNG BAO GIỜ suy ra yêu cầu audit từ
+các cụm như “context is heavy” hay “how much is left.”
 
-## Explicit Static Audit
+## Audit tĩnh tường minh
 
-Run an installation/configuration audit only when the user explicitly says
-`--audit`, “audit installed components,” or equivalent unambiguous wording.
-`--verbose` changes report detail; it does not opt into an audit by itself.
+Chỉ chạy audit cài đặt/cấu hình khi người dùng nói rõ ràng
+`--audit`, “audit installed components,” hoặc cách diễn đạt tương đương không mơ hồ.
+`--verbose` thay đổi mức chi tiết của báo cáo; bản thân nó không phải là opt-in audit.
 
-If the audit scope is ambiguous, ask for the harness and installation root
-before reading anything. Keep every audit bounded and read-only:
+Nếu phạm vi audit mơ hồ, hãy hỏi harness và thư mục gốc cài đặt
+trước khi đọc bất cứ thứ gì. Giữ mọi audit có giới hạn và chỉ đọc (read-only):
 
-1. Inspect only the named plugin/install root and the named harness's known
-   configuration files.
-2. Never recursively enumerate the workspace root, home directory, provider
-   cache, transcripts, debug logs, or unrelated worktrees.
-3. Never launch a provider CLI, MCP server, or debug session to count tools.
-4. Cap inventory output at 50 entries per component class. Summarize the rest.
-5. Do not write temporary logs or copy configuration content into the report.
+1. Chỉ kiểm tra thư mục gốc plugin/cài đặt được nêu tên và các file
+   cấu hình đã biết của harness được nêu tên.
+2. KHÔNG BAO GIỜ liệt kê đệ quy thư mục gốc workspace, thư mục home, cache của nhà cung cấp,
+   transcript, debug log hoặc các worktree không liên quan.
+3. KHÔNG BAO GIỜ khởi chạy CLI của nhà cung cấp, MCP server hay phiên debug để đếm tool.
+4. Giới hạn output kiểm kê ở 50 mục cho mỗi loại component. Tóm tắt phần còn lại.
+5. KHÔNG ghi log tạm hay sao chép nội dung cấu hình vào báo cáo.
 
-Audit only the component metadata relevant to eager discovery:
+Chỉ audit metadata của component liên quan đến eager discovery:
 
-- agent and skill descriptions;
-- command descriptions when the harness discovers them eagerly;
-- always-loaded instruction files in the explicitly named scope;
-- configured MCP tool schemas when an existing bounded manifest exposes them.
+- mô tả của agent và skill;
+- mô tả của command khi harness khám phá chúng theo kiểu eager;
+- các file chỉ dẫn luôn được nạp trong phạm vi được nêu tên rõ ràng;
+- schema tool MCP đã cấu hình khi một manifest có giới hạn sẵn có phơi bày chúng.
 
-Full skill, agent, command, and rule bodies are generally on-demand content.
-Report their disk size separately from estimated eager overhead instead of
-adding every body to the session baseline.
+Nội dung đầy đủ của skill, agent, command và rule nhìn chung là nội dung theo yêu cầu (on-demand).
+Hãy báo cáo kích thước trên đĩa của chúng riêng, tách khỏi chi phí eager ước tính, thay vì
+cộng mọi nội dung vào baseline của session.
 
-## Audit Output
+## Output của Audit
 
-Return a compact report containing:
+Trả về một báo cáo gọn gồm:
 
-- harness and exact paths inspected;
-- estimated eager/discovery overhead by component class;
-- installed counts and the heaviest metadata entries;
-- assumptions, unavailable measurements, and up to three optimizations.
+- harness và đường dẫn chính xác đã kiểm tra;
+- chi phí eager/discovery ước tính theo loại component;
+- số lượng đã cài và các mục metadata nặng nhất;
+- các giả định, phép đo không khả dụng, và tối đa ba đề xuất tối ưu hóa.
 
-Every calculated token number is an estimate of static configuration overhead,
-not live session context. Do not claim that an estimate is provider-reported,
-current, exact, or evidence of realized savings. Direct the user back to the
-native live-context command for current usage.
+Mọi con số token được tính toán đều là ước tính chi phí cấu hình tĩnh,
+không phải context session trực tiếp. KHÔNG tuyên bố rằng một ước tính do nhà cung cấp báo cáo,
+hiện tại, chính xác, hay là bằng chứng của mức tiết kiệm thực tế. Hướng người dùng quay lại
+lệnh context trực tiếp gốc để xem mức sử dụng hiện tại.
 
-## Optional Selected-Record Diagnostic
+## Chẩn đoán Selected-Record tùy chọn
 
-Inspect a persisted record only when the user explicitly selects that file for this diagnostic. This is separate from the default live-context request and the installation audit.
+Chỉ kiểm tra một bản ghi được lưu bền khi người dùng chọn rõ ràng file đó cho chẩn đoán này. Việc này tách biệt với yêu cầu context trực tiếp mặc định và audit cài đặt.
 
-For a local file diagnostic, explicitly select a stable, regular JSONL file or a snapshot you
-intend to inspect. Replace the example path below; this does not find or reconnect a session.
-The snippet prints aggregate byte counts only. It reads one line at a time, so memory use depends
-on the largest record; avoid very large records and actively growing files.
+Với chẩn đoán file cục bộ, hãy chọn rõ ràng một file JSONL thông thường, ổn định hoặc một snapshot mà bạn
+định kiểm tra. Thay đường dẫn ví dụ bên dưới; việc này không tìm hay kết nối lại một session.
+Đoạn mã chỉ in ra tổng số byte tổng hợp. Nó đọc từng dòng một, nên mức dùng bộ nhớ phụ thuộc
+vào bản ghi lớn nhất; tránh các bản ghi rất lớn và các file đang tăng trưởng liên tục.
 
 ```sh
 python3 - "/path/to/selected-session.jsonl" <<'EOF'
@@ -122,12 +122,12 @@ print(f"persisted {total}B | attachment records {attachment}B ({pct:.1f}%) | "
 EOF
 ```
 
-The three categories add up to the original file bytes, including line endings and blank lines.
-`attachment` is an exact record-type filter, not a guarantee about a harness's current internal
-schema. Other records have a different string `type`; malformed JSON, invalid UTF-8, nonobject
-values, missing or non-string types, and blank lines are unclassified. Neither category means
-"conversation," and the percentage is only a share of persisted bytes.
+Ba nhóm cộng lại bằng đúng số byte của file gốc, bao gồm ký tự xuống dòng và dòng trống.
+`attachment` là bộ lọc theo record-type chính xác, không phải đảm bảo về schema nội bộ hiện tại
+của harness. Các bản ghi khác có `type` là chuỗi khác; JSON sai định dạng, UTF-8 không hợp lệ, giá trị
+không phải object, type bị thiếu hoặc không phải chuỗi, và dòng trống đều thuộc nhóm unclassified. Không nhóm nào
+có nghĩa là "cuộc hội thoại," và phần trăm chỉ là tỷ lệ trên số byte đã lưu bền.
 
-These counts do not establish active context, remaining room, token usage, billing, or what a
-reconnect loads. For current harness-reported context and usage, use the version-appropriate
-[`/context` and `/usage` commands (`/cost` is an alias)](https://code.claude.com/docs/en/commands).
+Các số đếm này không xác lập context đang hoạt động, dung lượng còn lại, mức sử dụng token, thanh toán, hay những gì một lần
+kết nối lại nạp vào. Để xem context và mức sử dụng do harness báo cáo hiện tại, hãy dùng
+[các lệnh `/context` và `/usage` (`/cost` là alias)](https://code.claude.com/docs/en/commands) phù hợp với phiên bản.

@@ -1,10 +1,10 @@
-# Show Routes with Outlets
+# Hiển thị Route với Outlet
 
-The `RouterOutlet` directive is a placeholder where Angular renders the component for the current URL.
+Directive `RouterOutlet` là một placeholder nơi Angular render component cho URL hiện tại.
 
-## Basic Usage
+## Cách dùng cơ bản
 
-Include `<router-outlet />` in your template. Angular inserts the routed component as a sibling immediately following the outlet.
+Đặt `<router-outlet />` trong template của bạn. Angular chèn routed component như một phần tử anh em (sibling) ngay sau outlet.
 
 ```html
 <app-header /> <router-outlet />
@@ -12,9 +12,9 @@ Include `<router-outlet />` in your template. Angular inserts the routed compone
 <app-footer />
 ```
 
-## Nested Outlets
+## Outlet lồng nhau
 
-Child routes require their own `<router-outlet />` within the parent component's template.
+Route con cần `<router-outlet />` riêng trong template của component cha.
 
 ```ts
 // Parent component template
@@ -22,9 +22,9 @@ Child routes require their own `<router-outlet />` within the parent component's
 <router-outlet /> <!-- Child components like Profile or Security render here -->
 ```
 
-## Named Outlets (Secondary Routes)
+## Named Outlet (Secondary Route)
 
-Pages can have multiple outlets. Assign a `name` to an outlet to target it specifically. The default name is `'primary'`.
+Trang có thể có nhiều outlet. Gán một `name` cho outlet để nhắm tới nó cụ thể. Tên mặc định là `'primary'`.
 
 ```html
 <router-outlet />
@@ -33,7 +33,7 @@ Pages can have multiple outlets. Assign a `name` to an outlet to target it speci
 <!-- Secondary -->
 ```
 
-Define the `outlet` in the route config:
+Định nghĩa `outlet` trong cấu hình route:
 
 ```ts
 {
@@ -43,21 +43,21 @@ Define the `outlet` in the route config:
 }
 ```
 
-## Outlet Lifecycle Events
+## Outlet Lifecycle Event
 
-`RouterOutlet` emits events when components are changed:
+`RouterOutlet` phát event khi component thay đổi:
 
-- `activate`: New component instantiated.
-- `deactivate`: Component destroyed.
-- `attach` / `detach`: Used with `RouteReuseStrategy`.
+- `activate`: Component mới được khởi tạo.
+- `deactivate`: Component bị hủy.
+- `attach` / `detach`: Dùng với `RouteReuseStrategy`.
 
 ```html
 <router-outlet (activate)="onActivate($event)" />
 ```
 
-## Passing Data via `routerOutletData`
+## Truyền dữ liệu qua `routerOutletData`
 
-You can pass contextual data to the routed component using the `routerOutletData` input. The component accesses this via the `ROUTER_OUTLET_DATA` injection token as a signal.
+Bạn có thể truyền dữ liệu ngữ cảnh cho routed component bằng input `routerOutletData`. Component truy cập dữ liệu này qua injection token `ROUTER_OUTLET_DATA` dưới dạng signal.
 
 ```ts
 // In Parent

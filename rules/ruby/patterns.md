@@ -6,39 +6,39 @@ paths:
   - "**/app/**/*.erb"
   - "**/config/routes.rb"
 ---
-# Ruby Patterns
+# Pattern Ruby
 
-> This file extends [common/patterns.md](../common/patterns.md) with Ruby and Rails specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung riêng cho Ruby và Rails.
 
-## Rails Way First
+## Rails Way trước tiên
 
-- Start with plain Rails MVC and Active Record conventions for small and medium features.
-- Introduce service objects, query objects, form objects, decorators, or presenters when the model/controller boundary is carrying multiple responsibilities.
-- Name extracted objects after the business operation they perform, not after generic layers like `Manager` or `Processor`.
+- Bắt đầu với Rails MVC thuần và các quy ước Active Record cho tính năng nhỏ và vừa.
+- Đưa vào service object, query object, form object, decorator hoặc presenter khi ranh giới model/controller đang gánh nhiều trách nhiệm.
+- Đặt tên các object được tách ra theo thao tác nghiệp vụ mà chúng thực hiện, không đặt theo các tầng chung chung như `Manager` hay `Processor`.
 
-## Persistence
+## Lưu trữ dữ liệu (Persistence)
 
-- Prefer PostgreSQL for multi-host production Rails apps unless the existing platform has a clear reason for MySQL or SQLite.
-- Treat Rails 8 SQLite-backed defaults as viable for single-host or modest deployments, not as an automatic fit for shared multi-service systems.
-- Keep raw SQL behind query objects or model scopes and parameterize every dynamic value.
+- Ưu tiên PostgreSQL cho app Rails production nhiều host, trừ khi nền tảng hiện có có lý do rõ ràng cho MySQL hoặc SQLite.
+- Coi các mặc định dựa trên SQLite của Rails 8 là khả thi cho triển khai một host hoặc quy mô khiêm tốn, không phải lựa chọn tự động phù hợp với các hệ thống nhiều service dùng chung.
+- Giữ SQL thô phía sau query object hoặc model scope và tham số hóa mọi giá trị động.
 
-## Background Jobs And Runtime Services
+## Background Job và Runtime Service
 
-- Use **Solid Queue** for greenfield Rails 8 apps with modest throughput and simple deployment needs.
-- Use **Sidekiq** when the app needs mature observability, high throughput, existing Redis infrastructure, or Pro/Enterprise features.
-- Use **Solid Cache** and **Solid Cable** when their deployment model matches the app; use Redis when shared cross-service behavior, high fanout, or advanced data structures matter.
+- Dùng **Solid Queue** cho app Rails 8 greenfield có thông lượng khiêm tốn và nhu cầu triển khai đơn giản.
+- Dùng **Sidekiq** khi app cần khả năng quan sát trưởng thành, thông lượng cao, hạ tầng Redis sẵn có, hoặc tính năng Pro/Enterprise.
+- Dùng **Solid Cache** và **Solid Cable** khi mô hình triển khai của chúng phù hợp với app; dùng Redis khi cần hành vi chia sẻ giữa các service, fanout cao hoặc cấu trúc dữ liệu nâng cao.
 
 ## Frontend
 
-- Prefer **Hotwire** with Turbo, Stimulus, Importmap, and Propshaft for server-rendered Rails apps.
-- Use React, Vue, Inertia.js, or a separate SPA when interaction complexity, existing product architecture, or team ownership justifies the extra client surface.
-- Keep view components, partials, and presenters focused on rendering decisions; keep persistence and authorization out of templates.
+- Ưu tiên **Hotwire** với Turbo, Stimulus, Importmap và Propshaft cho app Rails render phía server.
+- Dùng React, Vue, Inertia.js hoặc một SPA riêng khi độ phức tạp tương tác, kiến trúc sản phẩm hiện có hoặc quyền sở hữu của team biện minh cho bề mặt client phát sinh thêm.
+- Giữ view component, partial và presenter tập trung vào các quyết định render; giữ persistence và phân quyền ra khỏi template.
 
-## Authentication
+## Xác thực (Authentication)
 
-- Use the Rails 8 authentication generator for straightforward session auth and password reset needs.
-- Use Devise or another established auth system when requirements include OAuth, MFA, confirmable/lockable flows, multi-model auth, or a large existing Devise footprint.
+- Dùng generator xác thực của Rails 8 cho nhu cầu session auth và reset mật khẩu đơn giản.
+- Dùng Devise hoặc một hệ thống auth đã được kiểm chứng khác khi yêu cầu bao gồm OAuth, MFA, flow confirmable/lockable, auth đa model, hoặc dấu ấn Devise sẵn có lớn.
 
-## Reference
+## Tham chiếu
 
-See skill: `backend-patterns` for service boundaries and adapter patterns.
+Xem skill: `backend-patterns` để biết về ranh giới service và pattern adapter.

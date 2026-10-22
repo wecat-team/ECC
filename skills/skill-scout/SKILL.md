@@ -1,67 +1,67 @@
 ---
 name: skill-scout
-description: Search existing local, marketplace, GitHub, and web skill sources before creating a new skill. Use when the user wants to create, build, fork, or find a skill for a workflow.
+description: Tìm kiếm các nguồn skill sẵn có (local, marketplace, GitHub và web) trước khi tạo skill mới. Dùng khi người dùng muốn tạo, xây dựng, fork hoặc tìm một skill cho một workflow.
 metadata:
   origin: community
 ---
 
 # Skill Scout
 
-Use this skill before creating a new skill. The goal is to avoid duplicating
-existing community or marketplace work, while still vetting anything external
-before adoption.
+Dùng skill này trước khi tạo một skill mới. Mục tiêu là tránh trùng lặp
+công sức của cộng đồng hoặc marketplace, đồng thời vẫn kiểm định (vet) mọi thứ
+từ bên ngoài trước khi áp dụng.
 
-Source: salvaged from stale community PR #1232 by `redminwang`.
+Nguồn: được cứu lại từ PR cộng đồng cũ #1232 của `redminwang`.
 
-## When to Use
+## Khi nào dùng
 
-- The user says "create a skill", "build a skill", "make a skill", or "new
+- Người dùng nói "create a skill", "build a skill", "make a skill" hoặc "new
   skill".
-- The user asks "is there a skill for X?" or "does a skill exist that does Y?"
-- The user describes a workflow and you are about to suggest creating a new
-  skill.
-- The user wants to fork or extend an existing skill.
+- Người dùng hỏi "is there a skill for X?" hoặc "does a skill exist that does Y?"
+- Người dùng mô tả một workflow và bạn sắp đề xuất tạo một skill
+  mới.
+- Người dùng muốn fork hoặc mở rộng một skill hiện có.
 
-If the user explicitly says to skip search or create from scratch, acknowledge
-that and proceed with the requested creation workflow.
+Nếu người dùng nói rõ là bỏ qua bước tìm kiếm hoặc tạo từ đầu, hãy ghi nhận
+điều đó và tiếp tục với workflow tạo skill được yêu cầu.
 
-## How It Works
+## Cách hoạt động
 
-### Step 1 - Capture Intent
+### Bước 1 - Nắm bắt ý định
 
-Extract:
+Trích xuất:
 
-- The task the skill should perform.
-- The trigger conditions for using it.
-- The domain, tools, frameworks, or data sources involved.
-- Three to five search keywords plus useful synonyms.
+- Tác vụ mà skill cần thực hiện.
+- Các điều kiện kích hoạt để dùng nó.
+- Domain, công cụ, framework hoặc nguồn dữ liệu liên quan.
+- Ba đến năm từ khóa tìm kiếm cùng các từ đồng nghĩa hữu ích.
 
-### Step 2 - Search Local Sources
+### Bước 2 - Tìm trong các nguồn local
 
-Search installed and marketplace skill names first. Local sources are preferred
-because they are already part of the user's environment.
+Tìm theo tên skill đã cài và skill trên marketplace trước. Ưu tiên nguồn local
+vì chúng đã là một phần của môi trường người dùng.
 
 ```bash
 find ~/.claude/skills -maxdepth 2 -name SKILL.md 2>/dev/null | grep -iE "keyword|synonym"
 find ~/.claude/plugins/marketplaces -path '*/skills/*/SKILL.md' 2>/dev/null | grep -iE "keyword|synonym"
 ```
 
-Then search frontmatter descriptions:
+Sau đó tìm trong phần description của frontmatter:
 
 ```bash
 grep -RilE "keyword|synonym" ~/.claude/skills ~/.claude/plugins/marketplaces 2>/dev/null
 ```
 
-### Step 3 - Search Remote Sources
+### Bước 3 - Tìm trong các nguồn từ xa
 
-Use available GitHub and web search tools. Prefer concise queries:
+Dùng các công cụ tìm kiếm GitHub và web hiện có. Ưu tiên truy vấn ngắn gọn:
 
 ```bash
 gh search repos "claude code skill keyword" --limit 10 --sort stars
 gh search code "name: keyword" --filename SKILL.md --limit 10
 ```
 
-For web search, use at most three targeted queries such as:
+Với tìm kiếm web, dùng tối đa ba truy vấn có mục tiêu như:
 
 ```text
 "claude code skill" keyword
@@ -69,45 +69,45 @@ For web search, use at most three targeted queries such as:
 "affaan-m/ECC" keyword
 ```
 
-### Step 4 - Vet External Matches
+### Bước 4 - Kiểm định các kết quả bên ngoài
 
-Before recommending any external skill for adoption or forking:
+Trước khi đề xuất áp dụng hoặc fork bất kỳ skill bên ngoài nào:
 
-- Read the `SKILL.md` frontmatter and instructions.
-- Look for unexpected shell commands, file writes, network calls, credential
-  handling, or package installs.
-- Check whether the repository appears maintained.
-- Prefer copying into a fresh local branch and reviewing the diff over editing
-  marketplace originals.
+- Đọc frontmatter và phần hướng dẫn của `SKILL.md`.
+- Tìm các lệnh shell bất thường, thao tác ghi file, lệnh gọi mạng, xử lý
+  credential hoặc cài đặt package.
+- Kiểm tra repository có vẻ còn được duy trì hay không.
+- Ưu tiên sao chép vào một branch local mới và review diff thay vì chỉnh sửa
+  bản gốc trên marketplace.
 
-### Step 5 - Rank Results
+### Bước 5 - Xếp hạng kết quả
 
-Rank candidates by:
+Xếp hạng các ứng viên theo:
 
-1. Exact keyword match in the skill name.
-2. Keyword or synonym match in description.
-3. Local installed or marketplace source.
-4. Maintained GitHub source with recent activity.
-5. Web-only mention.
+1. Khớp chính xác từ khóa trong tên skill.
+2. Khớp từ khóa hoặc từ đồng nghĩa trong description.
+3. Nguồn local đã cài hoặc từ marketplace.
+4. Nguồn GitHub còn được duy trì với hoạt động gần đây.
+5. Chỉ được nhắc đến trên web.
 
-Cap the final list at 10 results.
+Giới hạn danh sách cuối cùng ở 10 kết quả.
 
-### Step 6 - Present Decision Options
+### Bước 6 - Trình bày các lựa chọn quyết định
 
-Give the user a short table:
+Đưa cho người dùng một bảng ngắn:
 
-| Option | Meaning |
+| Lựa chọn | Ý nghĩa |
 | --- | --- |
-| Use existing | Invoke or install a matching skill as-is. |
-| Fork or extend | Copy the closest skill and modify it. |
-| Create fresh | Build a new skill after confirming no close match exists. |
+| Use existing | Gọi hoặc cài một skill khớp nguyên trạng. |
+| Fork or extend | Sao chép skill gần nhất và chỉnh sửa. |
+| Create fresh | Xây dựng skill mới sau khi xác nhận không có skill nào gần giống. |
 
-Only create a new skill after the user chooses that path or after the search
-finds no close match.
+Chỉ tạo skill mới sau khi người dùng chọn hướng đó hoặc sau khi việc tìm kiếm
+không thấy skill nào gần giống.
 
-## Examples
+## Ví dụ
 
-### Result Table
+### Bảng kết quả
 
 ```markdown
 | # | Skill | Source | Why it matches | Gap |
@@ -117,7 +117,7 @@ finds no close match.
 | 3 | blog-writer | GitHub | Blog writing skill with recent commits | Needs security review |
 ```
 
-### User-Facing Summary
+### Tóm tắt gửi người dùng
 
 ```markdown
 I found two close local matches and one external candidate. The closest fit is
@@ -126,16 +126,16 @@ release-note checklist you asked for. I can either use it as-is, fork it into a
 release-note variant, or create a fresh skill.
 ```
 
-## Anti-Patterns
+## Anti-Pattern
 
-- Do not jump directly to new skill creation when a search is reasonable.
-- Do not install external skills without reading them first.
-- Do not present a long unranked list of weak matches.
-- Do not treat web-only mentions as trusted sources.
-- Do not edit installed marketplace originals in place.
+- Không nhảy thẳng vào việc tạo skill mới khi việc tìm kiếm là hợp lý.
+- Không cài skill bên ngoài khi chưa đọc chúng.
+- Không đưa ra một danh sách dài, không xếp hạng gồm các kết quả khớp yếu.
+- Không coi các lần chỉ được nhắc đến trên web là nguồn đáng tin cậy.
+- Không chỉnh sửa trực tiếp các bản gốc đã cài từ marketplace.
 
-## Related
+## Liên quan
 
-- `search-first` - General search-before-building workflow.
-- `skill-stocktake` - Audit installed skills for health, duplicates, and gaps.
-- `agent-sort` - Categorize and organize existing agents and skills.
+- `search-first` - Workflow tìm kiếm trước khi xây dựng nói chung.
+- `skill-stocktake` - Audit các skill đã cài về độ lành mạnh, trùng lặp và khoảng trống.
+- `agent-sort` - Phân loại và tổ chức các agent và skill hiện có.

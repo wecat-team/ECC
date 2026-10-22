@@ -1,10 +1,10 @@
-# Angular CLI Guide for Agents
+# Hướng dẫn Angular CLI cho Agent
 
-The Angular CLI (`ng`) is the primary tool for managing an Angular workspace. Always prefer CLI commands over manual file creation or generic `npm` commands when modifying project structure or adding Angular-specific dependencies.
+Angular CLI (`ng`) là công cụ chính để quản lý một Angular workspace. Luôn ưu tiên dùng lệnh CLI thay vì tạo file thủ công hoặc dùng các lệnh `npm` chung chung khi thay đổi cấu trúc dự án hoặc thêm dependency dành riêng cho Angular.
 
-## 1. Managing Dependencies
+## 1. Quản lý dependency
 
-**ALWAYS use `ng add` for Angular libraries** instead of `npm install`. `ng add` installs the package AND runs initialization schematics (e.g., configuring `angular.json`, updating root providers).
+**LUÔN LUÔN dùng `ng add` cho các thư viện Angular** thay vì `npm install`. `ng add` cài đặt package VÀ chạy các schematic khởi tạo (ví dụ: cấu hình `angular.json`, cập nhật root provider).
 
 ```bash
 ng add @angular/material
@@ -12,46 +12,46 @@ ng add tailwindcss
 ng add @angular/fire
 ```
 
-To update the application and its dependencies (which automatically runs code migrations):
+Để cập nhật ứng dụng và các dependency của nó (tự động chạy các code migration):
 
 ```bash
 ng update @angular/core@<latest or specific version> @angular/cli<latest or specific version>
 ```
 
-## 2. Generating Code (`ng generate` or `ng g`)
+## 2. Sinh code (`ng generate` hoặc `ng g`)
 
-Always use the CLI to generate code to ensure it adheres to Angular standards and updates necessary configuration files automatically.
+Luôn dùng CLI để sinh code nhằm đảm bảo tuân thủ chuẩn Angular và tự động cập nhật các file cấu hình cần thiết.
 
-| Target       | Command               | Notes                                                                                          |
-| :----------- | :-------------------- | :--------------------------------------------------------------------------------------------- |
-| Component    | `ng g c path/to/name` | Generates a component. Use `--inline-style` (`-s`) or `--inline-template` (`-t`) if requested. |
-| Service      | `ng g s path/to/name` | Generates an `@Injectable({providedIn: 'root'})` service.                                      |
-| Directive    | `ng g d path/to/name` | Generates a directive.                                                                         |
-| Pipe         | `ng g p path/to/name` | Generates a pipe.                                                                              |
-| Guard        | `ng g g path/to/name` | Generates a functional route guard.                                                            |
-| Environments | `ng g environments`   | Scaffolds `src/environments/` and updates `angular.json` with file replacements.               |
+| Đối tượng    | Lệnh                  | Ghi chú                                                                                                  |
+| :----------- | :-------------------- | :------------------------------------------------------------------------------------------------------- |
+| Component    | `ng g c path/to/name` | Sinh một component. Dùng `--inline-style` (`-s`) hoặc `--inline-template` (`-t`) nếu được yêu cầu.       |
+| Service      | `ng g s path/to/name` | Sinh một service `@Injectable({providedIn: 'root'})`.                                                    |
+| Directive    | `ng g d path/to/name` | Sinh một directive.                                                                                      |
+| Pipe         | `ng g p path/to/name` | Sinh một pipe.                                                                                           |
+| Guard        | `ng g g path/to/name` | Sinh một functional route guard.                                                                         |
+| Environments | `ng g environments`   | Dựng sẵn `src/environments/` và cập nhật `angular.json` với các file replacement.                        |
 
-_Note: There is no command to generate a single route definition. Generate a component, then manually add it to the `Routes` array in `app.routes.ts`._
+_Lưu ý: Không có lệnh nào để sinh riêng một route definition. Hãy sinh một component, sau đó thêm thủ công vào mảng `Routes` trong `app.routes.ts`._
 
-## 3. Development Server & Proxying
+## 3. Development Server & Proxy
 
-Start the local development server with hot-module replacement (HMR):
+Khởi động development server cục bộ với hot-module replacement (HMR):
 
 ```bash
 ng serve
 ```
 
-### Backend API Proxying
+### Proxy cho Backend API
 
-To proxy API requests during development (e.g., rerouting `/api` to a local Node server):
+Để proxy các request API trong quá trình phát triển (ví dụ: chuyển hướng `/api` tới một Node server cục bộ):
 
-1. Create `src/proxy.conf.json`:
+1. Tạo `src/proxy.conf.json`:
    ```json
    {
      "/api/**": {"target": "http://localhost:3000", "secure": false}
    }
    ```
-2. Update `angular.json` under the `serve` target:
+2. Cập nhật `angular.json` ở target `serve`:
    ```json
    "serve": {
      "builder": "@angular/build:dev-server",
@@ -59,25 +59,25 @@ To proxy API requests during development (e.g., rerouting `/api` to a local Node
    }
    ```
 
-## 4. Building the Application
+## 4. Build ứng dụng
 
-Compile the application into an output directory (default: `dist/<project-name>/browser`). Modern Angular uses the `@angular/build:application` builder (esbuild-based).
+Biên dịch ứng dụng vào thư mục output (mặc định: `dist/<project-name>/browser`). Angular hiện đại dùng builder `@angular/build:application` (dựa trên esbuild).
 
 ```bash
 ng build
 ```
 
-- `ng build` defaults to the production configuration, which enables Ahead-of-Time (AOT) compilation, minification, and tree-shaking.
-- Target specific configurations defined in `angular.json` using `--configuration`: `ng build --configuration=staging`.
+- `ng build` mặc định dùng cấu hình production, bật biên dịch Ahead-of-Time (AOT), minification và tree-shaking.
+- Nhắm tới các cấu hình cụ thể được định nghĩa trong `angular.json` bằng `--configuration`: `ng build --configuration=staging`.
 
 ## 5. Testing
 
-- **Unit Tests**: Run `ng test` to execute unit tests via the configured test runner (e.g., Karma or Vitest).
-- **End-to-End (E2E)**: Run `ng e2e`. If no E2E framework is configured, the CLI will prompt to install one (Cypress, Playwright, Puppeteer, etc.).
+- **Unit Test**: Chạy `ng test` để thực thi unit test thông qua test runner đã cấu hình (ví dụ: Karma hoặc Vitest).
+- **End-to-End (E2E)**: Chạy `ng e2e`. Nếu chưa cấu hình framework E2E nào, CLI sẽ nhắc cài đặt một framework (Cypress, Playwright, Puppeteer, v.v.).
 
 ## 6. Deployment
 
-To deploy an application, you must first add a deployment builder, then run the deploy command:
+Để deploy một ứng dụng, trước tiên bạn phải thêm một deployment builder, sau đó chạy lệnh deploy:
 
 ```bash
 # Example for Firebase

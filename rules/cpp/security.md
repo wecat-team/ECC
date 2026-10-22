@@ -8,44 +8,44 @@ paths:
   - "**/*.h"
   - "**/CMakeLists.txt"
 ---
-# C++ Security
+# Bảo mật C++
 
-> This file extends [common/security.md](../common/security.md) with C++ specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho C++.
 
-## Memory Safety
+## An toàn bộ nhớ
 
-- Never use raw `new`/`delete` — use smart pointers
-- Never use C-style arrays — use `std::array` or `std::vector`
-- Never use `malloc`/`free` — use C++ allocation
-- Avoid `reinterpret_cast` unless absolutely necessary
+- KHÔNG BAO GIỜ dùng `new`/`delete` thuần — dùng smart pointer
+- KHÔNG BAO GIỜ dùng mảng kiểu C — dùng `std::array` hoặc `std::vector`
+- KHÔNG BAO GIỜ dùng `malloc`/`free` — dùng cấp phát của C++
+- Tránh `reinterpret_cast` trừ khi thực sự cần thiết
 
-## Buffer Overflows
+## Buffer Overflow
 
-- Use `std::string` over `char*`
-- Use `.at()` for bounds-checked access when safety matters
-- Never use `strcpy`, `strcat`, `sprintf` — use `std::string` or `fmt::format`
+- Dùng `std::string` thay cho `char*`
+- Dùng `.at()` để truy cập có kiểm tra giới hạn khi an toàn là ưu tiên
+- KHÔNG BAO GIỜ dùng `strcpy`, `strcat`, `sprintf` — dùng `std::string` hoặc `fmt::format`
 
 ## Undefined Behavior
 
-- Always initialize variables
-- Avoid signed integer overflow
-- Never dereference null or dangling pointers
-- Use sanitizers in CI:
+- Luôn khởi tạo biến
+- Tránh tràn số nguyên có dấu (signed integer overflow)
+- KHÔNG BAO GIỜ dereference con trỏ null hoặc dangling
+- Dùng sanitizer trong CI:
   ```bash
   cmake -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined" ..
   ```
 
-## Static Analysis
+## Phân tích tĩnh
 
-- Use **clang-tidy** for automated checks:
+- Dùng **clang-tidy** cho các kiểm tra tự động:
   ```bash
   clang-tidy --checks='*' src/*.cpp
   ```
-- Use **cppcheck** for additional analysis:
+- Dùng **cppcheck** cho phân tích bổ sung:
   ```bash
   cppcheck --enable=all src/
   ```
 
-## Reference
+## Tham chiếu
 
-See skill: `cpp-coding-standards` for detailed security guidelines.
+Xem skill: `cpp-coding-standards` để có hướng dẫn bảo mật chi tiết.

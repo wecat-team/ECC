@@ -1,28 +1,28 @@
 ---
 name: quarkus-patterns
-description: Quarkus 3.x LTS architecture patterns with Camel for messaging, RESTful API design, CDI services, data access with Panache, and async processing. Use for Java Quarkus backend work with event-driven architectures. Use when building or reviewing a Quarkus service, especially with Camel messaging or Panache data access.
+description: Các pattern kiến trúc Quarkus 3.x LTS với Camel cho messaging, thiết kế RESTful API, CDI service, data access với Panache và xử lý bất đồng bộ (async). Dùng cho công việc backend Java Quarkus với kiến trúc event-driven. Dùng khi xây dựng hoặc review một Quarkus service, đặc biệt với Camel messaging hoặc Panache data access.
 metadata:
   origin: ECC
 ---
 
-# Quarkus Development Patterns
+# Các pattern phát triển Quarkus
 
-Quarkus 3.x architecture and API patterns for cloud-native, event-driven services with Apache Camel.
+Các pattern kiến trúc và API của Quarkus 3.x cho service cloud-native, event-driven với Apache Camel.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Building REST APIs with JAX-RS or RESTEasy Reactive
-- Structuring resource → service → repository layers
-- Implementing event-driven patterns with Apache Camel and RabbitMQ
-- Configuring Hibernate Panache, caching, or reactive streams
-- Adding validation, exception mapping, or pagination
-- Setting up profiles for dev/staging/production environments (YAML config)
-- Custom logging with LogContext and Logback/Logstash encoder
-- Working with CompletableFuture for async operations
-- Implementing conditional flow processing
-- Working with GraalVM native compilation
+- Xây dựng REST API với JAX-RS hoặc RESTEasy Reactive
+- Cấu trúc các layer resource → service → repository
+- Triển khai các pattern event-driven với Apache Camel và RabbitMQ
+- Cấu hình Hibernate Panache, caching hoặc reactive stream
+- Thêm validation, exception mapping hoặc phân trang
+- Thiết lập profile cho môi trường dev/staging/production (cấu hình YAML)
+- Logging tùy chỉnh với LogContext và Logback/Logstash encoder
+- Làm việc với CompletableFuture cho các thao tác async
+- Triển khai xử lý luồng có điều kiện (conditional flow)
+- Làm việc với biên dịch native của GraalVM
 
-## Service Layer with Multiple Dependencies
+## Service Layer với nhiều Dependency
 
 ```java
 @Slf4j
@@ -58,15 +58,15 @@ public class OrderProcessingService {
 }
 ```
 
-**Key Patterns:**
-- `@RequiredArgsConstructor` for constructor injection via Lombok
-- `@Slf4j` for Logback logging
-- `@Transactional` on service methods that write through Panache or repositories
-- Validate input before persistence or message publication
-- Event tracking for success/error scenarios
-- Async Camel message publishing
+**Các pattern chính:**
+- `@RequiredArgsConstructor` cho constructor injection qua Lombok
+- `@Slf4j` cho logging bằng Logback
+- `@Transactional` trên các method của service có ghi dữ liệu qua Panache hoặc repository
+- Validate input trước khi lưu dữ liệu hoặc publish message
+- Theo dõi event cho các kịch bản thành công/lỗi
+- Publish message Camel bất đồng bộ
 
-## Custom Logging Context Pattern (Logback)
+## Pattern Logging Context tùy chỉnh (Logback)
 
 ```java
 @ApplicationScoped
@@ -94,7 +94,7 @@ public class ProcessingService {
 }
 ```
 
-**Logback Configuration (logback.xml):**
+**Cấu hình Logback (logback.xml):**
 
 ```xml
 <configuration>
@@ -112,7 +112,7 @@ public class ProcessingService {
 </configuration>
 ```
 
-## Event Service Pattern
+## Pattern Event Service
 
 ```java
 @Slf4j
@@ -160,7 +160,7 @@ public class EventService {
 }
 ```
 
-## Camel Message Publishing (RabbitMQ)
+## Publish message với Camel (RabbitMQ)
 
 ```java
 @Slf4j
@@ -178,7 +178,7 @@ public class BusinessRulesPublisher {
 }
 ```
 
-**Camel Route Configuration:**
+**Cấu hình Camel Route:**
 
 ```java
 @ApplicationScoped
@@ -205,7 +205,7 @@ public class BusinessRulesRoute extends RouteBuilder {
 }
 ```
 
-## Camel Direct Routes (In-Memory)
+## Camel Direct Route (In-Memory)
 
 ```java
 @ApplicationScoped
@@ -241,7 +241,7 @@ public class DocumentProcessingRoute extends RouteBuilder {
 }
 ```
 
-## Camel File Processing
+## Xử lý file với Camel
 
 ```java
 @ApplicationScoped
@@ -271,7 +271,7 @@ public class FileMonitoringRoute extends RouteBuilder {
 }
 ```
 
-## Camel Bean Invocation
+## Gọi Bean trong Camel
 
 ```java
 @ApplicationScoped
@@ -291,7 +291,7 @@ public class InvoiceRoute extends RouteBuilder {
 }
 ```
 
-## REST API Structure
+## Cấu trúc REST API
 
 ```java
 @Path("/api/documents")
@@ -330,7 +330,7 @@ public class DocumentResource {
 }
 ```
 
-## Repository Pattern (Panache Repository)
+## Pattern Repository (Panache Repository)
 
 ```java
 @ApplicationScoped
@@ -352,7 +352,7 @@ public class DocumentRepository implements PanacheRepository<Document> {
 }
 ```
 
-## Service Layer with Transactions
+## Service Layer với Transaction
 
 ```java
 @ApplicationScoped
@@ -388,7 +388,7 @@ public class DocumentService {
 }
 ```
 
-## DTOs and Validation
+## DTO và Validation
 
 ```java
 public record CreateDocumentRequest(
@@ -436,7 +436,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
 }
 ```
 
-## CompletableFuture Async Operations
+## Thao tác Async với CompletableFuture
 
 ```java
 @Slf4j
@@ -500,7 +500,7 @@ public class DocumentCacheService {
 }
 ```
 
-## Configuration as YAML
+## Cấu hình bằng YAML
 
 ```yaml
 # application.yml
@@ -555,7 +555,7 @@ camel:
       invoice-processing: invoice-processing-queue
 ```
 
-## Health Checks
+## Health Check
 
 ```java
 @Readiness
@@ -593,7 +593,7 @@ public class CamelHealthCheck implements HealthCheck {
 }
 ```
 
-## Dependencies (Maven)
+## Dependency (Maven)
 
 ```xml
 <properties>
@@ -670,54 +670,54 @@ public class CamelHealthCheck implements HealthCheck {
 
 ## Best Practices
 
-### Architecture
-- Use `@RequiredArgsConstructor` with Lombok for constructor injection
-- Keep service layer thin; delegate complex logic to specialized classes
-- Use Camel routes for message routing and integration patterns
-- Prefer Panache Repository pattern for data access
+### Kiến trúc
+- Dùng `@RequiredArgsConstructor` của Lombok cho constructor injection
+- Giữ service layer mỏng; ủy thác logic phức tạp cho các class chuyên biệt
+- Dùng Camel route cho message routing và các pattern tích hợp
+- Ưu tiên pattern Panache Repository cho data access
 
 ### Event-Driven
-- Always track operations with EventService (success/error events)
-- Use Camel `direct:` endpoints for in-memory routing
-- Use `spring-rabbitmq` component for RabbitMQ integration
-- Implement async publishing with `ProducerTemplate.asyncSendBody()`
+- LUÔN LUÔN theo dõi các thao tác bằng EventService (event thành công/lỗi)
+- Dùng endpoint `direct:` của Camel cho routing trong bộ nhớ
+- Dùng component `spring-rabbitmq` để tích hợp RabbitMQ
+- Triển khai publish bất đồng bộ bằng `ProducerTemplate.asyncSendBody()`
 
 ### Logging
-- Use Logback with Logstash encoder for structured logging
-- Propagate LogContext through service calls with `SafeAutoCloseable`
-- Add contextual information to LogContext for request tracing
-- Use `@Slf4j` instead of manual logger instantiation
+- Dùng Logback với Logstash encoder cho structured logging
+- Truyền LogContext qua các lời gọi service bằng `SafeAutoCloseable`
+- Thêm thông tin ngữ cảnh vào LogContext để truy vết request
+- Dùng `@Slf4j` thay vì tự khởi tạo logger thủ công
 
-### Async Operations
-- Use CompletableFuture for non-blocking I/O operations
-- Call `.join()` when you need to wait for completion
-- Handle exceptions from CompletableFuture properly
-- Pass LogContext to async operations for tracing
+### Thao tác Async
+- Dùng CompletableFuture cho các thao tác I/O không chặn (non-blocking)
+- Gọi `.join()` khi cần chờ hoàn tất
+- Xử lý đúng exception từ CompletableFuture
+- Truyền LogContext vào các thao tác async để truy vết
 
-### Configuration
-- Use YAML configuration (`quarkus-config-yaml`)
-- Profile-aware configuration for dev/test/prod environments
-- Externalize sensitive configuration to environment variables
-- Use `@ConfigProperty` for type-safe config injection
+### Cấu hình
+- Dùng cấu hình YAML (`quarkus-config-yaml`)
+- Cấu hình theo profile cho môi trường dev/test/prod
+- Tách cấu hình nhạy cảm ra biến môi trường
+- Dùng `@ConfigProperty` để inject config an toàn về type
 
 ### Validation
-- Validate at resource layer with `@Valid`
-- Use Bean Validation annotations on DTOs
-- Map exceptions to proper HTTP responses with `@Provider`
+- Validate ở resource layer bằng `@Valid`
+- Dùng annotation Bean Validation trên DTO
+- Map exception sang HTTP response phù hợp bằng `@Provider`
 
-### Transactions
-- Use `@Transactional` on service methods that modify data
-- Keep transactions short and focused
-- Avoid calling async operations within transactions
+### Transaction
+- Dùng `@Transactional` trên các method của service có thay đổi dữ liệu
+- Giữ transaction ngắn và tập trung
+- Tránh gọi các thao tác async bên trong transaction
 
 ### Testing
-- Use `camel-quarkus-junit5` for route testing
-- Use AssertJ for assertions
-- Mock all external dependencies
-- Test conditional flow logic thoroughly
+- Dùng `camel-quarkus-junit5` để test route
+- Dùng AssertJ cho assertion
+- Mock mọi dependency bên ngoài
+- Test kỹ logic của conditional flow
 
-### Quarkus-Specific
-- Stay on latest LTS version (3.x)
-- Use Quarkus dev mode for hot reload
-- Add health checks for production readiness
-- Test native compilation compatibility periodically
+### Đặc thù Quarkus
+- Luôn dùng phiên bản LTS mới nhất (3.x)
+- Dùng Quarkus dev mode để hot reload
+- Thêm health check để sẵn sàng cho production
+- Định kỳ test khả năng tương thích với native compilation

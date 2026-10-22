@@ -1,6 +1,6 @@
 ---
 name: motion-advanced
-description: Advanced motion patterns for React / Next.js — drag & drop, gestures, text animations, SVG path drawing, custom hooks, imperative sequences (useAnimate), loaders, and the full API decision tree. Requires motion-foundations. Use when building drag and drop, gestures, text or SVG animation, or imperative animation sequences in React or Next.js.
+description: Các pattern motion nâng cao cho React / Next.js — drag & drop, gesture, animation chữ, vẽ SVG path, custom hook, chuỗi animation imperative (useAnimate), loader, và cây quyết định API đầy đủ. Yêu cầu motion-foundations. Dùng khi xây dựng drag and drop, gesture, animation cho chữ hoặc SVG, hoặc chuỗi animation imperative trong React hoặc Next.js.
 tags: [motion, animation, advanced, gestures, svg]
 category: frontend
 author: jeff
@@ -10,82 +10,82 @@ metadata:
 
 # Motion Advanced
 
-Complex, interactive, and physics-based animation patterns.
-Requires `motion-foundations` to be set up first.
-Use these when `motion-patterns` is not enough.
+Các pattern animation phức tạp, tương tác và dựa trên vật lý.
+Yêu cầu thiết lập `motion-foundations` trước.
+Dùng khi `motion-patterns` chưa đủ.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Building drag-to-dismiss sheets, swipe gestures, or reorderable lists
-- Animating text word-by-word, character-by-character, or as a live counter
-- Drawing SVG paths, morphing icons, or animating circular progress
-- Writing a custom animation hook (`useScrollReveal`, magnetic button, cursor follower)
-- Sequencing multi-step animations imperatively with `useAnimate`
-- Building spinners, shimmer skeletons, pulse indicators, or loading button states
+- Xây dựng sheet vuốt để đóng (drag-to-dismiss), gesture swipe, hoặc list có thể sắp xếp lại
+- Animation chữ theo từng từ, từng ký tự, hoặc dạng bộ đếm trực tiếp
+- Vẽ SVG path, morph icon, hoặc animation tiến trình hình tròn
+- Viết custom animation hook (`useScrollReveal`, magnetic button, cursor follower)
+- Sắp xếp chuỗi animation nhiều bước theo kiểu imperative bằng `useAnimate`
+- Xây dựng spinner, shimmer skeleton, chỉ báo pulse, hoặc trạng thái loading của button
 
-## Outputs
+## Đầu ra
 
-This skill produces:
+Skill này tạo ra:
 
-- Drag interactions: draggable cards, drag-to-dismiss sheets, `Reorder.Group` lists
-- Gesture hooks: swipe detection, long press, pinch outline
-- Text animation components: word reveal, character typewriter, number counter
-- SVG animation: path draw-on, icon morph, stroke progress ring
-- Custom hooks: `useScrollReveal`, `useHoverScale`, `useNavigationDirection`, `useInViewOnce`
-- Imperative sequences via `useAnimate` with interrupt-safe `async/await`
-- Loader components: spinner, shimmer, pulse dot, progress bar, button loading state
+- Tương tác drag: card kéo được, sheet drag-to-dismiss, list `Reorder.Group`
+- Gesture hook: nhận diện swipe, long press, phác thảo pinch
+- Component animation chữ: word reveal, character typewriter, number counter
+- Animation SVG: path draw-on, icon morph, vòng tiến trình stroke
+- Custom hook: `useScrollReveal`, `useHoverScale`, `useNavigationDirection`, `useInViewOnce`
+- Chuỗi imperative qua `useAnimate` với `async/await` an toàn khi bị ngắt
+- Component loader: spinner, shimmer, pulse dot, progress bar, trạng thái loading của button
 
-## Principles
+## Nguyên tắc
 
-- Physics-based motion (`useSpring`, `springs.*`) always feels more natural than duration-based for direct manipulation.
-- `useMotionValue` + `useTransform` computes derived values without triggering re-renders.
-- `useAnimate` sequences are imperative and interrupt-safe — calling `animate()` mid-flight cancels the previous animation automatically.
-- Motion values (`useMotionValue`, `useSpring`) are SSR-safe and do not cause hydration errors.
+- Chuyển động dựa trên vật lý (`useSpring`, `springs.*`) luôn tự nhiên hơn chuyển động dựa trên duration đối với thao tác trực tiếp.
+- `useMotionValue` + `useTransform` tính các giá trị dẫn xuất mà không kích hoạt re-render.
+- Chuỗi `useAnimate` là imperative và an toàn khi bị ngắt — gọi `animate()` giữa chừng sẽ tự động hủy animation trước đó.
+- Motion value (`useMotionValue`, `useSpring`) an toàn với SSR và không gây lỗi hydration.
 
-## Rules
+## Quy tắc
 
-1. **Drag interactions must be tested on touch devices**, not just mouse. `drag` prop works on both but feel and threshold differ.
-2. **Infinite animations must pause when `document.visibilityState === "hidden"`.** Background tabs must not consume GPU/CPU.
-3. **Swipe threshold must be explicit.** Never infer intent from velocity alone; combine `offset` + `velocity` checks.
-4. **`useAnimate` scope ref must be attached to a mounted DOM element.** Calling `animate()` before mount throws silently.
-5. **Motion values must not be recreated on render.** `useMotionValue(0)` inside a component body is correct; `new MotionValue(0)` in a render is not.
-6. **All token values are imported from `motion-foundations`.** No inline numbers.
-7. **Custom hooks must handle cleanup.** Every `window.addEventListener` needs a matching `removeEventListener` in the `useEffect` return.
-8. **SVG morphing requires equal path command counts.** Paths with different command structures snap instead of interpolating.
+1. **Tương tác drag phải được test trên thiết bị cảm ứng**, không chỉ chuột. Prop `drag` hoạt động với cả hai nhưng cảm giác và ngưỡng khác nhau.
+2. **Animation vô hạn phải tạm dừng khi `document.visibilityState === "hidden"`.** Tab nền không được tiêu tốn GPU/CPU.
+3. **Ngưỡng swipe phải tường minh.** Không bao giờ suy ra ý định chỉ từ velocity; hãy kết hợp kiểm tra `offset` + `velocity`.
+4. **Ref scope của `useAnimate` phải được gắn vào một phần tử DOM đã mount.** Gọi `animate()` trước khi mount sẽ ném lỗi một cách âm thầm.
+5. **Không được tạo lại motion value mỗi lần render.** `useMotionValue(0)` trong thân component là đúng; `new MotionValue(0)` trong render thì không.
+6. **Mọi giá trị token được import từ `motion-foundations`.** Không dùng số inline.
+7. **Custom hook phải xử lý cleanup.** Mỗi `window.addEventListener` cần một `removeEventListener` tương ứng trong giá trị trả về của `useEffect`.
+8. **SVG morph yêu cầu số lượng path command bằng nhau.** Các path có cấu trúc command khác nhau sẽ nhảy cóc thay vì nội suy.
 
-## Decision Guidance
+## Hướng dẫn quyết định
 
-### Choosing the right advanced API
+### Chọn đúng API nâng cao
 
-| Scenario | API |
+| Tình huống | API |
 | ------------------------------ | -------------------------------- |
-| Drag with physics on release | `drag` + `dragTransition: springs.release` |
-| Ordered drag-to-reorder list | `Reorder.Group` + `Reorder.Item` |
-| Dismiss on drag offset | `drag="y"` + `onDragEnd` offset check |
-| Swipe left/right | `drag="x"` + `onDragEnd` offset check |
-| Long press | `useLongPress` hook |
-| Value smoothed over time | `useSpring` |
-| Value derived from another | `useTransform` |
-| Multi-step sequence | `useAnimate` with `async/await` |
-| One-shot imperative animation | `animate()` from `motion` |
-| Text entering word by word | Stagger on `inline-block` spans |
-| SVG drawing on | `pathLength` 0 → 1 |
-| SVG morph | `d` attribute tween (equal commands) |
-| Circular progress | `strokeDashoffset` tween |
+| Drag có vật lý khi thả | `drag` + `dragTransition: springs.release` |
+| List kéo thả để sắp xếp thứ tự | `Reorder.Group` + `Reorder.Item` |
+| Đóng khi kéo vượt offset | `drag="y"` + kiểm tra offset trong `onDragEnd` |
+| Swipe trái/phải | `drag="x"` + kiểm tra offset trong `onDragEnd` |
+| Long press | hook `useLongPress` |
+| Giá trị được làm mượt theo thời gian | `useSpring` |
+| Giá trị dẫn xuất từ giá trị khác | `useTransform` |
+| Chuỗi nhiều bước | `useAnimate` với `async/await` |
+| Animation imperative một lần | `animate()` từ `motion` |
+| Chữ xuất hiện từng từ | Stagger trên các span `inline-block` |
+| Vẽ SVG dần dần | `pathLength` 0 → 1 |
+| SVG morph | tween thuộc tính `d` (số command bằng nhau) |
+| Tiến trình hình tròn | tween `strokeDashoffset` |
 
-### When to use `useSpring` vs a spring transition
+### Khi nào dùng `useSpring` so với spring transition
 
 | | `useSpring` | `transition: springs.*` |
 | -------------- | ---------------------------------------- | ----------------------- |
-| Use for | Cursor follower, pointer-tracked values | Discrete state changes |
-| Updates | Continuous, on every frame | Triggered by state change |
-| Interrupt | Smooth — physics picks up from velocity | Restarts from current value |
+| Dùng cho | Cursor follower, giá trị bám theo con trỏ | Thay đổi trạng thái rời rạc |
+| Cập nhật | Liên tục, ở mỗi frame | Kích hoạt bởi thay đổi state |
+| Khi bị ngắt | Mượt — vật lý tiếp tục từ velocity | Khởi động lại từ giá trị hiện tại |
 
-## Core Concepts
+## Khái niệm cốt lõi
 
 ### useMotionValue + useTransform
 
-Reactive computation without re-renders:
+Tính toán phản ứng (reactive) mà không re-render:
 
 ```tsx
 const x = useMotionValue(0)
@@ -95,8 +95,8 @@ const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0])
 
 ### useAnimate
 
-Returns `[scope, animate]`. The scope ref must be attached to a DOM element.
-`animate()` calls are interrupt-safe — calling mid-flight cancels the previous run.
+Trả về `[scope, animate]`. Ref scope phải được gắn vào một phần tử DOM.
+Các lời gọi `animate()` an toàn khi bị ngắt — gọi giữa chừng sẽ hủy lượt chạy trước.
 
 ```tsx
 const [scope, animate] = useAnimate()
@@ -110,9 +110,9 @@ async function play() {
 return <div ref={scope}>...</div>
 ```
 
-## Code Examples
+## Ví dụ code
 
-### Draggable card
+### Card kéo được
 
 ```tsx
 "use client"
@@ -131,7 +131,7 @@ import { springs, motionTokens } from "@/lib/motion-tokens"
 />
 ```
 
-### Drag-to-dismiss sheet
+### Sheet drag-to-dismiss
 
 ```tsx
 "use client"
@@ -155,7 +155,7 @@ export function BottomSheet({ onClose }: { onClose: () => void }) {
 }
 ```
 
-### Reorderable list
+### List sắp xếp lại được
 
 ```tsx
 "use client"
@@ -175,7 +175,7 @@ export function SortableList() {
 }
 ```
 
-### Swipe detection
+### Nhận diện swipe
 
 ```tsx
 "use client"
@@ -196,7 +196,7 @@ const VELOCITY_THRESHOLD = 300
 />
 ```
 
-### Long press hook
+### Hook long press
 
 ```tsx
 import { useRef } from "react"
@@ -283,7 +283,7 @@ import { motionTokens } from "@/lib/motion-tokens"
 />
 ```
 
-### Stroke progress ring
+### Vòng tiến trình stroke
 
 ```tsx
 "use client"
@@ -310,7 +310,7 @@ export function ProgressRing({ progress }: { progress: number }) {
 }
 ```
 
-### useScrollReveal hook
+### Hook useScrollReveal
 
 ```tsx
 "use client"
@@ -408,7 +408,7 @@ export function ShimmerSkeleton({ className = "" }: { className?: string }) {
 }
 ```
 
-### Button loading state
+### Trạng thái loading của button
 
 ```tsx
 "use client"
@@ -456,7 +456,7 @@ export function LoadingButton({
 }
 ```
 
-### Infinite animation with visibility pause
+### Animation vô hạn với tạm dừng theo visibility
 
 ```tsx
 "use client"
@@ -494,11 +494,11 @@ export function PulseDot() {
 }
 ```
 
-## End-to-End Example
+## Ví dụ end-to-end
 
-Drag-to-dismiss sheet with shimmer content, loading state, and reduced motion
-support — combining `useMotionValue`, `useTransform`, `useSafeMotion`,
-`AnimatePresence`, and tokens from `motion-foundations`:
+Sheet drag-to-dismiss với nội dung shimmer, trạng thái loading và hỗ trợ
+reduced motion — kết hợp `useMotionValue`, `useTransform`, `useSafeMotion`,
+`AnimatePresence` và các token từ `motion-foundations`:
 
 ```tsx
 "use client"
@@ -567,31 +567,31 @@ export function DismissibleSheet({
 }
 ```
 
-## Constraints / Non-Goals
+## Ràng buộc / Ngoài phạm vi
 
-This skill does **not** cover:
+Skill này **không** bao gồm:
 
-- Token and spring definitions → see `motion-foundations`
-- Standard UI patterns (button, modal, stagger, page transitions) → see `motion-patterns`
-- CSS-only animations or Tailwind `animate-*` without `motion/react`
-- Canvas or WebGL-based animation (Three.js, Pixi, etc.)
-- Full drag-and-drop systems with external state managers (dnd-kit, react-beautiful-dnd)
-- Game-loop or frame-by-frame animation
+- Định nghĩa token và spring → xem `motion-foundations`
+- Các pattern UI tiêu chuẩn (button, modal, stagger, page transition) → xem `motion-patterns`
+- Animation chỉ dùng CSS hoặc `animate-*` của Tailwind mà không có `motion/react`
+- Animation dựa trên Canvas hoặc WebGL (Three.js, Pixi, v.v.)
+- Hệ thống drag-and-drop đầy đủ với state manager bên ngoài (dnd-kit, react-beautiful-dnd)
+- Animation kiểu game-loop hoặc từng frame một
 
-## Anti-Patterns
+## Anti-Pattern
 
-| Anti-pattern | Rule violated | Fix |
+| Anti-pattern | Quy tắc bị vi phạm | Cách sửa |
 | ---------------------------------------------- | ------- | ------------------------------------------------ |
-| `drag` tested only on desktop | Rule 1 | Test on touch emulator and real device |
-| `animate={{ repeat: Infinity }}` with no pause | Rule 2 | Add `visibilitychange` listener |
-| `onDragEnd` checking only offset, not velocity | Rule 3 | Check both `info.offset` and `info.velocity` |
-| `animate(scope, ...)` before `useEffect` | Rule 4 | Call `animate()` only after mount |
-| `const x = new MotionValue(0)` in render | Rule 5 | Use `const x = useMotionValue(0)` |
-| `transition={{ duration: 1.2 }}` inline | Rule 6 | Use `motionTokens.duration.crawl` |
-| `useEffect` without cleanup | Rule 7 | Return `removeEventListener` / `controls.stop` |
-| SVG morph between paths with different commands | Rule 8 | Normalize path commands before animating |
+| `drag` chỉ được test trên desktop | Quy tắc 1 | Test trên touch emulator và thiết bị thật |
+| `animate={{ repeat: Infinity }}` không có tạm dừng | Quy tắc 2 | Thêm listener `visibilitychange` |
+| `onDragEnd` chỉ kiểm tra offset, không kiểm tra velocity | Quy tắc 3 | Kiểm tra cả `info.offset` và `info.velocity` |
+| `animate(scope, ...)` trước `useEffect` | Quy tắc 4 | Chỉ gọi `animate()` sau khi mount |
+| `const x = new MotionValue(0)` trong render | Quy tắc 5 | Dùng `const x = useMotionValue(0)` |
+| `transition={{ duration: 1.2 }}` inline | Quy tắc 6 | Dùng `motionTokens.duration.crawl` |
+| `useEffect` không có cleanup | Quy tắc 7 | Trả về `removeEventListener` / `controls.stop` |
+| SVG morph giữa các path có command khác nhau | Quy tắc 8 | Chuẩn hóa path command trước khi animate |
 
-## Related Skills
+## Skill liên quan
 
-- **`motion-foundations`** — defines all tokens, springs, `useSafeMotion`, and SSR guards imported here. Must be set up before using this skill.
-- **`motion-patterns`** — handles standard UI patterns (button, modal, stagger, page transitions, scroll reveals). Use it before reaching for the advanced patterns here.
+- **`motion-foundations`** — định nghĩa mọi token, spring, `useSafeMotion` và các SSR guard được import ở đây. Phải được thiết lập trước khi dùng skill này.
+- **`motion-patterns`** — xử lý các pattern UI tiêu chuẩn (button, modal, stagger, page transition, scroll reveal). Hãy dùng nó trước khi dùng các pattern nâng cao ở đây.

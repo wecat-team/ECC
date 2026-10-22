@@ -1,29 +1,29 @@
-# Route Transition Animations
+# Animation chuyển Route
 
-Angular Router supports the browser's **View Transitions API** for smooth visual transitions between routes.
+Angular Router hỗ trợ **View Transitions API** của trình duyệt để tạo các chuyển đổi hình ảnh mượt mà giữa các route.
 
-## Enabling View Transitions
+## Bật View Transitions
 
-Add `withViewTransitions()` to your router configuration.
+Thêm `withViewTransitions()` vào cấu hình router của bạn.
 
 ```ts
 provideRouter(routes, withViewTransitions());
 ```
 
-This is a **progressive enhancement**. In browsers that don't support the API, the router will still work but without the transition animation.
+Đây là một **progressive enhancement** (cải tiến dần). Trên các trình duyệt không hỗ trợ API này, router vẫn hoạt động nhưng không có animation chuyển đổi.
 
-## How it Works
+## Cách hoạt động
 
-1. Browser takes a screenshot of the old state.
-2. Router updates the DOM (activates new component).
-3. Browser takes a screenshot of the new state.
-4. Browser animates between the two states.
+1. Trình duyệt chụp ảnh màn hình của trạng thái cũ.
+2. Router cập nhật DOM (kích hoạt component mới).
+3. Trình duyệt chụp ảnh màn hình của trạng thái mới.
+4. Trình duyệt tạo animation giữa hai trạng thái.
 
-## Customizing with CSS
+## Tùy biến bằng CSS
 
-Transitions are customized in **global CSS files** (not component-scoped CSS).
+Các chuyển đổi được tùy biến trong **file CSS toàn cục** (không phải CSS giới hạn trong component).
 
-Use the `::view-transition-old()` and `::view-transition-new()` pseudo-elements.
+Dùng các pseudo-element `::view-transition-old()` và `::view-transition-new()`.
 
 ```css
 /* Example: Cross-fade + Slide */
@@ -35,9 +35,9 @@ Use the `::view-transition-old()` and `::view-transition-new()` pseudo-elements.
 }
 ```
 
-## Advanced Control
+## Kiểm soát nâng cao
 
-Use `onViewTransitionCreated` to skip transitions or customize behavior based on the navigation context.
+Dùng `onViewTransitionCreated` để bỏ qua chuyển đổi hoặc tùy biến hành vi dựa trên ngữ cảnh điều hướng.
 
 ```ts
 withViewTransitions({
@@ -50,7 +50,7 @@ withViewTransitions({
 });
 ```
 
-## Best Practices
+## Best Practice
 
-- **Global Styles**: Always define transition animations in `styles.css` to avoid view encapsulation issues.
-- **View Transition Names**: Assign unique `view-transition-name` to elements that should transition smoothly across routes (e.g., a header image).
+- **Style toàn cục**: Luôn định nghĩa animation chuyển đổi trong `styles.css` để tránh các vấn đề về view encapsulation.
+- **View Transition Name**: Gán `view-transition-name` duy nhất cho các phần tử cần chuyển đổi mượt mà giữa các route (ví dụ: ảnh header).

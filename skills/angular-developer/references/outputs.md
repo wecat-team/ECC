@@ -1,10 +1,10 @@
-# Outputs (Custom Events)
+# Output (Custom Event)
 
-Outputs allow a child component to emit custom events that a parent component can listen to. Angular recommends using the new `output()` function for modern applications.
+Output cho phép component con phát (emit) các custom event mà component cha có thể lắng nghe. Angular khuyến nghị dùng hàm `output()` mới cho các ứng dụng hiện đại.
 
-## Function-based outputs
+## Output dựa trên hàm
 
-Declare outputs using the `output()` function. This returns an `OutputEmitterRef`.
+Khai báo output bằng hàm `output()`. Hàm này trả về một `OutputEmitterRef`.
 
 ```ts
 import {Component, output} from '@angular/core';
@@ -26,17 +26,17 @@ export class CustomSlider {
 }
 ```
 
-### Usage in Template
+### Cách dùng trong Template
 
-Bind to the output event using parentheses `()`. If the event emits data, access it using the special `$event` variable.
+Bind vào output event bằng dấu ngoặc đơn `()`. Nếu event phát ra dữ liệu, truy cập nó bằng biến đặc biệt `$event`.
 
 ```html
 <custom-slider (panelClosed)="savePanelState()" (valueChanged)="logValue($event)" />
 ```
 
-## Configuration Options
+## Các tùy chọn cấu hình
 
-The `output` function accepts a config object to specify an alias.
+Hàm `output` nhận một object cấu hình để chỉ định alias.
 
 ```ts
 @Component({...})
@@ -47,9 +47,9 @@ export class CustomSlider {
 }
 ```
 
-## Programmatic Subscription
+## Subscribe bằng lập trình
 
-When creating components dynamically, you can subscribe to outputs programmatically:
+Khi tạo component động, bạn có thể subscribe vào output bằng code:
 
 ```ts
 const componentRef = viewContainerRef.createComponent(CustomSlider);
@@ -62,9 +62,9 @@ const subscription = componentRef.instance.valueChanged.subscribe((val) => {
 subscription.unsubscribe();
 ```
 
-## Decorator-based Outputs (@Output)
+## Output dựa trên Decorator (@Output)
 
-The legacy API uses the `@Output()` decorator with an `EventEmitter`. It remains supported but is not recommended for new code.
+API cũ (legacy) dùng decorator `@Output()` với `EventEmitter`. Nó vẫn được hỗ trợ nhưng không được khuyến nghị cho code mới.
 
 ```ts
 import { Component, Output, EventEmitter } from '@angular/core';
@@ -78,9 +78,9 @@ export class LegacyExample {
 }
 ```
 
-## Best Practices
+## Best Practice
 
-- **Prefer `output()`**: Use the function-based `output()` instead of `@Output()` and `EventEmitter`.
-- **Naming**: Use `camelCase` for output names. Avoid prefixing with `on` (e.g., use `valueChanged` instead of `onValueChanged`).
-- **No DOM Bubbling**: Angular custom events do not bubble up the DOM tree like native events.
-- **Avoid Collisions**: Do not choose names that collide with native DOM events (like `click` or `submit`).
+- **Ưu tiên `output()`**: Dùng `output()` dựa trên hàm thay vì `@Output()` và `EventEmitter`.
+- **Đặt tên**: Dùng `camelCase` cho tên output. Tránh thêm tiền tố `on` (ví dụ: dùng `valueChanged` thay vì `onValueChanged`).
+- **Không bubble qua DOM**: Custom event của Angular không bubble lên cây DOM như các event gốc.
+- **Tránh xung đột**: Không chọn tên trùng với các DOM event gốc (như `click` hoặc `submit`).

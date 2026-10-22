@@ -1,40 +1,40 @@
 ---
 name: nuxt4-patterns
-description: Nuxt 4 app patterns for hydration safety, performance, route rules, lazy loading, and SSR-safe data fetching with useFetch and useAsyncData. Use when building or reviewing a Nuxt 4 app, or debugging hydration mismatches and SSR-safe data fetching.
+description: Các pattern app Nuxt 4 về an toàn hydration, hiệu năng, route rule, lazy loading và lấy dữ liệu an toàn với SSR bằng useFetch và useAsyncData. Dùng khi xây dựng hoặc review một app Nuxt 4, hoặc debug hydration mismatch và việc lấy dữ liệu an toàn với SSR.
 metadata:
   origin: ECC
 ---
 
 # Nuxt 4 Patterns
 
-Use when building or debugging Nuxt 4 apps with SSR, hybrid rendering, route rules, or page-level data fetching.
+Dùng khi xây dựng hoặc debug app Nuxt 4 với SSR, hybrid rendering, route rule, hoặc lấy dữ liệu ở cấp trang.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Hydration mismatches between server HTML and client state
-- Route-level rendering decisions such as prerender, SWR, ISR, or client-only sections
-- Performance work around lazy loading, lazy hydration, or payload size
-- Page or component data fetching with `useFetch`, `useAsyncData`, or `$fetch`
-- Nuxt routing issues tied to route params, middleware, or SSR/client differences
+- Hydration mismatch giữa HTML của server và state của client
+- Các quyết định rendering ở cấp route như prerender, SWR, ISR hoặc các section chỉ chạy ở client
+- Công việc hiệu năng liên quan đến lazy loading, lazy hydration hoặc kích thước payload
+- Lấy dữ liệu cho trang hoặc component bằng `useFetch`, `useAsyncData` hoặc `$fetch`
+- Vấn đề routing Nuxt gắn với route param, middleware hoặc khác biệt SSR/client
 
-## Hydration Safety
+## An toàn Hydration
 
-- Keep the first render deterministic. Do not put `Date.now()`, `Math.random()`, browser-only APIs, or storage reads directly into SSR-rendered template state.
-- Move browser-only logic behind `onMounted()`, `import.meta.client`, `ClientOnly`, or a `.client.vue` component when the server cannot produce the same markup.
-- Use Nuxt's `useRoute()` composable, not the one from `vue-router`.
-- Do not use `route.fullPath` to drive SSR-rendered markup. URL fragments are client-only, which can create hydration mismatches.
-- Treat `ssr: false` as an escape hatch for truly browser-only areas, not a default fix for mismatches.
+- Giữ lần render đầu tiên mang tính xác định (deterministic). Không đặt `Date.now()`, `Math.random()`, API chỉ có ở browser, hoặc việc đọc storage trực tiếp vào state template được SSR render.
+- Chuyển logic chỉ có ở browser ra phía sau `onMounted()`, `import.meta.client`, `ClientOnly`, hoặc một component `.client.vue` khi server không thể tạo ra cùng markup.
+- Dùng composable `useRoute()` của Nuxt, không dùng cái của `vue-router`.
+- Không dùng `route.fullPath` để điều khiển markup được SSR render. URL fragment chỉ có ở client, có thể gây ra hydration mismatch.
+- Coi `ssr: false` là lối thoát hiểm cho các vùng thực sự chỉ có ở browser, không phải cách sửa mặc định cho mismatch.
 
-## Data Fetching
+## Lấy dữ liệu
 
-- Prefer `await useFetch()` for SSR-safe API reads in pages and components. It forwards server-fetched data into the Nuxt payload and avoids a second fetch on hydration.
-- Use `useAsyncData()` when the fetcher is not a simple `$fetch()` call, when you need a custom key, or when you are composing multiple async sources.
-- Give `useAsyncData()` a stable key for cache reuse and predictable refresh behavior.
-- Keep `useAsyncData()` handlers side-effect free. They can run during SSR and hydration.
-- Use `$fetch()` for user-triggered writes or client-only actions, not top-level page data that should be hydrated from SSR.
-- Use `lazy: true`, `useLazyFetch()`, or `useLazyAsyncData()` for non-critical data that should not block navigation. Handle `status === 'pending'` in the UI.
-- Use `server: false` only for data that is not needed for SEO or the first paint.
-- Trim payload size with `pick` and prefer shallower payloads when deep reactivity is unnecessary.
+- Ưu tiên `await useFetch()` cho việc đọc API an toàn với SSR trong page và component. Nó chuyển dữ liệu đã fetch ở server vào Nuxt payload và tránh fetch lần hai khi hydration.
+- Dùng `useAsyncData()` khi fetcher không phải một lời gọi `$fetch()` đơn giản, khi bạn cần key tùy chỉnh, hoặc khi bạn đang kết hợp nhiều nguồn bất đồng bộ.
+- Đặt cho `useAsyncData()` một key ổn định để tái sử dụng cache và hành vi refresh dễ đoán.
+- Giữ các handler của `useAsyncData()` không có side effect. Chúng có thể chạy trong SSR và hydration.
+- Dùng `$fetch()` cho các thao tác ghi do người dùng kích hoạt hoặc hành động chỉ có ở client, không dùng cho dữ liệu trang cấp cao nhất cần được hydrate từ SSR.
+- Dùng `lazy: true`, `useLazyFetch()` hoặc `useLazyAsyncData()` cho dữ liệu không quan trọng không nên chặn điều hướng. Xử lý `status === 'pending'` trong UI.
+- Chỉ dùng `server: false` cho dữ liệu không cần cho SEO hoặc first paint.
+- Cắt giảm kích thước payload bằng `pick` và ưu tiên payload nông hơn khi không cần deep reactivity.
 
 ```ts
 const route = useRoute()
@@ -50,9 +50,9 @@ const { data: comments } = await useFetch(`/api/articles/${route.params.slug}/co
 })
 ```
 
-## Route Rules
+## Route Rule
 
-Prefer `routeRules` in `nuxt.config.ts` for rendering and caching strategy:
+Ưu tiên `routeRules` trong `nuxt.config.ts` cho chiến lược rendering và caching:
 
 ```ts
 export default defineNuxtConfig({
@@ -66,20 +66,20 @@ export default defineNuxtConfig({
 })
 ```
 
-- `prerender`: static HTML at build time
-- `swr`: serve cached content and revalidate in the background
-- `isr`: incremental static regeneration on supported platforms
-- `ssr: false`: client-rendered route
-- `cache` or `redirect`: Nitro-level response behavior
+- `prerender`: HTML tĩnh tại thời điểm build
+- `swr`: phục vụ nội dung đã cache và revalidate ở background
+- `isr`: incremental static regeneration trên các nền tảng được hỗ trợ
+- `ssr: false`: route render ở client
+- `cache` hoặc `redirect`: hành vi response ở cấp Nitro
 
-Pick route rules per route group, not globally. Marketing pages, catalogs, dashboards, and APIs usually need different strategies.
+Chọn route rule theo từng nhóm route, không áp dụng toàn cục. Trang marketing, catalog, dashboard và API thường cần các chiến lược khác nhau.
 
-## Lazy Loading and Performance
+## Lazy Loading và Hiệu năng
 
-- Nuxt already code-splits pages by route. Keep route boundaries meaningful before micro-optimizing component splits.
-- Use the `Lazy` prefix to dynamically import non-critical components.
-- Conditionally render lazy components with `v-if` so the chunk is not loaded until the UI actually needs it.
-- Use lazy hydration for below-the-fold or non-critical interactive UI.
+- Nuxt đã tự code-split các trang theo route. Hãy giữ ranh giới route có ý nghĩa trước khi tối ưu vi mô việc tách component.
+- Dùng tiền tố `Lazy` để import động các component không quan trọng.
+- Render có điều kiện các lazy component bằng `v-if` để chunk không được tải cho đến khi UI thực sự cần.
+- Dùng lazy hydration cho UI tương tác nằm dưới màn hình đầu (below-the-fold) hoặc không quan trọng.
 
 ```vue
 <template>
@@ -88,14 +88,14 @@ Pick route rules per route group, not globally. Marketing pages, catalogs, dashb
 </template>
 ```
 
-- For custom strategies, use `defineLazyHydrationComponent()` with a visibility or idle strategy.
-- Nuxt lazy hydration works on single-file components. Passing new props to a lazily hydrated component will trigger hydration immediately.
-- Use `NuxtLink` for internal navigation so Nuxt can prefetch route components and generated payloads.
+- Với các chiến lược tùy chỉnh, dùng `defineLazyHydrationComponent()` với chiến lược visibility hoặc idle.
+- Lazy hydration của Nuxt hoạt động trên single-file component. Truyền prop mới vào một component được lazy hydrate sẽ kích hoạt hydration ngay lập tức.
+- Dùng `NuxtLink` cho điều hướng nội bộ để Nuxt có thể prefetch các route component và payload được sinh ra.
 
-## Review Checklist
+## Checklist review
 
-- First SSR render and hydrated client render produce the same markup
-- Page data uses `useFetch` or `useAsyncData`, not top-level `$fetch`
-- Non-critical data is lazy and has explicit loading UI
-- Route rules match the page's SEO and freshness requirements
-- Heavy interactive islands are lazy-loaded or lazily hydrated
+- Lần SSR render đầu tiên và lần render client sau hydration tạo ra cùng markup
+- Dữ liệu trang dùng `useFetch` hoặc `useAsyncData`, không dùng `$fetch` ở cấp cao nhất
+- Dữ liệu không quan trọng là lazy và có UI loading tường minh
+- Route rule khớp với yêu cầu SEO và độ mới của trang
+- Các island tương tác nặng được lazy-load hoặc lazy hydrate

@@ -1,30 +1,30 @@
 ---
 name: laravel-verification
-description: "Verification loop for Laravel projects: env checks, linting, static analysis, tests with coverage, security scans, and deployment readiness. Use when verifying a Laravel project before merge or deploy — lint, static analysis, tests, coverage, security."
+description: "Vòng lặp verification cho dự án Laravel: kiểm tra env, linting, phân tích tĩnh, test kèm coverage, quét bảo mật và mức độ sẵn sàng deploy. Dùng khi verify một dự án Laravel trước khi merge hoặc deploy — lint, static analysis, test, coverage, security."
 metadata:
   origin: ECC
 ---
 
-# Laravel Verification Loop
+# Vòng lặp Verification cho Laravel
 
-Run before PRs, after major changes, and pre-deploy.
+Chạy trước PR, sau các thay đổi lớn và trước khi deploy.
 
-## When to Use
+## Khi nào dùng
 
-- Before opening a pull request for a Laravel project
-- After major refactors or dependency upgrades
-- Pre-deployment verification for staging or production
-- Running full lint -> test -> security -> deploy readiness pipeline
+- Trước khi mở pull request cho dự án Laravel
+- Sau các lần refactor lớn hoặc nâng cấp dependency
+- Verification trước khi deploy lên staging hoặc production
+- Chạy toàn bộ pipeline lint -> test -> security -> mức độ sẵn sàng deploy
 
-## How It Works
+## Cách hoạt động
 
-- Run phases sequentially from environment checks through deployment readiness so each layer builds on the last.
-- Environment and Composer checks gate everything else; stop immediately if they fail.
-- Linting/static analysis should be clean before running full tests and coverage.
-- Security and migration reviews happen after tests so you verify behavior before data or release steps.
-- Build/deploy readiness and queue/scheduler checks are final gates; any failure blocks release.
+- Chạy các phase tuần tự từ kiểm tra môi trường đến mức độ sẵn sàng deploy để mỗi lớp xây dựng trên lớp trước.
+- Kiểm tra môi trường và Composer là điều kiện cửa ngõ cho mọi bước còn lại; dừng ngay nếu chúng thất bại.
+- Linting/phân tích tĩnh phải sạch trước khi chạy toàn bộ test và coverage.
+- Review bảo mật và migration diễn ra sau test để bạn verify hành vi trước các bước liên quan đến dữ liệu hoặc release.
+- Mức độ sẵn sàng build/deploy và kiểm tra queue/scheduler là các cổng cuối; bất kỳ lỗi nào cũng chặn release.
 
-## Phase 1: Environment Checks
+## Phase 1: Kiểm tra môi trường
 
 ```bash
 php -v
@@ -32,38 +32,38 @@ composer --version
 php artisan --version
 ```
 
-- Verify `.env` is present and required keys exist
-- Confirm `APP_DEBUG=false` for production environments
-- Confirm `APP_ENV` matches the target deployment (`production`, `staging`)
+- Xác minh `.env` tồn tại và có đủ các key bắt buộc
+- Xác nhận `APP_DEBUG=false` cho môi trường production
+- Xác nhận `APP_ENV` khớp với môi trường deploy đích (`production`, `staging`)
 
-If using Laravel Sail locally:
+Nếu dùng Laravel Sail ở local:
 
 ```bash
 ./vendor/bin/sail php -v
 ./vendor/bin/sail artisan --version
 ```
 
-## Phase 1.5: Composer and Autoload
+## Phase 1.5: Composer và Autoload
 
 ```bash
 composer validate
 composer dump-autoload -o
 ```
 
-## Phase 2: Linting and Static Analysis
+## Phase 2: Linting và phân tích tĩnh
 
 ```bash
 vendor/bin/pint --test
 vendor/bin/phpstan analyse
 ```
 
-If your project uses Psalm instead of PHPStan:
+Nếu dự án của bạn dùng Psalm thay cho PHPStan:
 
 ```bash
 vendor/bin/psalm
 ```
 
-## Phase 3: Tests and Coverage
+## Phase 3: Test và Coverage
 
 ```bash
 php artisan test
@@ -75,7 +75,7 @@ Coverage (CI):
 XDEBUG_MODE=coverage php artisan test --coverage
 ```
 
-CI example (format -> static analysis -> tests):
+Ví dụ CI (format -> phân tích tĩnh -> test):
 
 ```bash
 vendor/bin/pint --test
@@ -83,25 +83,25 @@ vendor/bin/phpstan analyse
 XDEBUG_MODE=coverage php artisan test --coverage
 ```
 
-## Phase 4: Security and Dependency Checks
+## Phase 4: Kiểm tra bảo mật và dependency
 
 ```bash
 composer audit
 ```
 
-## Phase 5: Database and Migrations
+## Phase 5: Database và Migration
 
 ```bash
 php artisan migrate --pretend
 php artisan migrate:status
 ```
 
-- Review destructive migrations carefully
-- Ensure migration filenames follow `Y_m_d_His_*` (e.g., `2025_03_14_154210_create_orders_table.php`) and describe the change clearly
-- Ensure rollbacks are possible
-- Verify `down()` methods and avoid irreversible data loss without explicit backups
+- Review kỹ các migration có tính phá hủy
+- Đảm bảo tên file migration theo dạng `Y_m_d_His_*` (ví dụ `2025_03_14_154210_create_orders_table.php`) và mô tả rõ thay đổi
+- Đảm bảo có thể rollback
+- Kiểm tra các method `down()` và tránh mất dữ liệu không thể khôi phục nếu không có backup rõ ràng
 
-## Phase 6: Build and Deployment Readiness
+## Phase 6: Mức độ sẵn sàng Build và Deploy
 
 ```bash
 php artisan optimize:clear
@@ -110,43 +110,43 @@ php artisan route:cache
 php artisan view:cache
 ```
 
-- Ensure cache warmups succeed in production configuration
-- Verify queue workers and scheduler are configured
-- Confirm `storage/` and `bootstrap/cache/` are writable in the target environment
+- Đảm bảo cache warmup thành công trong cấu hình production
+- Xác minh queue worker và scheduler đã được cấu hình
+- Xác nhận `storage/` và `bootstrap/cache/` có quyền ghi trong môi trường đích
 
-## Phase 7: Queue and Scheduler Checks
+## Phase 7: Kiểm tra Queue và Scheduler
 
 ```bash
 php artisan schedule:list
 php artisan queue:failed
 ```
 
-If Horizon is used:
+Nếu dùng Horizon:
 
 ```bash
 php artisan horizon:status
 ```
 
-If `queue:monitor` is available, use it to check backlog without processing jobs:
+Nếu có `queue:monitor`, hãy dùng nó để kiểm tra backlog mà không xử lý job:
 
 ```bash
 php artisan queue:monitor default --max=100
 ```
 
-Active verification (staging only): dispatch a no-op job to a dedicated queue and run a single worker to process it (ensure a non-`sync` queue connection is configured).
+Verification chủ động (chỉ trên staging): dispatch một job no-op vào queue riêng và chạy một worker đơn để xử lý nó (đảm bảo đã cấu hình queue connection không phải `sync`).
 
 ```bash
 php artisan tinker --execute="dispatch((new App\\Jobs\\QueueHealthcheck())->onQueue('healthcheck'))"
 php artisan queue:work --once --queue=healthcheck
 ```
 
-Verify the job produced the expected side effect (log entry, healthcheck table row, or metric).
+Xác minh job tạo ra side effect mong đợi (log entry, dòng trong bảng healthcheck, hoặc metric).
 
-Only run this on non-production environments where processing a test job is safe.
+Chỉ chạy bước này trên các môi trường không phải production, nơi việc xử lý một job thử nghiệm là an toàn.
 
-## Examples
+## Ví dụ
 
-Minimal flow:
+Luồng tối thiểu:
 
 ```bash
 php -v
@@ -162,7 +162,7 @@ php artisan config:cache
 php artisan queue:failed
 ```
 
-CI-style pipeline:
+Pipeline kiểu CI:
 
 ```bash
 composer validate

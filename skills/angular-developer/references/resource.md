@@ -1,16 +1,16 @@
-# Async Reactivity with `resource`
+# Reactivity bất đồng bộ với `resource`
 
 > [!IMPORTANT]
-> The `resource` API is currently experimental in Angular.
+> API `resource` hiện đang ở mức thử nghiệm (experimental) trong Angular.
 
-A `Resource` incorporates asynchronous data fetching into Angular's signal-based reactivity. It executes an async loader function whenever its dependencies change, exposing the status and result as synchronous signals.
+`Resource` đưa việc lấy dữ liệu bất đồng bộ vào hệ thống reactivity dựa trên signal của Angular. Nó thực thi một hàm loader bất đồng bộ mỗi khi các dependency của nó thay đổi, và cung cấp trạng thái cùng kết quả dưới dạng các signal đồng bộ.
 
-## Basic Usage
+## Cách dùng cơ bản
 
-The `resource` function accepts an options object with two main properties:
+Hàm `resource` nhận một object tùy chọn với hai property chính:
 
-1. `params`: A reactive computation (like `computed`). When signals read here change, the resource re-fetches.
-2. `loader`: An async function that fetches data based on the parameters.
+1. `params`: Một phép tính reactive (như `computed`). Khi các signal được đọc ở đây thay đổi, resource sẽ fetch lại.
+2. `loader`: Một hàm bất đồng bộ lấy dữ liệu dựa trên các tham số.
 
 ```ts
 import { Component, resource, signal, computed } from '@angular/core';
@@ -42,36 +42,36 @@ export class UserProfile {
 }
 ```
 
-## Aborting Requests
+## Hủy Request
 
-If the `params` signal changes while a previous loader is still running, the `Resource` will attempt to abort the outstanding request using the provided `abortSignal`. **Always pass `abortSignal` to your `fetch` calls.**
+Nếu signal `params` thay đổi trong khi một loader trước đó vẫn đang chạy, `Resource` sẽ cố gắng hủy request đang chờ bằng `abortSignal` được cung cấp. **LUÔN LUÔN truyền `abortSignal` vào các lệnh `fetch` của bạn.**
 
-## Reloading Data
+## Tải lại dữ liệu
 
-You can imperatively force the resource to re-run the loader without the params changing by calling `.reload()`.
+Bạn có thể ép resource chạy lại loader theo cách mệnh lệnh mà không cần params thay đổi bằng cách gọi `.reload()`.
 
 ```ts
 this.userResource.reload();
 ```
 
-## Resource Status Signals
+## Các Signal trạng thái của Resource
 
-The `Resource` object provides several signals to read its current state:
+Đối tượng `Resource` cung cấp nhiều signal để đọc trạng thái hiện tại của nó:
 
-- `value()`: The resolved data, or `undefined`.
-- `hasValue()`: Type-guard boolean. `true` if a value exists.
-- `isLoading()`: Boolean indicating if the loader is currently running.
-- `error()`: The error thrown by the loader, or `undefined`.
-- `status()`: A string constant representing the exact state (`'idle'`, `'loading'`, `'resolved'`, `'error'`, `'reloading'`, `'local'`).
+- `value()`: Dữ liệu đã resolve, hoặc `undefined`.
+- `hasValue()`: Boolean dạng type-guard. `true` nếu có giá trị.
+- `isLoading()`: Boolean cho biết loader có đang chạy hay không.
+- `error()`: Lỗi do loader ném ra, hoặc `undefined`.
+- `status()`: Một hằng chuỗi biểu thị trạng thái chính xác (`'idle'`, `'loading'`, `'resolved'`, `'error'`, `'reloading'`, `'local'`).
 
-## Local Mutation
+## Thay đổi cục bộ (Local Mutation)
 
-You can optimistically update the resource's value directly. This changes the status to `'local'`.
+Bạn có thể cập nhật giá trị của resource một cách lạc quan (optimistic) trực tiếp. Việc này đổi trạng thái thành `'local'`.
 
 ```ts
 this.userResource.value.set({name: 'Optimistic Update'});
 ```
 
-## Reactive Data Fetching with `httpResource`
+## Lấy dữ liệu reactive với `httpResource`
 
-If you are using Angular's `HttpClient`, prefer using `httpResource`. It is a specialized wrapper that leverages the Angular HTTP stack (including interceptors) while providing the same signal-based resource API.
+Nếu bạn đang dùng `HttpClient` của Angular, hãy ưu tiên dùng `httpResource`. Đây là một wrapper chuyên dụng tận dụng HTTP stack của Angular (bao gồm cả interceptor) trong khi vẫn cung cấp cùng API resource dựa trên signal.

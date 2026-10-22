@@ -1,58 +1,58 @@
 ---
 name: production-audit
-description: Local-evidence production readiness audit for shipped apps, pre-launch reviews, post-merge checks, and "what breaks in prod?" questions without sending repo data to an external audit service. Use when auditing production readiness before launch, after a merge, or when asked what breaks in prod.
+description: Audit mức độ sẵn sàng cho production dựa trên bằng chứng cục bộ, dành cho app đã ship, review trước launch, kiểm tra sau merge, và các câu hỏi "cái gì sẽ hỏng trên prod?" mà không gửi dữ liệu repo tới dịch vụ audit bên ngoài. Dùng khi audit production readiness trước launch, sau một merge, hoặc khi được hỏi cái gì sẽ hỏng trên prod.
 metadata:
   origin: community
 ---
 
 # Production Audit
 
-Use this skill when the user asks whether an application is ready to ship, what
-could break in production, or what must be fixed before a launch. This is a
-maintainer-safe rewrite of the stale community production-audit idea: it keeps
-the useful production-readiness lens and removes unpinned external execution and
-third-party data sharing.
+Dùng skill này khi người dùng hỏi một ứng dụng đã sẵn sàng để ship chưa, cái gì
+có thể hỏng trên production, hoặc cần sửa gì trước khi launch. Đây là bản viết lại
+an toàn cho maintainer của ý tưởng production-audit cũ trong cộng đồng: giữ lại
+góc nhìn production-readiness hữu ích và loại bỏ việc thực thi bên ngoài không
+ghim phiên bản (unpinned) cũng như chia sẻ dữ liệu cho bên thứ ba.
 
-## When to Use
+## Khi nào dùng
 
-- The user asks "is this production-ready", "what would break in prod", "what
-  did we miss", "audit this repo", or "ready to ship?"
-- A feature was merged and needs a pre-deploy or post-merge risk pass.
-- A public launch, demo, customer rollout, or investor walkthrough is close.
-- CI is green but the user wants production risk, not only test status.
-- A deployed URL, release branch, PR, or current checkout is available for
-  evidence gathering.
+- Người dùng hỏi "is this production-ready", "what would break in prod", "what
+  did we miss", "audit this repo", hoặc "ready to ship?"
+- Một tính năng vừa được merge và cần một lượt rà soát rủi ro trước deploy hoặc sau merge.
+- Sắp có public launch, demo, rollout cho khách hàng hoặc buổi trình bày cho nhà đầu tư.
+- CI đã xanh nhưng người dùng muốn biết rủi ro production, không chỉ trạng thái test.
+- Có sẵn URL đã deploy, release branch, PR hoặc checkout hiện tại để thu thập
+  bằng chứng.
 
-## When Not to Use
+## Khi nào không dùng
 
-- During active implementation when the right lens is line-level secure coding;
-  use `security-review` first.
-- For pure libraries, templates, docs-only repos, or scaffolds unless the user
-  wants packaging/release readiness rather than application readiness.
-- When the user asks for a formal compliance audit. This skill is engineering
-  triage, not legal, financial, medical, or regulatory certification.
-- When the only available evidence is a product idea with no repo, deployment,
-  CI, or runtime surface.
+- Trong lúc đang triển khai (implementation) khi góc nhìn phù hợp là secure coding
+  ở mức từng dòng; hãy dùng `security-review` trước.
+- Với thư viện thuần, template, repo chỉ có tài liệu hoặc scaffold, trừ khi người dùng
+  muốn đánh giá packaging/release readiness thay vì application readiness.
+- Khi người dùng yêu cầu audit tuân thủ (compliance) chính thức. Skill này là
+  phân loại (triage) về kỹ thuật, không phải chứng nhận pháp lý, tài chính, y tế hay quy định.
+- Khi bằng chứng duy nhất có được chỉ là một ý tưởng sản phẩm, không có repo,
+  deployment, CI hay runtime.
 
-## How It Works
+## Cách hoạt động
 
-Build the audit from local and user-authorized evidence. Do not run unpinned
-remote code, upload repository contents to third-party services, or call
-external scanners unless the user explicitly approves that specific tool and
-data flow.
+Xây dựng audit từ bằng chứng cục bộ và bằng chứng được người dùng cho phép. KHÔNG chạy
+remote code không ghim phiên bản, KHÔNG upload nội dung repo lên dịch vụ bên thứ ba,
+và KHÔNG gọi scanner bên ngoài trừ khi người dùng chấp thuận rõ ràng đúng công cụ và
+luồng dữ liệu đó.
 
-Use this order:
+Theo thứ tự sau:
 
-1. Establish the release surface.
-2. Read recent changes and current branch state.
-3. Inspect runtime, auth, data, payment, background-job, AI, and deployment
-   boundaries that actually exist in the repo.
-4. Check CI, tests, migrations, environment documentation, and rollback path.
-5. Produce a short ship/block recommendation with specific fixes.
+1. Xác định phạm vi release (release surface).
+2. Đọc các thay đổi gần đây và trạng thái branch hiện tại.
+3. Kiểm tra các ranh giới runtime, auth, dữ liệu, thanh toán, background-job, AI và
+   deployment thực sự tồn tại trong repo.
+4. Kiểm tra CI, test, migration, tài liệu môi trường và đường rollback.
+5. Đưa ra khuyến nghị ship/block ngắn gọn kèm các bản sửa cụ thể.
 
-## Evidence Checklist
+## Checklist bằng chứng
 
-Start with cheap, local signals:
+Bắt đầu với các tín hiệu cục bộ, chi phí thấp:
 
 ```text
 git status --short --branch
@@ -60,115 +60,116 @@ git log --oneline --decorate -20
 git diff --stat origin/main...HEAD
 ```
 
-Then inspect the project-specific surface:
+Sau đó kiểm tra phần đặc thù của dự án:
 
-- Package scripts, CI workflows, release scripts, Docker files, and deployment
-  manifests.
-- API routes, webhooks, auth middleware, background workers, cron jobs, and
-  database migrations.
-- Environment variable documentation and startup checks.
-- Observability hooks, error reporting, logs, health checks, and dashboards.
-- Rollback, seed, migration, and backfill instructions.
-- E2E coverage for the user paths that matter most.
+- Package script, CI workflow, release script, Docker file và deployment
+  manifest.
+- API route, webhook, auth middleware, background worker, cron job và
+  database migration.
+- Tài liệu biến môi trường và các kiểm tra khi khởi động.
+- Observability hook, báo cáo lỗi, log, health check và dashboard.
+- Hướng dẫn rollback, seed, migration và backfill.
+- Độ phủ E2E cho các luồng người dùng quan trọng nhất.
 
-If a deployed URL is in scope, use browser or HTTP checks only against that URL
-and avoid credentialed actions unless the user supplies a safe test account.
+Nếu có URL đã deploy trong phạm vi, chỉ dùng kiểm tra bằng browser hoặc HTTP đối với
+đúng URL đó và tránh các hành động cần credential trừ khi người dùng cung cấp tài khoản
+test an toàn.
 
-## Risk Lenses
+## Các góc nhìn rủi ro
 
-### Security And Auth
+### Bảo mật và Auth
 
-- Are public routes, API routes, and admin routes clearly separated?
-- Are auth and authorization enforced server-side?
-- Are secrets kept out of client bundles, logs, example output, and checked-in
-  files?
-- Are rate limits, CSRF protections, CORS policy, and upload validation present
-  where the app needs them?
-- Does the AI or agent surface defend against prompt injection, tool abuse, and
-  untrusted content crossing into privileged actions?
+- Các route công khai, API route và admin route có được tách biệt rõ ràng không?
+- Auth và phân quyền (authorization) có được thực thi ở phía server không?
+- Secret có được giữ ngoài client bundle, log, output ví dụ và các file đã
+  commit không?
+- Rate limit, bảo vệ CSRF, chính sách CORS và kiểm tra upload có mặt ở
+  những nơi app cần không?
+- Phần AI hoặc agent có phòng thủ trước prompt injection, lạm dụng tool và
+  nội dung không tin cậy lọt vào các hành động đặc quyền không?
 
-### Data Integrity
+### Tính toàn vẹn dữ liệu
 
-- Do migrations run forward cleanly and have a rollback or recovery plan?
-- Are destructive migrations, backfills, and data imports staged safely?
-- Do database policies, grants, and service-role boundaries match the app's
-  tenancy model?
-- Are retries idempotent for writes, jobs, and webhook handlers?
+- Migration có chạy tiến (forward) sạch sẽ và có kế hoạch rollback hoặc khôi phục không?
+- Các migration phá hủy dữ liệu, backfill và import dữ liệu có được triển khai theo từng giai đoạn an toàn không?
+- Database policy, grant và ranh giới service-role có khớp với mô hình tenancy
+  của app không?
+- Việc retry có idempotent đối với ghi dữ liệu, job và webhook handler không?
 
-### Payments And Webhooks
+### Thanh toán và Webhook
 
-- Are webhook signatures verified before parsing trusted payload fields?
-- Is each payment, subscription, or fulfillment webhook idempotent?
-- Are replay, duplicate delivery, and out-of-order delivery handled?
-- Are test-mode and live-mode credentials separated?
+- Chữ ký webhook có được xác minh trước khi parse các field payload được tin cậy không?
+- Mỗi webhook thanh toán, subscription hoặc fulfillment có idempotent không?
+- Replay, giao trùng (duplicate delivery) và giao sai thứ tự có được xử lý không?
+- Credential của test-mode và live-mode có được tách biệt không?
 
-### Operations
+### Vận hành
 
-- Can the app start from a clean checkout using documented commands?
-- Are required environment variables named, validated, and fail-fast?
-- Is there a health check that proves dependencies are reachable?
-- Are deploy, rollback, and incident-owner paths documented?
-- Are logs useful without leaking secrets or personal data?
+- App có khởi động được từ một checkout sạch bằng các lệnh đã được ghi lại không?
+- Các biến môi trường bắt buộc có được đặt tên, validate và fail-fast không?
+- Có health check chứng minh các dependency truy cập được không?
+- Đường deploy, rollback và người phụ trách incident có được ghi lại không?
+- Log có hữu ích mà không làm lộ secret hay dữ liệu cá nhân không?
 
-### User Experience
+### Trải nghiệm người dùng
 
-- Are the launch-critical paths covered on desktop and mobile?
-- Are forms usable on mobile without input zoom, layout overlap, or blocked
-  submission states?
-- Do loading, empty, error, and permission-denied states tell the user what
-  happened?
-- Is there a support or recovery path when a critical operation fails?
+- Các luồng quan trọng cho launch có được phủ trên desktop và mobile không?
+- Form có dùng được trên mobile mà không bị zoom input, chồng layout hoặc trạng thái
+  submit bị chặn không?
+- Các trạng thái loading, rỗng, lỗi và bị từ chối quyền có cho người dùng biết điều
+  gì đã xảy ra không?
+- Có đường hỗ trợ hoặc khôi phục khi một thao tác quan trọng thất bại không?
 
-## Scoring
+## Chấm điểm
 
-Use scores to force prioritization, not to imply mathematical certainty.
+Dùng điểm số để buộc phải ưu tiên, không phải để ngụ ý sự chắc chắn về mặt toán học.
 
-| Band | Score | Meaning |
+| Mức | Điểm | Ý nghĩa |
 | --- | --- | --- |
-| Blocked | 0-49 | Do not ship until the top risks are fixed |
-| Risky | 50-69 | Ship only behind a small rollout or internal beta |
-| Launchable With Caveats | 70-84 | Ship if owners accept the listed risks |
-| Strong | 85-100 | No obvious launch blockers from available evidence |
+| Blocked | 0-49 | Không ship cho đến khi các rủi ro hàng đầu được sửa |
+| Risky | 50-69 | Chỉ ship với rollout nhỏ hoặc internal beta |
+| Launchable With Caveats | 70-84 | Ship nếu các owner chấp nhận các rủi ro đã liệt kê |
+| Strong | 85-100 | Không có blocker rõ ràng cho launch dựa trên bằng chứng hiện có |
 
-Cap the score at `69` if any of these are true:
+Giới hạn điểm tối đa ở `69` nếu có bất kỳ điều nào sau đây:
 
-- Authentication or authorization is missing on sensitive data.
-- Payment or fulfillment webhooks are not idempotent.
-- Required migrations cannot be run safely.
-- Secrets are exposed in client bundles, logs, or committed files.
-- There is no rollback path for a high-impact release.
+- Thiếu authentication hoặc authorization trên dữ liệu nhạy cảm.
+- Webhook thanh toán hoặc fulfillment không idempotent.
+- Các migration bắt buộc không thể chạy an toàn.
+- Secret bị lộ trong client bundle, log hoặc file đã commit.
+- Không có đường rollback cho một release có tác động lớn.
 
-Cap the score at `84` if CI is not green or the launch-critical path was not
-tested end to end.
+Giới hạn điểm tối đa ở `84` nếu CI chưa xanh hoặc luồng quan trọng cho launch chưa
+được test end to end.
 
-## Output Format
+## Định dạng đầu ra
 
-Lead with one sentence:
+Mở đầu bằng một câu:
 
 ```text
 Production audit: 76/100, launchable with caveats, with webhook idempotency and rollback docs as the two risks to fix before public launch.
 ```
 
-Then list:
+Sau đó liệt kê:
 
-- `Blockers`: must-fix items before deploy.
-- `High-value fixes`: next fixes if the user wants to improve the score.
-- `Evidence checked`: files, commands, CI, deployed URL, or PRs inspected.
-- `Evidence missing`: what would change confidence if provided.
-- `Next action`: one concrete fix or verification step.
+- `Blockers`: các mục bắt buộc sửa trước khi deploy.
+- `High-value fixes`: các bản sửa tiếp theo nếu người dùng muốn cải thiện điểm số.
+- `Evidence checked`: file, lệnh, CI, URL đã deploy hoặc PR đã kiểm tra.
+- `Evidence missing`: những gì sẽ thay đổi mức độ tin cậy nếu được cung cấp.
+- `Next action`: một bản sửa hoặc bước xác minh cụ thể.
 
-Keep strengths short. The user asked for readiness, so the useful answer is the
-remaining risk and the next action.
+Phần điểm mạnh nên ngắn gọn. Người dùng hỏi về mức độ sẵn sàng, nên câu trả lời hữu ích
+là rủi ro còn lại và hành động tiếp theo.
 
-## Example
+## Ví dụ
 
-User:
+Người dùng:
 
 ```text
 is this ready to ship?
 ```
 
-Response:
+Phản hồi:
 
 ```text
 Production audit: 68/100, risky, because Stripe webhooks are verified but not idempotent and there is no rollback note for the pending migration.
@@ -191,14 +192,14 @@ Next action: Want me to patch webhook idempotency first?
 
 ## Anti-Patterns
 
-- Running `npx <package>@latest` or a remote scanner as the default audit path.
-- Uploading source, secrets, customer data, or private topology to an external
-  audit service without explicit approval.
-- Producing a score without naming the evidence checked.
-- Treating green CI as production readiness.
-- Ending with a generic "let me know what you want to do."
+- Chạy `npx <package>@latest` hoặc một remote scanner làm đường audit mặc định.
+- Upload source, secret, dữ liệu khách hàng hoặc topology riêng tư lên dịch vụ
+  audit bên ngoài mà không có sự chấp thuận rõ ràng.
+- Đưa ra điểm số mà không nêu bằng chứng đã kiểm tra.
+- Coi CI xanh là production readiness.
+- Kết thúc bằng câu chung chung kiểu "let me know what you want to do."
 
-## See Also
+## Xem thêm
 
 - Skill: `security-review`
 - Skill: `deployment-patterns`

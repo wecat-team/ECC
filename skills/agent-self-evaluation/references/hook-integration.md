@@ -1,6 +1,6 @@
-# Hook Integration for Session-Stop Self-Evaluation
+# Tích hợp Hook cho Self-Evaluation khi kết thúc Session
 
-Add this hook to `hooks/hooks.json` to remind the agent to self-evaluate at the end of every session (the hook echoes a reminder; it does not run the evaluator automatically):
+Thêm hook này vào `hooks/hooks.json` để nhắc agent tự đánh giá vào cuối mỗi session (hook chỉ echo một lời nhắc; nó không tự động chạy evaluator):
 
 ```json
 {
@@ -20,11 +20,11 @@ Add this hook to `hooks/hooks.json` to remind the agent to self-evaluate at the 
 }
 ```
 
-`Stop` events do not require a `matcher` field (it is optional for `Stop`, `Notification`, `UserPromptSubmit`, and `SubagentStop` per `scripts/ci/validate-hooks.js`). If omitted, the hook object only needs `hooks` and metadata such as `description`.
+Các sự kiện `Stop` không yêu cầu trường `matcher` (nó là tùy chọn đối với `Stop`, `Notification`, `UserPromptSubmit` và `SubagentStop` theo `scripts/ci/validate-hooks.js`). Nếu bỏ qua, đối tượng hook chỉ cần `hooks` và metadata như `description`.
 
-## Integration with the Python Evaluator
+## Tích hợp với Python Evaluator
 
-The `scripts/evaluate.py` script can be used as a standalone tool:
+Script `scripts/evaluate.py` có thể được dùng như một công cụ độc lập:
 
 ```bash
 # Pipe agent output directly
@@ -34,7 +34,7 @@ echo "Your agent response here" | python3 skills/agent-self-evaluation/scripts/e
 python3 skills/agent-self-evaluation/scripts/evaluate.py --task task.txt --output response.txt
 ```
 
-To integrate it into hooks, capture the last agent output to a file first, then run the evaluator. For lightweight reminders after shell-based verification, use a simple supported matcher string:
+Để tích hợp vào hook, hãy capture output cuối cùng của agent vào một file trước, rồi chạy evaluator. Với các lời nhắc nhẹ sau khi xác minh dựa trên shell, hãy dùng một chuỗi matcher đơn giản được hỗ trợ:
 
 ```json
 {
@@ -55,10 +55,10 @@ To integrate it into hooks, capture the last agent output to a file first, then 
 }
 ```
 
-This avoids documenting unsupported command-expression matcher syntax. If your harness supports command-level matcher expressions, prefer a word-boundary regex such as `\b(pytest|npm test|go test)\b` rather than a broad `test` substring.
+Cách này tránh việc tài liệu hóa cú pháp matcher dạng biểu thức lệnh không được hỗ trợ. Nếu harness của bạn hỗ trợ matcher dạng biểu thức ở cấp lệnh, hãy ưu tiên một regex có word-boundary như `\b(pytest|npm test|go test)\b` thay vì một chuỗi con `test` quá rộng.
 
-These hooks are opt-in. Add them to your local `hooks/hooks.json` if you want automated evaluation prompts.
+Các hook này là opt-in. Hãy thêm chúng vào `hooks/hooks.json` cục bộ của bạn nếu muốn có các lời nhắc đánh giá tự động.
 
-## Manual Usage (Recommended)
+## Sử dụng thủ công (khuyến nghị)
 
-The most reliable approach is manual invocation — the agent runs self-evaluation as part of its workflow when the `agent-self-evaluation` skill is active, without requiring hook configuration. The skill's "When to Activate" section already covers trigger conditions (multi-file changes, debugging sessions, design documents).
+Cách đáng tin cậy nhất là gọi thủ công — agent chạy self-evaluation như một phần của quy trình khi skill `agent-self-evaluation` đang hoạt động, mà không cần cấu hình hook. Phần "When to Activate" của skill đã bao gồm các điều kiện kích hoạt (thay đổi nhiều file, phiên debug, tài liệu thiết kế).

@@ -1,47 +1,47 @@
 ---
 name: kotlin-testing
-description: Kotlin testing patterns with Kotest, MockK, coroutine testing, property-based testing, and Kover coverage. Follows TDD methodology with idiomatic Kotlin practices. Use when writing Kotlin tests with Kotest or MockK, or testing coroutines and checking coverage.
+description: "Các pattern testing Kotlin với Kotest, MockK, test coroutine, property-based testing và coverage bằng Kover. Tuân theo phương pháp TDD với các thực hành Kotlin idiomatic. Dùng khi viết test Kotlin với Kotest hoặc MockK, hoặc khi test coroutines và kiểm tra coverage."
 metadata:
   origin: ECC
 ---
 
-# Kotlin Testing Patterns
+# Các pattern Testing Kotlin
 
-Comprehensive Kotlin testing patterns for writing reliable, maintainable tests following TDD methodology with Kotest and MockK.
+Các pattern testing Kotlin toàn diện để viết test đáng tin cậy, dễ bảo trì theo phương pháp TDD với Kotest và MockK.
 
-## When to Use
+## Khi nào dùng
 
-- Writing new Kotlin functions or classes
-- Adding test coverage to existing Kotlin code
-- Implementing property-based tests
-- Following TDD workflow in Kotlin projects
-- Configuring Kover for code coverage
+- Viết hàm hoặc class Kotlin mới
+- Bổ sung test coverage cho code Kotlin hiện có
+- Triển khai property-based test
+- Tuân theo workflow TDD trong các dự án Kotlin
+- Cấu hình Kover cho code coverage
 
-## How It Works
+## Cách hoạt động
 
-1. **Identify target code** — Find the function, class, or module to test
-2. **Write a Kotest spec** — Choose a spec style (StringSpec, FunSpec, BehaviorSpec) matching the test scope
-3. **Mock dependencies** — Use MockK to isolate the unit under test
-4. **Run tests (RED)** — Verify the test fails with the expected error
-5. **Implement code (GREEN)** — Write minimal code to pass the test
-6. **Refactor** — Improve the implementation while keeping tests green
-7. **Check coverage** — Run `./gradlew koverHtmlReport` and verify 80%+ coverage
+1. **Xác định code mục tiêu** — Tìm hàm, class hoặc module cần test
+2. **Viết Kotest spec** — Chọn kiểu spec (StringSpec, FunSpec, BehaviorSpec) phù hợp với phạm vi test
+3. **Mock các dependency** — Dùng MockK để cô lập đơn vị đang được test
+4. **Chạy test (RED)** — Xác minh test thất bại với đúng lỗi mong đợi
+5. **Triển khai code (GREEN)** — Viết code tối thiểu để test pass
+6. **Refactor** — Cải thiện phần triển khai trong khi giữ test ở trạng thái xanh (green)
+7. **Kiểm tra coverage** — Chạy `./gradlew koverHtmlReport` và xác minh coverage từ 80% trở lên
 
-## Examples
+## Ví dụ
 
-The following sections contain detailed, runnable examples for each testing pattern:
+Các phần sau chứa các ví dụ chi tiết, chạy được cho từng pattern testing:
 
-### Quick Reference
+### Tham khảo nhanh
 
-- **Kotest specs** — StringSpec, FunSpec, BehaviorSpec, DescribeSpec examples in [Kotest Spec Styles](#kotest-spec-styles)
-- **Mocking** — MockK setup, coroutine mocking, argument capture in [MockK](#mockk)
-- **TDD walkthrough** — Full RED/GREEN/REFACTOR cycle with EmailValidator in [TDD Workflow for Kotlin](#tdd-workflow-for-kotlin)
-- **Coverage** — Kover configuration and commands in [Kover Coverage](#kover-coverage)
-- **Ktor testing** — testApplication setup in [Ktor testApplication Testing](#ktor-testapplication-testing)
+- **Kotest spec** — Ví dụ StringSpec, FunSpec, BehaviorSpec, DescribeSpec trong [Kotest Spec Styles](#kotest-spec-styles)
+- **Mocking** — Thiết lập MockK, mock coroutine, argument capture trong [MockK](#mockk)
+- **Hướng dẫn TDD từng bước** — Chu trình RED/GREEN/REFACTOR đầy đủ với EmailValidator trong [TDD Workflow for Kotlin](#tdd-workflow-for-kotlin)
+- **Coverage** — Cấu hình và lệnh Kover trong [Kover Coverage](#kover-coverage)
+- **Test Ktor** — Thiết lập testApplication trong [Ktor testApplication Testing](#ktor-testapplication-testing)
 
 ### TDD Workflow for Kotlin
 
-#### The RED-GREEN-REFACTOR Cycle
+#### Chu trình RED-GREEN-REFACTOR
 
 ```
 RED     -> Write a failing test first
@@ -50,7 +50,7 @@ REFACTOR -> Improve code while keeping tests green
 REPEAT  -> Continue with next requirement
 ```
 
-#### Step-by-Step TDD in Kotlin
+#### TDD từng bước trong Kotlin
 
 ```kotlin
 // Step 1: Define the interface/signature
@@ -108,7 +108,7 @@ fun validateEmail(email: String): Result<String> {
 
 ### Kotest Spec Styles
 
-#### StringSpec (Simplest)
+#### StringSpec (Đơn giản nhất)
 
 ```kotlin
 class CalculatorTest : StringSpec({
@@ -126,7 +126,7 @@ class CalculatorTest : StringSpec({
 })
 ```
 
-#### FunSpec (JUnit-like)
+#### FunSpec (Giống JUnit)
 
 ```kotlin
 class UserServiceTest : FunSpec({
@@ -152,7 +152,7 @@ class UserServiceTest : FunSpec({
 })
 ```
 
-#### BehaviorSpec (BDD Style)
+#### BehaviorSpec (Kiểu BDD)
 
 ```kotlin
 class OrderServiceTest : BehaviorSpec({
@@ -194,7 +194,7 @@ class OrderServiceTest : BehaviorSpec({
 })
 ```
 
-#### DescribeSpec (RSpec Style)
+#### DescribeSpec (Kiểu RSpec)
 
 ```kotlin
 class UserValidatorTest : DescribeSpec({
@@ -223,9 +223,9 @@ class UserValidatorTest : DescribeSpec({
 })
 ```
 
-### Kotest Matchers
+### Kotest Matcher
 
-#### Core Matchers
+#### Matcher cốt lõi
 
 ```kotlin
 import io.kotest.matchers.shouldBe
@@ -273,7 +273,7 @@ shouldNotThrow<Exception> {
 }
 ```
 
-#### Custom Matchers
+#### Matcher tùy chỉnh
 
 ```kotlin
 fun beActiveUser() = object : Matcher<User> {
@@ -290,7 +290,7 @@ user should beActiveUser()
 
 ### MockK
 
-#### Basic Mocking
+#### Mocking cơ bản
 
 ```kotlin
 class UserServiceTest : FunSpec({
@@ -322,7 +322,7 @@ class UserServiceTest : FunSpec({
 })
 ```
 
-#### Coroutine Mocking
+#### Mock Coroutine
 
 ```kotlin
 class AsyncUserServiceTest : FunSpec({
@@ -365,7 +365,7 @@ test("save captures the user argument") {
 }
 ```
 
-#### Spy and Partial Mocking
+#### Spy và Partial Mocking
 
 ```kotlin
 test("spy on real object") {
@@ -381,9 +381,9 @@ test("spy on real object") {
 }
 ```
 
-### Coroutine Testing
+### Test Coroutine
 
-#### runTest for Suspend Functions
+#### runTest cho Suspend Function
 
 ```kotlin
 import kotlinx.coroutines.test.runTest
@@ -414,7 +414,7 @@ class CoroutineServiceTest : FunSpec({
 })
 ```
 
-#### Testing Flows
+#### Test Flow
 
 ```kotlin
 import io.kotest.matchers.collections.shouldContainInOrder
@@ -488,7 +488,7 @@ class DispatcherTest : FunSpec({
 
 ### Property-Based Testing
 
-#### Kotest Property Testing
+#### Property Testing với Kotest
 
 ```kotlin
 import io.kotest.core.spec.style.FunSpec
@@ -528,7 +528,7 @@ class PropertyTest : FunSpec({
 })
 ```
 
-#### Custom Generators
+#### Generator tùy chỉnh
 
 ```kotlin
 val userArb: Arb<User> = Arb.bind(
@@ -554,7 +554,7 @@ val moneyArb: Arb<Money> = Arb.bind(
 
 ### Data-Driven Testing
 
-#### withData in Kotest
+#### withData trong Kotest
 
 ```kotlin
 class ParserTest : FunSpec({
@@ -584,7 +584,7 @@ class ParserTest : FunSpec({
 })
 ```
 
-### Test Lifecycle and Fixtures
+### Vòng đời Test và Fixture
 
 #### BeforeTest / AfterTest
 
@@ -628,7 +628,7 @@ class DatabaseTest : FunSpec({
 })
 ```
 
-#### Kotest Extensions
+#### Kotest Extension
 
 ```kotlin
 // Reusable test extension
@@ -657,7 +657,7 @@ class UserRepositoryTest : FunSpec({
 
 ### Kover Coverage
 
-#### Gradle Configuration
+#### Cấu hình Gradle
 
 ```kotlin
 // build.gradle.kts
@@ -685,7 +685,7 @@ kover {
 }
 ```
 
-#### Coverage Commands
+#### Lệnh Coverage
 
 ```bash
 # Run tests with coverage
@@ -703,14 +703,14 @@ kover {
 # Windows: start build/reports/kover/html/index.html
 ```
 
-#### Coverage Targets
+#### Mục tiêu Coverage
 
-| Code Type | Target |
+| Loại code | Mục tiêu |
 |-----------|--------|
-| Critical business logic | 100% |
-| Public APIs | 90%+ |
-| General code | 80%+ |
-| Generated / config code | Exclude |
+| Business logic quan trọng | 100% |
+| API công khai | 90%+ |
+| Code thông thường | 80%+ |
+| Code sinh tự động / config | Loại trừ |
 
 ### Ktor testApplication Testing
 
@@ -749,7 +749,7 @@ class ApiRoutesTest : FunSpec({
 })
 ```
 
-### Testing Commands
+### Lệnh Test
 
 ```bash
 # Run all tests
@@ -777,26 +777,26 @@ class ApiRoutesTest : FunSpec({
 ./gradlew test --continuous
 ```
 
-### Best Practices
+### Best Practice
 
-**DO:**
-- Write tests FIRST (TDD)
-- Use Kotest's spec styles consistently across the project
-- Use MockK's `coEvery`/`coVerify` for suspend functions
-- Use `runTest` for coroutine testing
-- Test behavior, not implementation
-- Use property-based testing for pure functions
-- Use `data class` test fixtures for clarity
+**NÊN:**
+- Viết test TRƯỚC (TDD)
+- Dùng các kiểu spec của Kotest nhất quán trong toàn dự án
+- Dùng `coEvery`/`coVerify` của MockK cho suspend function
+- Dùng `runTest` để test coroutine
+- Test hành vi, không test phần triển khai
+- Dùng property-based testing cho các hàm thuần (pure function)
+- Dùng fixture test dạng `data class` cho rõ ràng
 
-**DON'T:**
-- Mix testing frameworks (pick Kotest and stick with it)
-- Mock data classes (use real instances)
-- Use `Thread.sleep()` in coroutine tests (use `advanceTimeBy`)
-- Skip the RED phase in TDD
-- Test private functions directly
-- Ignore flaky tests
+**KHÔNG NÊN:**
+- Trộn lẫn các framework testing (chọn Kotest và bám theo nó)
+- Mock data class (hãy dùng instance thật)
+- Dùng `Thread.sleep()` trong test coroutine (hãy dùng `advanceTimeBy`)
+- Bỏ qua pha RED trong TDD
+- Test trực tiếp các hàm private
+- Bỏ qua các flaky test
 
-### Integration with CI/CD
+### Tích hợp với CI/CD
 
 ```yaml
 # GitHub Actions example
@@ -822,4 +822,4 @@ test:
         token: ${{ secrets.CODECOV_TOKEN }}
 ```
 
-**Remember**: Tests are documentation. They show how your Kotlin code is meant to be used. Use Kotest's expressive matchers to make tests readable and MockK for clean mocking of dependencies.
+**Hãy nhớ**: Test là tài liệu. Chúng cho thấy code Kotlin của bạn được dùng như thế nào. Dùng các matcher biểu đạt tốt của Kotest để test dễ đọc, và MockK để mock dependency gọn gàng.

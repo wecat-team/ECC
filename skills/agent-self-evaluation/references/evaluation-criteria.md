@@ -1,71 +1,71 @@
-# Evaluation Criteria — Detailed Scoring Guide
+# Tiêu chí đánh giá — Hướng dẫn chấm điểm chi tiết
 
-This reference provides concrete scoring anchors for each axis. Use it when you're unsure whether a gap merits a 4 vs a 3, or a 2 vs a 1.
+Tài liệu tham chiếu này cung cấp các mốc chấm điểm cụ thể cho từng trục. Dùng nó khi bạn không chắc một khoảng thiếu sót đáng 4 hay 3, hoặc 2 hay 1.
 
 ## Accuracy
 
-| Score | Anchor | Example |
+| Điểm | Mốc | Ví dụ |
 |---|---|---|
-| 5 | All facts verified against tool output, docs, or authoritative sources. No errors. | Configured retry via httpx transport — confirmed in httpx docs. All method names verified with grep against codebase. |
-| 4 | One minor inaccuracy that doesn't affect correctness. | Correct library, wrong default value for one parameter (claimed 0.5s, docs say 1.0s). |
-| 3 | One significant factual error, or 3+ minor inaccuracies. | Used `urllib3.Retry` in an httpx codebase. Works in this one case but wrong library. |
-| 2 | Multiple significant errors. Output would fail if followed. | Claimed "add this to package.json" but project uses pyproject.toml. Two other config claims also wrong. |
-| 1 | Fundamentally incorrect. Output contradicts itself or known facts. | Code has syntax errors. API endpoint doesn't exist. Claims a function signature that grep disproves. |
+| 5 | Mọi sự kiện đều được xác minh với output của tool, tài liệu hoặc nguồn có thẩm quyền. Không có lỗi. | Cấu hình retry qua httpx transport — đã xác nhận trong tài liệu httpx. Mọi tên phương thức được xác minh bằng grep trên codebase. |
+| 4 | Một điểm không chính xác nhỏ không ảnh hưởng đến tính đúng đắn. | Đúng thư viện, sai giá trị mặc định của một tham số (nói 0.5s, tài liệu ghi 1.0s). |
+| 3 | Một lỗi sự kiện đáng kể, hoặc 3+ điểm không chính xác nhỏ. | Dùng `urllib3.Retry` trong codebase httpx. Chạy được trong trường hợp này nhưng sai thư viện. |
+| 2 | Nhiều lỗi đáng kể. Output sẽ thất bại nếu làm theo. | Nói "thêm vào package.json" nhưng dự án dùng pyproject.toml. Hai khẳng định cấu hình khác cũng sai. |
+| 1 | Sai về căn bản. Output tự mâu thuẫn hoặc mâu thuẫn với sự thật đã biết. | Code có lỗi cú pháp. API endpoint không tồn tại. Nêu chữ ký hàm mà grep bác bỏ. |
 
 ## Completeness
 
-| Score | Anchor | Example |
+| Điểm | Mốc | Ví dụ |
 |---|---|---|
-| 5 | All explicit and implicit requirements covered. Edge cases handled. Error paths addressed. | User said "add retry to all HTTP requests." GET, POST, PUT, DELETE all covered. Timeout, 429, 5xx all handled. |
-| 4 | All explicit requirements covered. One implicit requirement missed. | All HTTP methods covered. Forgot to handle connection timeouts (not mentioned but expected). |
-| 3 | One explicit requirement missed, or 2+ implicit gaps. | User said "add logging too." Retry logic added but no logging. |
-| 2 | Multiple explicit requirements missed. Output is a partial solution. | Asked for retry + circuit breaker. Only retry implemented. |
-| 1 | Misses the core request. Delivers something adjacent to what was asked. | Asked for retry logic. Wrote a health check endpoint instead. |
+| 5 | Mọi yêu cầu tường minh và ngầm định đều được bao phủ. Edge case được xử lý. Đường dẫn lỗi được giải quyết. | Người dùng nói "thêm retry cho tất cả HTTP request." Bao phủ GET, POST, PUT, DELETE. Xử lý timeout, 429, 5xx. |
+| 4 | Mọi yêu cầu tường minh được bao phủ. Bỏ sót một yêu cầu ngầm định. | Bao phủ mọi phương thức HTTP. Quên xử lý connection timeout (không được nhắc tới nhưng được kỳ vọng). |
+| 3 | Bỏ sót một yêu cầu tường minh, hoặc 2+ khoảng thiếu ngầm định. | Người dùng nói "thêm cả logging." Đã thêm logic retry nhưng không có logging. |
+| 2 | Bỏ sót nhiều yêu cầu tường minh. Output là một giải pháp một phần. | Yêu cầu retry + circuit breaker. Chỉ triển khai retry. |
+| 1 | Bỏ lỡ yêu cầu cốt lõi. Giao thứ gì đó gần với điều được yêu cầu. | Yêu cầu logic retry. Lại viết một endpoint health check. |
 
 ## Clarity
 
-| Score | Anchor | Example |
+| Điểm | Mốc | Ví dụ |
 |---|---|---|
-| 5 | Perfectly structured. Jargon explained or avoided. Visual hierarchy helps scanning. No ambiguity. | README with clear sections, code blocks, and a 10-second summary at top. |
-| 4 | Generally clear. One section could be better organized or one term undefined. | Good structure but `exponential backoff` used without explanation — assumes the reader knows it. |
-| 3 | Understandable after re-reading. Multiple organizational issues or undefined terms. | The explanation circles the point before getting to it. Several terms used before defined. |
-| 2 | Confusing in places. Reader would need to ask follow-up questions. | Code works but the PR description doesn't explain why retry was needed or what it fixes. |
-| 1 | Unintelligible or contradictory. Reader cannot determine what was done or why. | Output is a wall of text with no structure. Conclusions contradict earlier statements. |
+| 5 | Cấu trúc hoàn hảo. Thuật ngữ được giải thích hoặc tránh dùng. Phân cấp thị giác giúp quét nhanh. Không mơ hồ. | README có các phần rõ ràng, code block và bản tóm tắt 10 giây ở đầu. |
+| 4 | Nhìn chung rõ ràng. Một phần có thể được tổ chức tốt hơn hoặc một thuật ngữ chưa được định nghĩa. | Cấu trúc tốt nhưng dùng `exponential backoff` mà không giải thích — giả định người đọc đã biết. |
+| 3 | Hiểu được sau khi đọc lại. Nhiều vấn đề về tổ chức hoặc thuật ngữ chưa định nghĩa. | Phần giải thích vòng vo trước khi vào điểm chính. Nhiều thuật ngữ được dùng trước khi được định nghĩa. |
+| 2 | Gây khó hiểu ở một số chỗ. Người đọc sẽ phải hỏi thêm. | Code chạy được nhưng mô tả PR không giải thích vì sao cần retry hay nó sửa điều gì. |
+| 1 | Không thể hiểu hoặc mâu thuẫn. Người đọc không thể xác định điều gì đã được làm hoặc vì sao. | Output là một khối chữ không có cấu trúc. Kết luận mâu thuẫn với các phát biểu trước đó. |
 
 ## Actionability
 
-| Score | Anchor | Example |
+| Điểm | Mốc | Ví dụ |
 |---|---|---|
-| 5 | Single action required. Verification path included. No implicit steps. | "Merge this PR. Tests pass: `42 passed`. Deploy with `./deploy.sh`." |
-| 4 | Single action required but verification path is implied, not explicit. | "Merge this PR." (Tests exist but weren't cited. User has to check themselves.) |
-| 3 | Multiple actions required, or one action with unclear next step. | "Review and merge. Then update the config." (Which config? Where? No link or path.) |
-| 2 | User must figure out how to use the output. Missing critical instructions. | Code written but no test file, no run instructions, no PR created. User has to assemble everything. |
-| 1 | Output cannot be acted on without significant rework or clarification. | "Here's a design idea." (No code, no file, no PR. User has to start from scratch.) |
+| 5 | Chỉ cần một hành động. Có đường xác minh kèm theo. Không có bước ngầm định. | "Merge PR này. Test pass: `42 passed`. Deploy bằng `./deploy.sh`." |
+| 4 | Chỉ cần một hành động nhưng đường xác minh chỉ được ngầm hiểu, không tường minh. | "Merge PR này." (Test có tồn tại nhưng không được trích dẫn. Người dùng phải tự kiểm tra.) |
+| 3 | Cần nhiều hành động, hoặc một hành động với bước tiếp theo không rõ. | "Review và merge. Sau đó cập nhật config." (Config nào? Ở đâu? Không có link hay đường dẫn.) |
+| 2 | Người dùng phải tự tìm cách dùng output. Thiếu chỉ dẫn quan trọng. | Đã viết code nhưng không có file test, không có hướng dẫn chạy, không tạo PR. Người dùng phải tự ráp mọi thứ. |
+| 1 | Không thể hành động dựa trên output nếu không làm lại đáng kể hoặc làm rõ thêm. | "Đây là một ý tưởng thiết kế." (Không có code, không có file, không có PR. Người dùng phải bắt đầu từ đầu.) |
 
 ## Conciseness
 
-| Score | Anchor | Example |
+| Điểm | Mốc | Ví dụ |
 |---|---|---|
-| 5 | Every sentence earns its place. No redundancy. Information density is high. | 30 lines that say what 60 lines would. No repeated points. No filler. |
-| 4 | Minor redundancy. One paragraph could be tightened. | Good overall but repeats the motivation in both the PR description and code comments. |
-| 3 | Noticeable redundancy. 20%+ of content could be removed without loss. | Explains the same concept three times (in summary, body, and conclusion). Verbose examples. |
-| 2 | Significantly bloated. 40%+ of content is filler or repetition. | 200 lines for a task that needed 60. Restates the user's question. Includes irrelevant background. |
-| 1 | Noise-to-signal ratio is inverted. More filler than substance. | 500-line response to a 2-line question. Most of it is boilerplate, repetition, or irrelevant context. |
+| 5 | Mỗi câu đều xứng đáng có mặt. Không dư thừa. Mật độ thông tin cao. | 30 dòng nói được điều mà 60 dòng sẽ nói. Không lặp ý. Không độn chữ. |
+| 4 | Dư thừa nhẹ. Một đoạn có thể được cô đọng hơn. | Tốt nhìn chung nhưng lặp lại động cơ ở cả mô tả PR lẫn comment trong code. |
+| 3 | Dư thừa đáng chú ý. 20%+ nội dung có thể bỏ đi mà không mất gì. | Giải thích cùng một khái niệm ba lần (trong tóm tắt, thân bài và kết luận). Ví dụ dài dòng. |
+| 2 | Phình to đáng kể. 40%+ nội dung là độn chữ hoặc lặp lại. | 200 dòng cho tác vụ chỉ cần 60. Nhắc lại câu hỏi của người dùng. Có bối cảnh không liên quan. |
+| 1 | Tỷ lệ nhiễu trên tín hiệu bị đảo ngược. Độn chữ nhiều hơn nội dung thực chất. | Câu trả lời 500 dòng cho câu hỏi 2 dòng. Phần lớn là boilerplate, lặp lại hoặc ngữ cảnh không liên quan. |
 
-## Edge Cases
+## Edge Case
 
-### When the user gave unclear instructions
+### Khi người dùng đưa ra chỉ dẫn không rõ ràng
 
-If the user's request was ambiguous, do NOT penalize completeness for not reading minds. Instead, note in the evaluation: "User's request was ambiguous about [scope]. I chose interpretation [chosen interpretation]. If they meant [alternative interpretation], this score would drop to [score]."
+Nếu yêu cầu của người dùng mơ hồ, KHÔNG trừ điểm completeness vì không đọc được suy nghĩ. Thay vào đó, hãy ghi chú trong đánh giá: "Yêu cầu của người dùng mơ hồ về [phạm vi]. Tôi chọn cách diễn giải [cách diễn giải đã chọn]. Nếu họ muốn nói [cách diễn giải khác], điểm này sẽ giảm xuống [điểm]."
 
-### When the task is inherently simple
+### Khi tác vụ vốn đã đơn giản
 
-A 3-line bug fix can legitimately score 5/5/5/5/5. The rubric scales with complexity — a simple task done perfectly IS a 5.0. Don't invent gaps to justify lower scores.
+Một bản sửa lỗi 3 dòng hoàn toàn có thể đạt 5/5/5/5/5. Thang điểm co giãn theo độ phức tạp — một tác vụ đơn giản được làm hoàn hảo LÀ 5.0. Đừng bịa ra thiếu sót để biện minh cho điểm thấp hơn.
 
-### When you caught your own error mid-task
+### Khi bạn tự bắt được lỗi của mình giữa chừng
 
-If you made an error, caught it, and fixed it before delivering — that's a 5 on Accuracy for the final output. The evaluation is about what the user received, not your internal process. Note the self-correction as evidence of thoroughness, not as a penalty.
+Nếu bạn mắc lỗi, phát hiện và sửa trước khi giao — đó là 5 về Accuracy cho output cuối cùng. Việc đánh giá dựa trên những gì người dùng nhận được, không phải quy trình nội bộ của bạn. Hãy ghi nhận việc tự sửa như bằng chứng của sự kỹ lưỡng, không phải một điểm trừ.
 
-### When the tool output contradicts your claim
+### Khi output của tool mâu thuẫn với khẳng định của bạn
 
-If you claimed "tests pass" but the terminal output shows a failure — that's an automatic Accuracy ≤ 2. Tool output is ground truth. Claims without verification are the most common source of low accuracy scores.
+Nếu bạn khẳng định "tests pass" nhưng output terminal cho thấy một lỗi — Accuracy tự động ≤ 2. Output của tool là ground truth. Khẳng định không có xác minh là nguồn phổ biến nhất của điểm accuracy thấp.

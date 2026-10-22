@@ -1,150 +1,150 @@
 ---
-description: Create comprehensive feature implementation plan with codebase analysis and pattern extraction
-argument-hint: <feature description | path/to/prd.md>
+description: Tạo kế hoạch triển khai tính năng toàn diện với phân tích codebase và trích xuất pattern
+argument-hint: <mô tả tính năng | path/to/prd.md>
 ---
 
-> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
+> Phỏng theo PRPs-agentic-eng của Wirasm. Thuộc chuỗi workflow PRP.
 
 # PRP Plan
 
-Create a detailed, self-contained implementation plan that captures all codebase patterns, conventions, and context needed to implement a feature in a single pass.
+Tạo một kế hoạch triển khai chi tiết, tự chứa đủ, ghi lại mọi pattern, quy ước và context của codebase cần thiết để triển khai một tính năng chỉ trong một lượt.
 
-**Core Philosophy**: A great plan contains everything needed to implement without asking further questions. Every pattern, every convention, every gotcha — captured once, referenced throughout.
+**Triết lý cốt lõi**: Một plan tốt chứa mọi thứ cần thiết để triển khai mà không phải hỏi thêm. Mọi pattern, mọi quy ước, mọi gotcha — được ghi lại một lần, tham chiếu xuyên suốt.
 
-**Golden Rule**: If you would need to search the codebase during implementation, capture that knowledge NOW in the plan.
+**Quy tắc vàng**: Nếu bạn sẽ phải tìm kiếm trong codebase trong lúc triển khai, hãy ghi lại kiến thức đó NGAY BÂY GIỜ vào plan.
 
 ---
 
-## Phase 0 — DETECT
+## Giai đoạn 0 — DETECT
 
-Determine input type from `$ARGUMENTS`:
+Xác định loại đầu vào từ `$ARGUMENTS`:
 
-| Input Pattern | Detection | Action |
+| Mẫu đầu vào | Cách nhận diện | Hành động |
 |---|---|---|
-| Path ending in `.prd.md` | File path to PRD | Parse PRD, find next pending phase |
-| Path to `.md` with "Implementation Phases" | PRD-like document | Parse phases, find next pending |
-| Path to any other file | Reference file | Read file for context, treat as free-form |
-| Free-form text | Feature description | Proceed directly to Phase 1 |
-| Empty / blank | No input | Ask user what feature to plan |
+| Đường dẫn kết thúc bằng `.prd.md` | Đường dẫn file PRD | Parse PRD, tìm phase pending tiếp theo |
+| Đường dẫn tới `.md` có "Implementation Phases" | Tài liệu giống PRD | Parse các phase, tìm phase pending tiếp theo |
+| Đường dẫn tới file khác bất kỳ | File tham chiếu | Đọc file để lấy context, coi như free-form |
+| Văn bản free-form | Mô tả tính năng | Chuyển thẳng sang Giai đoạn 1 |
+| Rỗng / trống | Không có đầu vào | Hỏi người dùng muốn lập plan cho tính năng nào |
 
-### PRD Parsing (when input is a PRD)
+### Parse PRD (khi đầu vào là PRD)
 
-1. Read the PRD file with `cat "$PRD_PATH"`
-2. Parse the **Implementation Phases** section
-3. Find phases by status:
-   - Look for `pending` phases
-   - Check dependency chains (a phase may depend on prior phases being `complete`)
-   - Select the **next eligible pending phase**
-4. Extract from the selected phase:
-   - Phase name and description
-   - Acceptance criteria
-   - Dependencies on prior phases
-   - Any scope notes or constraints
-5. Use the phase description as the feature to plan
+1. Đọc file PRD bằng `cat "$PRD_PATH"`
+2. Parse section **Implementation Phases**
+3. Tìm các phase theo trạng thái:
+   - Tìm các phase `pending`
+   - Kiểm tra chuỗi dependency (một phase có thể phụ thuộc vào các phase trước đó phải `complete`)
+   - Chọn **phase pending đủ điều kiện tiếp theo**
+4. Trích xuất từ phase đã chọn:
+   - Tên và mô tả phase
+   - Tiêu chí chấp nhận (acceptance criteria)
+   - Dependency vào các phase trước
+   - Mọi ghi chú về phạm vi hoặc ràng buộc
+5. Dùng mô tả của phase làm tính năng cần lập plan
 
-If no pending phases remain, report that all phases are complete.
+Nếu không còn phase pending nào, hãy báo cáo rằng tất cả các phase đã hoàn thành.
 
 ---
 
-## Phase 1 — PARSE
+## Giai đoạn 1 — PARSE
 
-Extract and clarify the feature requirements.
+Trích xuất và làm rõ các yêu cầu của tính năng.
 
-### Feature Understanding
+### Hiểu tính năng
 
-From the input (PRD phase or free-form description), identify:
+Từ đầu vào (phase của PRD hoặc mô tả free-form), xác định:
 
-- **What** is being built (concrete deliverable)
-- **Why** it matters (user value)
-- **Who** uses it (target user/system)
-- **Where** it fits (which part of the codebase)
+- **Cái gì** đang được xây dựng (sản phẩm bàn giao cụ thể)
+- **Tại sao** nó quan trọng (giá trị cho người dùng)
+- **Ai** dùng nó (người dùng/hệ thống mục tiêu)
+- **Ở đâu** nó phù hợp (phần nào của codebase)
 
 ### User Story
 
-Format as:
+Định dạng:
 ```
 As a [type of user],
 I want [capability],
 So that [benefit].
 ```
 
-### Complexity Assessment
+### Đánh giá độ phức tạp
 
-| Level | Indicators | Typical Scope |
+| Mức | Dấu hiệu | Phạm vi điển hình |
 |---|---|---|
-| **Small** | Single file, isolated change, no new dependencies | 1-3 files, <100 lines |
-| **Medium** | Multiple files, follows existing patterns, minor new concepts | 3-10 files, 100-500 lines |
-| **Large** | Cross-cutting concerns, new patterns, external integrations | 10+ files, 500+ lines |
-| **XL** | Architectural changes, new subsystems, migration needed | 20+ files, consider splitting |
+| **Small** | Một file, thay đổi cô lập, không có dependency mới | 1-3 file, <100 dòng |
+| **Medium** | Nhiều file, theo pattern hiện có, khái niệm mới nhỏ | 3-10 file, 100-500 dòng |
+| **Large** | Mối quan tâm xuyên suốt (cross-cutting), pattern mới, tích hợp bên ngoài | 10+ file, 500+ dòng |
+| **XL** | Thay đổi kiến trúc, subsystem mới, cần migration | 20+ file, cân nhắc tách nhỏ |
 
-### Ambiguity Gate
+### Cổng chống mơ hồ (Ambiguity Gate)
 
-If any of these are unclear, **STOP and ask the user** before proceeding:
+Nếu bất kỳ điều nào sau đây chưa rõ, **DỪNG và hỏi người dùng** trước khi tiếp tục:
 
-- The core deliverable is vague
-- Success criteria are undefined
-- There are multiple valid interpretations
-- Technical approach has major unknowns
+- Sản phẩm bàn giao cốt lõi còn mơ hồ
+- Tiêu chí thành công chưa được định nghĩa
+- Có nhiều cách diễn giải hợp lệ
+- Hướng tiếp cận kỹ thuật còn nhiều ẩn số lớn
 
-Do NOT guess. Ask. A plan built on assumptions fails during implementation.
+KHÔNG đoán. Hãy hỏi. Một plan xây trên các giả định sẽ thất bại trong lúc triển khai.
 
 ---
 
-## Phase 2 — EXPLORE
+## Giai đoạn 2 — EXPLORE
 
-Gather deep codebase intelligence. Search the codebase directly for each category below.
+Thu thập thông tin sâu về codebase. Tìm kiếm trực tiếp trong codebase cho từng nhóm bên dưới.
 
-### Codebase Search (8 Categories)
+### Tìm kiếm trong Codebase (8 nhóm)
 
-For each category, search using grep, find, and file reading:
+Với mỗi nhóm, tìm bằng grep, find và đọc file:
 
-1. **Similar Implementations** — Find existing features that resemble the planned one. Look for analogous patterns, endpoints, components, or modules.
+1. **Similar Implementations** — Tìm các tính năng hiện có giống với tính năng đang lập plan. Tìm các pattern, endpoint, component hoặc module tương tự.
 
-2. **Naming Conventions** — Identify how files, functions, variables, classes, and exports are named in the relevant area of the codebase.
+2. **Naming Conventions** — Xác định cách đặt tên file, function, biến, class và export trong khu vực liên quan của codebase.
 
-3. **Error Handling** — Find how errors are caught, propagated, logged, and returned to users in similar code paths.
+3. **Error Handling** — Tìm cách lỗi được bắt, lan truyền, ghi log và trả về cho người dùng trong các luồng code tương tự.
 
-4. **Logging Patterns** — Identify what gets logged, at what level, and in what format.
+4. **Logging Patterns** — Xác định cái gì được log, ở mức nào và theo định dạng nào.
 
-5. **Type Definitions** — Find relevant types, interfaces, schemas, and how they're organized.
+5. **Type Definitions** — Tìm các type, interface, schema liên quan và cách chúng được tổ chức.
 
-6. **Test Patterns** — Find how similar features are tested. Note test file locations, naming, setup/teardown patterns, and assertion styles.
+6. **Test Patterns** — Tìm cách các tính năng tương tự được test. Ghi lại vị trí file test, cách đặt tên, pattern setup/teardown và kiểu assertion.
 
-7. **Configuration** — Find relevant config files, environment variables, and feature flags.
+7. **Configuration** — Tìm các file config, biến môi trường và feature flag liên quan.
 
-8. **Dependencies** — Identify packages, imports, and internal modules used by similar features.
+8. **Dependencies** — Xác định các package, import và module nội bộ được các tính năng tương tự sử dụng.
 
-### Codebase Analysis (5 Traces)
+### Phân tích Codebase (5 luồng truy vết)
 
-Read relevant files to trace:
+Đọc các file liên quan để truy vết:
 
-1. **Entry Points** — How does a request/action enter the system and reach the area you're modifying?
-2. **Data Flow** — How does data move through the relevant code paths?
-3. **State Changes** — What state is modified and where?
-4. **Contracts** — What interfaces, APIs, or protocols must be honored?
-5. **Patterns** — What architectural patterns are used (repository, service, controller, etc.)?
+1. **Entry Points** — Một request/hành động đi vào hệ thống và đến khu vực bạn đang sửa bằng cách nào?
+2. **Data Flow** — Dữ liệu di chuyển qua các luồng code liên quan như thế nào?
+3. **State Changes** — State nào được thay đổi và ở đâu?
+4. **Contracts** — Những interface, API hoặc giao thức nào phải được tuân thủ?
+5. **Patterns** — Những pattern kiến trúc nào được dùng (repository, service, controller, v.v.)?
 
-### Unified Discovery Table
+### Bảng khám phá hợp nhất (Unified Discovery Table)
 
-Compile findings into a single reference:
+Tổng hợp các phát hiện vào một bảng tham chiếu duy nhất:
 
-| Category | File:Lines | Pattern | Key Snippet |
+| Nhóm | File:Dòng | Pattern | Đoạn code chính |
 |---|---|---|---|
-| Naming | `src/services/userService.ts:1-5` | camelCase services, PascalCase types | `export class UserService` |
-| Error | `src/middleware/errorHandler.ts:10-25` | Custom AppError class | `throw new AppError(...)` |
+| Naming | `src/services/userService.ts:1-5` | camelCase cho service, PascalCase cho type | `export class UserService` |
+| Error | `src/middleware/errorHandler.ts:10-25` | Class AppError tùy chỉnh | `throw new AppError(...)` |
 | ... | ... | ... | ... |
 
 ---
 
-## Phase 3 — RESEARCH
+## Giai đoạn 3 — RESEARCH
 
-If the feature involves external libraries, APIs, or unfamiliar technology:
+Nếu tính năng liên quan đến thư viện bên ngoài, API hoặc công nghệ chưa quen thuộc:
 
-1. Search the web for official documentation
-2. Find usage examples and best practices
-3. Identify version-specific gotchas
+1. Tìm tài liệu chính thức trên web
+2. Tìm các ví dụ sử dụng và best practice
+3. Xác định các gotcha riêng theo phiên bản
 
-Format each finding as:
+Định dạng mỗi phát hiện như sau:
 
 ```
 KEY_INSIGHT: [what you learned]
@@ -152,15 +152,15 @@ APPLIES_TO: [which part of the plan this affects]
 GOTCHA: [any warnings or version-specific issues]
 ```
 
-If the feature uses only well-understood internal patterns, skip this phase and note: "No external research needed — feature uses established internal patterns."
+Nếu tính năng chỉ dùng các pattern nội bộ đã được hiểu rõ, bỏ qua giai đoạn này và ghi chú: "No external research needed — feature uses established internal patterns."
 
 ---
 
-## Phase 4 — DESIGN
+## Giai đoạn 4 — DESIGN
 
-### UX Transformation (if applicable)
+### Chuyển đổi UX (nếu áp dụng)
 
-Document the before/after user experience:
+Ghi lại trải nghiệm người dùng trước/sau:
 
 **Before:**
 ```
@@ -180,34 +180,34 @@ Document the before/after user experience:
 └─────────────────────────────┘
 ```
 
-### Interaction Changes
+### Thay đổi tương tác
 
-| Touchpoint | Before | After | Notes |
+| Điểm chạm | Trước | Sau | Ghi chú |
 |---|---|---|---|
 | ... | ... | ... | ... |
 
-If the feature is purely backend/internal with no UX change, note: "Internal change — no user-facing UX transformation."
+Nếu tính năng thuần backend/nội bộ và không có thay đổi UX, ghi chú: "Internal change — no user-facing UX transformation."
 
 ---
 
-## Phase 5 — ARCHITECT
+## Giai đoạn 5 — ARCHITECT
 
-### Strategic Design
+### Thiết kế chiến lược
 
-Define the implementation approach:
+Định nghĩa hướng tiếp cận triển khai:
 
-- **Approach**: High-level strategy (e.g., "Add new service layer following existing repository pattern")
-- **Alternatives Considered**: What other approaches were evaluated and why they were rejected
-- **Scope**: Concrete boundaries of what WILL be built
-- **NOT Building**: Explicit list of what is OUT OF SCOPE (prevents scope creep during implementation)
+- **Approach**: Chiến lược ở mức cao (ví dụ: "Add new service layer following existing repository pattern")
+- **Alternatives Considered**: Những hướng tiếp cận khác đã được đánh giá và lý do bị loại
+- **Scope**: Ranh giới cụ thể của những gì SẼ được xây dựng
+- **NOT Building**: Danh sách tường minh những gì NẰM NGOÀI PHẠM VI (ngăn scope creep trong lúc triển khai)
 
 ---
 
-## Phase 6 — GENERATE
+## Giai đoạn 6 — GENERATE
 
-Write the full plan document using the template below. Save to `.claude/PRPs/plans/{kebab-case-feature-name}.plan.md`.
+Viết toàn bộ tài liệu plan theo template bên dưới. Lưu vào `.claude/PRPs/plans/{kebab-case-feature-name}.plan.md`.
 
-Create the directory if it doesn't exist:
+Tạo thư mục nếu chưa tồn tại:
 ```bash
 mkdir -p .claude/PRPs/plans
 ```
@@ -418,25 +418,24 @@ EXPECT: Feature works as designed
 ## Notes
 [Any additional context, decisions, or observations]
 ```
-
 ---
 
 ## Output
 
-### Save the Plan
+### Lưu Plan
 
-Write the generated plan to:
+Ghi plan đã tạo vào:
 ```
 .claude/PRPs/plans/{kebab-case-feature-name}.plan.md
 ```
 
-### Update PRD (if input was a PRD)
+### Cập nhật PRD (nếu đầu vào là PRD)
 
-If this plan was generated from a PRD phase:
-1. Update the phase status from `pending` to `in-progress`
-2. Add the plan file path as a reference in the phase
+Nếu plan này được tạo từ một phase của PRD:
+1. Cập nhật trạng thái phase từ `pending` sang `in-progress`
+2. Thêm đường dẫn file plan làm tham chiếu trong phase
 
-### Report to User
+### Báo cáo cho người dùng
 
 ```
 ## Plan Created
@@ -458,45 +457,45 @@ If this plan was generated from a PRD phase:
 
 ## Verification
 
-Before finalizing, verify the plan against these checklists:
+Trước khi hoàn tất, hãy đối chiếu plan với các checklist sau:
 
 ### Context Completeness
-- [ ] All relevant files discovered and documented
-- [ ] Naming conventions captured with examples
-- [ ] Error handling patterns documented
-- [ ] Test patterns identified
-- [ ] Dependencies listed
+- [ ] Đã khám phá và ghi lại tất cả file liên quan
+- [ ] Đã ghi lại quy ước đặt tên kèm ví dụ
+- [ ] Đã ghi lại các pattern xử lý lỗi
+- [ ] Đã xác định các pattern test
+- [ ] Đã liệt kê dependency
 
 ### Implementation Readiness
-- [ ] Every task has ACTION, IMPLEMENT, MIRROR, and VALIDATE
-- [ ] No task requires additional codebase searching
-- [ ] Import paths are specified
-- [ ] GOTCHAs documented where applicable
+- [ ] Mỗi task đều có ACTION, IMPLEMENT, MIRROR và VALIDATE
+- [ ] Không task nào cần tìm kiếm thêm trong codebase
+- [ ] Đã chỉ định đường dẫn import
+- [ ] Đã ghi lại GOTCHA ở nơi áp dụng
 
 ### Pattern Faithfulness
-- [ ] Code snippets are actual codebase examples (not invented)
-- [ ] SOURCE references point to real files and line numbers
-- [ ] Patterns cover naming, errors, logging, data access, and tests
-- [ ] New code will be indistinguishable from existing code
+- [ ] Các đoạn code là ví dụ thực tế từ codebase (không tự bịa)
+- [ ] Các tham chiếu SOURCE trỏ tới file và số dòng có thật
+- [ ] Các pattern bao phủ naming, lỗi, logging, truy cập dữ liệu và test
+- [ ] Code mới sẽ không thể phân biệt với code hiện có
 
 ### Validation Coverage
-- [ ] Static analysis commands specified
-- [ ] Test commands specified
-- [ ] Build verification included
+- [ ] Đã chỉ định lệnh static analysis
+- [ ] Đã chỉ định lệnh test
+- [ ] Đã bao gồm xác minh build
 
 ### UX Clarity
-- [ ] Before/after states documented (or marked N/A)
-- [ ] Interaction changes listed
-- [ ] Edge cases for UX identified
+- [ ] Đã ghi lại trạng thái trước/sau (hoặc đánh dấu N/A)
+- [ ] Đã liệt kê các thay đổi tương tác
+- [ ] Đã xác định các edge case của UX
 
-### No Prior Knowledge Test
-A developer unfamiliar with this codebase should be able to implement the feature using ONLY this plan, without searching the codebase or asking questions. If not, add the missing context.
+### Bài kiểm tra "không cần kiến thức trước" (No Prior Knowledge Test)
+Một developer không quen codebase này phải có thể triển khai tính năng chỉ bằng plan này, không cần tìm kiếm trong codebase hay đặt câu hỏi. Nếu không, hãy bổ sung context còn thiếu.
 
 ---
 
-## Next Steps
+## Các bước tiếp theo
 
-- Run `/prp-implement <plan-path>` to execute this plan
-- Run `/plan` for quick conversational planning without artifacts
-- Run `/prp-prd` to create a PRD first if scope is unclear
+- Chạy `/prp-implement <plan-path>` để thực thi plan này
+- Chạy `/plan` để lập kế hoạch nhanh bằng hội thoại, không tạo artifact
+- Chạy `/prp-prd` để tạo PRD trước nếu phạm vi chưa rõ
 ````

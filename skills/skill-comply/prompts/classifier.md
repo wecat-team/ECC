@@ -1,6 +1,6 @@
-You are classifying tool calls from a coding agent session against expected behavioral steps.
+Bạn đang phân loại các tool call từ một phiên làm việc của coding agent theo các bước hành vi mong đợi.
 
-For each tool call, determine which step (if any) it belongs to. A tool call can match at most one step.
+Với mỗi tool call, hãy xác định nó thuộc bước nào (nếu có). Một tool call chỉ được khớp tối đa một bước.
 
 Steps:
 {steps_description}
@@ -8,17 +8,17 @@ Steps:
 Tool calls (numbered):
 {tool_calls}
 
-Respond with ONLY a JSON object mapping step_id to a list of matching tool call numbers.
-Include only steps that have at least one match. If no tool calls match a step, omit it.
+CHỈ trả lời bằng một đối tượng JSON ánh xạ step_id tới danh sách số thứ tự các tool call khớp.
+Chỉ đưa vào những bước có ít nhất một tool call khớp. Nếu không có tool call nào khớp với một bước, hãy bỏ bước đó đi.
 
 Example response:
 {"write_test": [0, 1], "run_test_red": [2], "write_impl": [3, 4]}
 
-Rules:
-- Match based on the MEANING of the tool call, not just keywords
-- A Write to "test_calculator.py" is a test file write, even if the content is implementation-like
-- A Write to "calculator.py" is an implementation write, even if it contains test helpers
-- A Bash running "pytest" that outputs "FAILED" is a RED phase test run
-- A Bash running "pytest" that outputs "passed" is a GREEN phase test run
-- Each tool call should match at most one step (pick the best match)
-- If a tool call doesn't match any step, don't include it
+Quy tắc:
+- Khớp dựa trên Ý NGHĨA của tool call, không chỉ dựa vào từ khóa
+- Một lệnh Write vào "test_calculator.py" là ghi file test, ngay cả khi nội dung trông giống phần triển khai
+- Một lệnh Write vào "calculator.py" là ghi phần triển khai, ngay cả khi nó chứa các test helper
+- Một lệnh Bash chạy "pytest" mà đầu ra có "FAILED" là lần chạy test ở pha RED
+- Một lệnh Bash chạy "pytest" mà đầu ra có "passed" là lần chạy test ở pha GREEN
+- Mỗi tool call chỉ nên khớp tối đa một bước (chọn bước khớp nhất)
+- Nếu một tool call không khớp bước nào, đừng đưa nó vào

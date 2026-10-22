@@ -1,31 +1,31 @@
-# Common Patterns
+# Pattern thường dùng
 
-## Skeleton Projects
+## Skeleton Project
 
-When implementing new functionality:
-1. Search for battle-tested skeleton projects
-2. Use parallel agents to evaluate options:
-   - Security assessment
-   - Extensibility analysis
-   - Relevance scoring
-   - Implementation planning
-3. Clone best match as foundation
-4. Iterate within proven structure
+Khi triển khai chức năng mới:
+1. Tìm các skeleton project đã được kiểm chứng thực tế
+2. Dùng các agent song song để đánh giá các lựa chọn:
+   - Đánh giá bảo mật
+   - Phân tích khả năng mở rộng
+   - Chấm điểm mức độ phù hợp
+   - Lập kế hoạch triển khai
+3. Clone lựa chọn phù hợp nhất làm nền tảng
+4. Lặp lại (iterate) trong cấu trúc đã được kiểm chứng
 
-## Design Patterns
+## Design Pattern
 
 ### Repository Pattern
 
-Encapsulate data access behind a consistent interface:
-- Define standard operations: findAll, findById, create, update, delete
-- Concrete implementations handle storage details (database, API, file, etc.)
-- Business logic depends on the abstract interface, not the storage mechanism
-- Enables easy swapping of data sources and simplifies testing with mocks
+Đóng gói việc truy cập dữ liệu sau một interface nhất quán:
+- Định nghĩa các thao tác chuẩn: findAll, findById, create, update, delete
+- Các triển khai cụ thể xử lý chi tiết lưu trữ (database, API, file, v.v.)
+- Business logic phụ thuộc vào interface trừu tượng, không phụ thuộc cơ chế lưu trữ
+- Cho phép hoán đổi nguồn dữ liệu dễ dàng và đơn giản hóa việc test bằng mock
 
-### API Response Format
+### Định dạng API Response
 
-Use a consistent envelope for all API responses:
-- Include a success/status indicator
-- Include the data payload (nullable on error)
-- Include an error message field (nullable on success)
-- Include metadata for paginated responses (total, page, limit)
+Dùng một envelope nhất quán cho mọi API response:
+- Bao gồm chỉ báo thành công/trạng thái
+- Bao gồm data payload (nullable khi có lỗi)
+- Bao gồm trường thông báo lỗi (nullable khi thành công)
+- Bao gồm metadata cho response có phân trang (total, page, limit)

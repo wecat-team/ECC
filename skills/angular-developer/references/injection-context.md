@@ -1,15 +1,15 @@
 # Injection Context
 
-The `inject()` function can only be used when code is executing within an **injection context**.
+Hàm `inject()` chỉ có thể dùng khi code đang thực thi trong một **injection context**.
 
-## Where is an Injection Context Available?
+## Injection Context khả dụng ở đâu?
 
-An injection context is automatically available in:
+Một injection context tự động khả dụng trong:
 
-1. **Field initializers** of classes instantiated by DI (`@Injectable`, `@Component`, `@Directive`, `@Pipe`).
-2. **Constructors** of classes instantiated by DI.
-3. **Factory functions** specified in `useFactory` or `InjectionToken` configurations.
-4. **Functional APIs** executed by Angular (e.g., functional route guards, resolvers, interceptors).
+1. **Field initializer** của các class được DI khởi tạo (`@Injectable`, `@Component`, `@Directive`, `@Pipe`).
+2. **Constructor** của các class được DI khởi tạo.
+3. **Factory function** được chỉ định trong `useFactory` hoặc cấu hình `InjectionToken`.
+4. **Functional API** do Angular thực thi (ví dụ: functional route guard, resolver, interceptor).
 
 ```ts
 @Component({...})
@@ -31,7 +31,7 @@ export class Example {
 
 ## `runInInjectionContext`
 
-If you need to run a function within an injection context (often needed for dynamic component creation or testing), use `runInInjectionContext`. This requires access to an existing injector (like `EnvironmentInjector` or `Injector`).
+Nếu bạn cần chạy một hàm trong injection context (thường cần khi tạo component động hoặc khi testing), hãy dùng `runInInjectionContext`. Hàm này yêu cầu truy cập một injector sẵn có (như `EnvironmentInjector` hoặc `Injector`).
 
 ```ts
 import {Injectable, inject, EnvironmentInjector, runInInjectionContext} from '@angular/core';
@@ -51,7 +51,7 @@ export class MyService {
 
 ## `assertInInjectionContext`
 
-Use `assertInInjectionContext` in utility functions to guarantee they are called from a valid context. It throws a clear error if not.
+Dùng `assertInInjectionContext` trong các hàm tiện ích để đảm bảo chúng được gọi từ một context hợp lệ. Nó ném một lỗi rõ ràng nếu không hợp lệ.
 
 ```ts
 import {assertInInjectionContext, inject, ElementRef} from '@angular/core';

@@ -3,11 +3,11 @@ paths:
   - "**/*.cs"
   - "**/*.csx"
 ---
-# C# Patterns
+# Pattern C#
 
-> This file extends [common/patterns.md](../common/patterns.md) with C#-specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho C#.
 
-## API Response Pattern
+## Pattern API Response
 
 ```csharp
 public sealed record ApiResponse<T>(
@@ -32,7 +32,7 @@ public interface IRepository<T>
 
 ## Options Pattern
 
-Use strongly typed options for config instead of reading raw strings throughout the codebase.
+Dùng options có định kiểu mạnh cho cấu hình thay vì đọc chuỗi thô rải rác khắp codebase.
 
 ```csharp
 public sealed class PaymentsOptions
@@ -45,6 +45,6 @@ public sealed class PaymentsOptions
 
 ## Dependency Injection
 
-- Depend on interfaces at service boundaries
-- Keep constructors focused; if a service needs too many dependencies, split responsibilities
-- Register lifetimes intentionally: singleton for stateless/shared services, scoped for request data, transient for lightweight pure workers
+- Phụ thuộc vào interface tại ranh giới service
+- Giữ constructor tập trung; nếu một service cần quá nhiều dependency, hãy tách trách nhiệm
+- Đăng ký lifetime có chủ đích: singleton cho service stateless/dùng chung, scoped cho dữ liệu theo request, transient cho các worker thuần nhẹ

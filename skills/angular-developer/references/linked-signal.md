@@ -1,12 +1,12 @@
-# Dependent State with `linkedSignal`
+# State phụ thuộc với `linkedSignal`
 
-The `linkedSignal` function lets you create writable state that is intrinsically linked to some other state. It is perfect for state that needs a default value derived from an input or another signal, but can still be independently modified by the user.
+Hàm `linkedSignal` cho phép bạn tạo state ghi được (writable) gắn liền với một state khác. Nó rất phù hợp cho state cần giá trị mặc định dẫn xuất từ một input hoặc signal khác, nhưng vẫn có thể được người dùng chỉnh sửa độc lập.
 
-If the source state changes, the `linkedSignal` resets to a new computed value.
+Nếu state nguồn thay đổi, `linkedSignal` được đặt lại về một giá trị mới được tính toán.
 
-## Basic Usage
+## Cách dùng cơ bản
 
-When you only need to recompute based on a source, pass a computation function. `linkedSignal` works like `computed`, but the resulting signal is writable (you can call `.set()` or `.update()` on it).
+Khi bạn chỉ cần tính lại dựa trên một nguồn, hãy truyền vào một hàm tính toán. `linkedSignal` hoạt động như `computed`, nhưng signal kết quả là writable (bạn có thể gọi `.set()` hoặc `.update()` trên nó).
 
 ```ts
 import { Component, signal, linkedSignal } from '@angular/core';
@@ -26,11 +26,11 @@ export class ShippingMethodPicker {
 }
 ```
 
-## Advanced Usage: Accounting for Previous State
+## Cách dùng nâng cao: Xét đến state trước đó
 
-Sometimes, when the source state changes, you want to preserve the user's manual selection if it is still valid. To do this, use the object syntax providing `source` and `computation`.
+Đôi khi, khi state nguồn thay đổi, bạn muốn giữ lại lựa chọn thủ công của người dùng nếu nó vẫn còn hợp lệ. Để làm vậy, hãy dùng cú pháp object với `source` và `computation`.
 
-The `computation` function receives the new value of the source, and a `previous` object containing the previous source value and the previous `linkedSignal` value.
+Hàm `computation` nhận giá trị mới của nguồn, và một object `previous` chứa giá trị nguồn trước đó cùng giá trị `linkedSignal` trước đó.
 
 ```ts
 interface ShippingMethod { id: number; name: string; }
@@ -52,8 +52,8 @@ export class ShippingMethodPicker {
 }
 ```
 
-### When to use `linkedSignal` vs `computed` vs `effect`
+### Khi nào dùng `linkedSignal` so với `computed` so với `effect`
 
-- Use `computed`: When state is **strictly** derived from other state and should never be manually updated.
-- Use `linkedSignal`: When state is derived from other state, but the user **must** be able to override or manually update it.
-- **Never** use `effect` to sync one piece of state to another. That is an anti-pattern. Use `computed` or `linkedSignal` instead.
+- Dùng `computed`: Khi state được dẫn xuất **hoàn toàn** từ state khác và không bao giờ nên được cập nhật thủ công.
+- Dùng `linkedSignal`: Khi state được dẫn xuất từ state khác, nhưng người dùng **phải** có thể ghi đè hoặc cập nhật thủ công.
+- **KHÔNG BAO GIỜ** dùng `effect` để đồng bộ một state sang state khác. Đó là anti-pattern. Hãy dùng `computed` hoặc `linkedSignal`.

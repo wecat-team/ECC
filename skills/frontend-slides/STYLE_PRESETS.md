@@ -1,19 +1,19 @@
-# Style Presets Reference
+# Tham chiếu Style Preset
 
-Curated visual styles for `frontend-slides`.
+Các phong cách thị giác được tuyển chọn cho `frontend-slides`.
 
-Use this file for:
-- the mandatory viewport-fitting CSS base
-- preset selection and mood mapping
-- CSS gotchas and validation rules
+Dùng file này cho:
+- CSS nền bắt buộc để vừa khít viewport
+- chọn preset và ánh xạ tâm trạng
+- các cạm bẫy CSS và quy tắc xác thực
 
-Abstract shapes only. Avoid illustrations unless the user explicitly asks for them.
+Chỉ dùng hình khối trừu tượng. Tránh hình minh họa trừ khi người dùng yêu cầu rõ ràng.
 
-## Viewport Fit Is Non-Negotiable
+## Vừa khít Viewport là bất di bất dịch
 
-Every slide must fully fit in one viewport.
+Mọi slide phải nằm trọn trong một viewport.
 
-### Golden Rule
+### Quy tắc vàng
 
 ```text
 Each slide = exactly one viewport height.
@@ -21,20 +21,20 @@ Too much content = split into more slides.
 Never scroll inside a slide.
 ```
 
-### Density Limits
+### Giới hạn mật độ
 
-| Slide Type | Maximum Content |
+| Loại slide | Nội dung tối đa |
 |------------|-----------------|
-| Title slide | 1 heading + 1 subtitle + optional tagline |
-| Content slide | 1 heading + 4-6 bullets or 2 paragraphs |
-| Feature grid | 6 cards maximum |
-| Code slide | 8-10 lines maximum |
-| Quote slide | 1 quote + attribution |
-| Image slide | 1 image, ideally under 60vh |
+| Title slide | 1 heading + 1 subtitle + tagline tùy chọn |
+| Content slide | 1 heading + 4-6 bullet hoặc 2 đoạn |
+| Feature grid | tối đa 6 card |
+| Code slide | tối đa 8-10 dòng |
+| Quote slide | 1 trích dẫn + ghi nguồn |
+| Image slide | 1 ảnh, lý tưởng dưới 60vh |
 
-## Mandatory Base CSS
+## CSS nền bắt buộc
 
-Copy this block into every generated presentation and then theme on top of it.
+Sao chép khối này vào mọi bài thuyết trình được tạo ra rồi áp theme lên trên nó.
 
 ```css
 /* ===========================================
@@ -163,168 +163,168 @@ img, .image-container {
 }
 ```
 
-## Viewport Checklist
+## Checklist Viewport
 
-- every `.slide` has `height: 100vh`, `height: 100dvh`, and `overflow: hidden`
-- all typography uses `clamp()`
-- all spacing uses `clamp()` or viewport units
-- images have `max-height` constraints
-- grids adapt with `auto-fit` + `minmax()`
-- short-height breakpoints exist at `700px`, `600px`, and `500px`
-- if anything feels cramped, split the slide
+- mọi `.slide` có `height: 100vh`, `height: 100dvh` và `overflow: hidden`
+- toàn bộ typography dùng `clamp()`
+- toàn bộ khoảng cách dùng `clamp()` hoặc đơn vị viewport
+- ảnh có ràng buộc `max-height`
+- grid thích ứng với `auto-fit` + `minmax()`
+- có breakpoint cho chiều cao thấp tại `700px`, `600px` và `500px`
+- nếu có chỗ nào cảm thấy chật chội, hãy tách slide
 
-## Mood to Preset Mapping
+## Ánh xạ Tâm trạng sang Preset
 
-| Mood | Good Presets |
+| Tâm trạng | Preset phù hợp |
 |------|--------------|
-| Impressed / Confident | Bold Signal, Electric Studio, Dark Botanical |
-| Excited / Energized | Creative Voltage, Neon Cyber, Split Pastel |
-| Calm / Focused | Notebook Tabs, Paper & Ink, Swiss Modern |
-| Inspired / Moved | Dark Botanical, Vintage Editorial, Pastel Geometry |
+| Ấn tượng / Tự tin | Bold Signal, Electric Studio, Dark Botanical |
+| Hào hứng / Tràn năng lượng | Creative Voltage, Neon Cyber, Split Pastel |
+| Bình tĩnh / Tập trung | Notebook Tabs, Paper & Ink, Swiss Modern |
+| Truyền cảm hứng / Xúc động | Dark Botanical, Vintage Editorial, Pastel Geometry |
 
-## Preset Catalog
+## Danh mục Preset
 
 ### 1. Bold Signal
 
-- Vibe: confident, high-impact, keynote-ready
-- Best for: pitch decks, launches, statements
-- Fonts: Archivo Black + Space Grotesk
-- Palette: charcoal base, hot orange focal card, crisp white text
-- Signature: oversized section numbers, high-contrast card on dark field
+- Phong cách: tự tin, tác động mạnh, sẵn sàng cho keynote
+- Phù hợp cho: pitch deck, ra mắt sản phẩm, tuyên bố
+- Font: Archivo Black + Space Grotesk
+- Bảng màu: nền charcoal, card tiêu điểm màu cam rực, chữ trắng sắc nét
+- Đặc trưng: số section cỡ lớn, card tương phản cao trên nền tối
 
 ### 2. Electric Studio
 
-- Vibe: clean, bold, agency-polished
-- Best for: client presentations, strategic reviews
-- Fonts: Manrope only
-- Palette: black, white, saturated cobalt accent
-- Signature: two-panel split and sharp editorial alignment
+- Phong cách: sạch, đậm, trau chuốt kiểu agency
+- Phù hợp cho: thuyết trình khách hàng, review chiến lược
+- Font: chỉ Manrope
+- Bảng màu: đen, trắng, màu nhấn cobalt bão hòa
+- Đặc trưng: chia hai panel và căn lề biên tập sắc nét
 
 ### 3. Creative Voltage
 
-- Vibe: energetic, retro-modern, playful confidence
-- Best for: creative studios, brand work, product storytelling
-- Fonts: Syne + Space Mono
-- Palette: electric blue, neon yellow, deep navy
-- Signature: halftone textures, badges, punchy contrast
+- Phong cách: tràn năng lượng, retro-hiện đại, tự tin vui tươi
+- Phù hợp cho: studio sáng tạo, công việc thương hiệu, kể chuyện về sản phẩm
+- Font: Syne + Space Mono
+- Bảng màu: xanh điện, vàng neon, navy đậm
+- Đặc trưng: texture halftone, huy hiệu, tương phản mạnh
 
 ### 4. Dark Botanical
 
-- Vibe: elegant, premium, atmospheric
-- Best for: luxury brands, thoughtful narratives, premium product decks
-- Fonts: Cormorant + IBM Plex Sans
-- Palette: near-black, warm ivory, blush, gold, terracotta
-- Signature: blurred abstract circles, fine rules, restrained motion
+- Phong cách: thanh lịch, cao cấp, giàu khí quyển
+- Phù hợp cho: thương hiệu xa xỉ, câu chuyện sâu sắc, deck sản phẩm cao cấp
+- Font: Cormorant + IBM Plex Sans
+- Bảng màu: gần đen, ngà ấm, hồng phấn, vàng gold, đất nung (terracotta)
+- Đặc trưng: vòng tròn trừu tượng mờ, đường kẻ mảnh, chuyển động tiết chế
 
 ### 5. Notebook Tabs
 
-- Vibe: editorial, organized, tactile
-- Best for: reports, reviews, structured storytelling
-- Fonts: Bodoni Moda + DM Sans
-- Palette: cream paper on charcoal with pastel tabs
-- Signature: paper sheet, colored side tabs, binder details
+- Phong cách: biên tập, ngăn nắp, giàu xúc giác
+- Phù hợp cho: báo cáo, review, kể chuyện có cấu trúc
+- Font: Bodoni Moda + DM Sans
+- Bảng màu: giấy kem trên nền charcoal với tab pastel
+- Đặc trưng: tờ giấy, tab màu bên cạnh, chi tiết kiểu binder
 
 ### 6. Pastel Geometry
 
-- Vibe: approachable, modern, friendly
-- Best for: product overviews, onboarding, lighter brand decks
-- Fonts: Plus Jakarta Sans only
-- Palette: pale blue field, cream card, soft pink/mint/lavender accents
-- Signature: vertical pills, rounded cards, soft shadows
+- Phong cách: dễ gần, hiện đại, thân thiện
+- Phù hợp cho: tổng quan sản phẩm, onboarding, deck thương hiệu nhẹ nhàng hơn
+- Font: chỉ Plus Jakarta Sans
+- Bảng màu: nền xanh nhạt, card kem, màu nhấn hồng/bạc hà/oải hương dịu
+- Đặc trưng: viên thuốc dọc (pill), card bo tròn, đổ bóng mềm
 
 ### 7. Split Pastel
 
-- Vibe: playful, modern, creative
-- Best for: agency intros, workshops, portfolios
-- Fonts: Outfit only
-- Palette: peach + lavender split with mint badges
-- Signature: split backdrop, rounded tags, light grid overlays
+- Phong cách: vui tươi, hiện đại, sáng tạo
+- Phù hợp cho: giới thiệu agency, workshop, portfolio
+- Font: chỉ Outfit
+- Bảng màu: chia đôi đào + oải hương với huy hiệu bạc hà
+- Đặc trưng: nền chia đôi, tag bo tròn, lớp phủ lưới nhẹ
 
 ### 8. Vintage Editorial
 
-- Vibe: witty, personality-driven, magazine-inspired
-- Best for: personal brands, opinionated talks, storytelling
-- Fonts: Fraunces + Work Sans
-- Palette: cream, charcoal, dusty warm accents
-- Signature: geometric accents, bordered callouts, punchy serif headlines
+- Phong cách: dí dỏm, đậm cá tính, lấy cảm hứng từ tạp chí
+- Phù hợp cho: thương hiệu cá nhân, talk có quan điểm, kể chuyện
+- Font: Fraunces + Work Sans
+- Bảng màu: kem, charcoal, màu nhấn ấm bụi
+- Đặc trưng: điểm nhấn hình học, callout có viền, tiêu đề serif mạnh mẽ
 
 ### 9. Neon Cyber
 
-- Vibe: futuristic, techy, kinetic
-- Best for: AI, infra, dev tools, future-of-X talks
-- Fonts: Clash Display + Satoshi
-- Palette: midnight navy, cyan, magenta
-- Signature: glow, particles, grids, data-radar energy
+- Phong cách: tương lai, công nghệ, chuyển động
+- Phù hợp cho: AI, hạ tầng, dev tool, talk về tương lai của X
+- Font: Clash Display + Satoshi
+- Bảng màu: navy nửa đêm, cyan, magenta
+- Đặc trưng: glow, hạt, lưới, năng lượng radar dữ liệu
 
 ### 10. Terminal Green
 
-- Vibe: developer-focused, hacker-clean
-- Best for: APIs, CLI tools, engineering demos
-- Fonts: JetBrains Mono only
-- Palette: GitHub dark + terminal green
-- Signature: scan lines, command-line framing, precise monospace rhythm
+- Phong cách: hướng đến developer, hacker nhưng gọn gàng
+- Phù hợp cho: API, công cụ CLI, demo kỹ thuật
+- Font: chỉ JetBrains Mono
+- Bảng màu: GitHub dark + xanh lá terminal
+- Đặc trưng: scan line, khung kiểu dòng lệnh, nhịp monospace chính xác
 
 ### 11. Swiss Modern
 
-- Vibe: minimal, precise, data-forward
-- Best for: corporate, product strategy, analytics
-- Fonts: Archivo + Nunito
-- Palette: white, black, signal red
-- Signature: visible grids, asymmetry, geometric discipline
+- Phong cách: tối giản, chính xác, ưu tiên dữ liệu
+- Phù hợp cho: doanh nghiệp, chiến lược sản phẩm, analytics
+- Font: Archivo + Nunito
+- Bảng màu: trắng, đen, đỏ tín hiệu
+- Đặc trưng: lưới nhìn thấy được, bất đối xứng, kỷ luật hình học
 
 ### 12. Paper & Ink
 
-- Vibe: literary, thoughtful, story-driven
-- Best for: essays, keynote narratives, manifesto decks
-- Fonts: Cormorant Garamond + Source Serif 4
-- Palette: warm cream, charcoal, crimson accent
-- Signature: pull quotes, drop caps, elegant rules
+- Phong cách: văn chương, sâu sắc, hướng câu chuyện
+- Phù hợp cho: tiểu luận, keynote kể chuyện, deck tuyên ngôn
+- Font: Cormorant Garamond + Source Serif 4
+- Bảng màu: kem ấm, charcoal, màu nhấn đỏ thẫm
+- Đặc trưng: pull quote, drop cap, đường kẻ thanh lịch
 
-## Direct Selection Prompts
+## Gợi ý chọn trực tiếp
 
-If the user already knows the style they want, let them pick directly from the preset names above instead of forcing preview generation.
+Nếu người dùng đã biết phong cách mình muốn, hãy để họ chọn trực tiếp từ các tên preset ở trên thay vì ép tạo bản xem trước.
 
-## Animation Feel Mapping
+## Ánh xạ Cảm giác Animation
 
-| Feeling | Motion Direction |
+| Cảm giác | Hướng chuyển động |
 |---------|------------------|
-| Dramatic / Cinematic | slow fades, parallax, large scale-ins |
-| Techy / Futuristic | glow, particles, grid motion, scramble text |
-| Playful / Friendly | springy easing, rounded shapes, floating motion |
-| Professional / Corporate | subtle 200-300ms transitions, clean slides |
-| Calm / Minimal | very restrained movement, whitespace-first |
-| Editorial / Magazine | strong hierarchy, staggered text and image interplay |
+| Kịch tính / Điện ảnh | fade chậm, parallax, scale-in lớn |
+| Công nghệ / Tương lai | glow, hạt, chuyển động lưới, chữ scramble |
+| Vui tươi / Thân thiện | easing nảy, hình bo tròn, chuyển động lơ lửng |
+| Chuyên nghiệp / Doanh nghiệp | transition tinh tế 200-300ms, slide gọn gàng |
+| Tĩnh lặng / Tối giản | chuyển động rất tiết chế, ưu tiên khoảng trắng |
+| Biên tập / Tạp chí | phân cấp mạnh, chữ và ảnh đan xen so le |
 
-## CSS Gotcha: Negating Functions
+## Cạm bẫy CSS: Phủ định hàm
 
-Never write these:
+KHÔNG BAO GIỜ viết những dòng này:
 
 ```css
 right: -clamp(28px, 3.5vw, 44px);
 margin-left: -min(10vw, 100px);
 ```
 
-Browsers ignore them silently.
+Trình duyệt bỏ qua chúng một cách âm thầm.
 
-Always write this instead:
+Thay vào đó hãy luôn viết:
 
 ```css
 right: calc(-1 * clamp(28px, 3.5vw, 44px));
 margin-left: calc(-1 * min(10vw, 100px));
 ```
 
-## Validation Sizes
+## Kích thước xác thực
 
-Test at minimum:
+Test tối thiểu ở:
 - Desktop: `1920x1080`, `1440x900`, `1280x720`
 - Tablet: `1024x768`, `768x1024`
 - Mobile: `375x667`, `414x896`
-- Landscape phone: `667x375`, `896x414`
+- Điện thoại ngang: `667x375`, `896x414`
 
-## Anti-Patterns
+## Anti-Pattern
 
-Do not use:
-- purple-on-white startup templates
-- Inter / Roboto / Arial as the visual voice unless the user explicitly wants utilitarian neutrality
-- bullet walls, tiny type, or code blocks that require scrolling
-- decorative illustrations when abstract geometry would do the job better
+Không dùng:
+- template startup tím-trên-nền-trắng
+- Inter / Roboto / Arial làm giọng điệu thị giác trừ khi người dùng muốn rõ ràng sự trung tính thực dụng
+- tường bullet, chữ nhỏ xíu, hoặc khối code cần cuộn
+- hình minh họa trang trí khi hình học trừu tượng làm tốt hơn

@@ -7,19 +7,19 @@ paths:
   - "**/*.pipe.ts"
   - "**/*.spec.ts"
 ---
-# Angular Hooks
+# Hook cho Angular
 
-> This file extends [common/hooks.md](../common/hooks.md) with Angular specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung dành riêng cho Angular.
 
-## PostToolUse Hooks
+## Hook PostToolUse
 
-Configure in `~/.claude/settings.json`:
+Cấu hình trong `~/.claude/settings.json`:
 
-- **Prettier**: Auto-format `.ts` and `.html` files after edit
-- **ESLint / ng lint**: Run `ng lint` after editing Angular source files to catch decorator misuse, template errors, and style violations
-- **TypeScript check**: Run `tsc --noEmit` after editing `.ts` files
-- **Build check**: Run `ng build` after generating or significantly changing Angular code to catch template and type errors early
+- **Prettier**: Tự động format file `.ts` và `.html` sau khi sửa
+- **ESLint / ng lint**: Chạy `ng lint` sau khi sửa source Angular để bắt lỗi dùng decorator sai, lỗi template và vi phạm style
+- **Kiểm tra TypeScript**: Chạy `tsc --noEmit` sau khi sửa file `.ts`
+- **Kiểm tra build**: Chạy `ng build` sau khi sinh hoặc thay đổi đáng kể code Angular để phát hiện sớm lỗi template và lỗi type
 
-## Stop Hooks
+## Hook Stop
 
-- **Lint audit**: Run `ng lint` across modified files before session ends to catch any outstanding violations
+- **Lint audit**: Chạy `ng lint` trên các file đã sửa trước khi kết thúc phiên để bắt mọi vi phạm còn tồn đọng

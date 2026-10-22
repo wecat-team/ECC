@@ -1,36 +1,36 @@
 ---
 name: fsharp-testing
-description: F# testing patterns with xUnit, FsUnit, Unquote, FsCheck property-based testing, integration tests, and test organization best practices. Use when writing F# tests with xUnit, FsUnit, Unquote, or FsCheck.
+description: Pattern testing F# với xUnit, FsUnit, Unquote, property-based testing bằng FsCheck, integration test và best practice tổ chức test. Dùng khi viết test F# với xUnit, FsUnit, Unquote hoặc FsCheck.
 metadata:
   origin: ECC
 ---
 
-# F# Testing Patterns
+# Pattern Testing F#
 
-Comprehensive testing patterns for F# applications using xUnit, FsUnit, Unquote, FsCheck, and modern .NET testing practices.
+Các pattern testing toàn diện cho ứng dụng F# dùng xUnit, FsUnit, Unquote, FsCheck và thực hành testing .NET hiện đại.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new tests for F# code
-- Reviewing test quality and coverage
-- Setting up test infrastructure for F# projects
-- Debugging flaky or slow tests
+- Viết test mới cho code F#
+- Review chất lượng test và coverage
+- Thiết lập hạ tầng test cho project F#
+- Debug test flaky hoặc chậm
 
-## Test Framework Stack
+## Bộ framework test
 
-| Tool | Purpose |
+| Công cụ | Mục đích |
 |---|---|
-| **xUnit** | Test framework (standard .NET ecosystem choice) |
-| **FsUnit.xUnit** | F#-friendly assertion syntax for xUnit |
-| **Unquote** | Assertion library using F# quotations for clear failure messages |
-| **FsCheck.xUnit** | Property-based testing integrated with xUnit |
-| **NSubstitute** | Mocking .NET dependencies |
-| **Testcontainers** | Real infrastructure in integration tests |
-| **WebApplicationFactory** | ASP.NET Core integration tests |
+| **xUnit** | Test framework (lựa chọn chuẩn của hệ sinh thái .NET) |
+| **FsUnit.xUnit** | Cú pháp assertion thân thiện với F# cho xUnit |
+| **Unquote** | Thư viện assertion dùng F# quotation để có thông báo lỗi rõ ràng |
+| **FsCheck.xUnit** | Property-based testing tích hợp với xUnit |
+| **NSubstitute** | Mock các dependency .NET |
+| **Testcontainers** | Hạ tầng thật trong integration test |
+| **WebApplicationFactory** | Integration test cho ASP.NET Core |
 
-## Unit Tests with xUnit + FsUnit
+## Unit Test với xUnit + FsUnit
 
-### Basic Test Structure
+### Cấu trúc test cơ bản
 
 ```fsharp
 module OrderServiceTests
@@ -50,9 +50,9 @@ let ``confirm changes status to Confirmed`` () =
     confirmed.Status |> should be (ofCase <@ Confirmed @>)
 ```
 
-### Assertions with Unquote
+### Assertion với Unquote
 
-Unquote uses F# quotations so failure messages show the full expression that failed, not just "expected X got Y".
+Unquote dùng F# quotation nên thông báo lỗi hiển thị toàn bộ biểu thức thất bại, không chỉ "expected X got Y".
 
 ```fsharp
 module OrderValidationTests
@@ -79,7 +79,7 @@ let ``validated email rejects empty input`` () =
     test <@ Result.isError result @>
 ```
 
-### Async Tests
+### Test bất đồng bộ (Async)
 
 ```fsharp
 [<Fact>]
@@ -103,7 +103,7 @@ let ``PlaceOrder returns error when items are empty`` () = task {
 }
 ```
 
-### Parameterized Tests with Theory
+### Test tham số hóa với Theory
 
 ```fsharp
 [<Theory>]
@@ -123,9 +123,9 @@ let ``IsValidEmail returns expected result`` (email: string, expected: bool) =
     test <@ EmailValidator.isValid email = expected @>
 ```
 
-## Property-Based Testing with FsCheck
+## Property-Based Testing với FsCheck
 
-### Using FsCheck.xUnit
+### Dùng FsCheck.xUnit
 
 ```fsharp
 open FsCheck
@@ -147,7 +147,7 @@ let ``serialization roundtrips`` (order: Order) =
     deserialized = order
 ```
 
-### Custom Generators
+### Generator tùy chỉnh
 
 ```fsharp
 type OrderGenerators =
@@ -164,9 +164,9 @@ let ``valid emails pass validation`` (email: string) =
     EmailValidator.isValid email
 ```
 
-## Mocking Dependencies
+## Mock Dependency
 
-### Function Stubs (Preferred)
+### Function Stub (Ưu tiên)
 
 ```fsharp
 let createTestDeps () =
@@ -188,7 +188,7 @@ let ``PlaceOrder saves the confirmed order`` () = task {
 }
 ```
 
-### NSubstitute for .NET Interfaces
+### NSubstitute cho Interface .NET
 
 ```fsharp
 open NSubstitute
@@ -206,7 +206,7 @@ let ``calls repository with correct ID`` () = task {
 }
 ```
 
-## ASP.NET Core Integration Tests
+## Integration Test cho ASP.NET Core
 
 ```fsharp
 type OrderApiTests (factory: WebApplicationFactory<Program>) =
@@ -227,7 +227,7 @@ type OrderApiTests (factory: WebApplicationFactory<Program>) =
     }
 ```
 
-## Test Organization
+## Tổ chức Test
 
 ```
 tests/
@@ -245,37 +245,37 @@ tests/
       TestDeps.fs
 ```
 
-## Common Anti-Patterns
+## Anti-Pattern thường gặp
 
-| Anti-Pattern | Fix |
+| Anti-Pattern | Cách khắc phục |
 |---|---|
-| Testing implementation details | Test behavior and outcomes |
-| Mutable shared test state | Fresh state per test |
-| `Thread.Sleep` in async tests | Use `Task.Delay` with timeout, or polling helpers |
-| Asserting on `sprintf` output | Assert on typed values and pattern matches |
-| Ignoring `CancellationToken` | Always pass and verify cancellation |
-| Skipping property-based tests | Use FsCheck for any function with clear invariants |
+| Test chi tiết triển khai | Test hành vi và kết quả |
+| State test mutable dùng chung | State mới cho mỗi test |
+| `Thread.Sleep` trong test async | Dùng `Task.Delay` kèm timeout, hoặc helper polling |
+| Assert trên output của `sprintf` | Assert trên giá trị có kiểu và pattern match |
+| Bỏ qua `CancellationToken` | Luôn truyền và xác minh việc hủy |
+| Bỏ qua property-based test | Dùng FsCheck cho mọi hàm có invariant rõ ràng |
 
-## Related Skills
+## Skill liên quan
 
-- `dotnet-patterns` - Idiomatic .NET patterns, dependency injection, and architecture
-- `csharp-testing` - C# testing patterns (shared infrastructure like WebApplicationFactory and Testcontainers applies to F# too)
+- `dotnet-patterns` - Pattern .NET idiomatic, dependency injection và kiến trúc
+- `csharp-testing` - Pattern testing C# (hạ tầng dùng chung như WebApplicationFactory và Testcontainers cũng áp dụng cho F#)
 
-## Running Tests
+## Chạy Test
 
 ```bash
-# Run all tests
+# Chạy tất cả test
 dotnet test
 
-# Run with coverage
+# Chạy với coverage
 dotnet test --collect:"XPlat Code Coverage"
 
-# Run specific project
+# Chạy một project cụ thể
 dotnet test tests/MyApp.Tests/
 
-# Filter by test name
+# Lọc theo tên test
 dotnet test --filter "FullyQualifiedName~OrderService"
 
-# Watch mode during development
+# Chế độ watch trong lúc phát triển
 dotnet watch test --project tests/MyApp.Tests/
 ```

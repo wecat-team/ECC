@@ -1,14 +1,14 @@
-# Testing with the RouterTestingHarness
+# Testing với RouterTestingHarness
 
-When testing components that involve routing, it is crucial **not to mock the Router or related services**. Instead, use the `RouterTestingHarness`, which provides a robust and reliable way to test routing logic in an environment that closely mirrors a real application.
+Khi test các component có liên quan đến routing, điều quan trọng là **không mock Router hay các service liên quan**. Thay vào đó, hãy dùng `RouterTestingHarness`, công cụ cung cấp cách vững chắc và đáng tin cậy để test logic routing trong một môi trường phản ánh sát một ứng dụng thật.
 
-Using the harness ensures you are testing the actual router configuration, guards, and resolvers, leading to more meaningful tests.
+Dùng harness đảm bảo bạn đang test cấu hình router, guard và resolver thực sự, từ đó tạo ra các test có ý nghĩa hơn.
 
-## Setting Up for Router Testing
+## Thiết lập cho Router Testing
 
-The `RouterTestingHarness` is the primary tool for testing routing scenarios. You also need to provide your test routes using the `provideRouter` function in your `TestBed` configuration.
+`RouterTestingHarness` là công cụ chính để test các tình huống routing. Bạn cũng cần cung cấp các test route của mình bằng hàm `provideRouter` trong cấu hình `TestBed`.
 
-### Example Setup
+### Ví dụ thiết lập
 
 ```ts
 import {TestBed} from '@angular/core/testing';
@@ -38,16 +38,16 @@ describe('Dashboard Component Routing', () => {
 });
 ```
 
-### Key Concepts
+### Khái niệm chính
 
-1. **`provideRouter([...])`**: Provide a test-specific routing configuration. This should include the routes necessary for the component-under-test to function correctly.
-2. **`RouterTestingHarness.create()`**: Asynchronously creates and initializes the harness and performs an initial navigation to the root URL (`/`).
+1. **`provideRouter([...])`**: Cung cấp cấu hình routing riêng cho test. Cấu hình này nên bao gồm các route cần thiết để component đang được test hoạt động đúng.
+2. **`RouterTestingHarness.create()`**: Tạo và khởi tạo harness một cách bất đồng bộ, đồng thời thực hiện lần điều hướng ban đầu tới URL gốc (`/`).
 
-## Writing Router Tests
+## Viết Router Test
 
-Once the harness is created, you can use it to drive navigation and make assertions on the state of the router and the activated components.
+Sau khi harness được tạo, bạn có thể dùng nó để điều khiển điều hướng và đưa ra các assertion về trạng thái của router và các component được kích hoạt.
 
-### Example: Testing Navigation
+### Ví dụ: Test điều hướng
 
 ```ts
 it('should navigate to a hero detail when a hero is selected', async () => {
@@ -79,9 +79,9 @@ it('should get the activated component directly', async () => {
 });
 ```
 
-### Best Practices
+### Best Practice
 
-- **Navigate with the Harness:** Always use `harness.navigateByUrl()` to simulate navigation. This method returns a promise that resolves with the instance of the activated component.
-- **Access the Router State:** Use `harness.router` to access the live router instance and assert on its state (e.g., `harness.router.url`).
-- **Get Activated Components:** Use `harness.getHarness(ComponentType)` to get an instance of a component harness for the currently activated routed component, or `harness.routeDebugElement` to get the `DebugElement`.
-- **Wait for Stability:** After performing an action that causes navigation, always `await harness.fixture.whenStable()` to ensure the routing is complete before making assertions.
+- **Điều hướng bằng Harness:** Luôn dùng `harness.navigateByUrl()` để mô phỏng điều hướng. Phương thức này trả về một promise resolve ra instance của component được kích hoạt.
+- **Truy cập Router State:** Dùng `harness.router` để truy cập router instance đang chạy và assert trên trạng thái của nó (ví dụ: `harness.router.url`).
+- **Lấy các Component được kích hoạt:** Dùng `harness.getHarness(ComponentType)` để lấy một instance của component harness cho routed component đang được kích hoạt, hoặc `harness.routeDebugElement` để lấy `DebugElement`.
+- **Chờ cho ổn định:** Sau khi thực hiện một hành động gây ra điều hướng, luôn `await harness.fixture.whenStable()` để đảm bảo routing đã hoàn tất trước khi assert.

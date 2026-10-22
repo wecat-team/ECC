@@ -1,28 +1,28 @@
 ---
 name: instinct-import
-description: Import instincts from file or URL into project/global scope
+description: Import các instinct từ file hoặc URL vào phạm vi project/global
 command: true
 ---
 
-# Instinct Import Command
+# Lệnh Instinct Import
 
-## Implementation
+## Triển khai
 
-Run the instinct CLI using the plugin root path:
+Chạy instinct CLI bằng đường dẫn gốc của plugin:
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" import <file-or-url> [--dry-run] [--force] [--min-confidence 0.7] [--scope project|global]
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
+Hoặc nếu `CLAUDE_PLUGIN_ROOT` chưa được đặt (cài đặt thủ công):
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py import <file-or-url>
 ```
 
-Import instincts from local file paths or HTTP(S) URLs.
+Import các instinct từ đường dẫn file cục bộ hoặc URL HTTP(S).
 
-## Usage
+## Cách dùng
 
 ```
 /instinct-import team-instincts.yaml
@@ -31,17 +31,17 @@ Import instincts from local file paths or HTTP(S) URLs.
 /instinct-import team-instincts.yaml --scope global --force
 ```
 
-## What to Do
+## Cần làm gì
 
-1. Fetch the instinct file (local path or URL)
-2. Parse and validate the format
-3. Check for duplicates with existing instincts
-4. Merge or add new instincts
-5. Save to inherited instincts directory:
-   - Project scope: `~/.claude/homunculus/projects/<project-id>/instincts/inherited/`
-   - Global scope: `~/.claude/homunculus/instincts/inherited/`
+1. Lấy file instinct (đường dẫn cục bộ hoặc URL)
+2. Parse và validate định dạng
+3. Kiểm tra trùng lặp với các instinct hiện có
+4. Merge hoặc thêm instinct mới
+5. Lưu vào thư mục instinct kế thừa (inherited):
+   - Phạm vi dự án: `~/.claude/homunculus/projects/<project-id>/instincts/inherited/`
+   - Phạm vi global: `~/.claude/homunculus/instincts/inherited/`
 
-## Import Process
+## Quy trình import
 
 ```
  Importing instincts from: team-instincts.yaml
@@ -73,16 +73,16 @@ Already have similar instincts:
 Import 8 new, update 1?
 ```
 
-## Merge Behavior
+## Hành vi merge
 
-When importing an instinct with an existing ID:
-- Higher-confidence import becomes an update candidate
-- Equal/lower-confidence import is skipped
-- User confirms unless `--force` is used
+Khi import một instinct có ID đã tồn tại:
+- Bản import có độ tin cậy cao hơn trở thành ứng viên cập nhật
+- Bản import có độ tin cậy bằng/thấp hơn bị bỏ qua
+- Người dùng xác nhận, trừ khi dùng `--force`
 
-## Source Tracking
+## Theo dõi nguồn
 
-Imported instincts are marked with:
+Các instinct được import được đánh dấu bằng:
 ```yaml
 source: inherited
 scope: project
@@ -91,16 +91,16 @@ project_id: "a1b2c3d4e5f6"
 project_name: "my-project"
 ```
 
-## Flags
+## Flag
 
-- `--dry-run`: Preview without importing
-- `--force`: Skip confirmation prompt
-- `--min-confidence <n>`: Only import instincts above threshold
-- `--scope <project|global>`: Select target scope (default: `project`)
+- `--dry-run`: Xem trước mà không import
+- `--force`: Bỏ qua bước hỏi xác nhận
+- `--min-confidence <n>`: Chỉ import các instinct trên ngưỡng
+- `--scope <project|global>`: Chọn phạm vi đích (mặc định: `project`)
 
 ## Output
 
-After import:
+Sau khi import:
 ```
 PASS: Import complete!
 

@@ -1,32 +1,32 @@
 ---
 name: nextjs-turbopack
-description: Next.js 16+ and Turbopack guidance — incremental Rust bundling, file-system caching, faster dev startup and HMR, Turbopack vs webpack tradeoffs, and the middleware.ts to proxy.ts filename change. Use when developing or debugging Next.js 16+ apps, diagnosing slow dev startup or hot reload, choosing between bundlers, or reviewing middleware/proxy file naming.
+description: Hướng dẫn Next.js 16+ và Turbopack — bundling tăng dần bằng Rust, file-system caching, dev startup và HMR nhanh hơn, đánh đổi giữa Turbopack và webpack, và việc đổi tên file middleware.ts thành proxy.ts. Dùng khi phát triển hoặc debug app Next.js 16+, chẩn đoán dev startup hoặc hot reload chậm, chọn giữa các bundler, hoặc review cách đặt tên file middleware/proxy.
 metadata:
   origin: ECC
 ---
 
-# Next.js and Turbopack
+# Next.js và Turbopack
 
-Next.js 16+ uses Turbopack by default for local development: an incremental bundler written in Rust that significantly speeds up dev startup and hot updates.
+Next.js 16+ dùng Turbopack theo mặc định cho phát triển local: một bundler tăng dần (incremental) viết bằng Rust, giúp tăng tốc đáng kể dev startup và hot update.
 
-## When to Use
+## Khi nào dùng
 
-- **Turbopack (default dev)**: Use for day-to-day development. Faster cold start and HMR, especially in large apps.
-- **Webpack (legacy dev)**: Use only if you hit a Turbopack bug or rely on a webpack-only plugin in dev. Disable with `--webpack` (or `--no-turbopack` depending on your Next.js version; check the docs for your release).
-- **Production**: Production build behavior (`next build`) may use Turbopack or webpack depending on Next.js version; check the official Next.js docs for your version.
+- **Turbopack (dev mặc định)**: Dùng cho phát triển hằng ngày. Cold start và HMR nhanh hơn, đặc biệt trong các app lớn.
+- **Webpack (dev legacy)**: Chỉ dùng nếu bạn gặp bug của Turbopack hoặc phụ thuộc vào plugin chỉ có ở webpack trong dev. Tắt bằng `--webpack` (hoặc `--no-turbopack` tùy phiên bản Next.js; hãy xem tài liệu cho bản phát hành của bạn).
+- **Production**: Hành vi production build (`next build`) có thể dùng Turbopack hoặc webpack tùy phiên bản Next.js; hãy xem tài liệu chính thức của Next.js cho phiên bản của bạn.
 
-Use when: developing or debugging Next.js 16+ apps, diagnosing slow dev startup or HMR, or optimizing production bundles.
+Dùng khi: phát triển hoặc debug app Next.js 16+, chẩn đoán dev startup hoặc HMR chậm, hoặc tối ưu production bundle.
 
-## How It Works
+## Cách hoạt động
 
-- **Turbopack**: Incremental bundler for Next.js dev. Uses file-system caching so restarts are much faster (e.g. 5–14x on large projects).
-- **Default in dev**: From Next.js 16, `next dev` runs with Turbopack unless disabled.
-- **File-system caching**: Restarts reuse previous work; cache is typically under `.next`; no extra config needed for basic use.
-- **Bundle Analyzer (Next.js 16.1+)**: Experimental Bundle Analyzer to inspect output and find heavy dependencies; enable via config or experimental flag (see Next.js docs for your version).
+- **Turbopack**: Bundler tăng dần cho Next.js dev. Dùng file-system caching nên restart nhanh hơn nhiều (ví dụ 5–14 lần trên các dự án lớn).
+- **Mặc định trong dev**: Từ Next.js 16, `next dev` chạy với Turbopack trừ khi bị tắt.
+- **File-system caching**: Các lần restart tái sử dụng công việc trước đó; cache thường nằm dưới `.next`; không cần cấu hình thêm cho việc sử dụng cơ bản.
+- **Bundle Analyzer (Next.js 16.1+)**: Bundle Analyzer thử nghiệm để kiểm tra output và tìm các dependency nặng; bật qua config hoặc cờ experimental (xem tài liệu Next.js cho phiên bản của bạn).
 
-## Examples
+## Ví dụ
 
-### Commands
+### Lệnh
 
 ```bash
 next dev
@@ -34,25 +34,25 @@ next build
 next start
 ```
 
-### Usage
+### Cách dùng
 
-Run `next dev` for local development with Turbopack. Use the Bundle Analyzer (see Next.js docs) to optimize code-splitting and trim large dependencies. Prefer App Router and server components where possible.
+Chạy `next dev` để phát triển local với Turbopack. Dùng Bundle Analyzer (xem tài liệu Next.js) để tối ưu code-splitting và cắt bớt các dependency lớn. Ưu tiên App Router và server component khi có thể.
 
-## Middleware File Naming
+## Đặt tên file Middleware
 
-Next.js 16 introduced `proxy.ts` as the middleware filename, replacing the older `middleware.ts` convention:
+Next.js 16 giới thiệu `proxy.ts` làm tên file middleware, thay thế quy ước `middleware.ts` cũ:
 
-- **Next.js 16+**: use `proxy.ts` at the project root
-- **Pre-Next.js 16**: use `middleware.ts` at the project root
+- **Next.js 16+**: dùng `proxy.ts` ở root dự án
+- **Trước Next.js 16**: dùng `middleware.ts` ở root dự án
 
-The filename change is tied to the **Next.js version**, not to which bundler (Turbopack or webpack) is in use. Always check the official docs for the version you are reviewing.
+Việc đổi tên file gắn với **phiên bản Next.js**, không phải với bundler nào (Turbopack hay webpack) đang được dùng. Luôn xem tài liệu chính thức cho phiên bản bạn đang review.
 
-**Do not flag `proxy.ts` as a misnamed or missing middleware file in Next.js 16 projects.** The file is correct and intentional. Suggesting a rename to `middleware.ts` will break middleware execution.
+**Không đánh dấu `proxy.ts` là file middleware đặt sai tên hoặc bị thiếu trong các dự án Next.js 16.** File đó là đúng và có chủ đích. Đề xuất đổi tên thành `middleware.ts` sẽ làm hỏng việc thực thi middleware.
 
-Reference: [Next.js proxy docs](https://nextjs.org/docs/app/getting-started/proxy)
+Tham khảo: [Next.js proxy docs](https://nextjs.org/docs/app/getting-started/proxy)
 
-## Best Practices
+## Best Practice
 
-- Stay on a recent Next.js 16.x for stable Turbopack and caching behavior.
-- If dev is slow, ensure you're on Turbopack (default) and that the cache isn't being cleared unnecessarily.
-- For production bundle size issues, use the official Next.js bundle analysis tooling for your version.
+- Dùng một bản Next.js 16.x gần đây để có hành vi Turbopack và caching ổn định.
+- Nếu dev chậm, hãy đảm bảo bạn đang dùng Turbopack (mặc định) và cache không bị xóa một cách không cần thiết.
+- Với các vấn đề kích thước production bundle, hãy dùng công cụ phân tích bundle chính thức của Next.js cho phiên bản của bạn.

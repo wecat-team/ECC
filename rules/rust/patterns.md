@@ -2,13 +2,13 @@
 paths:
   - "**/*.rs"
 ---
-# Rust Patterns
+# Pattern Rust
 
-> This file extends [common/patterns.md](../common/patterns.md) with Rust-specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung riêng cho Rust.
 
-## Repository Pattern with Traits
+## Repository Pattern với Trait
 
-Encapsulate data access behind a trait:
+Đóng gói việc truy cập dữ liệu phía sau một trait:
 
 ```rust
 pub trait OrderRepository: Send + Sync {
@@ -19,11 +19,11 @@ pub trait OrderRepository: Send + Sync {
 }
 ```
 
-Concrete implementations handle storage details (Postgres, SQLite, in-memory for tests).
+Các triển khai cụ thể xử lý chi tiết lưu trữ (Postgres, SQLite, in-memory cho test).
 
 ## Service Layer
 
-Business logic in service structs; inject dependencies via constructor:
+Logic nghiệp vụ nằm trong các struct service; inject dependency qua constructor:
 
 ```rust
 pub struct OrderService {
@@ -45,9 +45,9 @@ impl OrderService {
 }
 ```
 
-## Newtype Pattern for Type Safety
+## Newtype Pattern để an toàn kiểu
 
-Prevent argument mix-ups with distinct wrapper types:
+Ngăn nhầm lẫn đối số bằng các wrapper type riêng biệt:
 
 ```rust
 struct UserId(u64);
@@ -59,9 +59,9 @@ fn get_order(user: UserId, order: OrderId) -> anyhow::Result<Order> {
 }
 ```
 
-## Enum State Machines
+## Enum State Machine
 
-Model states as enums — make illegal states unrepresentable:
+Mô hình hóa trạng thái bằng enum — làm cho trạng thái không hợp lệ không thể biểu diễn:
 
 ```rust
 enum ConnectionState {
@@ -83,11 +83,11 @@ fn handle(state: &ConnectionState) {
 }
 ```
 
-Always match exhaustively — no wildcard `_` for business-critical enums.
+Luôn match đầy đủ (exhaustive) — không dùng wildcard `_` cho các enum quan trọng với nghiệp vụ.
 
 ## Builder Pattern
 
-Use for structs with many optional parameters:
+Dùng cho struct có nhiều tham số tùy chọn:
 
 ```rust
 pub struct ServerConfig {
@@ -128,9 +128,9 @@ impl ServerConfigBuilder {
 }
 ```
 
-## Sealed Traits for Extensibility Control
+## Sealed Trait để kiểm soát khả năng mở rộng
 
-Use a private module to seal a trait, preventing external implementations:
+Dùng một module private để "niêm phong" (seal) một trait, ngăn các triển khai từ bên ngoài:
 
 ```rust
 mod private {
@@ -150,7 +150,7 @@ impl Format for Json {
 
 ## API Response Envelope
 
-Consistent API responses using a generic enum:
+Response API nhất quán bằng một enum generic:
 
 ```rust
 #[derive(Debug, serde::Serialize)]
@@ -163,6 +163,6 @@ pub enum ApiResponse<T: serde::Serialize> {
 }
 ```
 
-## References
+## Tham chiếu
 
-See skill: `rust-patterns` for comprehensive patterns including ownership, traits, generics, concurrency, and async.
+Xem skill: `rust-patterns` để biết đầy đủ các pattern gồm ownership, trait, generic, concurrency và async.

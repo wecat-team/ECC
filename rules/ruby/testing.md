@@ -7,32 +7,32 @@ paths:
   - "**/spec/**/*.rb"
   - "**/config/routes.rb"
 ---
-# Ruby Testing
+# Kiểm thử Ruby
 
-> This file extends [common/testing.md](../common/testing.md) with Ruby and Rails specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung riêng cho Ruby và Rails.
 
 ## Framework
 
-- Use **Minitest** when the Rails app follows the default Rails test stack.
-- Use **RSpec** when it is already established in the project or the team has explicit production conventions around it.
-- Do not mix Minitest and RSpec inside the same feature area without a migration reason.
+- Dùng **Minitest** khi app Rails theo test stack mặc định của Rails.
+- Dùng **RSpec** khi nó đã được thiết lập trong dự án hoặc team có quy ước production rõ ràng xoay quanh nó.
+- Không trộn Minitest và RSpec trong cùng một khu vực tính năng nếu không có lý do migration.
 
-## Test Pyramid
+## Kim tự tháp test (Test Pyramid)
 
-- Put fast domain behavior in model, service, query, policy, and job tests.
-- Use request/controller tests for HTTP contracts, auth behavior, redirects, status codes, and response shapes.
-- Use system tests with Capybara for browser-critical flows only; keep them focused and stable.
-- Cover background jobs with unit tests for behavior and integration tests for queue/enqueue contracts.
+- Đặt hành vi domain cần chạy nhanh vào test model, service, query, policy và job.
+- Dùng request/controller test cho hợp đồng HTTP, hành vi auth, redirect, status code và hình dạng response.
+- Dùng system test với Capybara chỉ cho các flow quan trọng trên trình duyệt; giữ chúng tập trung và ổn định.
+- Bao phủ background job bằng unit test cho hành vi và integration test cho hợp đồng queue/enqueue.
 
-## Fixtures And Factories
+## Fixture và Factory
 
-- Use Rails fixtures when they are the project default and the data graph is small.
-- Use `factory_bot` when scenarios need explicit object construction or complex traits.
-- Keep test data close to the behavior being asserted; avoid global fixtures that hide setup cost.
+- Dùng Rails fixture khi đó là mặc định của dự án và đồ thị dữ liệu nhỏ.
+- Dùng `factory_bot` khi kịch bản cần dựng object tường minh hoặc trait phức tạp.
+- Giữ dữ liệu test gần với hành vi đang được assert; tránh fixture toàn cục che giấu chi phí thiết lập.
 
-## Commands
+## Lệnh
 
-Prefer project-local commands:
+Ưu tiên các lệnh cục bộ của dự án:
 
 ```bash
 bin/rails test
@@ -43,9 +43,9 @@ bundle exec rspec spec/models/user_spec.rb
 
 ## Coverage
 
-- Use SimpleCov when coverage is enforced; keep thresholds in CI and avoid gaming branch coverage with low-value tests.
-- Add regression tests for bug fixes before changing production code.
+- Dùng SimpleCov khi coverage được thực thi bắt buộc; giữ ngưỡng trong CI và tránh "lách" branch coverage bằng các test giá trị thấp.
+- Thêm regression test cho bug fix trước khi thay đổi code production.
 
-## Reference
+## Tham chiếu
 
-See skill: `tdd-workflow` for the repo-wide RED -> GREEN -> REFACTOR loop.
+Xem skill: `tdd-workflow` để biết vòng lặp RED -> GREEN -> REFACTOR dùng chung toàn repo.

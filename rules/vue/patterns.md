@@ -3,46 +3,46 @@ paths:
   - "**/*.vue"
 ---
 
-# Vue Patterns
+# Pattern Vue
 
-> This file extends [common/patterns.md](../common/patterns.md) with Vue specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung riêng cho Vue.
 
-## Composables
+## Composable
 
-- The composable (`useXxx`) is the reusable-logic unit. In Feature-Sliced Design it lives in the slice `model` segment.
-- Accept `MaybeRefOrGetter<T>` inputs and normalize with `toValue`, so callers can pass a ref, a getter, or a raw value.
-- Return `toRefs(reactive(...))` so consumers can destructure without losing reactivity.
-- A composable that uses lifecycle hooks or `provide` / `inject` must be called inside a component `setup`, not lazily or conditionally.
+- Composable (`useXxx`) là đơn vị logic tái sử dụng. Trong Feature-Sliced Design, nó nằm ở segment `model` của slice.
+- Nhận đầu vào `MaybeRefOrGetter<T>` và chuẩn hóa bằng `toValue`, để bên gọi có thể truyền ref, getter hoặc giá trị thô.
+- Trả về `toRefs(reactive(...))` để bên dùng có thể destructure mà không mất reactivity.
+- Composable dùng lifecycle hook hoặc `provide` / `inject` phải được gọi bên trong `setup` của component, không gọi lazy hay có điều kiện.
 
 ## Props, Emits, v-model
 
-- Type-based `defineProps<Props>()` and tuple-form `defineEmits<{ change: [id: number] }>()`.
-- `defineModel<T>('name', { default })` for two-way binding. It compiles to a prop plus an `update:*` emit.
+- `defineProps<Props>()` dựa trên type và `defineEmits<{ change: [id: number] }>()` dạng tuple.
+- `defineModel<T>('name', { default })` cho binding hai chiều. Nó biên dịch thành một prop cộng một emit `update:*`.
 
 ## Provide / Inject
 
-- Use `provide` / `inject` for tree-scoped data without prop drilling.
-- Type-safe collision-free keys: `const key = Symbol() as InjectionKey<T>`.
-- The provider owns mutations. Expose a `readonly` ref plus an explicit updater function, never a raw mutable ref.
+- Dùng `provide` / `inject` cho dữ liệu có phạm vi theo cây mà không cần prop drilling.
+- Key an toàn về type, không xung đột: `const key = Symbol() as InjectionKey<T>`.
+- Provider sở hữu các mutation. Hãy expose một ref `readonly` cùng một hàm cập nhật tường minh, không bao giờ expose ref mutable thô.
 
-## Pinia (FSD model segment)
+## Pinia (segment model của FSD)
 
-- Prefer setup stores: `ref` is state, `computed` is getters, `function` is actions.
-- Setup stores do not get `$reset` for free. Define your own.
-- Use `storeToRefs` for state and getters. Destructure actions directly off the store.
-- Never persist raw auth tokens to `localStorage`.
+- Ưu tiên setup store: `ref` là state, `computed` là getter, `function` là action.
+- Setup store không có sẵn `$reset`. Hãy tự định nghĩa.
+- Dùng `storeToRefs` cho state và getter. Destructure action trực tiếp từ store.
+- Không bao giờ lưu auth token thô vào `localStorage`.
 
 ## vue-router
 
-- Lazy-load route components with dynamic `import()`.
-- A global `beforeEach` auth gate keyed on `meta.requiresAuth`. Guards return `false` (cancel), a route location (redirect), or `undefined` / `true` (continue).
-- Watch `() => route.params.id`, not the whole `route` object.
+- Lazy-load các route component bằng `import()` động.
+- Một auth gate `beforeEach` toàn cục dựa trên `meta.requiresAuth`. Guard trả về `false` (hủy), một route location (redirect), hoặc `undefined` / `true` (tiếp tục).
+- Watch `() => route.params.id`, không watch cả object `route`.
 
 ## vue-query (server cache)
 
-- `@tanstack/vue-query` owns server-cache state. Pinia owns client state.
-- Put request functions plus `queryOptions` factories in the FSD `api` segment.
-- Critical: put the ref or computed ITSELF in the query key, never `.value`. Passing `.value` freezes the key and kills reactive refetch.
+- `@tanstack/vue-query` sở hữu state server-cache. Pinia sở hữu state client.
+- Đặt các hàm request cùng factory `queryOptions` trong segment `api` của FSD.
+- Quan trọng: đặt CHÍNH ref hoặc computed vào query key, không bao giờ đặt `.value`. Truyền `.value` sẽ đóng băng key và làm mất refetch reactive.
 
 ```ts
 useQuery({ queryKey: ['auction', id], queryFn: () => fetchAuction(toValue(id)) })
@@ -50,7 +50,7 @@ useQuery({ queryKey: ['auction', id], queryFn: () => fetchAuction(toValue(id)) }
 queryClient.invalidateQueries({ queryKey: ['auction', id] })
 ```
 
-## Reference
+## Tham chiếu
 
-- ECC skills: `frontend-patterns`, `vite-patterns`.
-- Docs: <https://pinia.vuejs.org/> · <https://router.vuejs.org/> · <https://tanstack.com/query/latest/docs/framework/vue/overview> · <https://vuejs.org/guide/reusability/composables.html>
+- Skill ECC: `frontend-patterns`, `vite-patterns`.
+- Tài liệu: <https://pinia.vuejs.org/> · <https://router.vuejs.org/> · <https://tanstack.com/query/latest/docs/framework/vue/overview> · <https://vuejs.org/guide/reusability/composables.html>

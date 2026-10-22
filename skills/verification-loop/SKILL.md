@@ -1,26 +1,26 @@
 ---
 name: verification-loop
-description: Run a six-phase verification of a Claude Code session's work — build, type check, lint, tests with coverage, security grep, and diff review — then produce a PASS/FAIL verification report. Use when verifying work after completing a feature or refactor, before creating a PR, or when quality gates must pass.
+description: Chạy quy trình xác minh sáu giai đoạn cho công việc của một phiên Claude Code — build, type check, lint, test kèm coverage, security grep và diff review — rồi tạo báo cáo xác minh PASS/FAIL. Dùng khi xác minh công việc sau khi hoàn thành một tính năng hoặc refactor, trước khi tạo PR, hoặc khi các quality gate phải pass.
 license: MIT
 metadata:
   origin: ECC
 ---
 
-# Verification Loop Skill
+# Skill Verification Loop
 
-A comprehensive verification system for Claude Code sessions.
+Một hệ thống xác minh toàn diện cho các phiên Claude Code.
 
-## When to Use
+## Khi nào dùng
 
-Invoke this skill:
-- After completing a feature or significant code change
-- Before creating a PR
-- When you want to ensure quality gates pass
-- After refactoring
+Gọi skill này:
+- Sau khi hoàn thành một tính năng hoặc thay đổi code đáng kể
+- Trước khi tạo PR
+- Khi muốn đảm bảo các quality gate pass
+- Sau khi refactor
 
-## Verification Phases
+## Các giai đoạn xác minh
 
-### Phase 1: Build Verification
+### Giai đoạn 1: Xác minh build
 ```bash
 set -o pipefail  # report the build's exit status, not tail's
 # Check if project builds
@@ -29,9 +29,9 @@ npm run build 2>&1 | tail -20
 pnpm build 2>&1 | tail -20
 ```
 
-If build fails, STOP and fix before continuing.
+Nếu build thất bại, DỪNG và sửa trước khi tiếp tục.
 
-### Phase 2: Type Check
+### Giai đoạn 2: Type check
 ```bash
 set -o pipefail
 # TypeScript projects
@@ -41,12 +41,11 @@ npx --no-install tsc --noEmit 2>&1 | sed -n '1,30p'
 pyright . 2>&1 | sed -n '1,30p'
 ```
 
-Report all type errors. Fix critical ones before continuing.
+Báo cáo mọi lỗi type. Sửa các lỗi nghiêm trọng (critical) trước khi tiếp tục.
 
-### Phase 3: Lint Check
+### Giai đoạn 3: Lint check
 
-Use `sed` to limit displayed output while consuming the whole stream. This keeps a
-successful linter from failing on SIGPIPE when `pipefail` is enabled.
+Dùng `sed` để giới hạn output hiển thị trong khi vẫn tiêu thụ toàn bộ stream. Cách này giúp một linter chạy thành công không bị lỗi do SIGPIPE khi `pipefail` được bật.
 ```bash
 set -o pipefail
 # JavaScript/TypeScript
@@ -56,7 +55,7 @@ npm run lint 2>&1 | sed -n '1,30p'
 ruff check . 2>&1 | sed -n '1,30p'
 ```
 
-### Phase 4: Test Suite
+### Giai đoạn 4: Test suite
 ```bash
 set -o pipefail
 # Run tests with coverage
@@ -66,13 +65,13 @@ npm run test -- --coverage 2>&1 | tail -50
 # Target: 80% minimum
 ```
 
-Report:
-- Total tests: X
+Báo cáo:
+- Tổng số test: X
 - Passed: X
 - Failed: X
 - Coverage: X%
 
-### Phase 5: Security Scan
+### Giai đoạn 5: Security scan
 ```bash
 # Check for secrets
 grep -rn "sk-" --include="*.ts" --include="*.js" . 2>/dev/null | head -10
@@ -82,21 +81,21 @@ grep -rn "api_key" --include="*.ts" --include="*.js" . 2>/dev/null | head -10
 grep -rn "console.log" --include="*.ts" --include="*.tsx" src/ 2>/dev/null | head -10
 ```
 
-### Phase 6: Diff Review
+### Giai đoạn 6: Diff review
 ```bash
 # Show what changed
 git diff --stat
 git diff HEAD~1 --name-only
 ```
 
-Review each changed file for:
-- Unintended changes
-- Missing error handling
-- Potential edge cases
+Review từng file đã thay đổi để tìm:
+- Thay đổi ngoài ý muốn
+- Thiếu xử lý lỗi
+- Các edge case tiềm ẩn
 
-## Output Format
+## Định dạng output
 
-After running all phases, produce a verification report:
+Sau khi chạy tất cả các giai đoạn, tạo báo cáo xác minh:
 
 ```
 VERIFICATION REPORT
@@ -116,9 +115,9 @@ Issues to Fix:
 2. ...
 ```
 
-## Continuous Mode
+## Chế độ liên tục (Continuous Mode)
 
-For long sessions, run verification every 15 minutes or after major changes:
+Với các phiên dài, chạy xác minh mỗi 15 phút hoặc sau các thay đổi lớn:
 
 ```markdown
 Set a mental checkpoint:
@@ -129,7 +128,7 @@ Set a mental checkpoint:
 Run: /verify
 ```
 
-## Integration with Hooks
+## Tích hợp với Hook
 
-This skill complements PostToolUse hooks but provides deeper verification.
-Hooks catch issues immediately; this skill provides comprehensive review.
+Skill này bổ trợ cho các hook PostToolUse nhưng cung cấp xác minh sâu hơn.
+Hook bắt lỗi ngay lập tức; skill này cung cấp review toàn diện.

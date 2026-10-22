@@ -1,24 +1,24 @@
 ---
-description: "Alias of /pr for the PRP workflow series. Use when creating a pull request mid-PRP workflow; otherwise use /pr."
-argument-hint: "[base-branch] (default: main)"
+description: "Bí danh của /pr cho chuỗi workflow PRP. Dùng khi tạo pull request giữa chừng workflow PRP; ngoài ra hãy dùng /pr."
+argument-hint: "[base-branch] (mặc định: main)"
 ---
 
-# Create Pull Request
+# Tạo Pull Request
 
-> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
+> Phỏng theo PRPs-agentic-eng của Wirasm. Thuộc chuỗi workflow PRP.
 
-**Input**: `$ARGUMENTS` — optional, may contain a base branch name and/or flags (e.g., `--draft`).
+**Đầu vào**: `$ARGUMENTS` — tùy chọn, có thể chứa tên base branch và/hoặc các flag (ví dụ: `--draft`).
 
 **Parse `$ARGUMENTS`**:
-- Extract any recognized flags (`--draft`)
-- Treat remaining non-flag text as the base branch name
-- Default base branch to `main` if none specified
+- Trích xuất các flag được nhận diện (`--draft`)
+- Coi phần văn bản không phải flag còn lại là tên base branch
+- Mặc định base branch là `main` nếu không chỉ định
 
 ---
 
-## Phase 1 — VALIDATE
+## Giai đoạn 1 — VALIDATE
 
-Check preconditions:
+Kiểm tra các điều kiện tiên quyết:
 
 ```bash
 git branch --show-current
@@ -26,88 +26,88 @@ git status --short
 git log origin/<base>..HEAD --oneline
 ```
 
-| Check | Condition | Action if Failed |
+| Kiểm tra | Điều kiện | Hành động nếu thất bại |
 |---|---|---|
-| Not on base branch | Current branch ≠ base | Stop: "Switch to a feature branch first." |
-| Clean working directory | No uncommitted changes | Warn: "You have uncommitted changes. Commit or stash first. Use `/prp-commit` to commit." |
-| Has commits ahead | `git log origin/<base>..HEAD` not empty | Stop: "No commits ahead of `<base>`. Nothing to PR." |
-| No existing PR | `gh pr list --head <branch> --json number` is empty | Stop: "PR already exists: #<number>. Use `gh pr view <number> --web` to open it." |
+| Không ở base branch | Branch hiện tại ≠ base | Dừng: "Switch to a feature branch first." |
+| Working directory sạch | Không có thay đổi chưa commit | Cảnh báo: "You have uncommitted changes. Commit or stash first. Use `/prp-commit` to commit." |
+| Có commit đi trước | `git log origin/<base>..HEAD` không rỗng | Dừng: "No commits ahead of `<base>`. Nothing to PR." |
+| Chưa có PR | `gh pr list --head <branch> --json number` rỗng | Dừng: "PR already exists: #<number>. Use `gh pr view <number> --web` to open it." |
 
-If all checks pass, proceed.
+Nếu tất cả kiểm tra đều đạt, tiếp tục.
 
 ---
 
-## Phase 2 — DISCOVER
+## Giai đoạn 2 — DISCOVER
 
 ### PR Template
 
-Search for PR template in order:
+Tìm PR template theo thứ tự:
 
-1. `.github/PULL_REQUEST_TEMPLATE/` directory — if exists, list files and let user choose (or use `default.md`)
+1. Thư mục `.github/PULL_REQUEST_TEMPLATE/` — nếu tồn tại, liệt kê các file và để người dùng chọn (hoặc dùng `default.md`)
 2. `.github/PULL_REQUEST_TEMPLATE.md`
 3. `.github/pull_request_template.md`
 4. `docs/pull_request_template.md`
 
-If found, read it and use its structure for the PR body.
+Nếu tìm thấy, đọc nó và dùng cấu trúc của nó cho phần body của PR.
 
-### Commit Analysis
+### Phân tích Commit
 
 ```bash
 git log origin/<base>..HEAD --format="%h %s" --reverse
 ```
 
-Analyze commits to determine:
-- **PR title**: Use conventional commit format with type prefix — `feat: ...`, `fix: ...`, etc.
-  - If multiple types, use the dominant one
-  - If single commit, use its message as-is
-- **Change summary**: Group commits by type/area
+Phân tích các commit để xác định:
+- **Tiêu đề PR**: Dùng định dạng conventional commit với tiền tố type — `feat: ...`, `fix: ...`, v.v.
+  - Nếu có nhiều type, dùng type chiếm ưu thế
+  - Nếu chỉ có một commit, dùng nguyên message của nó
+- **Tóm tắt thay đổi**: Nhóm các commit theo type/khu vực
 
-### File Analysis
+### Phân tích File
 
 ```bash
 git diff origin/<base>..HEAD --stat
 git diff origin/<base>..HEAD --name-only
 ```
 
-Categorize changed files: source, tests, docs, config, migrations.
+Phân loại các file đã thay đổi: source, test, docs, config, migration.
 
-### PRP Artifacts
+### PRP Artifact
 
-Check for related PRP artifacts:
-- `.claude/PRPs/reports/` — Implementation reports
-- `.claude/PRPs/plans/` — Plans that were executed
-- `.claude/PRPs/prds/` — Related PRDs
+Kiểm tra các PRP artifact liên quan:
+- `.claude/PRPs/reports/` — Báo cáo triển khai
+- `.claude/PRPs/plans/` — Các plan đã được thực thi
+- `.claude/PRPs/prds/` — Các PRD liên quan
 
-Reference these in the PR body if they exist.
+Tham chiếu chúng trong body của PR nếu có.
 
 ---
 
-## Phase 3 — PUSH
+## Giai đoạn 3 — PUSH
 
 ```bash
 git push -u origin HEAD
 ```
 
-If push fails due to divergence:
+Nếu push thất bại do phân kỳ (divergence):
 ```bash
 git fetch origin
 git rebase origin/<base>
 git push -u origin HEAD
 ```
 
-If rebase conflicts occur, stop and inform the user.
+Nếu rebase xảy ra conflict, hãy dừng lại và thông báo cho người dùng.
 
 ---
 
-## Phase 4 — CREATE
+## Giai đoạn 4 — CREATE
 
-### With Template
+### Có Template
 
-If a PR template was found in Phase 2, fill in each section using the commit and file analysis. Preserve all template sections — leave sections as "N/A" if not applicable rather than removing them.
+Nếu tìm thấy PR template ở Giai đoạn 2, điền từng section dựa trên phân tích commit và file. Giữ nguyên tất cả section của template — để section là "N/A" nếu không áp dụng thay vì xóa chúng.
 
-### Without Template
+### Không có Template
 
-Use this default format:
+Dùng định dạng mặc định này:
 
 ```markdown
 ## Summary
@@ -131,7 +131,7 @@ Use this default format:
 <linked issues with Closes/Fixes/Relates to #N, or "None">
 ```
 
-### Create the PR
+### Tạo PR
 
 ```bash
 gh pr create \
@@ -143,7 +143,7 @@ gh pr create \
 
 ---
 
-## Phase 5 — VERIFY
+## Giai đoạn 5 — VERIFY
 
 ```bash
 gh pr view --json number,url,title,state,baseRefName,headRefName,additions,deletions,changedFiles
@@ -152,9 +152,9 @@ gh pr checks --json name,status,conclusion 2>/dev/null || true
 
 ---
 
-## Phase 6 — OUTPUT
+## Giai đoạn 6 — OUTPUT
 
-Report to user:
+Báo cáo cho người dùng:
 
 ```
 PR #<number>: <title>
@@ -175,10 +175,10 @@ Next steps:
 
 ---
 
-## Edge Cases
+## Edge Case
 
-- **No `gh` CLI**: Stop with: "GitHub CLI (`gh`) is required. Install: <https://cli.github.com/>"
-- **Not authenticated**: Stop with: "Run `gh auth login` first."
-- **Force push needed**: If remote has diverged and rebase was done, use `git push --force-with-lease` (never `--force`).
-- **Multiple PR templates**: If `.github/PULL_REQUEST_TEMPLATE/` has multiple files, list them and ask user to choose.
-- **Large PR (>20 files)**: Warn about PR size. Suggest splitting if changes are logically separable.
+- **Không có `gh` CLI**: Dừng với thông báo: "GitHub CLI (`gh`) is required. Install: <https://cli.github.com/>"
+- **Chưa xác thực**: Dừng với thông báo: "Run `gh auth login` first."
+- **Cần force push**: Nếu remote đã phân kỳ và đã rebase, dùng `git push --force-with-lease` (KHÔNG BAO GIỜ dùng `--force`).
+- **Nhiều PR template**: Nếu `.github/PULL_REQUEST_TEMPLATE/` có nhiều file, liệt kê chúng và yêu cầu người dùng chọn.
+- **PR lớn (>20 file)**: Cảnh báo về kích thước PR. Đề xuất tách nhỏ nếu các thay đổi có thể tách riêng một cách hợp lý.

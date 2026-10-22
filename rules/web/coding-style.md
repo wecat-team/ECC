@@ -10,13 +10,13 @@ paths:
   - "**/*.vue"
   - "**/*.svelte"
 ---
-> This file extends [common/coding-style.md](../common/coding-style.md) with web-specific frontend content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung frontend riêng cho web.
 
-# Web Coding Style
+# Coding Style Web
 
-## File Organization
+## Tổ chức file
 
-Organize by feature or surface area, not by file type:
+Tổ chức theo tính năng hoặc bề mặt (surface area), không theo loại file:
 
 ```text
 src/
@@ -45,9 +45,9 @@ src/
     └── global.css
 ```
 
-## CSS Custom Properties
+## CSS Custom Property
 
-Define design tokens as variables. Do not hardcode palette, typography, or spacing repeatedly:
+Định nghĩa design token dưới dạng biến. Không hardcode lặp lại bảng màu, typography hay khoảng cách:
 
 ```css
 :root {
@@ -66,15 +66,15 @@ Define design tokens as variables. Do not hardcode palette, typography, or spaci
 }
 ```
 
-## Animation-Only Properties
+## Thuộc tính chỉ dùng cho Animation
 
-Prefer compositor-friendly motion:
+Ưu tiên chuyển động thân thiện với compositor:
 - `transform`
 - `opacity`
 - `clip-path`
-- `filter` (sparingly)
+- `filter` (dùng hạn chế)
 
-Avoid animating layout-bound properties:
+Tránh animate các thuộc tính gắn với layout:
 - `width`
 - `height`
 - `top`
@@ -84,7 +84,7 @@ Avoid animating layout-bound properties:
 - `border`
 - `font-size`
 
-## Semantic HTML First
+## HTML ngữ nghĩa trước tiên
 
 ```html
 <header>
@@ -98,11 +98,11 @@ Avoid animating layout-bound properties:
 <footer>...</footer>
 ```
 
-Do not reach for generic wrapper `div` stacks when a semantic element exists.
+Đừng dùng các chồng `div` bọc chung chung khi đã có phần tử ngữ nghĩa phù hợp.
 
-## Naming
+## Đặt tên
 
-- Components: PascalCase (`ScrollySection`, `SurfaceCard`)
-- Hooks: `use` prefix (`useReducedMotion`)
-- CSS classes: kebab-case or utility classes
-- Animation timelines: camelCase with intent (`heroRevealTl`)
+- Component: PascalCase (`ScrollySection`, `SurfaceCard`)
+- Hook: tiền tố `use` (`useReducedMotion`)
+- CSS class: kebab-case hoặc utility class
+- Animation timeline: camelCase thể hiện ý đồ (`heroRevealTl`)

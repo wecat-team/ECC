@@ -1,46 +1,46 @@
 ---
 name: cpp-testing
-description: Use only when writing/updating/fixing C++ tests, configuring GoogleTest/CTest, diagnosing failing or flaky tests, or adding coverage/sanitizers.
+description: Chỉ dùng khi viết/cập nhật/sửa test C++, cấu hình GoogleTest/CTest, chẩn đoán test lỗi hoặc flaky, hoặc thêm coverage/sanitizer.
 metadata:
   origin: ECC
 ---
 
 # C++ Testing (Agent Skill)
 
-Agent-focused testing workflow for modern C++ (C++17/20) using GoogleTest/GoogleMock with CMake/CTest.
+Workflow testing hướng agent cho C++ hiện đại (C++17/20) dùng GoogleTest/GoogleMock với CMake/CTest.
 
-## When to Use
+## Khi nào dùng
 
-- Writing new C++ tests or fixing existing tests
-- Designing unit/integration test coverage for C++ components
-- Adding test coverage, CI gating, or regression protection
-- Configuring CMake/CTest workflows for consistent execution
-- Investigating test failures or flaky behavior
-- Enabling sanitizers for memory/race diagnostics
+- Viết test C++ mới hoặc sửa test hiện có
+- Thiết kế coverage unit/integration test cho các component C++
+- Thêm test coverage, CI gating hoặc bảo vệ chống regression
+- Cấu hình workflow CMake/CTest để thực thi nhất quán
+- Điều tra test lỗi hoặc hành vi flaky
+- Bật sanitizer để chẩn đoán bộ nhớ/race
 
-### When NOT to Use
+### Khi nào KHÔNG dùng
 
-- Implementing new product features without test changes
-- Large-scale refactors unrelated to test coverage or failures
-- Performance tuning without test regressions to validate
-- Non-C++ projects or non-test tasks
+- Triển khai tính năng sản phẩm mới mà không thay đổi test
+- Refactor quy mô lớn không liên quan đến test coverage hoặc test lỗi
+- Tinh chỉnh hiệu năng mà không có regression test để xác minh
+- Dự án không phải C++ hoặc tác vụ không phải test
 
-## Core Concepts
+## Khái niệm cốt lõi
 
-- **TDD loop**: red → green → refactor (tests first, minimal fix, then cleanups).
-- **Isolation**: prefer dependency injection and fakes over global state.
-- **Test layout**: `tests/unit`, `tests/integration`, `tests/testdata`.
-- **Mocks vs fakes**: mock for interactions, fake for stateful behavior.
-- **CTest discovery**: use `gtest_discover_tests()` for stable test discovery.
-- **CI signal**: run subset first, then full suite with `--output-on-failure`.
+- **Vòng lặp TDD**: red → green → refactor (test trước, sửa tối thiểu, rồi dọn dẹp).
+- **Cô lập (Isolation)**: ưu tiên dependency injection và fake hơn trạng thái global.
+- **Bố cục test**: `tests/unit`, `tests/integration`, `tests/testdata`.
+- **Mock vs fake**: mock cho tương tác, fake cho hành vi có state.
+- **CTest discovery**: dùng `gtest_discover_tests()` để khám phá test ổn định.
+- **Tín hiệu CI**: chạy một tập con trước, rồi toàn bộ suite với `--output-on-failure`.
 
-## TDD Workflow
+## Workflow TDD
 
-Follow the RED → GREEN → REFACTOR loop:
+Theo vòng lặp RED → GREEN → REFACTOR:
 
-1. **RED**: write a failing test that captures the new behavior
-2. **GREEN**: implement the smallest change to pass
-3. **REFACTOR**: clean up while tests stay green
+1. **RED**: viết một test thất bại ghi lại hành vi mới
+2. **GREEN**: triển khai thay đổi nhỏ nhất để pass
+3. **REFACTOR**: dọn dẹp trong khi test vẫn xanh
 
 ```cpp
 // tests/add_test.cpp
@@ -60,9 +60,9 @@ int Add(int a, int b) { // GREEN
 // REFACTOR: simplify/rename once tests pass
 ```
 
-## Code Examples
+## Ví dụ code
 
-### Basic Unit Test (gtest)
+### Unit Test cơ bản (gtest)
 
 ```cpp
 // tests/calculator_test.cpp
@@ -184,7 +184,7 @@ cmake --build build -j
 ctest --test-dir build --output-on-failure
 ```
 
-## Running Tests
+## Chạy test
 
 ```bash
 ctest --test-dir build --output-on-failure
@@ -197,16 +197,16 @@ ctest --test-dir build -R "UserStoreTest.*" --output-on-failure
 ./build/example_tests --gtest_filter=UserStoreTest.FindsExistingUser
 ```
 
-## Debugging Failures
+## Debug test lỗi
 
-1. Re-run the single failing test with gtest filter.
-2. Add scoped logging around the failing assertion.
-3. Re-run with sanitizers enabled.
-4. Expand to full suite once the root cause is fixed.
+1. Chạy lại riêng test đang lỗi bằng gtest filter.
+2. Thêm logging có phạm vi quanh assertion bị lỗi.
+3. Chạy lại với sanitizer được bật.
+4. Mở rộng ra toàn bộ suite sau khi nguyên nhân gốc đã được sửa.
 
 ## Coverage
 
-Prefer target-level settings instead of global flags.
+Ưu tiên cài đặt ở mức target thay vì flag toàn cục.
 
 ```cmake
 option(ENABLE_COVERAGE "Enable coverage flags" OFF)
@@ -243,7 +243,7 @@ llvm-profdata merge -sparse build-llvm/default.profraw -o build-llvm/default.pro
 llvm-cov report build-llvm/example_tests -instr-profile=build-llvm/default.profdata
 ```
 
-## Sanitizers
+## Sanitizer
 
 ```cmake
 option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
@@ -264,48 +264,48 @@ if(ENABLE_TSAN)
 endif()
 ```
 
-## Flaky Tests Guardrails
+## Rào chắn cho Flaky Test
 
-- Never use `sleep` for synchronization; use condition variables or latches.
-- Make temp directories unique per test and always clean them.
-- Avoid real time, network, or filesystem dependencies in unit tests.
-- Use deterministic seeds for randomized inputs.
+- KHÔNG BAO GIỜ dùng `sleep` để đồng bộ hóa; hãy dùng condition variable hoặc latch.
+- Làm cho thư mục tạm là duy nhất cho mỗi test và luôn dọn chúng.
+- Tránh phụ thuộc vào thời gian thực, mạng hoặc filesystem trong unit test.
+- Dùng seed xác định cho các đầu vào ngẫu nhiên.
 
-## Best Practices
+## Best Practice
 
-### DO
+### NÊN
 
-- Keep tests deterministic and isolated
-- Prefer dependency injection over globals
-- Use `ASSERT_*` for preconditions, `EXPECT_*` for multiple checks
-- Separate unit vs integration tests in CTest labels or directories
-- Run sanitizers in CI for memory and race detection
+- Giữ test có tính xác định và được cô lập
+- Ưu tiên dependency injection hơn biến global
+- Dùng `ASSERT_*` cho điều kiện tiên quyết, `EXPECT_*` cho nhiều kiểm tra
+- Tách unit và integration test bằng CTest label hoặc thư mục
+- Chạy sanitizer trong CI để phát hiện lỗi bộ nhớ và race
 
-### DON'T
+### KHÔNG NÊN
 
-- Don't depend on real time or network in unit tests
-- Don't use sleeps as synchronization when a condition variable can be used
-- Don't over-mock simple value objects
-- Don't use brittle string matching for non-critical logs
+- Đừng phụ thuộc vào thời gian thực hoặc mạng trong unit test
+- Đừng dùng sleep để đồng bộ hóa khi có thể dùng condition variable
+- Đừng mock quá mức các value object đơn giản
+- Đừng dùng so khớp chuỗi dễ vỡ cho các log không quan trọng
 
-### Common Pitfalls
+### Các cạm bẫy thường gặp
 
-- **Using fixed temp paths** → Generate unique temp directories per test and clean them.
-- **Relying on wall clock time** → Inject a clock or use fake time sources.
-- **Flaky concurrency tests** → Use condition variables/latches and bounded waits.
-- **Hidden global state** → Reset global state in fixtures or remove globals.
-- **Over-mocking** → Prefer fakes for stateful behavior and only mock interactions.
-- **Missing sanitizer runs** → Add ASan/UBSan/TSan builds in CI.
-- **Coverage on debug-only builds** → Ensure coverage targets use consistent flags.
+- **Dùng đường dẫn tạm cố định** → Tạo thư mục tạm duy nhất cho mỗi test và dọn chúng.
+- **Dựa vào thời gian đồng hồ thật (wall clock)** → Inject một clock hoặc dùng nguồn thời gian giả.
+- **Test đồng thời flaky** → Dùng condition variable/latch và chờ có giới hạn.
+- **Trạng thái global ẩn** → Reset trạng thái global trong fixture hoặc loại bỏ global.
+- **Mock quá mức** → Ưu tiên fake cho hành vi có state và chỉ mock các tương tác.
+- **Thiếu các lần chạy sanitizer** → Thêm build ASan/UBSan/TSan trong CI.
+- **Coverage trên build chỉ có debug** → Đảm bảo các target coverage dùng flag nhất quán.
 
-## Optional Appendix: Fuzzing / Property Testing
+## Phụ lục tùy chọn: Fuzzing / Property Testing
 
-Only use if the project already supports LLVM/libFuzzer or a property-testing library.
+Chỉ dùng nếu dự án đã hỗ trợ LLVM/libFuzzer hoặc một thư viện property-testing.
 
-- **libFuzzer**: best for pure functions with minimal I/O.
-- **RapidCheck**: property-based tests to validate invariants.
+- **libFuzzer**: tốt nhất cho các hàm thuần với I/O tối thiểu.
+- **RapidCheck**: test dựa trên property để xác thực các invariant.
 
-Minimal libFuzzer harness (pseudocode: replace ParseConfig):
+Harness libFuzzer tối thiểu (pseudocode: thay ParseConfig):
 
 ```cpp
 #include <cstddef>
@@ -319,7 +319,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 }
 ```
 
-## Alternatives to GoogleTest
+## Các lựa chọn thay thế GoogleTest
 
-- **Catch2**: header-only, expressive matchers
-- **doctest**: lightweight, minimal compile overhead
+- **Catch2**: header-only, matcher biểu đạt tốt
+- **doctest**: nhẹ, chi phí compile tối thiểu

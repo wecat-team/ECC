@@ -1,44 +1,44 @@
 ---
 name: codehealth-mcp
-description: Real-time structural Code Health via CodeScene MCP — review before edits, verify score deltas after changes, gate commits and PRs. Use when reviewing code quality, refactoring, checking if AI changes degraded a file, or before commit/PR.
+description: Code Health cấu trúc theo thời gian thực qua CodeScene MCP — review trước khi sửa, kiểm tra độ chênh điểm (score delta) sau khi thay đổi, chặn (gate) commit và PR. Dùng khi review chất lượng code, refactor, kiểm tra xem các thay đổi do AI có làm giảm chất lượng một file hay không, hoặc trước commit/PR.
 metadata:
   origin: community
 ---
 
 # Code Health MCP (CodeScene)
 
-Structural maintainability feedback for AI-assisted coding. Complements style/lint skills (`coding-standards`, `plankton-code-quality`) with **design-level** health scores and regression gates.
+Phản hồi về khả năng bảo trì ở mức cấu trúc cho việc lập trình có AI hỗ trợ. Bổ sung cho các skill về style/lint (`coding-standards`, `plankton-code-quality`) bằng điểm sức khỏe ở mức **thiết kế** và các regression gate.
 
 **Upstream:** [codescene-oss/codescene-mcp-server](https://github.com/codescene-oss/codescene-mcp-server)
-**Package:** `@codescene/codehealth-mcp` (stdio via npx)
+**Package:** `@codescene/codehealth-mcp` (stdio qua npx)
 
-## Security and boundaries
+## Bảo mật và ranh giới
 
-**Opt-in (ECC):** The `codescene` block in `mcp-configs/mcp-servers.json` is a template only. ECC plugin installs do not auto-enable bundled MCP servers. Copy the entry into your config only if you want it. You can exclude it during ECC install/sync with `ECC_DISABLED_MCPS=codescene,...`.
+**Opt-in (ECC):** Khối `codescene` trong `mcp-configs/mcp-servers.json` chỉ là template. Việc cài plugin ECC không tự động bật các MCP server đi kèm. Chỉ sao chép entry này vào config của bạn nếu bạn muốn dùng. Bạn có thể loại nó ra khi cài đặt/đồng bộ ECC bằng `ECC_DISABLED_MCPS=codescene,...`.
 
-**Credentials:** No bundled token. Set `CS_ACCESS_TOKEN` yourself (see [getting-a-personal-access-token.md](https://github.com/codescene-oss/codescene-mcp-server/blob/main/docs/getting-a-personal-access-token.md) in the upstream repo). Never commit tokens to the repo.
+**Credentials:** Không có token đi kèm. Tự đặt `CS_ACCESS_TOKEN` (xem [getting-a-personal-access-token.md](https://github.com/codescene-oss/codescene-mcp-server/blob/main/docs/getting-a-personal-access-token.md) trong repo upstream). KHÔNG BAO GIỜ commit token vào repo.
 
-**What the tools read:** When invoked, tools analyze files and git state **in the local repository** you point them at (paths you pass, plus branch context for `analyze_change_set`). They do not run by themselves. For standalone mode, follow upstream privacy docs: [codescene-mcp-server README](https://github.com/codescene-oss/codescene-mcp-server#frequently-asked-questions) and [CodeScene policies](https://codescene.com/policies). Do not use this skill for secrets, credentials, or paths you do not want analyzed.
+**Các tool đọc gì:** Khi được gọi, các tool phân tích file và trạng thái git **trong repository cục bộ** mà bạn trỏ tới (các đường dẫn bạn truyền vào, cộng với context branch cho `analyze_change_set`). Chúng không tự chạy. Với chế độ standalone, hãy theo tài liệu quyền riêng tư của upstream: [codescene-mcp-server README](https://github.com/codescene-oss/codescene-mcp-server#frequently-asked-questions) và [chính sách CodeScene](https://codescene.com/policies). Không dùng skill này cho secret, credential hoặc các đường dẫn bạn không muốn bị phân tích.
 
-**If the MCP is unavailable (offline, bad token, server crash):** Do not invent Code Health scores. Tell the user the check was skipped. Continue only with explicit user approval. Prefer lint/tests/verification-loop for gating when MCP is down. Re-enable checks once the server connects.
+**Nếu MCP không khả dụng (offline, token sai, server crash):** KHÔNG bịa điểm Code Health. Báo cho người dùng biết bước kiểm tra đã bị bỏ qua. Chỉ tiếp tục khi có sự đồng ý rõ ràng của người dùng. Ưu tiên lint/test/verification-loop để gate khi MCP ngừng hoạt động. Bật lại các bước kiểm tra khi server kết nối trở lại.
 
-## When to Use
+## Khi nào dùng
 
-- User asks to **review code quality**, **refactor** a file, or check if **AI changes degraded** maintainability
-- Before editing a **hotspot**, legacy module, or unfamiliar file
-- Before **commit** or **pull request** when you need a maintainability safeguard
-- After a large agent-written diff — verify Code Health did not regress
-- Pair with `verification-loop`, `tdd-workflow`, or `/quality-gate` as a structural check (not a replacement for tests/lint)
+- Người dùng yêu cầu **review chất lượng code**, **refactor** một file, hoặc kiểm tra xem **các thay đổi do AI** có làm giảm khả năng bảo trì không
+- Trước khi sửa một **hotspot**, module legacy hoặc file không quen thuộc
+- Trước **commit** hoặc **pull request** khi bạn cần một lớp bảo vệ về khả năng bảo trì
+- Sau một diff lớn do agent viết — xác minh Code Health không bị thụt lùi
+- Kết hợp với `verification-loop`, `tdd-workflow` hoặc `/quality-gate` như một bước kiểm tra cấu trúc (không thay thế test/lint)
 
-## When to Activate
+## Khi nào kích hoạt
 
-Same triggers as **When to Use** above — this heading is what ECC uses for skill auto-activation.
+Cùng điều kiện kích hoạt như mục **Khi nào dùng** ở trên — tiêu đề này là thứ ECC dùng để tự động kích hoạt skill.
 
-## How It Works
+## Cách hoạt động
 
-### 1. Connect the MCP server
+### 1. Kết nối MCP server
 
-Copy the `codescene` entry from `mcp-configs/mcp-servers.json` into your harness MCP config.
+Sao chép entry `codescene` từ `mcp-configs/mcp-servers.json` vào config MCP của harness bạn dùng.
 
 **Claude Code** (`~/.claude.json` → `mcpServers`):
 
@@ -52,66 +52,66 @@ Copy the `codescene` entry from `mcp-configs/mcp-servers.json` into your harness
 }
 ```
 
-**Project-scoped:** merge the same block into `.mcp.json` at the repo root.
+**Phạm vi dự án:** gộp cùng khối này vào `.mcp.json` ở thư mục gốc của repo.
 
-Token setup is documented in the upstream repo (link above). Standalone mode does not require a paid CodeScene platform account for the four tools listed below. Restart the session and confirm the `codescene` server is connected before relying on scores.
+Cách thiết lập token được ghi trong repo upstream (link ở trên). Chế độ standalone không yêu cầu tài khoản nền tảng CodeScene trả phí cho bốn tool liệt kê bên dưới. Khởi động lại session và xác nhận server `codescene` đã kết nối trước khi dựa vào các điểm số.
 
-### 2. Call standalone tools only
+### 2. Chỉ gọi các tool standalone
 
-| Tool | When to use |
+| Tool | Khi nào dùng |
 |------|-------------|
-| `code_health_review` | Full structural analysis **before** modifying a file |
-| `code_health_score` | Quick numeric score after each change (delta check) |
-| `pre_commit_code_health_safeguard` | Block commits that introduce Code Health regressions |
-| `analyze_change_set` | Branch-level check **before** opening a PR |
+| `code_health_review` | Phân tích cấu trúc đầy đủ **trước khi** sửa một file |
+| `code_health_score` | Điểm số nhanh sau mỗi thay đổi (kiểm tra delta) |
+| `pre_commit_code_health_safeguard` | Chặn các commit gây ra regression về Code Health |
+| `analyze_change_set` | Kiểm tra ở mức branch **trước khi** mở PR |
 
-Do **not** call platform-only tools (e.g. repository-wide technical debt hotspot lists). Do **not** reference `delta_analysis` — not available on standalone.
+KHÔNG gọi các tool chỉ có trên platform (ví dụ danh sách hotspot technical debt toàn repository). KHÔNG tham chiếu `delta_analysis` — không có trên standalone.
 
-### 3. Interpret scores (1–10)
+### 3. Diễn giải điểm số (1–10)
 
-| Range | Meaning | Agent behavior |
+| Khoảng | Ý nghĩa | Hành vi của agent |
 |-------|---------|----------------|
-| **9.0–10.0** | Green — healthy | Safer to extend; still prefer vertical slices |
-| **4.0–8.9** | Yellow — debt | Tread carefully; no drive-by refactors |
-| **1.0–3.9** | Red — severe debt | Narrow scope only |
+| **9.0–10.0** | Xanh — khỏe mạnh | An toàn hơn để mở rộng; vẫn ưu tiên vertical slice |
+| **4.0–8.9** | Vàng — có nợ kỹ thuật | Cẩn trọng; không refactor tiện tay |
+| **1.0–3.9** | Đỏ — nợ kỹ thuật nghiêm trọng | Chỉ thay đổi phạm vi hẹp |
 
-### 4. Run the feedback loop
+### 4. Chạy vòng lặp phản hồi
 
-**Before touching a file**
+**Trước khi đụng vào một file**
 
-1. Run `code_health_review` on the target path.
-2. Record baseline score and listed code smells.
-3. Plan the smallest change that addresses the task.
+1. Chạy `code_health_review` trên đường dẫn mục tiêu.
+2. Ghi lại điểm baseline và các code smell được liệt kê.
+3. Lên kế hoạch cho thay đổi nhỏ nhất đáp ứng được tác vụ.
 
-Scope by score: **below 5** — minimal diff only; **5–7** — no broad refactors; **above 7** — safer to refactor, still verify after each edit.
+Phạm vi theo điểm: **dưới 5** — chỉ diff tối thiểu; **5–7** — không refactor rộng; **trên 7** — an toàn hơn để refactor, vẫn xác minh sau mỗi lần sửa.
 
-**After each change**
+**Sau mỗi thay đổi**
 
-1. Run `code_health_score` on the same file.
-2. Compare to the baseline from `code_health_review`.
-3. If the score **regressed**, fix before continuing. Never mark the task done while the score is lower than when you started.
+1. Chạy `code_health_score` trên cùng file.
+2. So sánh với baseline từ `code_health_review`.
+3. Nếu điểm **bị thụt lùi**, hãy sửa trước khi tiếp tục. KHÔNG BAO GIỜ đánh dấu tác vụ hoàn thành khi điểm thấp hơn lúc bạn bắt đầu.
 
-**Before every commit** — run `pre_commit_code_health_safeguard` on the repository path.
+**Trước mỗi commit** — chạy `pre_commit_code_health_safeguard` trên đường dẫn repository.
 
-**Before a PR** — run `analyze_change_set` against the base branch (e.g. `main`).
+**Trước một PR** — chạy `analyze_change_set` so với base branch (ví dụ `main`).
 
-## Examples
+## Ví dụ
 
-### Example: Flask maintainability improvement
+### Ví dụ: Cải thiện khả năng bảo trì của Flask
 
-On `pallets/flask`, an agent loop using only standalone tools:
+Trên `pallets/flask`, một vòng lặp agent chỉ dùng các tool standalone:
 
-1. `code_health_review` on a target module (baseline **4.82**)
-2. Targeted refactor addressing listed smells
-3. `code_health_score` after each edit
-4. `pre_commit_code_health_safeguard` before commit
-5. `analyze_change_set` before PR
+1. `code_health_review` trên một module mục tiêu (baseline **4.82**)
+2. Refactor có mục tiêu để xử lý các smell được liệt kê
+3. `code_health_score` sau mỗi lần sửa
+4. `pre_commit_code_health_safeguard` trước commit
+5. `analyze_change_set` trước PR
 
-Result: Code Health **4.82 → 9.1** (free standalone token only).
+Kết quả: Code Health **4.82 → 9.1** (chỉ dùng token standalone miễn phí).
 
-### Example: AGENTS.md enforcement block
+### Ví dụ: Khối bắt buộc cho AGENTS.md
 
-Paste into the project `AGENTS.md` or `CLAUDE.md`:
+Dán vào `AGENTS.md` hoặc `CLAUDE.md` của dự án:
 
 ```md
 ## Code Health (CodeScene MCP)
@@ -130,7 +130,7 @@ Before every commit: run `pre_commit_code_health_safeguard`.
 Before PR: run `analyze_change_set`.
 ```
 
-### Example: anti-patterns vs correct loop
+### Ví dụ: anti-pattern so với vòng lặp đúng
 
 ```markdown
 # BAD: Edit first, check later
@@ -145,23 +145,23 @@ Drive-by cleanup across the module
 # GOOD: review → small change → score → commit safeguard → analyze_change_set
 ```
 
-## Pairing with ECC
+## Kết hợp với ECC
 
-| ECC skill / flow | Code Health MCP role |
+| ECC skill / flow | Vai trò của Code Health MCP |
 |------------------|----------------------|
-| `coding-standards` | Style/naming; Code Health = structure/complexity |
-| `plankton-code-quality` | Write-time lint/format; Code Health = pre/post edit structural gate |
-| `verification-loop` / `/quality-gate` | Add structural regression check before "done" |
-| `security-review` | Security vs maintainability — use both when relevant |
-| `tdd-workflow` | Tests pass ≠ healthy design — check score after refactors |
+| `coding-standards` | Style/đặt tên; Code Health = cấu trúc/độ phức tạp |
+| `plankton-code-quality` | Lint/format lúc viết; Code Health = gate cấu trúc trước/sau khi sửa |
+| `verification-loop` / `/quality-gate` | Thêm kiểm tra regression cấu trúc trước khi "done" |
+| `security-review` | Bảo mật so với khả năng bảo trì — dùng cả hai khi liên quan |
+| `tdd-workflow` | Test pass ≠ thiết kế khỏe mạnh — kiểm tra điểm sau khi refactor |
 
-**Context tip:** ECC recommends keeping MCP count low. Enable `codescene` when doing substantive edits; disable when not needed.
+**Mẹo về context:** ECC khuyến nghị giữ số lượng MCP thấp. Bật `codescene` khi thực hiện các chỉnh sửa đáng kể; tắt khi không cần.
 
-## Related Skills
+## Skill liên quan
 
-- `coding-standards` — baseline conventions
-- `plankton-code-quality` — write-time lint/format hooks
-- `verification-loop` — build/test/lint gate
-- `tdd-workflow` — test-first development
-- `security-review` — security checklist
-- `documentation-lookup` — library docs via Context7 (orthogonal)
+- `coding-standards` — convention nền tảng
+- `plankton-code-quality` — hook lint/format lúc viết
+- `verification-loop` — gate build/test/lint
+- `tdd-workflow` — phát triển test-first
+- `security-review` — checklist bảo mật
+- `documentation-lookup` — tài liệu thư viện qua Context7 (độc lập)

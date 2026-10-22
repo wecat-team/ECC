@@ -1,36 +1,36 @@
-# Testing Requirements
+# Yêu cầu kiểm thử
 
-## Minimum Test Coverage: 80%
+## Test Coverage tối thiểu: 80%
 
-Test Types (ALL required):
-1. **Unit Tests** - Individual functions, utilities, components
-2. **Integration Tests** - API endpoints, database operations
-3. **E2E Tests** - Critical user flows (framework chosen per language)
+Các loại test (TẤT CẢ đều bắt buộc):
+1. **Unit Test** - Từng hàm, utility, component riêng lẻ
+2. **Integration Test** - API endpoint, thao tác database
+3. **E2E Test** - Các luồng người dùng quan trọng (framework chọn theo ngôn ngữ)
 
-## Test-Driven Development
+## Phát triển hướng kiểm thử (TDD)
 
-MANDATORY workflow:
-1. Write test first (RED)
-2. Run test - it should FAIL
-3. Write minimal implementation (GREEN)
-4. Run test - it should PASS
+Quy trình BẮT BUỘC:
+1. Viết test trước (RED)
+2. Chạy test - nó PHẢI FAIL
+3. Viết triển khai tối thiểu (GREEN)
+4. Chạy test - nó PHẢI PASS
 5. Refactor (IMPROVE)
-6. Verify coverage (80%+)
+6. Xác minh coverage (80%+)
 
-## Troubleshooting Test Failures
+## Xử lý sự cố khi test thất bại
 
-1. Use **tdd-guide** agent
-2. Check test isolation
-3. Verify mocks are correct
-4. Fix implementation, not tests (unless tests are wrong)
+1. Dùng agent **tdd-guide**
+2. Kiểm tra tính cô lập của test
+3. Xác minh mock đúng
+4. Sửa phần triển khai, không sửa test (trừ khi test sai)
 
-## Agent Support
+## Hỗ trợ từ Agent
 
-- **tdd-guide** - Use PROACTIVELY for new features, enforces write-tests-first
+- **tdd-guide** - Dùng CHỦ ĐỘNG cho tính năng mới, ép buộc viết test trước
 
-## Test Structure (AAA Pattern)
+## Cấu trúc Test (AAA Pattern)
 
-Prefer Arrange-Act-Assert structure for tests:
+Ưu tiên cấu trúc Arrange-Act-Assert cho test:
 
 ```typescript
 test('calculates similarity correctly', () => {
@@ -46,9 +46,9 @@ test('calculates similarity correctly', () => {
 })
 ```
 
-### Test Naming
+### Đặt tên Test
 
-Use descriptive names that explain the behavior under test:
+Dùng tên mô tả giải thích hành vi đang được kiểm thử:
 
 ```typescript
 test('returns empty array when no markets match query', () => {})

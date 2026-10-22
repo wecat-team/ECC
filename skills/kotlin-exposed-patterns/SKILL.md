@@ -1,28 +1,28 @@
 ---
 name: kotlin-exposed-patterns
-description: JetBrains Exposed ORM patterns including DSL queries, DAO pattern, transactions, HikariCP connection pooling, Flyway migrations, and repository pattern. Use when working with the Exposed ORM — DSL or DAO queries, transactions, pooling, or migrations.
+description: "Các pattern JetBrains Exposed ORM bao gồm DSL query, DAO pattern, transaction, connection pooling HikariCP, migration Flyway và repository pattern. Dùng khi làm việc với Exposed ORM — DSL hoặc DAO query, transaction, pooling hoặc migration."
 metadata:
   origin: ECC
 ---
 
-# Kotlin Exposed Patterns
+# Các pattern Kotlin Exposed
 
-Comprehensive patterns for database access with JetBrains Exposed ORM, including DSL queries, DAO, transactions, and production-ready configuration.
+Các pattern toàn diện để truy cập database với JetBrains Exposed ORM, bao gồm DSL query, DAO, transaction và cấu hình sẵn sàng cho production.
 
-## When to Use
+## Khi nào dùng
 
-- Setting up database access with Exposed
-- Writing SQL queries using Exposed DSL or DAO
-- Configuring connection pooling with HikariCP
-- Creating database migrations with Flyway
-- Implementing the repository pattern with Exposed
-- Handling JSON columns and complex queries
+- Thiết lập truy cập database với Exposed
+- Viết SQL query bằng Exposed DSL hoặc DAO
+- Cấu hình connection pooling với HikariCP
+- Tạo database migration với Flyway
+- Triển khai repository pattern với Exposed
+- Xử lý cột JSON và các query phức tạp
 
-## How It Works
+## Cách hoạt động
 
-Exposed provides two query styles: DSL for direct SQL-like expressions and DAO for entity lifecycle management. HikariCP manages a pool of reusable database connections configured via `HikariConfig`. Flyway runs versioned SQL migration scripts at startup to keep the schema in sync. All database operations run inside `newSuspendedTransaction` blocks for coroutine safety and atomicity. The repository pattern wraps Exposed queries behind an interface so business logic stays decoupled from the data layer and tests can use an in-memory H2 database.
+Exposed cung cấp hai kiểu query: DSL cho các biểu thức giống SQL trực tiếp và DAO cho việc quản lý vòng đời entity. HikariCP quản lý một pool các database connection có thể tái sử dụng, được cấu hình qua `HikariConfig`. Flyway chạy các script migration SQL có đánh phiên bản khi khởi động để giữ schema đồng bộ. Mọi thao tác database chạy bên trong các block `newSuspendedTransaction` để đảm bảo an toàn với coroutine và tính nguyên tử (atomicity). Repository pattern bọc các query Exposed sau một interface để business logic tách rời khỏi tầng dữ liệu và các test có thể dùng database H2 in-memory.
 
-## Examples
+## Ví dụ
 
 ### DSL Query
 
@@ -36,7 +36,7 @@ suspend fun findUserById(id: UUID): UserRow? =
     }
 ```
 
-### DAO Entity Usage
+### Sử dụng DAO Entity
 
 ```kotlin
 suspend fun createUser(request: CreateUserRequest): User =
@@ -49,7 +49,7 @@ suspend fun createUser(request: CreateUserRequest): User =
     }
 ```
 
-### HikariCP Configuration
+### Cấu hình HikariCP
 
 ```kotlin
 val hikariConfig = HikariConfig().apply {
@@ -64,7 +64,7 @@ val hikariConfig = HikariConfig().apply {
 }
 ```
 
-## Database Setup
+## Thiết lập Database
 
 ### HikariCP Connection Pooling
 
@@ -96,7 +96,7 @@ data class DatabaseConfig(
 )
 ```
 
-### Flyway Migrations
+### Flyway Migration
 
 ```kotlin
 // FlywayMigration.kt
@@ -122,7 +122,7 @@ fun Application.module() {
 }
 ```
 
-### Migration Files
+### File Migration
 
 ```sql
 -- src/main/resources/db/migration/V1__create_users.sql
@@ -140,9 +140,9 @@ CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_role ON users(role);
 ```
 
-## Table Definitions
+## Định nghĩa Table
 
-### DSL Style Tables
+### Table theo kiểu DSL
 
 ```kotlin
 // tables/UsersTable.kt
@@ -171,7 +171,7 @@ object OrderItemsTable : UUIDTable("order_items") {
 }
 ```
 
-### Composite Tables
+### Composite Table
 
 ```kotlin
 object UserRolesTable : Table("user_roles") {
@@ -181,9 +181,9 @@ object UserRolesTable : Table("user_roles") {
 }
 ```
 
-## DSL Queries
+## DSL Query
 
-### Basic CRUD
+### CRUD cơ bản
 
 ```kotlin
 // Insert
@@ -241,7 +241,7 @@ private fun ResultRow.toUser() = UserRow(
 )
 ```
 
-### Advanced Queries
+### Query nâng cao
 
 ```kotlin
 // Join queries
@@ -326,7 +326,7 @@ suspend fun findUsersPaginated(page: Int, limit: Int): Page<UserRow> =
     }
 ```
 
-### Batch Operations
+### Thao tác Batch
 
 ```kotlin
 // Batch insert
@@ -354,7 +354,7 @@ suspend fun upsertUser(id: UUID, name: String, email: String) {
 
 ## DAO Pattern
 
-### Entity Definitions
+### Định nghĩa Entity
 
 ```kotlin
 // entities/UserEntity.kt
@@ -394,7 +394,7 @@ class OrderEntity(id: EntityID<UUID>) : UUIDEntity(id) {
 }
 ```
 
-### DAO Operations
+### Thao tác DAO
 
 ```kotlin
 suspend fun findUserByEmail(email: String): User? =
@@ -423,9 +423,9 @@ suspend fun updateUser(id: UUID, request: UpdateUserRequest): User? =
     }
 ```
 
-## Transactions
+## Transaction
 
-### Suspend Transaction Support
+### Hỗ trợ Suspend Transaction
 
 ```kotlin
 // Good: Use newSuspendedTransaction for coroutine support
@@ -474,7 +474,7 @@ suspend fun serializableOperation() {
 
 ## Repository Pattern
 
-### Interface Definition
+### Định nghĩa Interface
 
 ```kotlin
 interface UserRepository {
@@ -489,7 +489,7 @@ interface UserRepository {
 }
 ```
 
-### Exposed Implementation
+### Triển khai bằng Exposed
 
 ```kotlin
 class ExposedUserRepository(
@@ -576,9 +576,9 @@ class ExposedUserRepository(
 }
 ```
 
-## JSON Columns
+## Cột JSON
 
-### JSONB with kotlinx.serialization
+### JSONB với kotlinx.serialization
 
 ```kotlin
 // Custom column type for JSONB
@@ -617,9 +617,9 @@ object UsersTable : UUIDTable("users") {
 }
 ```
 
-## Testing with Exposed
+## Testing với Exposed
 
-### In-Memory Database for Tests
+### Database In-Memory cho Test
 
 ```kotlin
 class UserRepositoryTest : FunSpec({
@@ -675,7 +675,7 @@ class UserRepositoryTest : FunSpec({
 })
 ```
 
-## Gradle Dependencies
+## Dependency Gradle
 
 ```kotlin
 // build.gradle.kts
@@ -702,19 +702,19 @@ dependencies {
 }
 ```
 
-## Quick Reference: Exposed Patterns
+## Tham khảo nhanh: Các pattern Exposed
 
-| Pattern | Description |
+| Pattern | Mô tả |
 |---------|-------------|
-| `object Table : UUIDTable("name")` | Define table with UUID primary key |
-| `newSuspendedTransaction { }` | Coroutine-safe transaction block |
-| `Table.selectAll().where { }` | Query with conditions |
-| `Table.insertAndGetId { }` | Insert and return generated ID |
-| `Table.update({ condition }) { }` | Update matching rows |
-| `Table.deleteWhere { }` | Delete matching rows |
-| `Table.batchInsert(items) { }` | Efficient bulk insert |
-| `innerJoin` / `leftJoin` | Join tables |
-| `orderBy` / `limit` / `offset` | Sort and paginate |
-| `count()` / `sum()` / `avg()` | Aggregation functions |
+| `object Table : UUIDTable("name")` | Định nghĩa table với primary key UUID |
+| `newSuspendedTransaction { }` | Block transaction an toàn với coroutine |
+| `Table.selectAll().where { }` | Query có điều kiện |
+| `Table.insertAndGetId { }` | Insert và trả về ID được sinh ra |
+| `Table.update({ condition }) { }` | Cập nhật các dòng khớp điều kiện |
+| `Table.deleteWhere { }` | Xóa các dòng khớp điều kiện |
+| `Table.batchInsert(items) { }` | Bulk insert hiệu quả |
+| `innerJoin` / `leftJoin` | Join các table |
+| `orderBy` / `limit` / `offset` | Sắp xếp và phân trang |
+| `count()` / `sum()` / `avg()` | Các hàm aggregation |
 
-**Remember**: Use the DSL style for simple queries and the DAO style when you need entity lifecycle management. Always use `newSuspendedTransaction` for coroutine support, and wrap database operations behind a repository interface for testability.
+**Hãy nhớ**: Dùng kiểu DSL cho các query đơn giản và kiểu DAO khi bạn cần quản lý vòng đời entity. Luôn dùng `newSuspendedTransaction` để hỗ trợ coroutine, và bọc các thao tác database sau một repository interface để dễ kiểm thử.

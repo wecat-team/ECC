@@ -1,29 +1,29 @@
 ---
 name: santa-method
-description: "Multi-agent adversarial verification: two independent reviewers with the same rubric must both pass before output ships, with a fix-and-re-review convergence loop and human escalation cap. Use when gating publishing, production deploys, compliance or brand-sensitive content, or hallucination-prone claims before they ship."
+description: "Xác minh đối kháng (adversarial verification) đa agent: hai reviewer độc lập dùng cùng một rubric phải cùng pass thì đầu ra mới được phát hành, kèm vòng lặp hội tụ sửa-và-review-lại và giới hạn chuyển lên người xử lý (human escalation). Dùng để chặn cổng (gating) khi publish, deploy production, nội dung nhạy cảm về compliance hoặc thương hiệu, hay các tuyên bố dễ bị hallucination trước khi phát hành."
 metadata:
   origin: "Ronald Skelton - Founder, RapportScore.ai"
 ---
 
 # Santa Method
 
-Multi-agent adversarial verification framework. Make a list, check it twice. If it's naughty, fix it until it's nice.
+Framework xác minh đối kháng đa agent. Lập danh sách, kiểm tra hai lần. Nếu hư (naughty), sửa cho đến khi ngoan (nice).
 
-The core insight: a single agent reviewing its own output shares the same biases, knowledge gaps, and systematic errors that produced the output. Two independent reviewers with no shared context break this failure mode.
+Điểm mấu chốt: một agent tự review đầu ra của chính mình sẽ mang cùng những thiên kiến, lỗ hổng kiến thức và sai sót hệ thống đã tạo ra đầu ra đó. Hai reviewer độc lập không chia sẻ context sẽ phá vỡ kiểu thất bại này.
 
-## When to Activate
+## Khi nào kích hoạt
 
-Invoke this skill when:
-- Output will be published, deployed, or consumed by end users
-- Compliance, regulatory, or brand constraints must be enforced
-- Code ships to production without human review
-- Content accuracy matters (technical docs, educational material, customer-facing copy)
-- Batch generation at scale where spot-checking misses systemic patterns
-- Hallucination risk is elevated (claims, statistics, API references, legal language)
+Gọi skill này khi:
+- Đầu ra sẽ được publish, deploy hoặc đến tay người dùng cuối
+- Phải thực thi các ràng buộc về compliance, quy định pháp lý hoặc thương hiệu
+- Code được đưa lên production mà không có con người review
+- Độ chính xác của nội dung quan trọng (tài liệu kỹ thuật, tài liệu giáo dục, nội dung hướng tới khách hàng)
+- Sinh hàng loạt ở quy mô lớn mà kiểm tra ngẫu nhiên sẽ bỏ sót các pattern mang tính hệ thống
+- Rủi ro hallucination cao (tuyên bố, số liệu thống kê, tham chiếu API, ngôn ngữ pháp lý)
 
-Do NOT use for internal drafts, exploratory research, or tasks with deterministic verification (use build/test/lint pipelines for those).
+KHÔNG dùng cho bản nháp nội bộ, nghiên cứu khám phá, hoặc các tác vụ có thể xác minh một cách xác định (deterministic) (hãy dùng pipeline build/test/lint cho những việc đó).
 
-## Architecture
+## Kiến trúc
 
 ```
 ┌─────────────┐
@@ -63,25 +63,25 @@ Do NOT use for internal drafts, exploratory research, or tasks with deterministi
                └──────────────┘
 ```
 
-## Phase Details
+## Chi tiết từng giai đoạn
 
-### Phase 1: Make a List (Generate)
+### Giai đoạn 1: Lập danh sách (Generate)
 
-Execute the primary task. No changes to your normal generation workflow. Santa Method is a post-generation verification layer, not a generation strategy.
+Thực hiện tác vụ chính. Không thay đổi workflow sinh nội dung thông thường của bạn. Santa Method là một lớp xác minh sau khi sinh, không phải một chiến lược sinh nội dung.
 
 ```python
 # The generator runs as normal
 output = generate(task_spec)
 ```
 
-### Phase 2: Check It Twice (Independent Dual Review)
+### Giai đoạn 2: Kiểm tra hai lần (Review kép độc lập)
 
-Spawn two review agents in parallel. Critical invariants:
+Khởi chạy hai agent review song song. Các bất biến (invariant) quan trọng:
 
-1. **Context isolation** — neither reviewer sees the other's assessment
-2. **Identical rubric** — both receive the same evaluation criteria
-3. **Same inputs** — both receive the original spec AND the generated output
-4. **Structured output** — each returns a typed verdict, not prose
+1. **Cô lập context** — không reviewer nào thấy đánh giá của reviewer kia
+2. **Rubric giống hệt nhau** — cả hai nhận cùng tiêu chí đánh giá
+3. **Cùng đầu vào** — cả hai nhận spec gốc VÀ đầu ra đã sinh
+4. **Đầu ra có cấu trúc** — mỗi reviewer trả về một verdict có kiểu rõ ràng, không phải văn xuôi
 
 ```python
 REVIEWER_PROMPT = """
@@ -123,40 +123,40 @@ review_c = Agent(prompt=REVIEWER_PROMPT.format(...), description="Santa Reviewer
 # Both run concurrently — neither sees the other
 ```
 
-### Rubric Design
+### Thiết kế Rubric
 
-The rubric is the most important input. Vague rubrics produce vague reviews. Every criterion must have an objective pass/fail condition.
+Rubric là đầu vào quan trọng nhất. Rubric mơ hồ sinh ra review mơ hồ. Mỗi tiêu chí phải có điều kiện pass/fail khách quan.
 
-| Criterion | Pass Condition | Failure Signal |
+| Tiêu chí | Điều kiện pass | Dấu hiệu thất bại |
 |-----------|---------------|----------------|
-| Factual accuracy | All claims verifiable against source material or common knowledge | Invented statistics, wrong version numbers, nonexistent APIs |
-| Hallucination-free | No fabricated entities, quotes, URLs, or references | Links to pages that don't exist, attributed quotes with no source |
-| Completeness | Every requirement in the spec is addressed | Missing sections, skipped edge cases, incomplete coverage |
-| Compliance | Passes all project-specific constraints | Banned terms used, tone violations, regulatory non-compliance |
-| Internal consistency | No contradictions within the output | Section A says X, section B says not-X |
-| Technical correctness | Code compiles/runs, algorithms are sound | Syntax errors, logic bugs, wrong complexity claims |
+| Độ chính xác thực tế | Mọi tuyên bố đều kiểm chứng được với tài liệu nguồn hoặc kiến thức phổ thông | Số liệu bịa, số phiên bản sai, API không tồn tại |
+| Không hallucination | Không có thực thể, trích dẫn, URL hay tham chiếu bịa đặt | Link tới trang không tồn tại, trích dẫn gán tác giả nhưng không có nguồn |
+| Tính đầy đủ | Mọi yêu cầu trong spec đều được đáp ứng | Thiếu section, bỏ qua edge case, coverage chưa đủ |
+| Compliance | Đáp ứng mọi ràng buộc riêng của dự án | Dùng từ bị cấm, sai giọng điệu, vi phạm quy định pháp lý |
+| Nhất quán nội tại | Không có mâu thuẫn trong đầu ra | Section A nói X, section B nói không-X |
+| Tính đúng đắn về kỹ thuật | Code compile/chạy được, thuật toán đúng đắn | Lỗi cú pháp, bug logic, khẳng định sai về độ phức tạp |
 
-#### Domain-Specific Rubric Extensions
+#### Mở rộng rubric theo lĩnh vực
 
-**Content/Marketing:**
-- Brand voice adherence
-- SEO requirements met (keyword density, meta tags, structure)
-- No competitor trademark misuse
-- CTA present and correctly linked
+**Nội dung/Marketing:**
+- Tuân thủ giọng điệu thương hiệu
+- Đáp ứng yêu cầu SEO (mật độ từ khóa, meta tag, cấu trúc)
+- Không lạm dụng nhãn hiệu của đối thủ
+- Có CTA và được liên kết đúng
 
 **Code:**
-- Type safety (no `any` leaks, proper null handling)
-- Error handling coverage
-- Security (no secrets in code, input validation, injection prevention)
-- Test coverage for new paths
+- An toàn kiểu (không rò rỉ `any`, xử lý null đúng cách)
+- Độ phủ xử lý lỗi
+- Bảo mật (không có secret trong code, kiểm tra đầu vào, chống injection)
+- Test coverage cho các nhánh mới
 
-**Compliance-Sensitive (regulated, legal, financial):**
-- No outcome guarantees or unsubstantiated claims
-- Required disclaimers present
-- Approved terminology only
-- Jurisdiction-appropriate language
+**Nhạy cảm về compliance (quy định, pháp lý, tài chính):**
+- Không cam kết kết quả hoặc đưa ra tuyên bố thiếu căn cứ
+- Có đủ các tuyên bố miễn trừ trách nhiệm (disclaimer) bắt buộc
+- Chỉ dùng thuật ngữ đã được phê duyệt
+- Ngôn ngữ phù hợp với khu vực pháp lý
 
-### Phase 3: Naughty or Nice (Verdict Gate)
+### Giai đoạn 3: Naughty hay Nice (Cổng Verdict)
 
 ```python
 def santa_verdict(review_b, review_c):
@@ -171,9 +171,9 @@ def santa_verdict(review_b, review_c):
     return "NAUGHTY", all_issues, all_suggestions
 ```
 
-Why both must pass: if only one reviewer catches an issue, that issue is real. The other reviewer's blind spot is exactly the failure mode Santa Method exists to eliminate.
+Vì sao cả hai phải pass: nếu chỉ một reviewer phát hiện ra vấn đề thì vấn đề đó là có thật. Điểm mù của reviewer còn lại chính là kiểu thất bại mà Santa Method sinh ra để loại bỏ.
 
-### Phase 4: Fix Until Nice (Convergence Loop)
+### Giai đoạn 4: Sửa đến khi Nice (Vòng lặp hội tụ)
 
 ```python
 MAX_ITERATIONS = 3
@@ -201,13 +201,13 @@ log_santa_result(output, MAX_ITERATIONS, "escalated")
 escalate_to_human(output, issues)
 ```
 
-Critical: each review round uses **fresh agents**. Reviewers must not carry memory from previous rounds, as prior context creates anchoring bias.
+Quan trọng: mỗi vòng review dùng **agent mới hoàn toàn**. Reviewer không được mang theo bộ nhớ từ các vòng trước, vì context cũ tạo ra thiên kiến neo (anchoring bias).
 
-## Implementation Patterns
+## Pattern triển khai
 
-### Pattern A: Claude Code Subagents (Recommended)
+### Pattern A: Subagent của Claude Code (Khuyến nghị)
 
-Subagents provide true context isolation. Each reviewer is a separate process with no shared state.
+Subagent cung cấp khả năng cô lập context thực sự. Mỗi reviewer là một process riêng biệt, không chia sẻ state.
 
 ```bash
 # In a Claude Code session, use the Agent tool to spawn reviewers
@@ -226,28 +226,28 @@ reviewer_c = Agent(
 )
 ```
 
-### Pattern B: Sequential Inline (Fallback)
+### Pattern B: Tuần tự inline (Phương án dự phòng)
 
-When subagents aren't available, simulate isolation with explicit context resets:
+Khi không có subagent, hãy mô phỏng sự cô lập bằng cách reset context một cách tường minh:
 
-1. Generate output
-2. New context: "You are Reviewer 1. Evaluate ONLY against this rubric. Find problems."
-3. Record findings verbatim
-4. Clear context completely
-5. New context: "You are Reviewer 2. Evaluate ONLY against this rubric. Find problems."
-6. Compare both reviews, fix, repeat
+1. Sinh đầu ra
+2. Context mới: "You are Reviewer 1. Evaluate ONLY against this rubric. Find problems."
+3. Ghi lại nguyên văn các phát hiện
+4. Xóa sạch context hoàn toàn
+5. Context mới: "You are Reviewer 2. Evaluate ONLY against this rubric. Find problems."
+6. So sánh hai review, sửa, lặp lại
 
-The subagent pattern is strictly superior — inline simulation risks context bleed between reviewers.
+Pattern dùng subagent hoàn toàn vượt trội — mô phỏng inline có nguy cơ rò rỉ context giữa các reviewer.
 
-### Pattern C: Batch Sampling
+### Pattern C: Lấy mẫu theo batch
 
-For large batches (100+ items), full Santa on every item is cost-prohibitive. Use stratified sampling:
+Với batch lớn (100+ mục), chạy Santa đầy đủ cho từng mục là quá tốn kém. Hãy dùng lấy mẫu phân tầng (stratified sampling):
 
-1. Run Santa on a random sample (10-15% of batch, minimum 5 items)
-2. Categorize failures by type (hallucination, compliance, completeness, etc.)
-3. If systematic patterns emerge, apply targeted fixes to the entire batch
-4. Re-sample and re-verify the fixed batch
-5. Continue until a clean sample passes
+1. Chạy Santa trên một mẫu ngẫu nhiên (10-15% của batch, tối thiểu 5 mục)
+2. Phân loại lỗi theo loại (hallucination, compliance, tính đầy đủ, v.v.)
+3. Nếu xuất hiện pattern mang tính hệ thống, áp dụng bản sửa có mục tiêu cho toàn bộ batch
+4. Lấy mẫu lại và xác minh lại batch đã sửa
+5. Tiếp tục cho đến khi một mẫu sạch pass
 
 ```python
 import random
@@ -265,43 +265,43 @@ def santa_batch(items, rubric, sample_rate=0.15):
     return items  # Clean sample → ship batch
 ```
 
-## Failure Modes and Mitigations
+## Các kiểu thất bại và cách giảm thiểu
 
-| Failure Mode | Symptom | Mitigation |
+| Kiểu thất bại | Triệu chứng | Cách giảm thiểu |
 |-------------|---------|------------|
-| Infinite loop | Reviewers keep finding new issues after fixes | Max iteration cap (3). Escalate. |
-| Rubber stamping | Both reviewers pass everything | Adversarial prompt: "Your job is to find problems, not approve." |
-| Subjective drift | Reviewers flag style preferences, not errors | Tight rubric with objective pass/fail criteria only |
-| Fix regression | Fixing issue A introduces issue B | Fresh reviewers each round catch regressions |
-| Reviewer agreement bias | Both reviewers miss the same thing | Mitigated by independence, not eliminated. For critical output, add a third reviewer or human spot-check. |
-| Cost explosion | Too many iterations on large outputs | Batch sampling pattern. Budget caps per verification cycle. |
+| Vòng lặp vô hạn | Reviewer liên tục tìm ra vấn đề mới sau mỗi lần sửa | Giới hạn số vòng lặp tối đa (3). Chuyển lên người xử lý. |
+| Đóng dấu cho qua | Cả hai reviewer cho pass mọi thứ | Prompt đối kháng: "Your job is to find problems, not approve." |
+| Trôi sang chủ quan | Reviewer đánh dấu sở thích về phong cách chứ không phải lỗi | Rubric chặt chẽ chỉ gồm tiêu chí pass/fail khách quan |
+| Hồi quy khi sửa | Sửa vấn đề A lại gây ra vấn đề B | Reviewer mới ở mỗi vòng sẽ bắt được hồi quy |
+| Thiên kiến đồng thuận của reviewer | Cả hai reviewer cùng bỏ sót một thứ | Giảm thiểu nhờ tính độc lập, nhưng không loại bỏ hoàn toàn. Với đầu ra quan trọng, thêm reviewer thứ ba hoặc để con người kiểm tra chọn lọc. |
+| Chi phí bùng nổ | Quá nhiều vòng lặp trên đầu ra lớn | Pattern lấy mẫu theo batch. Giới hạn ngân sách cho mỗi chu kỳ xác minh. |
 
-## Integration with Other Skills
+## Tích hợp với các skill khác
 
-| Skill | Relationship |
+| Skill | Mối quan hệ |
 |-------|-------------|
-| Verification Loop | Use for deterministic checks (build, lint, test). Santa for semantic checks (accuracy, hallucinations). Run verification-loop first, Santa second. |
-| Eval Harness | Santa Method results feed eval metrics. Track pass@k across Santa runs to measure generator quality over time. |
-| Continuous Learning v2 | Santa findings become instincts. Repeated failures on the same criterion → learned behavior to avoid the pattern. |
-| Strategic Compact | Run Santa BEFORE compacting. Don't lose review context mid-verification. |
+| Verification Loop | Dùng cho kiểm tra xác định (build, lint, test). Santa dùng cho kiểm tra ngữ nghĩa (độ chính xác, hallucination). Chạy verification-loop trước, Santa sau. |
+| Eval Harness | Kết quả của Santa Method cung cấp cho các chỉ số eval. Theo dõi pass@k qua các lần chạy Santa để đo chất lượng generator theo thời gian. |
+| Continuous Learning v2 | Các phát hiện của Santa trở thành instinct. Thất bại lặp lại trên cùng một tiêu chí → hành vi học được để tránh pattern đó. |
+| Strategic Compact | Chạy Santa TRƯỚC khi compact. Đừng làm mất context review giữa chừng quá trình xác minh. |
 
-## Metrics
+## Chỉ số
 
-Track these to measure Santa Method effectiveness:
+Theo dõi các chỉ số sau để đo hiệu quả của Santa Method:
 
-- **First-pass rate**: % of outputs that pass Santa on round 1 (target: >70%)
-- **Mean iterations to convergence**: average rounds to NICE (target: <1.5)
-- **Issue taxonomy**: distribution of failure types (hallucination vs. completeness vs. compliance)
-- **Reviewer agreement**: % of issues flagged by both reviewers vs. only one (low agreement = rubric needs tightening)
-- **Escape rate**: issues found post-ship that Santa should have caught (target: 0)
+- **Tỷ lệ pass ngay lần đầu**: % đầu ra pass Santa ngay vòng 1 (mục tiêu: >70%)
+- **Số vòng lặp trung bình để hội tụ**: số vòng trung bình để đạt NICE (mục tiêu: <1.5)
+- **Phân loại vấn đề**: phân bố các loại thất bại (hallucination so với tính đầy đủ so với compliance)
+- **Mức đồng thuận của reviewer**: % vấn đề được cả hai reviewer đánh dấu so với chỉ một người (đồng thuận thấp = rubric cần chặt chẽ hơn)
+- **Tỷ lệ lọt lưới**: vấn đề được phát hiện sau khi phát hành mà Santa lẽ ra phải bắt được (mục tiêu: 0)
 
-## Cost Analysis
+## Phân tích chi phí
 
-Santa Method costs approximately 2-3x the token cost of generation alone per verification cycle. For most high-stakes output, this is a bargain:
+Santa Method tốn khoảng 2-3 lần chi phí token của riêng việc sinh nội dung cho mỗi chu kỳ xác minh. Với hầu hết đầu ra có mức rủi ro cao, đây là một món hời:
 
 ```
 Cost of Santa = (generation tokens) + 2×(review tokens per round) × (avg rounds)
 Cost of NOT Santa = (reputation damage) + (correction effort) + (trust erosion)
 ```
 
-For batch operations, the sampling pattern reduces cost to ~15-20% of full verification while catching >90% of systematic issues.
+Với các thao tác theo batch, pattern lấy mẫu giảm chi phí xuống còn ~15-20% so với xác minh đầy đủ mà vẫn bắt được >90% vấn đề mang tính hệ thống.

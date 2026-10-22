@@ -7,13 +7,13 @@ paths:
   - "**/app/**/*.tsx"
   - "**/pages/**/*.tsx"
 ---
-# React Patterns
+# Pattern React
 
-> This file extends [typescript/patterns.md](../typescript/patterns.md) and [common/patterns.md](../common/patterns.md) with React specific content. For hook-specific rules see [hooks.md](./hooks.md).
+> File này mở rộng [typescript/patterns.md](../typescript/patterns.md) và [common/patterns.md](../common/patterns.md) với nội dung riêng cho React. Về các quy tắc riêng của hook, xem [hooks.md](./hooks.md).
 
-## Container / Presentational Split
+## Tách Container / Presentational
 
-Container components own data fetching, state, and side effects. Presentational components receive props and render — no service calls, no hooks beyond local UI state.
+Container component sở hữu việc fetch dữ liệu, state và side effect. Presentational component nhận props và render — không gọi service, không dùng hook nào ngoài state UI cục bộ.
 
 ```tsx
 // Container — owns data
@@ -30,22 +30,22 @@ export function UserCard({ user, onSelect }: { user: User; onSelect: (id: string
 }
 ```
 
-## State Location Decision Tree
+## Cây quyết định vị trí đặt State
 
-1. Used by one component → `useState` inside it
-2. Used by parent + a few children → lift to nearest common ancestor, pass via props
-3. Used across distant branches → React Context **for low-frequency reads only** (theme, auth, locale)
-4. High-frequency updates shared across the tree → external store (Zustand, Jotai, Redux Toolkit)
-5. Server-derived data → server-state library (TanStack Query, SWR, RSC fetch) — not application state
+1. Dùng bởi một component → `useState` bên trong nó
+2. Dùng bởi cha + vài con → nâng lên (lift) tới tổ tiên chung gần nhất, truyền qua props
+3. Dùng ở các nhánh cách xa nhau → React Context **chỉ cho các lần đọc tần suất thấp** (theme, auth, locale)
+4. Cập nhật tần suất cao được chia sẻ khắp cây → external store (Zustand, Jotai, Redux Toolkit)
+5. Dữ liệu có nguồn gốc từ server → thư viện server-state (TanStack Query, SWR, RSC fetch) — không phải application state
 
-Context misused for frequently changing values causes every consumer to re-render on every update.
+Dùng Context sai cách cho các giá trị thay đổi thường xuyên khiến mọi consumer re-render ở mỗi lần cập nhật.
 
-## Server / Client Component Boundary (RSC, Next.js App Router)
+## Ranh giới Server / Client Component (RSC, Next.js App Router)
 
-- Server Components are the default — they run on the server, do not ship to the client, and can `await` directly
-- Client Components opt in with `"use client"` at the top of the file
-- Data flows down: a Server Component can render a Client Component and pass serializable props
-- A Client Component cannot import a Server Component, but it can receive one via `children` or named slots
+- Server Component là mặc định — chúng chạy trên server, không được gửi xuống client, và có thể `await` trực tiếp
+- Client Component được bật bằng `"use client"` ở đầu file
+- Dữ liệu chảy xuống: Server Component có thể render Client Component và truyền các props serialize được
+- Client Component không thể import Server Component, nhưng có thể nhận một Server Component qua `children` hoặc các slot có tên
 
 ```tsx
 // Server (default)
@@ -62,12 +62,12 @@ export function UserClient({ user }: { user: User }) {
 }
 ```
 
-- Never import `"server-only"` packages (DB clients, secrets) from a Client Component file — wrap them in a Server Component or Server Action
-- Mark sensitive modules with `import "server-only"` so the bundler errors if a client file imports them
+- Không bao giờ import các package `"server-only"` (DB client, secret) từ file Client Component — hãy bọc chúng trong Server Component hoặc Server Action
+- Đánh dấu các module nhạy cảm bằng `import "server-only"` để bundler báo lỗi nếu file client import chúng
 
-## Suspense + Error Boundaries
+## Suspense + Error Boundary
 
-Every Suspense boundary needs an Error Boundary above it. The pair handles both states.
+Mỗi Suspense boundary cần một Error Boundary phía trên nó. Cặp này xử lý cả hai trạng thái.
 
 ```tsx
 <ErrorBoundary fallback={<ErrorView />}>
@@ -77,15 +77,15 @@ Every Suspense boundary needs an Error Boundary above it. The pair handles both 
 </ErrorBoundary>
 ```
 
-- Place Suspense boundaries close to where data is needed, not at the route root
-- Multiple narrower boundaries reveal loaded content progressively
-- Error Boundary must be a Class Component (React 19 has no functional equivalent yet) OR use a library wrapper such as `react-error-boundary`
+- Đặt Suspense boundary gần nơi cần dữ liệu, không đặt ở gốc route
+- Nhiều boundary hẹp hơn sẽ hiển thị dần nội dung đã tải xong
+- Error Boundary phải là Class Component (React 19 chưa có bản tương đương dạng function) HOẶC dùng một wrapper của thư viện như `react-error-boundary`
 
-## Forms
+## Form
 
-### Uncontrolled (React 19 + form actions)
+### Uncontrolled (React 19 + form action)
 
-Prefer uncontrolled inputs with form actions when the form has a clear submit step. The browser owns the value; React reads it via `FormData` on submit.
+Ưu tiên input uncontrolled cùng form action khi form có bước submit rõ ràng. Trình duyệt giữ giá trị; React đọc nó qua `FormData` khi submit.
 
 ```tsx
 async function action(formData: FormData) {
@@ -105,48 +105,48 @@ export function UserForm() {
 
 ### Controlled
 
-Use controlled inputs when the value drives other UI, requires real-time validation, or formatting.
+Dùng input controlled khi giá trị điều khiển UI khác, cần validate theo thời gian thực, hoặc cần định dạng.
 
 ```tsx
 const [email, setEmail] = useState("");
 return <input value={email} onChange={(e) => setEmail(e.target.value)} />;
 ```
 
-### Form Libraries
+### Thư viện Form
 
-For complex forms (multi-step, dynamic field arrays, cross-field validation), use a library:
+Với form phức tạp (nhiều bước, mảng field động, validate chéo giữa các field), hãy dùng thư viện:
 
-- React Hook Form — minimal re-renders, uncontrolled-first
-- TanStack Form — typed, framework-agnostic
-- Final Form — when subscription-based re-renders matter
+- React Hook Form — ít re-render nhất, ưu tiên uncontrolled
+- TanStack Form — có type, không phụ thuộc framework
+- Final Form — khi việc re-render dựa trên subscription quan trọng
 
-## Data Fetching
+## Fetch dữ liệu
 
-| Strategy | When |
+| Chiến lược | Khi nào |
 |---|---|
-| RSC fetch (`await` in Server Component) | Per-request data in Next.js App Router, no client-side cache needed |
-| TanStack Query | Client-side cache, mutations, optimistic updates, polling |
-| SWR | Lightweight cache + revalidation, simpler than TanStack Query |
-| `fetch` in `useEffect` | Avoid — race conditions, no cache, no retry. Only acceptable for one-off fire-and-forget |
+| RSC fetch (`await` trong Server Component) | Dữ liệu theo từng request trong Next.js App Router, không cần cache phía client |
+| TanStack Query | Cache phía client, mutation, optimistic update, polling |
+| SWR | Cache nhẹ + revalidation, đơn giản hơn TanStack Query |
+| `fetch` trong `useEffect` | Tránh — có race condition, không cache, không retry. Chỉ chấp nhận cho tác vụ fire-and-forget dùng một lần |
 
-Never fetch in a `useEffect` when a real cache library is available — they handle deduping, cache invalidation, error retry, and Suspense integration.
+Không bao giờ fetch trong `useEffect` khi đã có thư viện cache thực thụ — chúng xử lý dedupe, vô hiệu hóa cache, retry khi lỗi và tích hợp Suspense.
 
-## Lists and Keys
+## Danh sách và Key
 
-- `key` must be stable across renders — never `index` for any list that can reorder, insert, or delete
-- `key` must be unique among siblings, not globally
-- A reordered list with index keys causes state in child components to attach to the wrong row
+- `key` phải ổn định giữa các lần render — không bao giờ dùng `index` cho bất kỳ danh sách nào có thể bị sắp xếp lại, chèn hoặc xóa
+- `key` phải duy nhất giữa các phần tử anh em (sibling), không cần duy nhất toàn cục
+- Danh sách bị sắp xếp lại khi dùng index làm key khiến state của component con gắn nhầm vào hàng khác
 
-## Composition over Inheritance
+## Composition thay vì Inheritance
 
-- Pass `children` for slot-style composition
-- Pass render-prop functions for parameterized rendering
-- Pass component types for plug-in points: `renderItem={UserRow}`
-- Never extend a component class to specialize behavior
+- Truyền `children` cho kiểu composition dạng slot
+- Truyền hàm render-prop cho việc render có tham số
+- Truyền kiểu component cho các điểm plug-in: `renderItem={UserRow}`
+- Không bao giờ extend một class component để chuyên biệt hóa hành vi
 
-## Compound Components
+## Compound Component
 
-For related controls (Tabs, Accordion, Menu), use compound components sharing state via Context:
+Với các control liên quan nhau (Tabs, Accordion, Menu), dùng compound component chia sẻ state qua Context:
 
 ```tsx
 <Tabs defaultValue="profile">
@@ -159,13 +159,13 @@ For related controls (Tabs, Accordion, Menu), use compound components sharing st
 </Tabs>
 ```
 
-## Portals
+## Portal
 
-Use `createPortal` for modals, tooltips, toast containers — anything that must escape the parent's `overflow: hidden` or `z-index` stacking context. Render to a stable DOM node mounted in `index.html`.
+Dùng `createPortal` cho modal, tooltip, toast container — mọi thứ phải thoát khỏi `overflow: hidden` hoặc stacking context `z-index` của phần tử cha. Render vào một DOM node ổn định được mount trong `index.html`.
 
-## Refs and Forwarding (React 19+)
+## Ref và Forwarding (React 19+)
 
-React 19 lets function components accept `ref` as a regular prop — `forwardRef` is no longer required.
+React 19 cho phép function component nhận `ref` như một prop thông thường — không còn cần `forwardRef`.
 
 ```tsx
 export function Input({ ref, ...rest }: { ref?: React.Ref<HTMLInputElement> } & InputProps) {
@@ -173,22 +173,22 @@ export function Input({ ref, ...rest }: { ref?: React.Ref<HTMLInputElement> } & 
 }
 ```
 
-Older codebases on React 18 still need `forwardRef`.
+Các codebase cũ trên React 18 vẫn cần `forwardRef`.
 
-## Out of Scope (Pointer Sections)
+## Ngoài phạm vi (các mục trỏ tới nơi khác)
 
 ### Next.js (App Router)
 
-- Server Actions, Route Handlers, Middleware, Parallel/Intercepted Routes, streaming Metadata
-- Treated as a separate framework concern — when adding deep Next-specific patterns, propose a dedicated `rules/nextjs/` track
-- For now follow Next.js official docs for App Router specifics
+- Server Action, Route Handler, Middleware, Parallel/Intercepted Route, streaming Metadata
+- Được coi là mối quan tâm riêng của framework — khi thêm các pattern chuyên sâu của Next, hãy đề xuất một track riêng `rules/nextjs/`
+- Hiện tại hãy theo tài liệu chính thức của Next.js về các chi tiết của App Router
 
 ### React Native
 
-- Platform-specific imports (`Platform.OS`, `.ios.tsx` / `.android.tsx`), `StyleSheet`, navigation libraries (React Navigation, Expo Router)
-- Treated as a separate track — `rules/react-native/` is not yet present
-- React core hooks/patterns from this file still apply
+- Import theo nền tảng (`Platform.OS`, `.ios.tsx` / `.android.tsx`), `StyleSheet`, các thư viện điều hướng (React Navigation, Expo Router)
+- Được coi là một track riêng — `rules/react-native/` chưa có
+- Các hook/pattern lõi của React trong file này vẫn áp dụng
 
-## Skill Reference
+## Tham chiếu Skill
 
-For React-specific deep dives see `skills/react-patterns/SKILL.md`. For cross-framework frontend concerns see `skills/frontend-patterns/SKILL.md`. For accessibility see `skills/accessibility/SKILL.md`.
+Để tìm hiểu sâu về React, xem `skills/react-patterns/SKILL.md`. Với các vấn đề frontend xuyên framework, xem `skills/frontend-patterns/SKILL.md`. Về accessibility, xem `skills/accessibility/SKILL.md`.

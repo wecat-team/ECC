@@ -1,70 +1,70 @@
 ---
-description: Fix Gradle build errors for Android and KMP projects
+description: Sửa lỗi build Gradle cho các dự án Android và KMP
 ---
 
 # Gradle Build Fix
 
-Incrementally fix Gradle build and compilation errors for Android and Kotlin Multiplatform projects.
+Sửa dần các lỗi build và biên dịch Gradle cho dự án Android và Kotlin Multiplatform.
 
-## Step 1: Detect Build Configuration
+## Bước 1: Phát hiện cấu hình build
 
-Identify the project type and run the appropriate build:
+Xác định loại dự án và chạy lệnh build phù hợp:
 
-| Indicator | Build Command |
+| Dấu hiệu | Lệnh build |
 |-----------|---------------|
 | `build.gradle.kts` + `composeApp/` (KMP) | `./gradlew composeApp:compileKotlinMetadata 2>&1` |
 | `build.gradle.kts` + `app/` (Android) | `./gradlew app:compileDebugKotlin 2>&1` |
-| `settings.gradle.kts` with modules | `./gradlew assemble 2>&1` |
-| Detekt configured | `./gradlew detekt 2>&1` |
+| `settings.gradle.kts` có các module | `./gradlew assemble 2>&1` |
+| Đã cấu hình Detekt | `./gradlew detekt 2>&1` |
 
-Also check `gradle.properties` and `local.properties` for configuration.
+Đồng thời kiểm tra `gradle.properties` và `local.properties` để xem cấu hình.
 
-## Step 2: Parse and Group Errors
+## Bước 2: Phân tích và nhóm lỗi
 
-1. Run the build command and capture output
-2. Separate Kotlin compilation errors from Gradle configuration errors
-3. Group by module and file path
-4. Sort: configuration errors first, then compilation errors by dependency order
+1. Chạy lệnh build và thu thập output
+2. Tách lỗi biên dịch Kotlin khỏi lỗi cấu hình Gradle
+3. Nhóm theo module và đường dẫn file
+4. Sắp xếp: lỗi cấu hình trước, sau đó là lỗi biên dịch theo thứ tự dependency
 
-## Step 3: Fix Loop
+## Bước 3: Vòng lặp sửa lỗi
 
-For each error:
+Với mỗi lỗi:
 
-1. **Read the file** — Full context around the error line
-2. **Diagnose** — Common categories:
-   - Missing import or unresolved reference
-   - Type mismatch or incompatible types
-   - Missing dependency in `build.gradle.kts`
+1. **Đọc file** — Toàn bộ context xung quanh dòng lỗi
+2. **Chẩn đoán** — Các nhóm thường gặp:
+   - Thiếu import hoặc unresolved reference
+   - Type mismatch hoặc kiểu không tương thích
+   - Thiếu dependency trong `build.gradle.kts`
    - Expect/actual mismatch (KMP)
-   - Compose compiler error
-3. **Fix minimally** — Smallest change that resolves the error
-4. **Re-run build** — Verify fix and check for new errors
-5. **Continue** — Move to next error
+   - Lỗi Compose compiler
+3. **Sửa tối thiểu** — Thay đổi nhỏ nhất giải quyết được lỗi
+4. **Chạy lại build** — Xác minh bản sửa và kiểm tra lỗi mới
+5. **Tiếp tục** — Chuyển sang lỗi tiếp theo
 
-## Step 4: Guardrails
+## Bước 4: Rào chắn an toàn (Guardrails)
 
-Stop and ask the user if:
-- Fix introduces more errors than it resolves
-- Same error persists after 3 attempts
-- Error requires adding new dependencies or changing module structure
-- Gradle sync itself fails (configuration-phase error)
-- Error is in generated code (Room, SQLDelight, KSP)
+Dừng lại và hỏi người dùng nếu:
+- Bản sửa gây ra nhiều lỗi hơn số lỗi nó giải quyết
+- Cùng một lỗi vẫn còn sau 3 lần thử
+- Lỗi đòi hỏi thêm dependency mới hoặc thay đổi cấu trúc module
+- Bản thân Gradle sync thất bại (lỗi ở pha cấu hình)
+- Lỗi nằm trong code được sinh tự động (Room, SQLDelight, KSP)
 
-## Step 5: Summary
+## Bước 5: Tóm tắt
 
-Report:
-- Errors fixed (module, file, description)
-- Errors remaining
-- New errors introduced (should be zero)
-- Suggested next steps
+Báo cáo:
+- Các lỗi đã sửa (module, file, mô tả)
+- Các lỗi còn lại
+- Các lỗi mới phát sinh (phải bằng không)
+- Các bước tiếp theo được đề xuất
 
-## Common Gradle/KMP Fixes
+## Các bản sửa Gradle/KMP thường gặp
 
-| Error | Fix |
+| Lỗi | Cách sửa |
 |-------|-----|
-| Unresolved reference in `commonMain` | Check if the dependency is in `commonMain.dependencies {}` |
-| Expect declaration without actual | Add `actual` implementation in each platform source set |
-| Compose compiler version mismatch | Align Kotlin and Compose compiler versions in `libs.versions.toml` |
-| Duplicate class | Check for conflicting dependencies with `./gradlew dependencies` |
-| KSP error | Run `./gradlew kspCommonMainKotlinMetadata` to regenerate |
-| Configuration cache issue | Check for non-serializable task inputs |
+| Unresolved reference trong `commonMain` | Kiểm tra dependency có nằm trong `commonMain.dependencies {}` không |
+| Expect declaration không có actual | Thêm phần triển khai `actual` trong từng source set của nền tảng |
+| Phiên bản Compose compiler không khớp | Đồng bộ phiên bản Kotlin và Compose compiler trong `libs.versions.toml` |
+| Duplicate class | Kiểm tra các dependency xung đột bằng `./gradlew dependencies` |
+| Lỗi KSP | Chạy `./gradlew kspCommonMainKotlinMetadata` để sinh lại |
+| Vấn đề configuration cache | Kiểm tra các input của task không thể serialize |

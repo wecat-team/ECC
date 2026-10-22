@@ -1,41 +1,41 @@
 ---
 name: redis-patterns
-description: Redis data structure patterns, caching strategies, distributed locks, rate limiting, pub/sub, and connection management for production applications. Use when adding caching, a distributed lock, rate limiting, or pub/sub with Redis, or when key design needs review.
+description: Các pattern cấu trúc dữ liệu Redis, chiến lược caching, distributed lock, rate limiting, pub/sub và quản lý connection cho ứng dụng production. Dùng khi thêm caching, distributed lock, rate limiting hoặc pub/sub với Redis, hoặc khi cần review thiết kế key.
 metadata:
   origin: ECC
 ---
 
 # Redis Patterns
 
-Quick reference for Redis best practices across common backend use cases.
+Tài liệu tham khảo nhanh về best practice của Redis cho các use case backend phổ biến.
 
-## How It Works
+## Cách hoạt động
 
-Redis is an in-memory data structure store that supports strings, hashes, lists, sets, sorted sets, streams, and more. Individual Redis commands are atomic on a single instance; multi-step workflows require Lua scripts, MULTI/EXEC transactions, or explicit synchronization to stay atomic. Data is optionally persisted via RDB snapshots or AOF logs. Clients communicate over TCP using the RESP protocol; connection pools are essential to avoid per-request handshake overhead.
+Redis là một kho cấu trúc dữ liệu in-memory, hỗ trợ string, hash, list, set, sorted set, stream và nhiều kiểu khác. Từng lệnh Redis riêng lẻ là atomic trên một instance; các workflow nhiều bước cần Lua script, transaction MULTI/EXEC hoặc đồng bộ hóa tường minh để giữ tính atomic. Dữ liệu có thể được lưu bền qua snapshot RDB hoặc log AOF. Client giao tiếp qua TCP bằng giao thức RESP; connection pool là bắt buộc để tránh chi phí handshake cho mỗi request.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Adding caching to an application
-- Implementing rate limiting or throttling
-- Building distributed locks or coordination
-- Setting up session or token storage
-- Using Pub/Sub or Redis Streams for messaging
-- Configuring Redis in production (pooling, eviction, clustering)
+- Thêm caching vào ứng dụng
+- Triển khai rate limiting hoặc throttling
+- Xây dựng distributed lock hoặc cơ chế điều phối
+- Thiết lập lưu trữ session hoặc token
+- Dùng Pub/Sub hoặc Redis Streams để truyền thông điệp
+- Cấu hình Redis trong production (pooling, eviction, clustering)
 
-## Data Structure Cheat Sheet
+## Bảng tra nhanh cấu trúc dữ liệu
 
-| Use Case | Structure | Example Key |
+| Use Case | Cấu trúc | Key ví dụ |
 |----------|-----------|-------------|
-| Simple cache | String | `product:123` |
-| User session | Hash | `session:abc` |
-| Leaderboard | Sorted Set | `scores:weekly` |
-| Unique visitors | Set | `visitors:2024-01-01` |
+| Cache đơn giản | String | `product:123` |
+| Session người dùng | Hash | `session:abc` |
+| Bảng xếp hạng | Sorted Set | `scores:weekly` |
+| Khách truy cập duy nhất | Set | `visitors:2024-01-01` |
 | Activity feed | List | `feed:user:456` |
 | Event stream | Stream | `events:orders` |
-| Counters / rate limits | String (INCR) | `ratelimit:user:123` |
+| Bộ đếm / rate limit | String (INCR) | `ratelimit:user:123` |
 | Bloom filter / HLL | HyperLogLog | `hll:pageviews` |
 
-## Core Patterns
+## Các pattern cốt lõi
 
 ### Cache-Aside (Lazy Loading)
 
@@ -118,7 +118,7 @@ def delete_session(session_id: str):
 
 ## Rate Limiting
 
-### Fixed Window (Simple)
+### Fixed Window (đơn giản)
 
 ```python
 def is_rate_limited(user_id: int, limit: int = 100, window: int = 60) -> bool:
@@ -163,7 +163,7 @@ def allow_request(user_id: int) -> bool:
     return bool(sliding_window(keys=[key], args=[now, 60000, 100]))
 ```
 
-## Distributed Locks
+## Distributed Lock
 
 ### Distributed Lock (Single Node — SET NX PX)
 
@@ -196,7 +196,7 @@ if token:
         release_lock("order:payment:123", token)
 ```
 
-> For multi-node setups use the `redlock-py` library which implements the full Redlock algorithm.
+> Với setup nhiều node, hãy dùng thư viện `redlock-py` triển khai đầy đủ thuật toán Redlock.
 
 ## Pub/Sub & Streams
 
@@ -238,11 +238,11 @@ def consume(stream: str, group: str, consumer: str):
                 r.xack(stream, group, msg_id)
 ```
 
-> Prefer **Streams** over Pub/Sub when you need delivery guarantees, consumer groups, or replay.
+> Ưu tiên **Streams** hơn Pub/Sub khi cần đảm bảo giao nhận, consumer group hoặc replay.
 
-## Key Design
+## Thiết kế Key
 
-### Naming Conventions
+### Quy ước đặt tên
 
 ```
 # Pattern: resource:id:field
@@ -258,20 +258,20 @@ myapp:ratelimit:user:123
 stats:pageviews:2024-01-01
 ```
 
-### TTL Strategy
+### Chiến lược TTL
 
-| Data Type | Suggested TTL |
+| Loại dữ liệu | TTL đề xuất |
 |-----------|--------------|
-| User session | 24h (`86400`) |
-| API response cache | 5–15 min |
-| Rate limit window | Match window size |
-| Short-lived tokens | 5–10 min |
-| Leaderboard | 1h–24h |
-| Static/reference data | 1h–1 week |
+| Session người dùng | 24h (`86400`) |
+| Cache response API | 5–15 phút |
+| Cửa sổ rate limit | Khớp với kích thước cửa sổ |
+| Token ngắn hạn | 5–10 phút |
+| Bảng xếp hạng | 1h–24h |
+| Dữ liệu tĩnh/tham chiếu | 1h–1 tuần |
 
-Always set a TTL. Keys without TTL accumulate indefinitely and cause memory pressure.
+Luôn đặt TTL. Key không có TTL sẽ tích tụ vô hạn và gây áp lực bộ nhớ.
 
-## Connection Management
+## Quản lý Connection
 
 ### Connection Pooling
 
@@ -316,31 +316,31 @@ master = sentinel.master_for('mymaster', decode_responses=True)
 replica = sentinel.slave_for('mymaster', decode_responses=True)
 ```
 
-## Eviction Policies
+## Chính sách Eviction
 
-| Policy | Behavior | Best For |
+| Chính sách | Hành vi | Phù hợp nhất cho |
 |--------|----------|----------|
-| `noeviction` | Error on write when full | Queues / critical data |
-| `allkeys-lru` | Evict least recently used | General cache |
-| `volatile-lru` | LRU only among keys with TTL | Mixed data store |
-| `allkeys-lfu` | Evict least frequently used | Skewed access patterns |
-| `volatile-ttl` | Evict soonest-to-expire | Prioritize long-lived data |
+| `noeviction` | Báo lỗi khi ghi lúc đầy bộ nhớ | Queue / dữ liệu quan trọng |
+| `allkeys-lru` | Loại bỏ key ít được dùng gần đây nhất | Cache thông thường |
+| `volatile-lru` | LRU chỉ trong các key có TTL | Kho dữ liệu hỗn hợp |
+| `allkeys-lfu` | Loại bỏ key ít được dùng thường xuyên nhất | Pattern truy cập lệch |
+| `volatile-ttl` | Loại bỏ key sắp hết hạn sớm nhất | Ưu tiên dữ liệu sống lâu |
 
-Set via `redis.conf`: `maxmemory-policy allkeys-lru`
+Đặt qua `redis.conf`: `maxmemory-policy allkeys-lru`
 
-## Anti-Patterns
+## Anti-Pattern
 
-| Anti-Pattern | Problem | Fix |
+| Anti-Pattern | Vấn đề | Cách sửa |
 |---|---|---|
-| Keys with no TTL | Memory grows unbounded | Always set TTL |
-| `KEYS *` in production | Blocks the server (O(N)) | Use `SCAN` cursor |
-| Storing large blobs (>100KB) | Slow serialization, memory pressure | Store reference + fetch from object store |
-| Single Redis for everything | No isolation between cache & queue | Use separate DBs or instances |
-| Ignoring connection pool limits | Connection exhaustion under load | Size pool to workload |
-| Not handling cache miss stampede | Thundering herd on cold start | Use locks or probabilistic early expiry |
-| `FLUSHALL` without thought | Wipes entire instance | Scope deletes by key pattern |
+| Key không có TTL | Bộ nhớ tăng không giới hạn | Luôn đặt TTL |
+| `KEYS *` trong production | Chặn server (O(N)) | Dùng con trỏ `SCAN` |
+| Lưu blob lớn (>100KB) | Serialize chậm, áp lực bộ nhớ | Lưu tham chiếu + lấy từ object store |
+| Một Redis cho mọi thứ | Không cô lập giữa cache và queue | Dùng DB hoặc instance riêng |
+| Bỏ qua giới hạn connection pool | Cạn kiệt connection khi tải cao | Chỉnh kích thước pool theo workload |
+| Không xử lý cache miss stampede | Thundering herd khi cold start | Dùng lock hoặc probabilistic early expiry |
+| `FLUSHALL` thiếu suy nghĩ | Xóa sạch toàn bộ instance | Giới hạn phạm vi xóa theo key pattern |
 
-### Cache Miss Stampede Prevention
+### Ngăn chặn Cache Miss Stampede
 
 ```python
 import threading
@@ -366,39 +366,39 @@ def get_with_lock(key: str, fetch_fn, ttl: int = 300):
         return value
 ```
 
-> Note: for multi-process deployments, replace the in-process lock with `acquire_lock`/`release_lock` from the Distributed Locks section above.
+> Lưu ý: với deployment nhiều process, hãy thay lock trong process bằng `acquire_lock`/`release_lock` từ phần Distributed Lock ở trên.
 
-## Examples
+## Ví dụ
 
-**Add caching to a Django/Flask API endpoint:**
-Use cache-aside with `setex` and a 5-minute TTL on the response. Key on the request parameters.
+**Thêm caching vào endpoint API Django/Flask:**
+Dùng cache-aside với `setex` và TTL 5 phút cho response. Dùng các tham số của request làm key.
 
-**Rate-limit an API by user:**
-Use fixed-window with `pipeline(transaction=True)` for low-traffic endpoints; use sliding-window Lua for accurate per-user throttling.
+**Rate-limit API theo người dùng:**
+Dùng fixed-window với `pipeline(transaction=True)` cho endpoint lưu lượng thấp; dùng sliding-window Lua để throttle chính xác theo từng người dùng.
 
-**Coordinate a background job across workers:**
-Use `acquire_lock` with a TTL that exceeds the expected job duration. Always release in a `finally` block.
+**Điều phối background job giữa các worker:**
+Dùng `acquire_lock` với TTL lớn hơn thời lượng job dự kiến. Luôn release trong khối `finally`.
 
-**Fan-out notifications to multiple subscribers:**
-Use Pub/Sub for fire-and-forget. Switch to Streams if you need guaranteed delivery or replay for late consumers.
+**Fan-out thông báo tới nhiều subscriber:**
+Dùng Pub/Sub cho fire-and-forget. Chuyển sang Streams nếu cần đảm bảo giao nhận hoặc replay cho consumer đến muộn.
 
-## Quick Reference
+## Tham khảo nhanh
 
-| Pattern | When to Use |
+| Pattern | Khi nào dùng |
 |---------|-------------|
-| Cache-aside | Read-heavy, tolerate slight staleness |
-| Write-through | Strong consistency required |
-| Distributed lock | Prevent concurrent access to a resource |
-| Sliding window rate limit | Accurate per-user throttling |
-| Redis Streams | Durable event queue with consumer groups |
-| Pub/Sub | Broadcast with no delivery guarantees needed |
-| Sorted Set leaderboard | Ranked scoring, pagination |
-| HyperLogLog | Approximate unique count at low memory |
+| Cache-aside | Đọc nhiều, chấp nhận dữ liệu hơi cũ |
+| Write-through | Cần nhất quán mạnh |
+| Distributed lock | Ngăn truy cập đồng thời vào một tài nguyên |
+| Sliding window rate limit | Throttle chính xác theo từng người dùng |
+| Redis Streams | Event queue bền vững với consumer group |
+| Pub/Sub | Broadcast, không cần đảm bảo giao nhận |
+| Sorted Set leaderboard | Chấm điểm xếp hạng, phân trang |
+| HyperLogLog | Đếm số lượng duy nhất xấp xỉ với bộ nhớ thấp |
 
-## Related
+## Liên quan
 
-- Skill: `postgres-patterns` — relational data patterns
-- Skill: `backend-patterns` — API and service layer patterns
-- Skill: `database-migrations` — schema versioning
-- Skill: `django-patterns` — Django cache framework integration
-- Agent: `database-reviewer` — full database review workflow
+- Skill: `postgres-patterns` — pattern cho dữ liệu quan hệ
+- Skill: `backend-patterns` — pattern cho tầng API và service
+- Skill: `database-migrations` — quản lý phiên bản schema
+- Skill: `django-patterns` — tích hợp Django cache framework
+- Agent: `database-reviewer` — workflow review database đầy đủ

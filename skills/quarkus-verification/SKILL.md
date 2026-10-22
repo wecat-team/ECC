@@ -1,24 +1,24 @@
 ---
 name: quarkus-verification
-description: "Verification loop for Quarkus projects: build, static analysis (Checkstyle, PMD, SpotBugs), tests with JaCoCo coverage, OWASP dependency and container security scans, GraalVM native compilation, health checks, and config validation. Use when verifying a Quarkus service before a PR, after major refactoring or dependency upgrades, or pre-deploy."
+description: "Vòng lặp kiểm chứng (verification loop) cho dự án Quarkus: build, phân tích tĩnh (Checkstyle, PMD, SpotBugs), test với coverage JaCoCo, quét bảo mật dependency và container bằng OWASP, biên dịch native GraalVM, health check và kiểm tra config. Dùng khi kiểm chứng một Quarkus service trước PR, sau refactor lớn hoặc nâng cấp dependency, hoặc trước khi deploy."
 metadata:
   origin: ECC
 ---
 
-# Quarkus Verification Loop
+# Vòng lặp kiểm chứng cho Quarkus
 
-Run before PRs, after major changes, and pre-deploy.
+Chạy trước khi tạo PR, sau các thay đổi lớn và trước khi deploy.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Before opening a pull request for a Quarkus service
-- After major refactoring or dependency upgrades
-- Pre-deployment verification for staging or production
-- Running full build → lint → test → security scan → native compilation pipeline
-- Validating test coverage meets thresholds (80%+)
-- Testing native image compatibility
+- Trước khi mở pull request cho một Quarkus service
+- Sau khi refactor lớn hoặc nâng cấp dependency
+- Kiểm chứng trước khi deploy lên staging hoặc production
+- Chạy toàn bộ pipeline build → lint → test → quét bảo mật → biên dịch native
+- Xác nhận coverage của test đạt ngưỡng (80% trở lên)
+- Test khả năng tương thích của native image
 
-## Phase 1: Build
+## Giai đoạn 1: Build
 
 ```bash
 # Maven
@@ -28,9 +28,9 @@ mvn clean verify -DskipTests
 ./gradlew clean assemble -x test
 ```
 
-If build fails, stop and fix compilation errors.
+Nếu build thất bại, hãy dừng lại và sửa các lỗi biên dịch.
 
-## Phase 2: Static Analysis
+## Giai đoạn 2: Phân tích tĩnh
 
 ### Checkstyle, PMD, SpotBugs (Maven)
 
@@ -38,7 +38,7 @@ If build fails, stop and fix compilation errors.
 mvn checkstyle:check pmd:check spotbugs:check
 ```
 
-### SonarQube (if configured)
+### SonarQube (nếu đã cấu hình)
 
 ```bash
 mvn sonar:sonar \
@@ -47,14 +47,14 @@ mvn sonar:sonar \
   -Dsonar.login=${SONAR_TOKEN}
 ```
 
-### Common Issues to Address
+### Các vấn đề thường gặp cần xử lý
 
-- Unused imports or variables
-- Complex methods (high cyclomatic complexity)
-- Potential null pointer dereferences
-- Security issues flagged by SpotBugs
+- Import hoặc biến không dùng đến
+- Method phức tạp (cyclomatic complexity cao)
+- Khả năng dereference null pointer
+- Vấn đề bảo mật do SpotBugs cảnh báo
 
-## Phase 3: Tests + Coverage
+## Giai đoạn 3: Test + Coverage
 
 ```bash
 # Run all tests
@@ -70,10 +70,10 @@ mvn jacoco:check
 ./gradlew test jacocoTestReport jacocoTestCoverageVerification
 ```
 
-### Test Categories
+### Các loại test
 
-#### Unit Tests
-Test service logic with mocked dependencies:
+#### Unit Test
+Test logic của service với dependency đã mock:
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -96,8 +96,8 @@ class UserServiceTest {
 }
 ```
 
-#### Integration Tests
-Test with real database (Testcontainers):
+#### Integration Test
+Test với database thật (Testcontainers):
 
 ```java
 @QuarkusTest
@@ -123,8 +123,8 @@ class UserRepositoryIntegrationTest {
 }
 ```
 
-#### API Tests
-Test REST endpoints with REST Assured:
+#### API Test
+Test REST endpoint bằng REST Assured:
 
 ```java
 @QuarkusTest
@@ -157,24 +157,24 @@ class UserResourceTest {
 }
 ```
 
-### Coverage Report
+### Báo cáo Coverage
 
-Check `target/site/jacoco/index.html` for detailed coverage:
-- Overall line coverage (target: 80%+)
-- Branch coverage (target: 70%+)
-- Identify uncovered critical paths
+Xem `target/site/jacoco/index.html` để biết coverage chi tiết:
+- Line coverage tổng thể (mục tiêu: 80% trở lên)
+- Branch coverage (mục tiêu: 70% trở lên)
+- Xác định các critical path chưa được cover
 
-## Phase 4: Security Scanning
+## Giai đoạn 4: Quét bảo mật
 
-### Dependency Vulnerabilities (Maven)
+### Lỗ hổng trong Dependency (Maven)
 
 ```bash
 mvn org.owasp:dependency-check-maven:check
 ```
 
-Review `target/dependency-check-report.html` for CVEs.
+Xem `target/dependency-check-report.html` để kiểm tra các CVE.
 
-### Quarkus Security Audit
+### Audit bảo mật Quarkus
 
 ```bash
 # Check vulnerable extensions
@@ -184,7 +184,7 @@ mvn quarkus:audit
 mvn quarkus:list-extensions
 ```
 
-### OWASP ZAP (API Security Testing)
+### OWASP ZAP (Test bảo mật API)
 
 ```bash
 docker run -t ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py \
@@ -192,20 +192,20 @@ docker run -t ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py \
   -f openapi
 ```
 
-### Common Security Checks
+### Các kiểm tra bảo mật thường gặp
 
-- [ ] All secrets in environment variables (not in code)
-- [ ] Input validation on all endpoints
-- [ ] Authentication/authorization configured
-- [ ] CORS properly configured
-- [ ] Security headers set
-- [ ] Passwords hashed with BCrypt
-- [ ] SQL injection protection (parameterized queries)
-- [ ] Rate limiting on public endpoints
+- [ ] Mọi secret nằm trong biến môi trường (không nằm trong code)
+- [ ] Input validation trên mọi endpoint
+- [ ] Đã cấu hình authentication/authorization
+- [ ] CORS được cấu hình đúng
+- [ ] Đã đặt security header
+- [ ] Mật khẩu được hash bằng BCrypt
+- [ ] Chống SQL injection (parameterized query)
+- [ ] Rate limiting trên các endpoint công khai
 
-## Phase 5: Native Compilation
+## Giai đoạn 5: Biên dịch Native
 
-Test GraalVM native image compatibility:
+Test khả năng tương thích với GraalVM native image:
 
 ```bash
 # Build native executable
@@ -222,22 +222,22 @@ curl http://localhost:8080/q/health/live
 curl http://localhost:8080/q/health/ready
 ```
 
-### Native Image Troubleshooting
+### Xử lý sự cố Native Image
 
-Common issues:
-- **Reflection**: Add reflection config for dynamic classes
-- **Resources**: Include resources with `quarkus.native.resources.includes`
-- **JNI**: Register JNI classes if using native libraries
+Các vấn đề thường gặp:
+- **Reflection**: Thêm reflection config cho các class động
+- **Resources**: Đưa resource vào bằng `quarkus.native.resources.includes`
+- **JNI**: Đăng ký các class JNI nếu dùng thư viện native
 
-Example reflection config:
+Ví dụ reflection config:
 ```java
 @RegisterForReflection(targets = {MyDynamicClass.class})
 public class ReflectionConfiguration {}
 ```
 
-## Phase 6: Performance Testing
+## Giai đoạn 6: Performance Testing
 
-### Load Testing with K6
+### Load Testing với K6
 
 ```javascript
 // load-test.js
@@ -261,20 +261,20 @@ export default function () {
 }
 ```
 
-Run:
+Chạy:
 ```bash
 k6 run load-test.js
 ```
 
-### Metrics to Monitor
+### Các metric cần theo dõi
 
 - Response time (p50, p95, p99)
-- Throughput (requests/sec)
-- Error rate
-- Memory usage
-- CPU usage
+- Throughput (request/giây)
+- Tỷ lệ lỗi
+- Mức dùng bộ nhớ
+- Mức dùng CPU
 
-## Phase 7: Health Checks
+## Giai đoạn 7: Health Check
 
 ```bash
 # Liveness
@@ -290,7 +290,7 @@ curl http://localhost:8080/q/health
 curl http://localhost:8080/q/metrics
 ```
 
-Expected responses:
+Phản hồi kỳ vọng:
 ```json
 {
   "status": "UP",
@@ -303,7 +303,7 @@ Expected responses:
 }
 ```
 
-## Phase 8: Container Image Build
+## Giai đoạn 8: Build Container Image
 
 ```bash
 # Build container image
@@ -320,7 +320,7 @@ mvn package \
 docker run -p 8080:8080 myorg/my-quarkus-app:1.0.0
 ```
 
-### Container Security Scan
+### Quét bảo mật Container
 
 ```bash
 # Trivy
@@ -330,7 +330,7 @@ trivy image myorg/my-quarkus-app:1.0.0
 grype myorg/my-quarkus-app:1.0.0
 ```
 
-## Phase 9: Configuration Validation
+## Giai đoạn 9: Kiểm tra Cấu hình
 
 ```bash
 # Check all configuration properties
@@ -340,63 +340,63 @@ mvn quarkus:info
 curl http://localhost:8080/q/dev/io.quarkus.quarkus-vertx-http/config
 ```
 
-### Environment-Specific Checks
+### Kiểm tra theo từng môi trường
 
-- [ ] Database URLs configured per environment
-- [ ] Secrets externalized (Vault, env vars)
-- [ ] Logging levels appropriate
-- [ ] CORS origins set correctly
-- [ ] Rate limiting configured
-- [ ] Monitoring/tracing enabled
+- [ ] URL database được cấu hình theo từng môi trường
+- [ ] Secret được tách ra ngoài (Vault, biến môi trường)
+- [ ] Mức logging phù hợp
+- [ ] CORS origin được đặt đúng
+- [ ] Đã cấu hình rate limiting
+- [ ] Đã bật monitoring/tracing
 
-## Phase 10: Documentation Review
+## Giai đoạn 10: Review Tài liệu
 
-- [ ] OpenAPI/Swagger docs up to date (`/q/swagger-ui`)
-- [ ] README has setup instructions
-- [ ] API changes documented
-- [ ] Migration guide for breaking changes
-- [ ] Configuration properties documented
+- [ ] Tài liệu OpenAPI/Swagger được cập nhật (`/q/swagger-ui`)
+- [ ] README có hướng dẫn cài đặt
+- [ ] Thay đổi API đã được ghi lại
+- [ ] Có migration guide cho các breaking change
+- [ ] Các configuration property đã được ghi lại
 
-Generate OpenAPI spec:
+Tạo OpenAPI spec:
 ```bash
 curl http://localhost:8080/q/openapi -o openapi.json
 ```
 
-## Verification Checklist
+## Checklist kiểm chứng
 
-### Code Quality
-- [ ] Build passes without warnings
-- [ ] Static analysis clean (no high/medium issues)
-- [ ] Code follows team conventions
-- [ ] No commented-out code or TODOs in PR
+### Chất lượng code
+- [ ] Build pass không có warning
+- [ ] Phân tích tĩnh sạch (không có vấn đề mức high/medium)
+- [ ] Code tuân theo quy ước của team
+- [ ] Không có code bị comment-out hoặc TODO trong PR
 
 ### Testing
-- [ ] All tests pass
+- [ ] Mọi test đều pass
 - [ ] Code coverage ≥ 80%
-- [ ] Integration tests with real database
-- [ ] Security tests pass
-- [ ] Performance within acceptable limits
+- [ ] Integration test với database thật
+- [ ] Security test pass
+- [ ] Hiệu năng nằm trong giới hạn chấp nhận được
 
-### Security
-- [ ] No dependency vulnerabilities
-- [ ] Authentication/authorization tested
-- [ ] Input validation complete
-- [ ] Secrets not in source code
-- [ ] Security headers configured
+### Bảo mật
+- [ ] Không có lỗ hổng trong dependency
+- [ ] Đã test authentication/authorization
+- [ ] Input validation đầy đủ
+- [ ] Secret không nằm trong source code
+- [ ] Đã cấu hình security header
 
 ### Deployment
-- [ ] Native compilation successful
-- [ ] Container image builds
-- [ ] Health checks respond correctly
-- [ ] Configuration valid for target environment
+- [ ] Biên dịch native thành công
+- [ ] Container image build được
+- [ ] Health check phản hồi đúng
+- [ ] Cấu hình hợp lệ cho môi trường đích
 
 ### Native Image
-- [ ] Native executable builds
-- [ ] Native tests pass
-- [ ] Startup time < 100ms
-- [ ] Memory footprint acceptable
+- [ ] Native executable build được
+- [ ] Native test pass
+- [ ] Thời gian khởi động < 100ms
+- [ ] Dung lượng bộ nhớ chấp nhận được
 
-## Automated Verification Script
+## Script kiểm chứng tự động
 
 ```bash
 #!/bin/bash
@@ -424,9 +424,9 @@ echo "  - Security: target/dependency-check-report.html"
 echo "  - Native: target/*-runner"
 ```
 
-## CI/CD Integration
+## Tích hợp CI/CD
 
-### GitHub Actions Example
+### Ví dụ GitHub Actions
 
 ```yaml
 name: Verification
@@ -469,13 +469,13 @@ jobs:
 
 ## Best Practices
 
-- Run verification loop before every PR
-- Automate in CI/CD pipeline
-- Fix issues immediately; don't accumulate debt
-- Keep coverage above 80%
-- Update dependencies regularly
-- Test native compilation periodically
-- Monitor performance trends
-- Document breaking changes
-- Review security scan results
-- Validate configuration for each environment
+- Chạy verification loop trước mỗi PR
+- Tự động hóa trong CI/CD pipeline
+- Sửa vấn đề ngay lập tức; đừng để tích tụ nợ kỹ thuật
+- Giữ coverage trên 80%
+- Cập nhật dependency thường xuyên
+- Định kỳ test biên dịch native
+- Theo dõi xu hướng hiệu năng
+- Ghi lại các breaking change
+- Review kết quả quét bảo mật
+- Kiểm tra cấu hình cho từng môi trường

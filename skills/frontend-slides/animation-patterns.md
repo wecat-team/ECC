@@ -1,19 +1,19 @@
-# Animation Patterns Reference
+# Tham chiếu Animation Pattern
 
-Use this reference when generating presentations. Match animations to the intended feeling.
+Dùng tài liệu tham chiếu này khi tạo bài thuyết trình. Hãy khớp animation với cảm giác mong muốn.
 
-## Effect-to-Feeling Guide
+## Hướng dẫn Hiệu ứng theo Cảm giác
 
-| Feeling | Animations | Visual Cues |
+| Cảm giác | Animation | Gợi ý thị giác |
 |---------|-----------|-------------|
-| **Dramatic / Cinematic** | Slow fade-ins (1-1.5s), large-scale transitions (0.9 to 1), parallax scrolling | Dark backgrounds, spotlight effects, full-bleed images |
-| **Techy / Futuristic** | Neon glow (box-shadow), glitch/scramble text, grid reveals | Particle systems (canvas), grid patterns, monospace accents, cyan/magenta/electric blue |
-| **Playful / Friendly** | Bouncy easing (spring physics), floating/bobbing | Rounded corners, pastel/bright colors, hand-drawn elements |
-| **Professional / Corporate** | Subtle fast animations (200-300ms), clean slides | Navy/slate/charcoal, precise spacing, data visualization focus |
-| **Calm / Minimal** | Very slow subtle motion, gentle fades | High whitespace, muted palette, serif typography, generous padding |
-| **Editorial / Magazine** | Staggered text reveals, image-text interplay | Strong type hierarchy, pull quotes, grid-breaking layouts, serif headlines + sans body |
+| **Kịch tính / Điện ảnh** | Fade-in chậm (1-1.5s), transition quy mô lớn (0.9 đến 1), parallax scrolling | Nền tối, hiệu ứng spotlight, ảnh tràn viền (full-bleed) |
+| **Công nghệ / Tương lai** | Neon glow (box-shadow), chữ glitch/scramble, grid reveal | Hệ thống hạt (canvas), pattern lưới, điểm nhấn monospace, cyan/magenta/xanh điện |
+| **Vui tươi / Thân thiện** | Easing nảy (vật lý lò xo), lơ lửng/nhấp nhô | Góc bo tròn, màu pastel/tươi sáng, phần tử vẽ tay |
+| **Chuyên nghiệp / Doanh nghiệp** | Animation tinh tế và nhanh (200-300ms), slide gọn gàng | Navy/slate/charcoal, khoảng cách chính xác, tập trung vào trực quan hóa dữ liệu |
+| **Tĩnh lặng / Tối giản** | Chuyển động rất chậm và tinh tế, fade nhẹ nhàng | Nhiều khoảng trắng, bảng màu trầm, typography serif, padding rộng rãi |
+| **Biên tập / Tạp chí** | Hiện chữ so le (staggered), tương tác giữa ảnh và chữ | Phân cấp chữ mạnh, pull quote, layout phá vỡ lưới, tiêu đề serif + nội dung sans |
 
-## Entrance Animations
+## Animation xuất hiện (Entrance)
 
 ```css
 /* Fade + Slide Up (most versatile) */
@@ -62,7 +62,7 @@ Use this reference when generating presentations. Match animations to the intend
 }
 ```
 
-## Background Effects
+## Hiệu ứng nền (Background)
 
 ```css
 /* Gradient Mesh — layered radial gradients for depth */
@@ -87,7 +87,7 @@ Use this reference when generating presentations. Match animations to the intend
 }
 ```
 
-## Interactive Effects
+## Hiệu ứng tương tác
 
 ```javascript
 /* 3D Tilt on Hover — adds depth to cards/panels */
@@ -111,12 +111,12 @@ class TiltEffect {
 }
 ```
 
-## Troubleshooting
+## Xử lý sự cố
 
-| Problem | Fix |
+| Vấn đề | Cách khắc phục |
 |---------|-----|
-| Fonts not loading | Check Fontshare/Google Fonts URL; ensure font names match in CSS |
-| Animations not triggering | Verify Intersection Observer is running; check `.visible` class is being added |
-| Scroll snap not working | Ensure `scroll-snap-type: y mandatory` on html; each slide needs `scroll-snap-align: start` |
-| Mobile issues | Disable heavy effects at 768px breakpoint; test touch events; reduce particle count |
-| Performance issues | Use `will-change` sparingly; prefer `transform`/`opacity` animations; throttle scroll handlers |
+| Font không tải | Kiểm tra URL Fontshare/Google Fonts; đảm bảo tên font khớp trong CSS |
+| Animation không kích hoạt | Xác minh Intersection Observer đang chạy; kiểm tra class `.visible` đang được thêm vào |
+| Scroll snap không hoạt động | Đảm bảo `scroll-snap-type: y mandatory` trên html; mỗi slide cần `scroll-snap-align: start` |
+| Vấn đề trên mobile | Tắt các hiệu ứng nặng ở breakpoint 768px; test sự kiện touch; giảm số lượng hạt |
+| Vấn đề hiệu năng | Dùng `will-change` tiết kiệm; ưu tiên animation `transform`/`opacity`; throttle scroll handler |

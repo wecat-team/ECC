@@ -9,28 +9,28 @@ paths:
   - "**/*.resolver.ts"
   - "**/*.module.ts"
 ---
-# Angular Coding Style
+# Phong cách code Angular
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with Angular specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho Angular.
 
-## Version Awareness
+## Nhận biết phiên bản
 
-Always check the project's Angular version before writing code — features differ significantly between versions. Run `ng version` or inspect `package.json`. When creating a new project, do not pin a version unless the user specifies one.
+Luôn kiểm tra phiên bản Angular của dự án trước khi viết code — tính năng khác nhau đáng kể giữa các phiên bản. Chạy `ng version` hoặc xem `package.json`. Khi tạo dự án mới, không ghim (pin) phiên bản trừ khi người dùng chỉ định.
 
-After generating or modifying Angular code, always run `ng build` to catch errors before finishing.
+Sau khi sinh hoặc sửa code Angular, luôn chạy `ng build` để bắt lỗi trước khi kết thúc.
 
-## File Naming
+## Đặt tên file
 
-Follow Angular CLI conventions — one artifact per file:
+Tuân theo quy ước của Angular CLI — mỗi file một artifact:
 
 - `user-profile.component.ts` + `user-profile.component.html` + `user-profile.component.spec.ts`
 - `user.service.ts`, `auth.guard.ts`, `date-format.pipe.ts`
-- Feature folders: `features/users/`, `features/auth/`
-- Generate with the CLI: `ng generate component features/users/user-card`
+- Thư mục feature: `features/users/`, `features/auth/`
+- Sinh bằng CLI: `ng generate component features/users/user-card`
 
-## Components
+## Component
 
-Prefer standalone components (v17+ default). Use `OnPush` change detection on all new components.
+Ưu tiên standalone component (mặc định từ v17+). Dùng change detection `OnPush` cho mọi component mới.
 
 ```typescript
 @Component({
@@ -48,7 +48,7 @@ export class UserCardComponent {
 
 ## Dependency Injection
 
-Use `inject()` over constructor injection. Keep constructors empty or remove them entirely.
+Dùng `inject()` thay cho constructor injection. Để constructor trống hoặc bỏ hẳn.
 
 ```typescript
 // CORRECT
@@ -62,7 +62,7 @@ export class UserService {
 constructor(private http: HttpClient, private router: Router) {}
 ```
 
-Use `InjectionToken` for non-class dependencies:
+Dùng `InjectionToken` cho các dependency không phải class:
 
 ```typescript
 const API_URL = new InjectionToken<string>('API_URL');
@@ -76,7 +76,7 @@ private apiUrl = inject(API_URL);
 
 ## Signals
 
-### Core Primitives
+### Các primitive cốt lõi
 
 ```typescript
 count = signal(0);
@@ -87,18 +87,18 @@ increment() {
 }
 ```
 
-### `linkedSignal` — Writable Derived State
+### `linkedSignal` — State dẫn xuất có thể ghi
 
-Use `linkedSignal` when a signal must reset or adapt when a source changes, but also be independently writable:
+Dùng `linkedSignal` khi một signal phải reset hoặc thích ứng khi nguồn thay đổi, nhưng đồng thời vẫn có thể ghi độc lập:
 
 ```typescript
 selectedOption = linkedSignal(() => this.options()[0]);
 // Resets to first option when options changes, but user can override
 ```
 
-### `resource` — Async Data into Signals
+### `resource` — Đưa dữ liệu bất đồng bộ vào signal
 
-Use `resource()` to fetch async data reactively without manual subscriptions:
+Dùng `resource()` để lấy dữ liệu bất đồng bộ theo kiểu reactive mà không cần subscription thủ công:
 
 ```typescript
 userResource = resource({
@@ -109,9 +109,9 @@ userResource = resource({
 // Access: userResource.value(), userResource.isLoading(), userResource.error()
 ```
 
-### `effect` Usage
+### Cách dùng `effect`
 
-Use `effect()` only for side effects that must react to signal changes (logging, third-party DOM manipulation). Never use effects to synchronize signals — use `computed` or `linkedSignal` instead. For DOM work after render, use `afterRenderEffect`.
+Chỉ dùng `effect()` cho các side effect bắt buộc phải phản ứng với thay đổi của signal (logging, thao tác DOM của thư viện bên thứ ba). KHÔNG BAO GIỜ dùng effect để đồng bộ các signal — hãy dùng `computed` hoặc `linkedSignal`. Với thao tác DOM sau khi render, dùng `afterRenderEffect`.
 
 ```typescript
 // CORRECT: Side effect
@@ -121,9 +121,9 @@ effect(() => console.log('User changed:', this.user()));
 effect(() => { this.fullName.set(`${this.first()} ${this.last()}`); });
 ```
 
-## Templates
+## Template
 
-Use v17+ block syntax. Always provide `track` in `@for`:
+Dùng cú pháp block của v17+. Luôn cung cấp `track` trong `@for`:
 
 ```html
 @for (item of items(); track item.id) {
@@ -139,15 +139,15 @@ Use v17+ block syntax. Always provide `track` in `@for`:
 }
 ```
 
-No logic in templates beyond simple conditionals — move to component methods or pipes.
+Không đặt logic trong template ngoài các điều kiện đơn giản — hãy chuyển sang method của component hoặc pipe.
 
-## Forms
+## Form
 
-Choose the form strategy that matches the project's existing approach:
+Chọn chiến lược form phù hợp với cách tiếp cận sẵn có của dự án:
 
-- **Signal Forms** (v21+): Preferred for new projects on v21+. Signal-based form state.
-- **Reactive Forms**: `FormBuilder` + `FormGroup` + `FormControl`. Best for complex forms with dynamic validation.
-- **Template-Driven Forms**: `ngModel`. Suitable for simple forms only.
+- **Signal Forms** (v21+): Ưu tiên cho dự án mới trên v21+. State của form dựa trên signal.
+- **Reactive Forms**: `FormBuilder` + `FormGroup` + `FormControl`. Phù hợp nhất cho form phức tạp có validation động.
+- **Template-Driven Forms**: `ngModel`. Chỉ phù hợp với form đơn giản.
 
 ```typescript
 // Reactive Forms — standard approach for most apps
@@ -167,16 +167,16 @@ export class LoginComponent {
 }
 ```
 
-## Component Styles
+## Style của component
 
-Use component-level styles with `ViewEncapsulation.Emulated` (default). Avoid `ViewEncapsulation.None` unless building a design system that intentionally bleeds styles.
+Dùng style ở cấp component với `ViewEncapsulation.Emulated` (mặc định). Tránh `ViewEncapsulation.None` trừ khi xây dựng design system cố ý để style lan ra ngoài.
 
-- Scope styles to the component — do not use global class names inside component stylesheets
-- Use `:host` for host element styling
-- Prefer CSS custom properties for themeable values
+- Giới hạn phạm vi style trong component — không dùng tên class toàn cục bên trong stylesheet của component
+- Dùng `:host` để tạo style cho host element
+- Ưu tiên CSS custom property cho các giá trị có thể đổi theme
 
 ## Change Detection
 
-- Default to `ChangeDetectionStrategy.OnPush` on all new components
-- Signals and `async` pipe handle detection automatically — avoid `markForCheck()` and `detectChanges()`
-- Never mutate `@Input()` objects in place when using OnPush
+- Mặc định dùng `ChangeDetectionStrategy.OnPush` cho mọi component mới
+- Signal và `async` pipe tự xử lý việc phát hiện thay đổi — tránh `markForCheck()` và `detectChanges()`
+- KHÔNG BAO GIỜ mutate trực tiếp các object `@Input()` khi dùng OnPush

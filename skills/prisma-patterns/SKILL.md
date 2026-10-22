@@ -1,46 +1,46 @@
 ---
 name: prisma-patterns
-description: Prisma ORM patterns for TypeScript backends — schema design, query optimization, transactions, pagination, and critical traps like updateMany returning count not records, $transaction timeouts, migrate dev resetting the DB, @updatedAt skipped on bulk writes, and serverless connection exhaustion. Use when writing a Prisma schema or query, or debugging transactions, migrations, or serverless connection limits.
+description: Các pattern Prisma ORM cho backend TypeScript — thiết kế schema, tối ưu query, transaction, phân trang, và các cái bẫy quan trọng như updateMany trả về count thay vì records, timeout của $transaction, migrate dev reset DB, @updatedAt bị bỏ qua khi bulk write, và cạn kiệt connection trên serverless. Dùng khi viết Prisma schema hoặc query, hoặc khi debug transaction, migration hoặc giới hạn connection trên serverless.
 metadata:
   origin: ECC
 ---
 
 # Prisma Patterns
 
-Production patterns and non-obvious traps for Prisma ORM in TypeScript backends.
+Các pattern cho production và những cái bẫy không hiển nhiên của Prisma ORM trong backend TypeScript.
 
-> **Check your version before applying patterns.** The Prisma API surface has evolved across major releases:
+> **Hãy kiểm tra phiên bản trước khi áp dụng các pattern.** Bề mặt API của Prisma đã thay đổi qua các bản major:
 >
 > ```bash
 > npx prisma --version
 > ```
 >
-> Notable API differences across versions:
-> - `relationJoins` can load relations via JOIN rather than separate queries, but may cause row explosion on large 1:N relations or deep `include` — benchmark both approaches
-> - `omit` field modifier and `prisma.$extends` Client Extensions API were added
-> - **Newer installs**: the package may be named `prisma` instead of `@prisma/client`; `PrismaClient` may require a driver adapter (e.g. `@prisma/adapter-pg`); `datasource.url` may live in `prisma.config.ts` instead of `schema.prisma`
-> - CLI commands (`migrate dev`, `migrate deploy`, `generate`) are unchanged across versions
+> Những khác biệt API đáng chú ý giữa các phiên bản:
+> - `relationJoins` có thể tải relation bằng JOIN thay vì các query riêng, nhưng có thể gây bùng nổ số dòng với relation 1:N lớn hoặc `include` lồng sâu — hãy benchmark cả hai cách
+> - Đã thêm field modifier `omit` và Client Extensions API `prisma.$extends`
+> - **Bản cài mới hơn**: package có thể tên là `prisma` thay vì `@prisma/client`; `PrismaClient` có thể yêu cầu driver adapter (ví dụ `@prisma/adapter-pg`); `datasource.url` có thể nằm trong `prisma.config.ts` thay vì `schema.prisma`
+> - Các lệnh CLI (`migrate dev`, `migrate deploy`, `generate`) không đổi giữa các phiên bản
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Designing or modifying Prisma schema models and relations
-- Writing queries, transactions, or pagination logic
-- Using `updateMany`, `deleteMany`, or any bulk operation
-- Running or planning database migrations
-- Deploying to serverless environments (Vercel, Lambda, Cloudflare Workers)
-- Implementing soft delete or multi-tenant row filtering
+- Thiết kế hoặc chỉnh sửa model và relation trong Prisma schema
+- Viết query, transaction hoặc logic phân trang
+- Dùng `updateMany`, `deleteMany` hoặc bất kỳ thao tác bulk nào
+- Chạy hoặc lên kế hoạch database migration
+- Deploy lên môi trường serverless (Vercel, Lambda, Cloudflare Workers)
+- Triển khai soft delete hoặc lọc dòng theo multi-tenant
 
-## Core Concepts
+## Khái niệm cốt lõi
 
-### ID Strategy
+### Chiến lược ID
 
-| Strategy | Use When | Avoid When |
+| Chiến lược | Dùng khi | Tránh khi |
 |---|---|---|
-| `@default(cuid())` | Default choice — URL-safe, sortable, no collisions | Sequential IDs needed for external systems |
-| `@default(uuid())` | Interoperability with non-Prisma systems required | High-write tables (random UUIDs fragment B-tree indexes) |
-| `@default(autoincrement())` | Internal join tables, audit logs | Public-facing IDs (exposes record count) |
+| `@default(cuid())` | Lựa chọn mặc định — an toàn cho URL, sắp xếp được, không va chạm | Cần ID tuần tự cho hệ thống bên ngoài |
+| `@default(uuid())` | Cần tương thích với các hệ thống không dùng Prisma | Bảng ghi nhiều (UUID ngẫu nhiên làm phân mảnh B-tree index) |
+| `@default(autoincrement())` | Bảng join nội bộ, audit log | ID hiển thị công khai (lộ số lượng bản ghi) |
 
-### Schema Defaults
+### Mặc định cho Schema
 
 ```prisma
 model User {
@@ -58,18 +58,18 @@ model User {
 }
 ```
 
-- Add `@@index` on every foreign key and column used in `WHERE` or `ORDER BY`.
-- Declare `deletedAt DateTime?` upfront when soft delete is a foreseeable requirement — adding it later requires a migration on a live table.
-- `updatedAt @updatedAt` is set automatically by Prisma on `update` and `upsert` only (see Anti-Patterns for bulk update trap).
+- Thêm `@@index` cho mọi foreign key và cột dùng trong `WHERE` hoặc `ORDER BY`.
+- Khai báo `deletedAt DateTime?` ngay từ đầu khi có thể dự đoán cần soft delete — thêm sau này sẽ cần migration trên bảng đang chạy thật.
+- `updatedAt @updatedAt` chỉ được Prisma tự đặt khi `update` và `upsert` (xem Anti-Patterns về cái bẫy khi bulk update).
 
 ### `include` vs `select`
 
 | | `include` | `select` |
 |---|---|---|
-| Returns | All scalar fields + specified relations | Only specified fields |
-| Use when | You need most fields plus a relation | Hot paths, large tables, avoiding over-fetch |
-| Performance | May over-fetch on wide tables | Minimal payload, faster on large datasets |
-| Prisma 5 note | Uses JOIN by default (`relationJoins`) | Same |
+| Trả về | Tất cả scalar field + các relation chỉ định | Chỉ các field chỉ định |
+| Dùng khi | Cần hầu hết các field cùng một relation | Hot path, bảng lớn, tránh over-fetch |
+| Hiệu năng | Có thể over-fetch trên bảng nhiều cột | Payload tối thiểu, nhanh hơn trên dataset lớn |
+| Ghi chú Prisma 5 | Mặc định dùng JOIN (`relationJoins`) | Tương tự |
 
 ```ts
 // include — all columns + relation
@@ -85,7 +85,7 @@ const user = await prisma.user.findUnique({
 });
 ```
 
-Never return raw Prisma entities from API responses — map to response DTOs to control exposed fields:
+KHÔNG BAO GIỜ trả về trực tiếp entity thô của Prisma trong API response — hãy map sang response DTO để kiểm soát các field được lộ ra:
 
 ```ts
 // BAD: leaks passwordHash, deletedAt, internal fields
@@ -96,13 +96,13 @@ const user = await prisma.user.findUniqueOrThrow({ where: { id } });
 return { id: user.id, name: user.name, email: user.email };
 ```
 
-### Transaction Form Selection
+### Chọn dạng Transaction
 
-| Situation | Use |
+| Tình huống | Dùng |
 |---|---|
-| Independent operations, no inter-dependency | Array form |
-| Later step depends on earlier result | Interactive form |
-| External calls (email, HTTP) involved | Outside transaction entirely |
+| Các thao tác độc lập, không phụ thuộc lẫn nhau | Dạng array |
+| Bước sau phụ thuộc vào kết quả bước trước | Dạng interactive |
+| Có lời gọi bên ngoài (email, HTTP) | Để hoàn toàn ngoài transaction |
 
 ```ts
 // Array form — batched in one round trip
@@ -121,7 +121,7 @@ const post = await prisma.$transaction(async (tx) => {
 
 ### PrismaClient Singleton
 
-Each `PrismaClient` instance opens its own connection pool. Instantiate once.
+Mỗi instance `PrismaClient` mở một connection pool riêng. Chỉ khởi tạo một lần.
 
 ```ts
 // lib/prisma.ts
@@ -151,14 +151,14 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 // export const prisma = globalForPrisma.prisma ?? new PrismaClient({ ... });
 ```
 
-Use Option A if your Prisma install requires an `adapter` argument in the `PrismaClient` constructor.
-Use Option B if `new PrismaClient()` works without arguments. Let the compiler tell you which is correct.
+Dùng Option A nếu bản Prisma bạn cài yêu cầu tham số `adapter` trong constructor `PrismaClient`.
+Dùng Option B nếu `new PrismaClient()` chạy được không cần tham số. Hãy để compiler cho biết cách nào đúng.
 
-The `globalThis` pattern prevents duplicate instances during hot reload (Next.js, nodemon, ts-node-dev).
+Pattern `globalThis` ngăn tạo instance trùng lặp khi hot reload (Next.js, nodemon, ts-node-dev).
 
-### N+1 Problem
+### Vấn đề N+1
 
-Loading relations inside a loop issues one query per row.
+Tải relation bên trong vòng lặp sẽ phát sinh một query cho mỗi dòng.
 
 ```ts
 // BAD: N+1 — one extra query per user
@@ -171,11 +171,11 @@ for (const user of users) {
 const users = await prisma.user.findMany({ include: { posts: true } });
 ```
 
-With Prisma 5+ `relationJoins`, the `include` form uses a single JOIN. On large 1:N sets this may increase result set size — benchmark both approaches if the relation can return many rows per parent.
+Với `relationJoins` của Prisma 5+, dạng `include` dùng một JOIN duy nhất. Trên các tập 1:N lớn, điều này có thể làm tăng kích thước result set — hãy benchmark cả hai cách nếu relation có thể trả về nhiều dòng cho mỗi bản ghi cha.
 
-## Code Examples
+## Ví dụ code
 
-### Cursor Pagination (preferred for feeds and large datasets)
+### Cursor Pagination (ưu tiên cho feed và dataset lớn)
 
 ```ts
 async function getPosts(cursor?: string, limit = 20) {
@@ -196,7 +196,7 @@ async function getPosts(cursor?: string, limit = 20) {
 }
 ```
 
-Fetch `limit + 1` and pop — canonical way to detect `hasNextPage` without an extra count query. Always include a unique field (e.g. `id`) as a secondary `orderBy` to prevent unstable pagination when multiple rows share the same timestamp. Use offset pagination only when users need to jump to arbitrary pages (admin tables).
+Lấy `limit + 1` rồi pop — cách chuẩn để phát hiện `hasNextPage` mà không cần thêm query count. LUÔN LUÔN thêm một field duy nhất (ví dụ `id`) làm `orderBy` phụ để tránh phân trang không ổn định khi nhiều dòng có cùng timestamp. Chỉ dùng offset pagination khi người dùng cần nhảy tới trang bất kỳ (bảng admin).
 
 ### Soft Delete
 
@@ -208,7 +208,7 @@ await prisma.user.update({ where: { id }, data: { deletedAt: new Date() } });
 await prisma.user.update({ where: { id }, data: { deletedAt: null } }); // restore
 ```
 
-### Error Handling
+### Xử lý lỗi
 
 ```ts
 import { Prisma } from '@prisma/client'; // or the generated client path for your setup
@@ -225,13 +225,13 @@ try {
 }
 ```
 
-Common codes: `P2002` unique violation · `P2025` not found · `P2003` foreign key violation.
+Các mã thường gặp: `P2002` vi phạm unique · `P2025` không tìm thấy · `P2003` vi phạm foreign key.
 
-Catch at the service boundary and translate to domain errors. Never expose raw Prisma messages to API consumers.
+Bắt lỗi ở ranh giới service và chuyển thành domain error. KHÔNG BAO GIỜ để lộ message thô của Prisma cho phía dùng API.
 
 ### Connection Pool — Serverless
 
-Embed connection params directly in `DATABASE_URL` — string concatenation breaks if the URL already has query parameters (e.g. `?schema=public`):
+Nhúng các tham số connection trực tiếp vào `DATABASE_URL` — nối chuỗi sẽ lỗi nếu URL đã có query parameter (ví dụ `?schema=public`):
 
 ```bash
 # .env — preferred: embed params in the URL
@@ -259,7 +259,7 @@ const prisma = new PrismaClient({
 
 ## Anti-Patterns
 
-### `updateMany` returns a count, not records
+### `updateMany` trả về count, không phải records
 
 ```ts
 // BAD: result is { count: 2 } — users[0] is undefined
@@ -275,9 +275,9 @@ await prisma.user.updateMany({ where: { id: { in: ids } }, data: { role: 'USER' 
 const updated = await prisma.user.findMany({ where: { id: { in: ids } } });
 ```
 
-Same applies to `deleteMany` — returns `{ count: n }`, never the deleted rows.
+Tương tự với `deleteMany` — trả về `{ count: n }`, không bao giờ trả về các dòng đã xóa.
 
-### `$transaction` interactive form times out after 5 seconds
+### Dạng interactive của `$transaction` bị timeout sau 5 giây
 
 ```ts
 // BAD: external call inside transaction exceeds 5s default → "Transaction already closed"
@@ -296,9 +296,9 @@ await prisma.user.update({ where: { id }, data: { emailSent: true } });
 await prisma.$transaction(async (tx) => { ... }, { timeout: 30_000 });
 ```
 
-### `migrate dev` can reset the database
+### `migrate dev` có thể reset database
 
-`migrate dev` detects schema drift and may prompt to reset the DB, dropping all data.
+`migrate dev` phát hiện schema drift và có thể yêu cầu reset DB, xóa toàn bộ dữ liệu.
 
 ```bash
 # NEVER on shared dev, staging, or production
@@ -314,13 +314,13 @@ npx prisma migrate diff \
   --shadow-database-url "$SHADOW_DATABASE_URL"
 ```
 
-### Manually editing a migration file breaks future deploys
+### Sửa tay file migration sẽ làm hỏng các lần deploy sau
 
-Prisma checksums every migration file. Editing after apply causes `P3006 checksum mismatch` on every environment where the original already ran. Create a new migration instead.
+Prisma tính checksum cho mọi file migration. Sửa file sau khi đã apply sẽ gây lỗi `P3006 checksum mismatch` trên mọi môi trường đã chạy bản gốc. Hãy tạo migration mới thay vì sửa.
 
-### Breaking schema changes require multi-step migration
+### Thay đổi schema gây breaking cần migration nhiều bước
 
-Adding `NOT NULL` to an existing column or renaming a column in one migration will lock the table or drop data. Use expand-and-contract:
+Thêm `NOT NULL` vào cột hiện có hoặc đổi tên cột trong một migration duy nhất sẽ khóa bảng hoặc mất dữ liệu. Hãy dùng expand-and-contract:
 
 ```bash
 # Step 1: create migration locally, then deploy
@@ -339,9 +339,9 @@ npx prisma migrate dev --name make_new_column_required  # local only
 npx prisma migrate deploy                               # staging / production
 ```
 
-### `@updatedAt` does not fire on `updateMany`
+### `@updatedAt` không được kích hoạt khi `updateMany`
 
-`@updatedAt` is set automatically only on `update` and `upsert`. Bulk writes leave it stale.
+`@updatedAt` chỉ được đặt tự động khi `update` và `upsert`. Bulk write sẽ để nó giữ giá trị cũ.
 
 ```ts
 // BAD: updatedAt stays at its old value
@@ -354,11 +354,11 @@ await prisma.post.updateMany({
 });
 ```
 
-### Soft delete + `findUniqueOrThrow` leaks deleted records
+### Soft delete + `findUniqueOrThrow` làm lộ bản ghi đã xóa
 
-`findUniqueOrThrow` throws `P2025` only when the row does not exist in the DB. Soft-deleted rows still exist and are returned without error.
+`findUniqueOrThrow` chỉ ném `P2025` khi dòng không tồn tại trong DB. Các dòng đã soft delete vẫn tồn tại và được trả về mà không có lỗi.
 
-`findUniqueOrThrow` requires a unique constraint field in `where` — adding `deletedAt: null` alongside `id` breaks the type because `{ id, deletedAt }` is not a compound unique constraint. Use `findFirstOrThrow` instead.
+`findUniqueOrThrow` yêu cầu field có unique constraint trong `where` — thêm `deletedAt: null` cạnh `id` sẽ gây lỗi type vì `{ id, deletedAt }` không phải compound unique constraint. Hãy dùng `findFirstOrThrow`.
 
 ```ts
 // BAD: returns soft-deleted user
@@ -371,7 +371,7 @@ const user = await prisma.user.findUniqueOrThrow({ where: { id, deletedAt: null 
 const user = await prisma.user.findFirstOrThrow({ where: { id, deletedAt: null } });
 ```
 
-### `deleteMany` without `where` deletes every row
+### `deleteMany` không có `where` sẽ xóa mọi dòng
 
 ```ts
 // BAD: silently wipes the table
@@ -383,19 +383,19 @@ await prisma.post.deleteMany({ where: { authorId: userId } });
 
 ## Best Practices
 
-| Rule | Reason |
+| Quy tắc | Lý do |
 |---|---|
-| `migrate deploy` in CI/CD, `migrate dev` only locally | `migrate dev` can reset the DB on drift |
-| Map entities to response DTOs | Prevents leaking internal fields |
-| Catch `PrismaClientKnownRequestError` at service boundary | Translate to domain errors |
-| Prefer `*OrThrow` methods over manual null checks | Throws P2025 automatically; use `findFirstOrThrow` when filtering non-unique fields |
-| `connection_limit=1` + external pooler in serverless | Prevents connection exhaustion |
-| Always provide `where` on `deleteMany` | Prevents accidental table wipe |
-| Set `updatedAt: new Date()` manually in `updateMany` | `@updatedAt` skips bulk writes |
+| `migrate deploy` trong CI/CD, `migrate dev` chỉ dùng ở local | `migrate dev` có thể reset DB khi có drift |
+| Map entity sang response DTO | Tránh lộ các field nội bộ |
+| Bắt `PrismaClientKnownRequestError` ở ranh giới service | Chuyển thành domain error |
+| Ưu tiên các method `*OrThrow` thay vì kiểm tra null thủ công | Tự động ném P2025; dùng `findFirstOrThrow` khi lọc theo field không unique |
+| `connection_limit=1` + pooler bên ngoài trên serverless | Tránh cạn kiệt connection |
+| LUÔN LUÔN cung cấp `where` cho `deleteMany` | Tránh vô tình xóa sạch bảng |
+| Đặt `updatedAt: new Date()` thủ công trong `updateMany` | `@updatedAt` bỏ qua bulk write |
 
-## Related Skills
+## Skill liên quan
 
-- `nestjs-patterns` — NestJS service layer that integrates Prisma
-- `postgres-patterns` — PostgreSQL-level indexing and connection tuning
-- `database-migrations` — multi-step migration planning for production
-- `backend-patterns` — general API and service layer design
+- `nestjs-patterns` — service layer NestJS tích hợp Prisma
+- `postgres-patterns` — indexing và tinh chỉnh connection ở cấp PostgreSQL
+- `database-migrations` — lập kế hoạch migration nhiều bước cho production
+- `backend-patterns` — thiết kế API và service layer nói chung

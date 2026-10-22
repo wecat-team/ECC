@@ -1,26 +1,26 @@
 ---
 name: api-design
-description: REST API design patterns including resource naming, status codes, pagination, filtering, error responses, versioning, and rate limiting for production APIs. Use when designing or reviewing REST endpoints, resource names, status codes, pagination, or versioning.
+description: Các pattern thiết kế REST API gồm đặt tên resource, status code, pagination, filtering, error response, versioning và rate limiting cho API production. Dùng khi thiết kế hoặc review REST endpoint, tên resource, status code, pagination hoặc versioning.
 metadata:
   origin: ECC
 ---
 
-# API Design Patterns
+# Các Pattern thiết kế API
 
-Conventions and best practices for designing consistent, developer-friendly REST APIs.
+Quy ước và best practice để thiết kế REST API nhất quán, thân thiện với developer.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Designing new API endpoints
-- Reviewing existing API contracts
-- Adding pagination, filtering, or sorting
-- Implementing error handling for APIs
-- Planning API versioning strategy
-- Building public or partner-facing APIs
+- Thiết kế API endpoint mới
+- Review các API contract hiện có
+- Thêm pagination, filtering hoặc sorting
+- Triển khai xử lý lỗi cho API
+- Lập kế hoạch chiến lược versioning cho API
+- Xây dựng API công khai hoặc API dành cho đối tác
 
-## Resource Design
+## Thiết kế Resource
 
-### URL Structure
+### Cấu trúc URL
 
 ```
 # Resources are nouns, plural, lowercase, kebab-case
@@ -41,7 +41,7 @@ POST   /api/v1/auth/login
 POST   /api/v1/auth/refresh
 ```
 
-### Naming Rules
+### Quy tắc đặt tên
 
 ```
 # GOOD
@@ -56,21 +56,21 @@ POST   /api/v1/auth/refresh
 /api/v1/users/123/getOrders   # verb in nested resource
 ```
 
-## HTTP Methods and Status Codes
+## HTTP Method và Status Code
 
-### Method Semantics
+### Ngữ nghĩa của Method
 
-| Method | Idempotent | Safe | Use For |
+| Method | Idempotent | Safe | Dùng cho |
 |--------|-----------|------|---------|
-| GET | Yes | Yes | Retrieve resources |
-| POST | No | No | Create resources, trigger actions |
-| PUT | Yes | No | Full replacement of a resource |
-| PATCH | No* | No | Partial update of a resource |
-| DELETE | Yes | No | Remove a resource |
+| GET | Có | Có | Lấy resource |
+| POST | Không | Không | Tạo resource, kích hoạt action |
+| PUT | Có | Không | Thay thế toàn bộ một resource |
+| PATCH | Không* | Không | Cập nhật một phần resource |
+| DELETE | Có | Không | Xóa một resource |
 
-*PATCH can be made idempotent with proper implementation
+*PATCH có thể được làm idempotent nếu triển khai đúng cách
 
-### Status Code Reference
+### Tham chiếu Status Code
 
 ```
 # Success
@@ -93,7 +93,7 @@ POST   /api/v1/auth/refresh
 503 Service Unavailable   — Temporary overload, include Retry-After
 ```
 
-### Common Mistakes
+### Các lỗi thường gặp
 
 ```
 # BAD: 200 for everything
@@ -112,7 +112,7 @@ HTTP/1.1 201 Created
 Location: /api/v1/users/abc-123
 ```
 
-## Response Format
+## Định dạng Response
 
 ### Success Response
 
@@ -127,7 +127,7 @@ Location: /api/v1/users/abc-123
 }
 ```
 
-### Collection Response (with Pagination)
+### Collection Response (kèm Pagination)
 
 ```json
 {
@@ -172,7 +172,7 @@ Location: /api/v1/users/abc-123
 }
 ```
 
-### Response Envelope Variants
+### Các biến thể Response Envelope
 
 ```typescript
 // Option A: Envelope with data wrapper (recommended for public APIs)
@@ -198,7 +198,7 @@ interface ApiError {
 
 ## Pagination
 
-### Offset-Based (Simple)
+### Dựa trên Offset (Đơn giản)
 
 ```
 GET /api/v1/users?page=2&per_page=20
@@ -209,10 +209,10 @@ ORDER BY created_at DESC
 LIMIT 20 OFFSET 20;
 ```
 
-**Pros:** Easy to implement, supports "jump to page N"
-**Cons:** Slow on large offsets (OFFSET 100000), inconsistent with concurrent inserts
+**Ưu điểm:** Dễ triển khai, hỗ trợ "nhảy tới trang N"
+**Nhược điểm:** Chậm khi offset lớn (OFFSET 100000), không nhất quán khi có insert đồng thời
 
-### Cursor-Based (Scalable)
+### Dựa trên Cursor (Khả năng mở rộng)
 
 ```
 GET /api/v1/users?cursor=eyJpZCI6MTIzfQ&limit=20
@@ -234,19 +234,19 @@ LIMIT 21;  -- fetch one extra to determine has_next
 }
 ```
 
-**Pros:** Consistent performance regardless of position, stable with concurrent inserts
-**Cons:** Cannot jump to arbitrary page, cursor is opaque
+**Ưu điểm:** Hiệu năng ổn định bất kể vị trí, ổn định khi có insert đồng thời
+**Nhược điểm:** Không thể nhảy tới trang tùy ý, cursor là opaque (không đọc được)
 
-### When to Use Which
+### Khi nào dùng loại nào
 
-| Use Case | Pagination Type |
+| Trường hợp | Loại Pagination |
 |----------|----------------|
-| Admin dashboards, small datasets (<10K) | Offset |
-| Infinite scroll, feeds, large datasets | Cursor |
-| Public APIs | Cursor (default) with offset (optional) |
-| Search results | Offset (users expect page numbers) |
+| Dashboard quản trị, dataset nhỏ (<10K) | Offset |
+| Infinite scroll, feed, dataset lớn | Cursor |
+| API công khai | Cursor (mặc định) kèm offset (tùy chọn) |
+| Kết quả tìm kiếm | Offset (người dùng kỳ vọng có số trang) |
 
-## Filtering, Sorting, and Search
+## Filtering, Sorting và Search
 
 ### Filtering
 
@@ -285,7 +285,7 @@ GET /api/v1/products?q=wireless+headphones
 GET /api/v1/users?email=alice
 ```
 
-### Sparse Fieldsets
+### Sparse Fieldset
 
 ```
 # Return only specified fields (reduces payload)
@@ -293,7 +293,7 @@ GET /api/v1/users?fields=id,name,email
 GET /api/v1/orders?fields=id,total,status&include=customer.name
 ```
 
-## Authentication and Authorization
+## Authentication và Authorization
 
 ### Token-Based Auth
 
@@ -307,7 +307,7 @@ GET /api/v1/data
 X-API-Key: sk_live_...
 ```
 
-### Authorization Patterns
+### Các Pattern Authorization
 
 ```typescript
 // Resource-level: check ownership
@@ -327,7 +327,7 @@ app.delete("/api/v1/users/:id", requireRole("admin"), async (req, res) => {
 
 ## Rate Limiting
 
-### Headers
+### Header
 
 ```
 HTTP/1.1 200 OK
@@ -346,38 +346,38 @@ Retry-After: 60
 }
 ```
 
-### Rate Limit Tiers
+### Các bậc Rate Limit
 
-| Tier | Limit | Window | Use Case |
+| Bậc | Giới hạn | Cửa sổ | Trường hợp dùng |
 |------|-------|--------|----------|
-| Anonymous | 30/min | Per IP | Public endpoints |
-| Authenticated | 100/min | Per user | Standard API access |
-| Premium | 1000/min | Per API key | Paid API plans |
-| Internal | 10000/min | Per service | Service-to-service |
+| Anonymous | 30/min | Theo IP | Endpoint công khai |
+| Authenticated | 100/min | Theo người dùng | Truy cập API tiêu chuẩn |
+| Premium | 1000/min | Theo API key | Gói API trả phí |
+| Internal | 10000/min | Theo service | Service-to-service |
 
 ## Versioning
 
-### URL Path Versioning (Recommended)
+### Versioning theo URL Path (Khuyến nghị)
 
 ```
 /api/v1/users
 /api/v2/users
 ```
 
-**Pros:** Explicit, easy to route, cacheable
-**Cons:** URL changes between versions
+**Ưu điểm:** Tường minh, dễ routing, có thể cache
+**Nhược điểm:** URL thay đổi giữa các phiên bản
 
-### Header Versioning
+### Versioning theo Header
 
 ```
 GET /api/users
 Accept: application/vnd.myapp.v2+json
 ```
 
-**Pros:** Clean URLs
-**Cons:** Harder to test, easy to forget
+**Ưu điểm:** URL gọn gàng
+**Nhược điểm:** Khó test hơn, dễ quên
 
-### Versioning Strategy
+### Chiến lược Versioning
 
 ```
 1. Start with /api/v1/ — don't version until you need to
@@ -397,7 +397,7 @@ Accept: application/vnd.myapp.v2+json
    - Changing authentication method
 ```
 
-## Implementation Patterns
+## Các Pattern triển khai
 
 ### TypeScript (Next.js API Route)
 
@@ -506,19 +506,19 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-## API Design Checklist
+## Checklist thiết kế API
 
-Before shipping a new endpoint:
+Trước khi ship một endpoint mới:
 
-- [ ] Resource URL follows naming conventions (plural, kebab-case, no verbs)
-- [ ] Correct HTTP method used (GET for reads, POST for creates, etc.)
-- [ ] Appropriate status codes returned (not 200 for everything)
-- [ ] Input validated with schema (Zod, Pydantic, Bean Validation)
-- [ ] Error responses follow standard format with codes and messages
-- [ ] Pagination implemented for list endpoints (cursor or offset)
-- [ ] Authentication required (or explicitly marked as public)
-- [ ] Authorization checked (user can only access their own resources)
-- [ ] Rate limiting configured
-- [ ] Response does not leak internal details (stack traces, SQL errors)
-- [ ] Consistent naming with existing endpoints (camelCase vs snake_case)
-- [ ] Documented (OpenAPI/Swagger spec updated)
+- [ ] URL resource tuân theo quy ước đặt tên (số nhiều, kebab-case, không có động từ)
+- [ ] Dùng đúng HTTP method (GET để đọc, POST để tạo, v.v.)
+- [ ] Trả về status code phù hợp (không dùng 200 cho mọi thứ)
+- [ ] Input được validate bằng schema (Zod, Pydantic, Bean Validation)
+- [ ] Error response tuân theo định dạng chuẩn với code và message
+- [ ] Đã triển khai pagination cho các list endpoint (cursor hoặc offset)
+- [ ] Yêu cầu authentication (hoặc được đánh dấu tường minh là công khai)
+- [ ] Đã kiểm tra authorization (người dùng chỉ truy cập được resource của chính mình)
+- [ ] Đã cấu hình rate limiting
+- [ ] Response không làm lộ chi tiết nội bộ (stack trace, lỗi SQL)
+- [ ] Đặt tên nhất quán với các endpoint hiện có (camelCase so với snake_case)
+- [ ] Đã có tài liệu (spec OpenAPI/Swagger đã được cập nhật)

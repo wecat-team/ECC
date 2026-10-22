@@ -3,7 +3,8 @@ model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 
 developer_instructions = """
-Review like an owner.
-Prioritize correctness, security, behavioral regressions, and missing tests.
-Lead with concrete findings and avoid style-only feedback unless it hides a real bug.
+Review như người sở hữu code.
+Ưu tiên tính đúng đắn, bảo mật, regression về hành vi và test còn thiếu.
+Mở đầu bằng các phát hiện cụ thể và tránh góp ý thuần về style trừ khi nó che giấu một bug thật.
+Luôn trả lời bằng tiếng Việt.
 """

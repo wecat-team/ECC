@@ -1,29 +1,29 @@
 ---
-description: Fix Rust build errors, borrow checker issues, and dependency problems incrementally. Invokes the rust-build-resolver agent for minimal, surgical fixes.
+description: Sửa dần các lỗi build Rust, vấn đề borrow checker và vấn đề dependency. Gọi agent rust-build-resolver để sửa tối thiểu, chính xác.
 ---
 
 # Rust Build and Fix
 
-This command invokes the **rust-build-resolver** agent to incrementally fix Rust build errors with minimal changes.
+Lệnh này gọi agent **rust-build-resolver** để sửa dần các lỗi build Rust với thay đổi tối thiểu.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Run Diagnostics**: Execute `cargo check`, `cargo clippy`, `cargo fmt --check`
-2. **Parse Errors**: Identify error codes and affected files
-3. **Fix Incrementally**: One error at a time
-4. **Verify Each Fix**: Re-run `cargo check` after each change
-5. **Report Summary**: Show what was fixed and what remains
+1. **Chạy chẩn đoán**: Thực thi `cargo check`, `cargo clippy`, `cargo fmt --check`
+2. **Phân tích lỗi**: Xác định mã lỗi và các file bị ảnh hưởng
+3. **Sửa dần**: Mỗi lần một lỗi
+4. **Xác minh từng bản sửa**: Chạy lại `cargo check` sau mỗi thay đổi
+5. **Báo cáo tóm tắt**: Cho biết đã sửa gì và còn lại gì
 
-## When to Use
+## Khi nào dùng
 
-Use `/rust-build` when:
-- `cargo build` or `cargo check` fails with errors
-- `cargo clippy` reports warnings
-- Borrow checker or lifetime errors block compilation
-- Cargo dependency resolution fails
-- After pulling changes that break the build
+Dùng `/rust-build` khi:
+- `cargo build` hoặc `cargo check` thất bại với lỗi
+- `cargo clippy` báo cảnh báo
+- Lỗi borrow checker hoặc lifetime chặn việc compile
+- Việc resolve dependency của Cargo thất bại
+- Sau khi pull các thay đổi làm hỏng build
 
-## Diagnostic Commands Run
+## Các lệnh chẩn đoán được chạy
 
 ```bash
 # Primary build check
@@ -42,7 +42,7 @@ cargo tree --duplicates
 if command -v cargo-audit >/dev/null; then cargo audit; else echo "cargo-audit not installed"; fi
 ```
 
-## Example Session
+## Ví dụ phiên làm việc
 
 ````text
 User: /rust-build
@@ -147,41 +147,41 @@ test result: ok. 6 passed; 0 failed; 0 ignored
 Build Status: SUCCESS
 ````
 
-## Common Errors Fixed
+## Các lỗi thường gặp đã sửa
 
-| Error | Typical Fix |
+| Lỗi | Cách sửa điển hình |
 |-------|-------------|
-| `cannot borrow as mutable` | Restructure to end immutable borrow first; clone only if justified |
-| `does not live long enough` | Use owned type or add lifetime annotation |
-| `cannot move out of` | Restructure to take ownership; clone only as last resort |
-| `mismatched types` | Add `.into()`, `as`, or explicit conversion |
-| `trait X not implemented` | Add `#[derive(Trait)]` or implement manually |
-| `unresolved import` | Add to Cargo.toml or fix `use` path |
-| `cannot find value` | Add import or fix path |
+| `cannot borrow as mutable` | Cấu trúc lại để kết thúc immutable borrow trước; chỉ clone khi có lý do chính đáng |
+| `does not live long enough` | Dùng owned type hoặc thêm lifetime annotation |
+| `cannot move out of` | Cấu trúc lại để lấy ownership; clone chỉ là phương án cuối cùng |
+| `mismatched types` | Thêm `.into()`, `as` hoặc chuyển đổi tường minh |
+| `trait X not implemented` | Thêm `#[derive(Trait)]` hoặc tự implement |
+| `unresolved import` | Thêm vào Cargo.toml hoặc sửa đường dẫn `use` |
+| `cannot find value` | Thêm import hoặc sửa đường dẫn |
 
-## Fix Strategy
+## Chiến lược sửa
 
-1. **Build errors first** - Code must compile
-2. **Clippy warnings second** - Fix suspicious constructs
-3. **Formatting third** - `cargo fmt` compliance
-4. **One fix at a time** - Verify each change
-5. **Minimal changes** - Don't refactor, just fix
+1. **Lỗi build trước** - Code phải compile được
+2. **Cảnh báo Clippy thứ hai** - Sửa các cấu trúc đáng ngờ
+3. **Định dạng thứ ba** - tuân thủ `cargo fmt`
+4. **Mỗi lần một bản sửa** - Xác minh từng thay đổi
+5. **Thay đổi tối thiểu** - Không refactor, chỉ sửa
 
-## Stop Conditions
+## Điều kiện dừng
 
-The agent will stop and report if:
-- Same error persists after 3 attempts
-- Fix introduces more errors
-- Requires architectural changes
-- Borrow checker error requires redesigning data ownership
+Agent sẽ dừng và báo cáo nếu:
+- Cùng một lỗi vẫn tồn tại sau 3 lần thử
+- Bản sửa gây ra thêm lỗi
+- Cần thay đổi kiến trúc
+- Lỗi borrow checker đòi hỏi thiết kế lại ownership của dữ liệu
 
-## Related Commands
+## Các lệnh liên quan
 
-- `/rust-test` - Run tests after build succeeds
-- `/rust-review` - Review code quality
-- `verification-loop` skill - Full verification loop
+- `/rust-test` - Chạy test sau khi build thành công
+- `/rust-review` - Review chất lượng code
+- skill `verification-loop` - Vòng lặp verification đầy đủ
 
-## Related
+## Liên quan
 
 - Agent: `agents/rust-build-resolver.md`
 - Skill: `skills/rust-patterns/`

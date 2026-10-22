@@ -1,31 +1,31 @@
 ---
-description: Enforce TDD workflow for React. Write React Testing Library tests first (behavior-focused, accessibility-first), then implement components. Detects Vitest or Jest and verifies coverage targets.
+description: Áp dụng quy trình TDD cho React. Viết test React Testing Library trước (tập trung vào hành vi, ưu tiên accessibility), sau đó triển khai component. Phát hiện Vitest hoặc Jest và xác minh mục tiêu coverage.
 ---
 
-# React TDD Command
+# Lệnh React TDD
 
-This command enforces test-driven development for React using React Testing Library plus Vitest or Jest, detected at runtime.
+Lệnh này áp dụng phát triển hướng kiểm thử (TDD) cho React bằng React Testing Library cùng Vitest hoặc Jest, được phát hiện lúc runtime.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Define Component Signature**: Scaffold the component, prop type, and exports
-2. **Write Behavior Tests First**: RTL queries (role-first), `userEvent`, MSW for network — RED
-3. **Run Tests**: Verify they fail for the right reason
-4. **Implement Minimal Code**: Just enough to pass — GREEN
-5. **Refactor**: Improve while keeping tests green
-6. **Check Coverage**: Hit the targets in [rules/react/testing.md](../rules/react/testing.md)
+1. **Định nghĩa signature của component**: Dựng khung component, type của prop và các export
+2. **Viết test hành vi trước**: Truy vấn RTL (ưu tiên role), `userEvent`, MSW cho network — RED
+3. **Chạy test**: Xác minh chúng thất bại đúng lý do
+4. **Triển khai code tối thiểu**: Vừa đủ để pass — GREEN
+5. **Refactor**: Cải thiện trong khi giữ test xanh
+6. **Kiểm tra coverage**: Đạt các mục tiêu trong [rules/react/testing.md](../rules/react/testing.md)
 
-## When to Use
+## Khi nào dùng
 
-Use `/react-test` when:
+Dùng `/react-test` khi:
 
-- Implementing a new React component or custom hook
-- Adding test coverage to an untested component
-- Fixing a bug (write failing test first that reproduces it)
-- Building forms, state machines, or accessibility-critical UI
-- Onboarding to RTL + Vitest/Jest workflow
+- Triển khai một React component hoặc custom hook mới
+- Bổ sung test coverage cho component chưa có test
+- Sửa bug (viết test thất bại tái hiện bug trước)
+- Xây dựng form, state machine hoặc UI quan trọng về accessibility
+- Làm quen với quy trình RTL + Vitest/Jest
 
-## TDD Cycle
+## Chu trình TDD
 
 ```
 RED      -> Write failing test for the next behavior
@@ -34,16 +34,16 @@ REFACTOR -> Improve component, tests stay green
 REPEAT   -> Next behavior
 ```
 
-## Runner Detection
+## Phát hiện runner
 
 ```bash
 test -f vitest.config.ts -o -f vitest.config.js -o -f vite.config.ts   # Vitest
 grep -l '"jest"' package.json                                          # Jest
 ```
 
-Prefer Vitest for new Vite-based projects; respect Jest for existing setups.
+Ưu tiên Vitest cho các project mới dựa trên Vite; tôn trọng Jest với các thiết lập hiện có.
 
-## Example Session
+## Ví dụ phiên làm việc
 
 ````text
 User: /react-test I need a SearchInput component with debounced search
@@ -175,20 +175,20 @@ $ vitest run --coverage src/components/SearchInput.test.tsx
 ## TDD Complete!
 ````
 
-## Test Patterns
+## Các pattern test
 
-### Behavior, not implementation
+### Hành vi, không phải triển khai
 
-Use `getByRole`, `getByLabelText`, `getByText`. Avoid `container.querySelector` and asserting on component state.
+Dùng `getByRole`, `getByLabelText`, `getByText`. Tránh `container.querySelector` và assert trên state của component.
 
-### `userEvent.setup()` per test
+### `userEvent.setup()` cho mỗi test
 
 ```tsx
 const user = userEvent.setup();
 await user.click(screen.getByRole("button", { name: /save/i }));
 ```
 
-### MSW for network
+### MSW cho network
 
 ```tsx
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
@@ -198,7 +198,7 @@ afterAll(() => server.close());
 server.use(http.post("/api/users", () => HttpResponse.json({ id: "1" }, { status: 201 })));
 ```
 
-### Custom hooks
+### Custom hook
 
 ```tsx
 const { result } = renderHook(() => useCounter(0));
@@ -213,28 +213,28 @@ import { axe } from "vitest-axe";
 expect(await axe(container)).toHaveNoViolations();
 ```
 
-## Coverage Targets
+## Mục tiêu coverage
 
-| Layer | Target |
+| Tầng | Mục tiêu |
 |---|---|
-| Pure utilities | >=90% |
-| Custom hooks | >=85% |
-| Presentational components | >=80% |
-| Container components | >=70% |
-| Pages | E2E covered separately |
+| Utility thuần | >=90% |
+| Custom hook | >=85% |
+| Presentational component | >=80% |
+| Container component | >=70% |
+| Page | Được E2E bao phủ riêng |
 
-Configure in `vitest.config.ts` / `jest.config.js` to enforce thresholds in CI.
+Cấu hình trong `vitest.config.ts` / `jest.config.js` để áp dụng ngưỡng trong CI.
 
-## Anti-Patterns to Avoid
+## Anti-pattern cần tránh
 
-- `container.querySelector(...)` — bypasses accessibility queries
-- Asserting on render count
-- Mocking `react` itself (`jest.mock("react", ...)`)
-- Mocking child components by default (mock only when child has heavy side effects)
-- Ignoring `act()` warnings — they signal real bugs
-- Snapshot tests of rendered components (brittle, rubber-stamped) — use Playwright/Cypress visual diff instead
+- `container.querySelector(...)` — bỏ qua các truy vấn accessibility
+- Assert trên số lần render
+- Mock chính `react` (`jest.mock("react", ...)`)
+- Mock child component theo mặc định (chỉ mock khi child có side effect nặng)
+- Bỏ qua cảnh báo `act()` — chúng báo hiệu bug thật
+- Snapshot test của component đã render (dễ vỡ, bị duyệt qua loa) — hãy dùng visual diff của Playwright/Cypress thay thế
 
-## Test Commands
+## Các lệnh test
 
 ```bash
 # Vitest
@@ -252,14 +252,14 @@ jest path/to/file.test.tsx
 CI=true vitest run --coverage
 ```
 
-## Related Commands
+## Các lệnh liên quan
 
-- `/react-build` — fix build errors before running tests
-- `/react-review` — review after implementation
-- `verification-loop` skill — full verification loop
+- `/react-build` — sửa lỗi build trước khi chạy test
+- `/react-review` — review sau khi triển khai
+- skill `verification-loop` — vòng lặp verification đầy đủ
 
-## Related
+## Liên quan
 
 - Skills: `skills/react-testing/`, `skills/tdd-workflow/`, `skills/accessibility/`, `skills/e2e-testing/`
 - Rules: `rules/react/testing.md`
-- Agents: `react-reviewer` (reviews test quality), `tdd-guide` (enforces TDD process)
+- Agents: `react-reviewer` (review chất lượng test), `tdd-guide` (thực thi quy trình TDD)

@@ -7,45 +7,45 @@ paths:
   - "**/config/routes.rb"
   - "**/config/credentials*.yml.enc"
 ---
-# Ruby Security
+# Bảo mật Ruby
 
-> This file extends [common/security.md](../common/security.md) with Ruby and Rails specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung riêng cho Ruby và Rails.
 
-## Rails Defaults
+## Mặc định của Rails
 
-- Keep CSRF protection enabled for state-changing browser requests.
-- Use strong parameters or typed boundary objects before mass assignment.
-- Store secrets in Rails credentials, environment variables, or a secret manager. Never commit plaintext keys, tokens, private credentials, or copied `.env` values.
+- Giữ bật bảo vệ CSRF cho các request trình duyệt làm thay đổi trạng thái.
+- Dùng strong parameters hoặc các boundary object có type trước khi mass assignment.
+- Lưu secret trong Rails credentials, biến môi trường hoặc một secret manager. KHÔNG BAO GIỜ commit key, token, credential riêng tư dạng plaintext hay giá trị `.env` được sao chép.
 
-## SQL And Active Record
+## SQL và Active Record
 
-- Prefer Active Record query APIs and parameterized SQL.
-- Never interpolate request, cookie, header, job, or webhook values into SQL strings.
-- Scope model callbacks carefully; security-sensitive side effects should be explicit and covered by tests.
+- Ưu tiên API truy vấn của Active Record và SQL tham số hóa.
+- Không bao giờ nội suy giá trị từ request, cookie, header, job hay webhook vào chuỗi SQL.
+- Phạm vi của model callback cần cân nhắc cẩn thận; các side effect nhạy cảm về bảo mật nên tường minh và được test bao phủ.
 
-## Authentication And Sessions
+## Xác thực và Session
 
-- Use the Rails 8 authentication generator for simple session auth, or Devise when OAuth, MFA, confirmable, lockable, multi-model auth, or existing Devise conventions are required.
-- Rotate sessions after sign-in and privilege changes.
-- Protect account recovery flows with expiry, single-use tokens, rate limiting, and audit logging.
+- Dùng generator xác thực của Rails 8 cho session auth đơn giản, hoặc Devise khi cần OAuth, MFA, confirmable, lockable, auth đa model, hoặc quy ước Devise sẵn có.
+- Xoay vòng (rotate) session sau khi đăng nhập và khi quyền thay đổi.
+- Bảo vệ các flow khôi phục tài khoản bằng thời hạn, token dùng một lần, rate limiting và audit logging.
 
-## Dependencies
+## Dependency
 
-- Run dependency checks when the lockfile changes:
+- Chạy kiểm tra dependency khi lockfile thay đổi:
 
 ```bash
 bundle exec bundle-audit check --update
 bundle exec brakeman --no-progress
 ```
 
-- Review new gems for maintainer activity, native extension risk, transitive dependencies, and whether the same behavior can be implemented with Rails core.
+- Review các gem mới về mức độ hoạt động của maintainer, rủi ro native extension, dependency bắc cầu (transitive), và liệu cùng hành vi đó có thể triển khai bằng Rails core hay không.
 
-## Web Safety
+## An toàn Web
 
-- Escape template output by default. Treat `html_safe`, `raw`, and custom sanitizers as security-sensitive code.
-- Validate file uploads by content type, extension, size, and storage destination.
-- Treat background jobs, webhooks, Action Cable messages, and Turbo Stream inputs as untrusted boundaries.
+- Escape output của template theo mặc định. Coi `html_safe`, `raw` và các sanitizer tùy chỉnh là code nhạy cảm về bảo mật.
+- Validate file upload theo content type, phần mở rộng, kích thước và đích lưu trữ.
+- Coi background job, webhook, message Action Cable và đầu vào Turbo Stream là các ranh giới không đáng tin.
 
-## Reference
+## Tham chiếu
 
-See skill: `security-review` for secure-by-default review patterns.
+Xem skill: `security-review` để biết các pattern review secure-by-default.

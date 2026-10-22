@@ -1,32 +1,32 @@
 ---
 name: windows-desktop-e2e
-description: E2E testing for Windows native desktop apps (WPF, WinForms, Win32/MFC, Qt) using pywinauto and Windows UI Automation. Use when writing E2E tests for a Windows native desktop app with pywinauto or UI Automation.
+description: E2E testing cho ứng dụng desktop native của Windows (WPF, WinForms, Win32/MFC, Qt) dùng pywinauto và Windows UI Automation. Dùng khi viết E2E test cho ứng dụng desktop native của Windows bằng pywinauto hoặc UI Automation.
 metadata:
   origin: ECC
 ---
 
-# Windows Desktop E2E Testing
+# E2E Testing cho Windows Desktop
 
-End-to-end testing for Windows native desktop applications using **pywinauto** backed by Windows UI Automation (UIA). Covers WPF, WinForms, Win32/MFC, and Qt (5.x / 6.x) — with Qt-specific guidance as a dedicated section.
+Kiểm thử end-to-end cho ứng dụng desktop native của Windows bằng **pywinauto** chạy trên Windows UI Automation (UIA). Bao gồm WPF, WinForms, Win32/MFC và Qt (5.x / 6.x) — với hướng dẫn riêng cho Qt trong một mục chuyên biệt.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing or running E2E tests for a Windows native desktop application
-- Setting up a desktop GUI test suite from scratch
-- Diagnosing flaky or failing desktop automation tests
-- Adding testability (AutomationId, accessible names) to an existing app
-- Integrating desktop E2E into a CI/CD pipeline (GitHub Actions `windows-latest`)
+- Viết hoặc chạy E2E test cho ứng dụng desktop native của Windows
+- Thiết lập bộ test GUI desktop từ đầu
+- Chẩn đoán các test tự động hóa desktop chập chờn (flaky) hoặc thất bại
+- Bổ sung khả năng kiểm thử (AutomationId, accessible name) cho ứng dụng hiện có
+- Tích hợp E2E desktop vào pipeline CI/CD (GitHub Actions `windows-latest`)
 
-### When NOT to Use
+### Khi nào KHÔNG dùng
 
-- Web applications → use `e2e-testing` skill (Playwright)
-- Electron / CEF / WebView2 apps → the HTML layer needs browser automation, not UIA
-- Mobile apps → use platform-specific tools (UIAutomator, XCUITest)
-- Pure unit or integration tests that don't need a running GUI
+- Ứng dụng web → dùng skill `e2e-testing` (Playwright)
+- Ứng dụng Electron / CEF / WebView2 → lớp HTML cần tự động hóa trình duyệt, không phải UIA
+- Ứng dụng mobile → dùng công cụ riêng của từng nền tảng (UIAutomator, XCUITest)
+- Unit test hoặc integration test thuần không cần GUI đang chạy
 
-## Core Concepts
+## Khái niệm cốt lõi
 
-All Windows desktop automation relies on **UI Automation (UIA)**, a Windows-built-in accessibility API. Every supported framework exposes a tree of UIA elements with properties Claude can read and act on:
+Mọi tự động hóa desktop trên Windows đều dựa vào **UI Automation (UIA)**, một API accessibility có sẵn của Windows. Mỗi framework được hỗ trợ đều expose một cây các phần tử UIA với các thuộc tính mà Claude có thể đọc và thao tác:
 
 ```
 Your test (Python)
@@ -36,19 +36,19 @@ Your test (Python)
                 └── Running .exe
 ```
 
-**UIA quality by framework:**
+**Chất lượng UIA theo framework:**
 
-| Framework | AutomationId | Reliability | Notes |
+| Framework | AutomationId | Độ tin cậy | Ghi chú |
 |-----------|-------------|-------------|-------|
-| WPF | 5/5 | Excellent | `x:Name` maps directly to AutomationId |
-| WinForms | 4/5 | Good | `AccessibleName` = AutomationId |
-| UWP / WinUI 3 | 5/5 | Excellent | Full Microsoft support |
-| Qt 6.x | 5/5 | Excellent | Accessibility enabled by default; class names change to `Qt6*` |
-| Qt 5.15+ | 4/5 | Good | Improved Accessibility module |
-| Qt 5.7–5.14 | 3/5 | Fair | Needs `QT_ACCESSIBILITY=1`; objectName manual |
-| Win32 / MFC | 3/5 | Fair | Control IDs accessible; text matching common |
+| WPF | 5/5 | Xuất sắc | `x:Name` ánh xạ trực tiếp sang AutomationId |
+| WinForms | 4/5 | Tốt | `AccessibleName` = AutomationId |
+| UWP / WinUI 3 | 5/5 | Xuất sắc | Được Microsoft hỗ trợ đầy đủ |
+| Qt 6.x | 5/5 | Xuất sắc | Accessibility bật mặc định; tên class đổi thành `Qt6*` |
+| Qt 5.15+ | 4/5 | Tốt | Module Accessibility đã được cải thiện |
+| Qt 5.7–5.14 | 3/5 | Tạm được | Cần `QT_ACCESSIBILITY=1`; objectName đặt thủ công |
+| Win32 / MFC | 3/5 | Tạm được | Control ID truy cập được; thường phải khớp theo text |
 
-## Setup & Prerequisites
+## Thiết lập và điều kiện tiên quyết
 
 ```bash
 # Python 3.8+, Windows only
@@ -57,18 +57,18 @@ pip install pywinauto pytest pytest-html Pillow pytest-timeout
 # Install ffmpeg and add to PATH: https://ffmpeg.org/download.html
 ```
 
-Verify UIA is reachable:
+Xác minh UIA truy cập được:
 
 ```python
 from pywinauto import Desktop
 Desktop(backend="uia").windows()  # lists all top-level windows
 ```
 
-Install **Accessibility Insights for Windows** (free, from Microsoft) — your DevTools equivalent for inspecting the UIA element tree before writing any test.
+Cài **Accessibility Insights for Windows** (miễn phí, của Microsoft) — công cụ tương đương DevTools của bạn để kiểm tra cây phần tử UIA trước khi viết bất kỳ test nào.
 
-## Testability Setup (by Framework)
+## Thiết lập khả năng kiểm thử (theo Framework)
 
-The single most impactful thing you can do is **give every interactive control a stable AutomationId** before writing tests.
+Việc có tác động lớn nhất bạn có thể làm là **gán cho mọi control tương tác một AutomationId ổn định** trước khi viết test.
 
 ### WPF
 
@@ -98,7 +98,7 @@ lblError.AccessibleName = "lblError";
 // Prefer SetWindowText for Name; add IAccessible for richer support
 ```
 
-### Qt — see dedicated section below
+### Qt — xem mục chuyên biệt bên dưới
 
 ---
 
@@ -248,7 +248,7 @@ class LoginPage(BasePage):
 
 ### conftest.py
 
-> For new projects prefer the **Tier 1 sandbox fixture** (see below) — it adds filesystem isolation at zero extra cost. This basic fixture is for minimal/legacy setups only.
+> Với dự án mới, ưu tiên dùng **Tier 1 sandbox fixture** (xem bên dưới) — nó bổ sung cô lập filesystem mà không tốn thêm chi phí. Fixture cơ bản này chỉ dành cho các thiết lập tối giản/legacy.
 
 ```python
 import os, pytest
@@ -310,14 +310,14 @@ markers =
 addopts = -v --tb=short --html=artifacts/report.html --self-contained-html
 ```
 
-## Locator Strategy
+## Chiến lược Locator
 
 ```
 AutomationId  >  Name (text)  >  ClassName + index  >  XPath
   (stable)         (readable)       (fragile)           (last resort)
 ```
 
-Inspect with Accessibility Insights → **Properties** pane → look for `AutomationId` first.
+Kiểm tra bằng Accessibility Insights → pane **Properties** → tìm `AutomationId` trước.
 
 ```python
 # Inspect at runtime — paste into a REPL to explore the tree
@@ -326,7 +326,7 @@ win.print_control_identifiers()
 win.child_window(auto_id="groupBox1").print_control_identifiers()
 ```
 
-## Wait Patterns
+## Pattern chờ (Wait)
 
 ```python
 # Wait for control to appear
@@ -342,9 +342,9 @@ dlg = page.wait_window("Confirm Delete")
 page.wait_until(lambda: page.get_text(page.by_id("lblStatus")) == "Ready")
 ```
 
-**Never use `time.sleep()` as primary synchronization** — use `wait()` or `wait_until()`.
+**KHÔNG BAO GIỜ dùng `time.sleep()` làm cơ chế đồng bộ chính** — hãy dùng `wait()` hoặc `wait_until()`.
 
-## Artifact Management
+## Quản lý Artifact
 
 ```python
 # Screenshot on demand
@@ -367,11 +367,11 @@ def stop_recording(proc):
     proc.stdin.write(b"q"); proc.stdin.flush(); proc.wait(timeout=10)
 ```
 
-## Per-Step Trace (opt-in)
+## Trace theo từng bước (opt-in)
 
-The default failure screenshot is often too thin for diagnosing flaky tests. The step-level trace below is **off by default** — enable it only when reproducing a flaky case.
+Screenshot khi thất bại mặc định thường quá sơ sài để chẩn đoán test chập chờn. Trace ở mức từng bước dưới đây **mặc định tắt** — chỉ bật khi tái hiện một trường hợp flaky.
 
-### Enable
+### Bật
 
 ```bash
 E2E_TRACE=1 pytest tests/test_login.py -v
@@ -379,7 +379,7 @@ E2E_TRACE=1 pytest tests/test_login.py -v
 E2E_TRACE=1 E2E_TRACE_INCLUDE_TEXT=1 pytest ...
 ```
 
-### Patch into BasePage
+### Patch vào BasePage
 
 ```python
 import os, json, time
@@ -418,15 +418,15 @@ class BasePage:
         self._trace("type_after", spec)
 ```
 
-### Caveats
+### Lưu ý
 
-- **PII / credentials**: `type_text` content is `<redacted>` by default. Never set `E2E_TRACE_INCLUDE_TEXT=1` on login or payment flows.
-- **Overhead**: ~50–200ms per action + one PNG per step on disk. Don't enable on the default CI matrix — only on a dedicated flake-repro job.
-- **Artifact bloat**: a long flow produces tens of MB; tune `retention-days` accordingly.
-- **Parallel/rerun hygiene**: this simple example appends to `trace.jsonl` and uses a class-level counter. Clear the artifact directory before reruns, and use per-worker artifact dirs for parallel tests.
-- **Coverage gap**: actions performed outside `BasePage` (raw `pywinauto` calls in test code) are not traced.
+- **PII / credential**: nội dung `type_text` mặc định là `<redacted>`. KHÔNG BAO GIỜ đặt `E2E_TRACE_INCLUDE_TEXT=1` trên các luồng đăng nhập hoặc thanh toán.
+- **Overhead**: ~50–200ms mỗi thao tác + một file PNG mỗi bước trên đĩa. Đừng bật trên CI matrix mặc định — chỉ bật trên job chuyên để tái hiện flake.
+- **Artifact phình to**: một luồng dài tạo ra hàng chục MB; hãy điều chỉnh `retention-days` cho phù hợp.
+- **Vệ sinh khi chạy song song/chạy lại**: ví dụ đơn giản này ghi nối tiếp (append) vào `trace.jsonl` và dùng bộ đếm cấp class. Hãy xóa thư mục artifact trước khi chạy lại, và dùng thư mục artifact riêng cho từng worker khi test song song.
+- **Khoảng trống bao phủ**: các thao tác thực hiện ngoài `BasePage` (gọi `pywinauto` thô trong code test) không được trace.
 
-## Flaky Test Handling
+## Xử lý test chập chờn (Flaky)
 
 ```python
 # Quarantine — equivalent to Playwright's test.fixme()
@@ -438,25 +438,25 @@ def test_animated_transition(self, app): ...
 def test_heavy_load(self, app): ...
 ```
 
-Common causes and fixes:
+Nguyên nhân thường gặp và cách khắc phục:
 
-| Cause | Fix |
+| Nguyên nhân | Cách khắc phục |
 |-------|-----|
-| Control not ready | Replace `time.sleep` with `wait_visible` |
-| Window not focused | Add `win.set_focus()` before interactions |
-| Animation in progress | `wait_until(lambda: not loading_indicator.exists())` |
-| Dialog timing | `wait_window(title, timeout=15)` |
-| CI display not ready | Set `DISPLAY` or use virtual desktop in CI |
-| `set_edit_text` raises NotImplementedError | UIA ValuePattern missing (common on Qt 5.x) — `BasePage.type_text` already falls back to `keyboard.send_keys` |
-| Control exists but `wait_visible` times out | Window minimised or off-screen — call `win.restore()` + `win.set_focus()` before waiting |
+| Control chưa sẵn sàng | Thay `time.sleep` bằng `wait_visible` |
+| Window không được focus | Thêm `win.set_focus()` trước khi tương tác |
+| Animation đang chạy | `wait_until(lambda: not loading_indicator.exists())` |
+| Thời điểm xuất hiện dialog | `wait_window(title, timeout=15)` |
+| Display của CI chưa sẵn sàng | Đặt `DISPLAY` hoặc dùng virtual desktop trong CI |
+| `set_edit_text` ném NotImplementedError | Thiếu UIA ValuePattern (thường gặp trên Qt 5.x) — `BasePage.type_text` đã tự fallback sang `keyboard.send_keys` |
+| Control tồn tại nhưng `wait_visible` bị timeout | Window bị minimise hoặc nằm ngoài màn hình — gọi `win.restore()` + `win.set_focus()` trước khi chờ |
 
-## Test Isolation & Sandbox
+## Cô lập test và Sandbox
 
-Three tiers of isolation — use the lightest tier that satisfies your needs.
+Ba tầng cô lập — dùng tầng nhẹ nhất đáp ứng nhu cầu của bạn.
 
-### Tier 1 — Filesystem Isolation (default, always use)
+### Tier 1 — Cô lập Filesystem (mặc định, luôn dùng)
 
-Each test gets its own `APPDATA` / `LOCALAPPDATA` / `TEMP` via `subprocess.Popen` and `Application.connect()`. pytest's `tmp_path` fixture handles cleanup automatically.
+Mỗi test có `APPDATA` / `LOCALAPPDATA` / `TEMP` riêng thông qua `subprocess.Popen` và `Application.connect()`. Fixture `tmp_path` của pytest tự động xử lý việc dọn dẹp.
 
 ```python
 # conftest.py — replace the basic `app` fixture with this
@@ -515,18 +515,13 @@ def pytest_runtest_makereport(item, call):
     setattr(item, f"rep_{outcome.get_result().when}", outcome.get_result())
 ```
 
-### Tier 2 — Windows Job Object (optional: process-lifetime containment)
+### Tier 2 — Windows Job Object (tùy chọn: kiểm soát vòng đời process)
 
-Attach the process to a Job Object so it is **automatically terminated** when
-the test fixture's job handle is GC'd. Also prevents the app from spawning
-child processes that escape fixture cleanup.
+Gắn process vào một Job Object để nó **tự động bị kết thúc** khi job handle của test fixture bị GC. Đồng thời ngăn ứng dụng sinh ra các child process thoát khỏi bước dọn dẹp của fixture.
 
-> **Scope of isolation:** Job Objects do NOT virtualize filesystem access or
-> block network traffic. File-write and network isolation require AppContainer,
-> Windows Firewall rules, or Tier 3 (Windows Sandbox). Use Tier 2 only for
-> process-lifetime and child-process containment.
+> **Phạm vi cô lập:** Job Object KHÔNG ảo hóa quyền truy cập filesystem hay chặn lưu lượng mạng. Cô lập ghi file và mạng đòi hỏi AppContainer, quy tắc Windows Firewall, hoặc Tier 3 (Windows Sandbox). Chỉ dùng Tier 2 để kiểm soát vòng đời process và child process.
 
-Requires no extra dependencies.
+Không cần thêm dependency nào.
 
 ```python
 import ctypes, ctypes.wintypes as wt
@@ -571,15 +566,13 @@ def restrict_process(pid: int):
 # After proc = subprocess.Popen(...):  job = restrict_process(proc.pid)
 ```
 
-### Tier 3 — Windows Sandbox (CI full-OS isolation)
+### Tier 3 — Windows Sandbox (cô lập toàn bộ OS cho CI)
 
-When you need a clean Windows image per run (no leftover registry keys, no
-shared GPU state, true isolation), run the **entire test suite** inside
-[Windows Sandbox](https://learn.microsoft.com/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview).
+Khi cần một image Windows sạch cho mỗi lần chạy (không còn registry key sót lại, không dùng chung trạng thái GPU, cô lập thực sự), hãy chạy **toàn bộ test suite** bên trong [Windows Sandbox](https://learn.microsoft.com/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview).
 
-**Requirement:** Windows 10/11 Pro or Enterprise, Virtualization enabled.
+**Yêu cầu:** Windows 10/11 Pro hoặc Enterprise, đã bật Virtualization.
 
-Create `e2e-sandbox.wsb` in your project root:
+Tạo `e2e-sandbox.wsb` ở thư mục gốc dự án:
 
 ```xml
 <Configuration>
@@ -614,24 +607,24 @@ Create `e2e-sandbox.wsb` in your project root:
 </Configuration>
 ```
 
-Launch: `WindowsSandbox.exe e2e-sandbox.wsb`
+Khởi chạy: `WindowsSandbox.exe e2e-sandbox.wsb`
 
-> pywinauto and the app both run **inside** the sandbox (same session required).
-> Artifacts are written back to the host via the mapped folder.
+> pywinauto và ứng dụng đều chạy **bên trong** sandbox (bắt buộc cùng một session).
+> Artifact được ghi ngược về host qua thư mục được map.
 
-### Tier comparison
+### So sánh các Tier
 
-| Tier | Isolation | Setup cost | Works on CI | Use when |
+| Tier | Cô lập | Chi phí thiết lập | Chạy được trên CI | Dùng khi |
 |------|-----------|-----------|-------------|----------|
-| 1 — `tmp_path` env redirect | Filesystem | Zero | Always | Default for all tests |
-| 2 — Job Object | Process tree | Low | Always | Prevent child-process escape |
-| 3 — Windows Sandbox | Full OS | Medium | Needs Pro/Enterprise image | Nightly clean-room runs |
+| 1 — chuyển hướng env qua `tmp_path` | Filesystem | Không | Luôn luôn | Mặc định cho mọi test |
+| 2 — Job Object | Cây process | Thấp | Luôn luôn | Ngăn child process thoát ra ngoài |
+| 3 — Windows Sandbox | Toàn bộ OS | Trung bình | Cần image Pro/Enterprise | Chạy phòng sạch (clean-room) hằng đêm |
 
-### Prevent hanging tests
+### Ngăn test bị treo
 
-Add `pytest-timeout` to cap any single test. In `pytest.ini` set `timeout = 60` and `timeout_method = thread`. Note: `thread` method cannot kill Qt app subprocesses on Windows — add `atexit.register(lambda: [p.kill() for p in psutil.Process().children(recursive=True)])` in `conftest.py` to reap orphans.
+Thêm `pytest-timeout` để giới hạn thời gian của mỗi test. Trong `pytest.ini` đặt `timeout = 60` và `timeout_method = thread`. Lưu ý: phương thức `thread` không thể kill các subprocess của ứng dụng Qt trên Windows — hãy thêm `atexit.register(lambda: [p.kill() for p in psutil.Process().children(recursive=True)])` trong `conftest.py` để dọn các process mồ côi.
 
-## CI/CD Integration
+## Tích hợp CI/CD
 
 ```yaml
 # .github/workflows/e2e-desktop.yml
@@ -668,11 +661,11 @@ jobs:
           retention-days: 14
 ```
 
-## Qt Specific
+## Đặc thù của Qt
 
-### Enable UIA in Qt 5.x
+### Bật UIA trong Qt 5.x
 
-Qt 5.x accessibility is disabled by default in some builds (especially 5.7–5.14). Set the environment variable **before** launching. Qt 6.x enables accessibility by default — skip this step for Qt 6.
+Accessibility của Qt 5.x bị tắt mặc định trong một số bản build (đặc biệt 5.7–5.14). Hãy đặt biến môi trường **trước** khi khởi chạy. Qt 6.x bật accessibility theo mặc định — bỏ qua bước này với Qt 6.
 
 ```python
 # conftest.py — add at module top
@@ -680,14 +673,14 @@ import os
 os.environ["QT_ACCESSIBILITY"] = "1"
 ```
 
-Or export it in CI:
+Hoặc export trong CI:
 
 ```yaml
 env:
   QT_ACCESSIBILITY: "1"
 ```
 
-### Add Stable Identifiers to Qt Widgets
+### Thêm định danh ổn định cho Qt Widget
 
 ```cpp
 // Preferred: both objectName and accessibleName
@@ -703,7 +696,7 @@ setTestId(ui->loginButton,  "btnLogin");
 setTestId(ui->errorLabel,   "lblError");
 ```
 
-Centralise all IDs in a header to avoid typos:
+Tập trung mọi ID vào một header để tránh gõ sai:
 
 ```cpp
 // test_ids.h
@@ -713,9 +706,9 @@ Centralise all IDs in a header to avoid typos:
 #define TID_LBL_ERROR  "lblError"
 ```
 
-### Qt-Specific Quirks
+### Các điểm kỳ quặc riêng của Qt
 
-**QComboBox** — the dropdown is a separate top-level window:
+**QComboBox** — dropdown là một window top-level riêng:
 
 ```python
 from pywinauto import Desktop
@@ -730,14 +723,14 @@ def select_combo_item(page, combo_spec, item_text):
     popup.child_window(title=item_text).click_input()
 ```
 
-**QMessageBox / QDialog** — also separate top-level windows:
+**QMessageBox / QDialog** — cũng là các window top-level riêng:
 
 ```python
 dlg = page.wait_window("Confirm")          # wait for dialog title
 dlg.child_window(title="OK").click_input() # click button inside it
 ```
 
-**QTableWidget / QTableView** — row/cell access:
+**QTableWidget / QTableView** — truy cập hàng/ô:
 
 ```python
 table = page.by_id("tblUsers").wrapper_object()
@@ -745,11 +738,11 @@ cell  = table.cell(row=0, column=1)
 print(cell.window_text())
 ```
 
-**Self-drawn controls** (`paintEvent`-only, `QGraphicsView`, `QOpenGLWidget`) — UIA cannot see their internals. Use the Fallback section below.
+**Control tự vẽ** (chỉ có `paintEvent`, `QGraphicsView`, `QOpenGLWidget`) — UIA không thấy được bên trong chúng. Hãy dùng mục Fallback bên dưới.
 
-## Fallback: Screenshot Mode
+## Fallback: Chế độ Screenshot
 
-When a control is not reachable via UIA (self-drawn, third-party, game engine):
+Khi một control không truy cập được qua UIA (tự vẽ, bên thứ ba, game engine):
 
 ```bash
 pip install pyautogui Pillow opencv-python
@@ -781,19 +774,19 @@ def click_image(template_path, confidence=0.85):
     pyautogui.click(*pos)
 ```
 
-### DPI / Scaling Rules (screenshot mode only)
+### Quy tắc DPI / Scaling (chỉ áp dụng cho chế độ screenshot)
 
-Screenshot matching is brutally sensitive to Windows display scaling (100% / 125% / 150%). Three hard rules:
+Việc khớp screenshot cực kỳ nhạy cảm với display scaling của Windows (100% / 125% / 150%). Ba quy tắc cứng:
 
-1. **Capture templates at the same scale as the target machine.** Don't try to rescue a mismatch with `PIL.Image.resize` — `cv2.matchTemplate` is very fragile against resampling artefacts.
-2. **Pin the CI display scaling.** On `windows-latest` add a step like `Set-DisplayResolution 1920 1080 -Force` and disable per-monitor DPI scaling, so screenshot dimensions are reproducible.
-3. **Record the scale alongside each artefact.** On capture, write `GetDpiForWindow(hwnd) / 96` to `artifacts/<test>/metadata.json` — postmortems become obvious instead of guess-work.
+1. **Chụp template ở cùng mức scale với máy đích.** Đừng cố cứu một sự lệch bằng `PIL.Image.resize` — `cv2.matchTemplate` rất mong manh trước các artefact do resample.
+2. **Ghim (pin) display scaling của CI.** Trên `windows-latest` hãy thêm một bước như `Set-DisplayResolution 1920 1080 -Force` và tắt per-monitor DPI scaling, để kích thước screenshot tái lập được.
+3. **Ghi lại mức scale cùng với mỗi artefact.** Khi chụp, ghi `GetDpiForWindow(hwnd) / 96` vào `artifacts/<test>/metadata.json` — việc phân tích sau sự cố trở nên rõ ràng thay vì đoán mò.
 
-> Process-level DPI awareness (`SetProcessDpiAwarenessContext`) **can conflict with Qt's own DPI handling** when the app under test is Qt-based. Prefer "same-scale templates + CI pin" over flipping process-wide DPI mode in fixtures.
+> DPI awareness ở cấp process (`SetProcessDpiAwarenessContext`) **có thể xung đột với cách xử lý DPI riêng của Qt** khi ứng dụng được test dựa trên Qt. Ưu tiên "template cùng scale + ghim CI" hơn là đổi chế độ DPI toàn process trong fixture.
 
-### Debugging Match Confidence
+### Debug độ tin cậy của việc khớp (Match Confidence)
 
-When tuning the `confidence` threshold, the only sane workflow is to **see** where the match landed. The helper below is diagnosis-only — do not call it from test code.
+Khi tinh chỉnh ngưỡng `confidence`, quy trình duy nhất hợp lý là **nhìn thấy** vị trí khớp rơi vào đâu. Helper bên dưới chỉ dùng để chẩn đoán — đừng gọi nó từ code test.
 
 ```python
 def debug_match(template_path, out="artifacts/match_debug.png", confidence=0.85):
@@ -819,10 +812,10 @@ def debug_match(template_path, out="artifacts/match_debug.png", confidence=0.85)
     return mv
 ```
 
-**Use sparingly** — image matching breaks on DPI changes, theme switches, and partial occlusion.
-Always try UIA first; fall back to screenshots only for genuinely unreachable controls.
+**Dùng có chừng mực** — việc khớp ảnh sẽ hỏng khi đổi DPI, đổi theme và khi bị che một phần.
+Luôn thử UIA trước; chỉ fallback sang screenshot với các control thực sự không truy cập được.
 
-## Anti-Patterns
+## Anti-Pattern
 
 ```python
 # BAD: fixed sleep
@@ -861,7 +854,7 @@ def app(): ...
 def app(): ...
 ```
 
-## Running Tests
+## Chạy test
 
 ```bash
 # All tests
@@ -881,8 +874,8 @@ pip install pytest-repeat
 pytest tests/test_login.py --count=5 -v
 ```
 
-## Related Skills
+## Skill liên quan
 
-- `e2e-testing` — Playwright E2E for web applications
-- `cpp-testing` — C++ unit/integration testing with GoogleTest
-- `cpp-coding-standards` — C++ code style and patterns
+- `e2e-testing` — Playwright E2E cho ứng dụng web
+- `cpp-testing` — Unit/integration test C++ với GoogleTest
+- `cpp-coding-standards` — Phong cách và pattern code C++

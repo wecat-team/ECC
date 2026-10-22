@@ -1,16 +1,16 @@
-# tinystruct System and Usage Reference
+# Tham chiếu hệ thống và cách sử dụng của tinystruct
 
-## When to Use
+## Khi nào dùng
 
-Use these patterns to handle request state, manage web sessions, implement Server-Sent Events (SSE), handle file uploads, or perform outbound HTTP networking.
+Dùng các pattern này để xử lý trạng thái request, quản lý web session, triển khai Server-Sent Events (SSE), xử lý upload file, hoặc thực hiện kết nối HTTP ra bên ngoài.
 
-## How It Works
+## Cách hoạt động
 
-### Context and CLI Arguments
-`Context` is the primary data store for request-specific state. CLI flags passed as `--key value` are stored in `Context` as `"--key"`.
+### Context và tham số CLI
+`Context` là nơi lưu trữ dữ liệu chính cho trạng thái riêng của từng request. Các flag CLI truyền dạng `--key value` được lưu trong `Context` với khóa `"--key"`.
 
-### Session Management
-Pluggable architecture. Default is `MemorySessionRepository`. Configure Redis in `application.properties`:
+### Quản lý session
+Kiến trúc cắm rút (pluggable). Mặc định là `MemorySessionRepository`. Cấu hình Redis trong `application.properties`:
 ```properties
 default.session.repository=org.tinystruct.http.RedisSessionRepository
 redis.host=127.0.0.1
@@ -18,14 +18,14 @@ redis.port=6379
 ```
 
 ### Server-Sent Events (SSE)
-Built-in support for real-time push. The `HttpServer` automatically handles the SSE lifecycle when it detects the `Accept: text/event-stream` header. Connections are tracked by session ID in `SSEPushManager`.
+Hỗ trợ sẵn cho push thời gian thực. `HttpServer` tự động xử lý vòng đời SSE khi phát hiện header `Accept: text/event-stream`. Các kết nối được theo dõi theo session ID trong `SSEPushManager`.
 
-### Outbound Networking
-Use `URLRequest` and `HTTPHandler` for making HTTP requests to external services.
+### Kết nối mạng ra ngoài
+Dùng `URLRequest` và `HTTPHandler` để gửi HTTP request tới các dịch vụ bên ngoài.
 
-## Examples
+## Ví dụ
 
-### Context and CLI Arguments
+### Context và tham số CLI
 ```java
 @Action("echo")
 public String echo() {
@@ -36,7 +36,7 @@ public String echo() {
 }
 ```
 
-### Session Management
+### Quản lý session
 ```java
 @Action(value = "login", mode = Mode.HTTP_POST)
 public String login(Request<?, ?> request) {
@@ -57,7 +57,7 @@ String sessionId = getContext().getId();
 SSEPushManager.getInstance().push(sessionId, new Builder().put("msg", "hello"));
 ```
 
-### File Uploads
+### Upload file
 ```java
 import org.tinystruct.data.FileEntity;
 
@@ -73,7 +73,7 @@ public String upload(Request<?, ?> request) throws ApplicationException {
 }
 ```
 
-### Outbound HTTP
+### HTTP ra ngoài
 ```java
 import org.tinystruct.net.URLRequest;
 import org.tinystruct.net.handlers.HTTPHandler;
@@ -88,8 +88,8 @@ if (response.getStatusCode() == 200) {
 }
 ```
 
-### Event System
-Register handlers in `init()` for asynchronous task execution.
+### Hệ thống sự kiện (Event System)
+Đăng ký handler trong `init()` để thực thi tác vụ bất đồng bộ.
 ```java
 EventDispatcher.getInstance().registerHandler(MyEvent.class, event -> {
     CompletableFuture.runAsync(() -> doHeavyWork(event.getPayload()));

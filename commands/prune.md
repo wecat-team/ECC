@@ -1,28 +1,28 @@
 ---
 name: prune
-description: Delete pending instincts older than 30 days that were never promoted. Thin CLI wrapper for continuous-learning-v2's instinct-cli.py prune command; use to clean up stale pending instincts that were never reviewed or promoted.
+description: Xóa các instinct pending cũ hơn 30 ngày chưa từng được promote. Lớp bọc CLI mỏng cho lệnh prune của instinct-cli.py trong continuous-learning-v2; dùng để dọn các instinct pending cũ chưa từng được review hoặc promote.
 command: true
 ---
 
-# Prune Pending Instincts
+# Dọn dẹp Pending Instinct
 
-Remove expired pending instincts that were auto-generated but never reviewed or promoted.
+Xóa các instinct pending đã hết hạn, được tạo tự động nhưng chưa từng được review hoặc promote.
 
-## Implementation
+## Triển khai
 
-Run the instinct CLI using the plugin root path:
+Chạy instinct CLI bằng đường dẫn plugin root:
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" prune
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
+Hoặc nếu `CLAUDE_PLUGIN_ROOT` chưa được đặt (cài đặt thủ công):
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py prune
 ```
 
-## Usage
+## Cách dùng
 
 ```
 /prune                    # Delete instincts older than 30 days

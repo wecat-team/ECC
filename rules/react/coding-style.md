@@ -7,26 +7,26 @@ paths:
   - "**/hooks/**/*.ts"
   - "**/hooks/**/*.js"
 ---
-# React Coding Style
+# Coding Style React
 
-> This file extends [typescript/coding-style.md](../typescript/coding-style.md) and [common/coding-style.md](../common/coding-style.md) with React specific content.
+> File này mở rộng [typescript/coding-style.md](../typescript/coding-style.md) và [common/coding-style.md](../common/coding-style.md) với nội dung riêng cho React.
 
-## File Extensions
+## Phần mở rộng file
 
-- `.tsx` for any file containing JSX, even one-liner snippets
-- `.ts` for pure logic, custom hooks without JSX, type definitions, utilities
-- `.test.tsx` / `.test.ts` mirroring the source file
-- Use `.jsx` only when the project intentionally avoids TypeScript — flag every new untyped React file in review
+- `.tsx` cho mọi file chứa JSX, kể cả đoạn snippet một dòng
+- `.ts` cho logic thuần, custom hook không có JSX, định nghĩa type, utility
+- `.test.tsx` / `.test.ts` phản chiếu file nguồn
+- Chỉ dùng `.jsx` khi dự án chủ ý tránh TypeScript — đánh dấu mọi file React mới không có type trong review
 
-## Naming
+## Đặt tên
 
-- Components: `PascalCase` for both the symbol and the file (`UserCard.tsx`, default export `UserCard`)
-- Custom hooks: `useCamelCase` for the symbol, kebab-case for the file when the project convention is kebab-case (`use-debounce.ts` exports `useDebounce`)
-- Context: `<Domain>Context` symbol, `<Domain>Provider` provider component, `use<Domain>` consumer hook
-- Event handlers: `handleClick`, `handleSubmit` inside the component; the prop that receives it is `onClick`, `onSubmit`
-- Boolean props: `isLoading`, `hasError`, `canSubmit` — never `loading` or `error` alone for booleans
+- Component: `PascalCase` cho cả symbol lẫn tên file (`UserCard.tsx`, default export `UserCard`)
+- Custom hook: `useCamelCase` cho symbol, kebab-case cho tên file khi quy ước của dự án là kebab-case (`use-debounce.ts` export `useDebounce`)
+- Context: symbol `<Domain>Context`, provider component `<Domain>Provider`, consumer hook `use<Domain>`
+- Event handler: `handleClick`, `handleSubmit` bên trong component; prop nhận handler là `onClick`, `onSubmit`
+- Prop boolean: `isLoading`, `hasError`, `canSubmit` — không bao giờ chỉ dùng `loading` hay `error` cho boolean
 
-## Component Shape
+## Hình dạng component
 
 ```tsx
 type Props = {
@@ -43,60 +43,60 @@ export function UserCard({ user, onSelect }: Props) {
 }
 ```
 
-- Prefer `type Props = {}` for closed component prop shapes
-- Use `interface` only when the prop type is extended via declaration merging or exported as a public API extension point
-- Always destructure props in the parameter list — no `props.user` access inside the body
-- Type the return implicitly through JSX (`function Foo(): JSX.Element` only when the function returns conditionally and the union confuses inference)
+- Ưu tiên `type Props = {}` cho các prop shape đóng của component
+- Chỉ dùng `interface` khi type của prop được mở rộng qua declaration merging hoặc được export như điểm mở rộng của API công khai
+- Luôn destructure props trong danh sách tham số — không truy cập `props.user` bên trong thân hàm
+- Để type của giá trị trả về được suy ra ngầm qua JSX (`function Foo(): JSX.Element` chỉ khi hàm trả về có điều kiện và union làm việc suy luận kiểu bị rối)
 
 ## JSX
 
-- Self-close tags with no children: `<img />`, `<UserCard user={u} />`
-- Use fragments `<>...</>` over wrapper `<div>` when no DOM element is needed
-- Conditional rendering: `{condition && <Foo />}` for booleans, ternary for either/or, early return for guard clauses
-- Never put logic inline in JSX when it reads as multi-line — extract to a const above the return or a function
+- Self-close các thẻ không có children: `<img />`, `<UserCard user={u} />`
+- Dùng fragment `<>...</>` thay vì `<div>` bọc ngoài khi không cần phần tử DOM
+- Render có điều kiện: `{condition && <Foo />}` cho boolean, ternary cho trường hợp hoặc-hoặc, early return cho guard clause
+- Không bao giờ đặt logic inline trong JSX khi nó dài nhiều dòng — tách ra một const phía trên return hoặc thành một hàm
 
 ```tsx
-// Prefer
+// Nên dùng
 const greeting = user.isAdmin ? "Welcome, admin" : `Hello ${user.name}`;
 return <h1>{greeting}</h1>;
 
-// Over
+// Thay vì
 return <h1>{user.isAdmin ? "Welcome, admin" : `Hello ${user.name}`}</h1>;
 ```
 
-## Server / Client Boundary (Next.js App Router, RSC)
+## Ranh giới Server / Client (Next.js App Router, RSC)
 
-- Default a new file to Server Component — only add `"use client"` when the file uses state, effects, refs, browser APIs, or event handlers
-- Place the `"use client"` directive on line 1, before any imports
-- Never import a Client Component file from inside a `"use server"` action file
-- Never re-export server-only code through a client module — the bundler will silently include it
+- Mặc định file mới là Server Component — chỉ thêm `"use client"` khi file dùng state, effect, ref, browser API hoặc event handler
+- Đặt directive `"use client"` ở dòng 1, trước mọi import
+- Không bao giờ import một file Client Component từ bên trong file action `"use server"`
+- Không bao giờ re-export code chỉ dành cho server qua một module client — bundler sẽ âm thầm đưa nó vào bundle
 
-## Imports
+## Import
 
-- React imports first: `import { useState } from "react"`
-- Then third-party libs, then absolute project imports, then relative
-- Type-only imports: `import type { ReactNode } from "react"` — never mix runtime and type imports in one statement when ESLint's `consistent-type-imports` is configured
+- Import React trước: `import { useState } from "react"`
+- Sau đó là thư viện bên thứ ba, rồi import tuyệt đối của dự án, rồi import tương đối
+- Import chỉ có type: `import type { ReactNode } from "react"` — không bao giờ trộn import runtime và import type trong một câu lệnh khi ESLint đã cấu hình `consistent-type-imports`
 
-## Hooks Discipline
+## Kỷ luật với Hook
 
-See [hooks.md](./hooks.md) for the full ruleset. Style highlights:
+Xem [hooks.md](./hooks.md) để biết đầy đủ bộ quy tắc. Các điểm chính về style:
 
-- Custom hooks must start with `use` — enforced by `eslint-plugin-react-hooks`
-- Group all hook calls at the top of the component, before any conditional logic
-- Avoid creating ad-hoc hooks for one-line wrappers — inline the call instead
+- Custom hook phải bắt đầu bằng `use` — được `eslint-plugin-react-hooks` thực thi
+- Gom mọi lời gọi hook ở đầu component, trước mọi logic có điều kiện
+- Tránh tạo hook ad-hoc chỉ để bọc một dòng — hãy inline lời gọi
 
 ## State
 
-- Local first (`useState`), lift only when shared
-- Context for cross-cutting state read by many components (theme, auth, i18n) — not for high-frequency updates
-- External store (Zustand, Jotai, Redux Toolkit) when state must persist across route changes, sync across tabs, or be debugged via devtools
-- Never duplicate state that can be derived — compute during render
+- Ưu tiên local trước (`useState`), chỉ nâng lên (lift) khi cần chia sẻ
+- Context dành cho state xuyên suốt được nhiều component đọc (theme, auth, i18n) — không dùng cho cập nhật tần suất cao
+- External store (Zustand, Jotai, Redux Toolkit) khi state phải tồn tại qua các lần đổi route, đồng bộ giữa các tab, hoặc cần debug qua devtools
+- Không bao giờ nhân đôi state có thể suy ra được — hãy tính toán trong lúc render
 
-## Class Components
+## Class Component
 
-Forbidden in new code. Convert legacy class components to function components when touching them for non-trivial changes.
+Cấm trong code mới. Hãy chuyển class component cũ sang function component khi chạm vào chúng để thay đổi không nhỏ.
 
-## File Layout per Component
+## Bố cục file cho mỗi component
 
 ```
 components/UserCard/
@@ -106,4 +106,4 @@ components/UserCard/
   index.ts              # re-export only
 ```
 
-Inline single-file components are fine for trivial presentational pieces.
+Component một file inline là chấp nhận được đối với các phần trình bày đơn giản.

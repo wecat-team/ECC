@@ -1,37 +1,37 @@
 ---
 name: laravel-patterns
-description: Laravel architecture patterns, routing/controllers, Eloquent ORM, service layers, queues, events, caching, and API resources for production apps. Use when building or reviewing Laravel apps — controllers, Eloquent, service layers, queues, or API resources.
+description: "Các pattern kiến trúc Laravel, routing/controller, Eloquent ORM, service layer, queue, event, caching và API resource cho ứng dụng production. Dùng khi xây dựng hoặc review ứng dụng Laravel — controller, Eloquent, service layer, queue hoặc API resource."
 metadata:
   origin: ECC
 ---
 
-# Laravel Development Patterns
+# Các pattern phát triển Laravel
 
-Production-grade Laravel architecture patterns for scalable, maintainable applications.
+Các pattern kiến trúc Laravel chuẩn production cho ứng dụng có khả năng mở rộng và dễ bảo trì.
 
-## When to Use
+## Khi nào dùng
 
-- Building Laravel web applications or APIs
-- Structuring controllers, services, and domain logic
-- Working with Eloquent models and relationships
-- Designing APIs with resources and pagination
-- Adding queues, events, caching, and background jobs
+- Xây dựng ứng dụng web hoặc API Laravel
+- Cấu trúc controller, service và logic domain
+- Làm việc với Eloquent model và quan hệ (relationship)
+- Thiết kế API với resource và pagination
+- Thêm queue, event, caching và background job
 
-## How It Works
+## Cách hoạt động
 
-- Structure the app around clear boundaries (controllers -> services/actions -> models).
-- Use explicit bindings and scoped bindings to keep routing predictable; still enforce authorization for access control.
-- Favor typed models, casts, and scopes to keep domain logic consistent.
-- Keep IO-heavy work in queues and cache expensive reads.
-- Centralize config in `config/*` and keep environments explicit.
+- Cấu trúc ứng dụng xoay quanh các ranh giới rõ ràng (controllers -> services/actions -> models).
+- Dùng binding tường minh và scoped binding để routing dễ dự đoán; vẫn phải thực thi authorization để kiểm soát truy cập.
+- Ưu tiên model có kiểu, cast và scope để logic domain nhất quán.
+- Đưa công việc nặng về IO vào queue và cache các lần đọc tốn kém.
+- Tập trung config trong `config/*` và giữ các môi trường tường minh.
 
-## Examples
+## Ví dụ
 
-### Project Structure
+### Cấu trúc dự án
 
-Use a conventional Laravel layout with clear layer boundaries (HTTP, services/actions, models).
+Dùng bố cục Laravel quy ước với ranh giới các tầng rõ ràng (HTTP, services/actions, models).
 
-### Recommended Layout
+### Bố cục khuyến nghị
 
 ```
 app/
@@ -66,7 +66,7 @@ routes/
 
 ### Controllers -> Services -> Actions
 
-Keep controllers thin. Put orchestration in services and single-purpose logic in actions.
+Giữ controller mỏng. Đặt phần điều phối vào service và logic đơn mục đích vào action.
 
 ```php
 final class CreateOrderAction
@@ -97,9 +97,9 @@ final class OrdersController extends Controller
 }
 ```
 
-### Routing and Controllers
+### Routing và Controller
 
-Prefer route-model binding and resource controllers for clarity.
+Ưu tiên route-model binding và resource controller cho rõ ràng.
 
 ```php
 use Illuminate\Support\Facades\Route;
@@ -111,7 +111,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 ### Route Model Binding (Scoped)
 
-Use scoped bindings to prevent cross-tenant access.
+Dùng scoped binding để ngăn truy cập chéo giữa các tenant (cross-tenant).
 
 ```php
 Route::scopeBindings()->group(function () {
@@ -119,11 +119,11 @@ Route::scopeBindings()->group(function () {
 });
 ```
 
-### Nested Routes and Binding Names
+### Route lồng nhau và tên Binding
 
-- Keep prefixes and paths consistent to avoid double nesting (e.g., `conversation` vs `conversations`).
-- Use a single parameter name that matches the bound model (e.g., `{conversation}` for `Conversation`).
-- Prefer scoped bindings when nesting to enforce parent-child relationships.
+- Giữ prefix và path nhất quán để tránh lồng đôi (ví dụ: `conversation` so với `conversations`).
+- Dùng một tên tham số duy nhất khớp với model được bind (ví dụ: `{conversation}` cho `Conversation`).
+- Ưu tiên scoped binding khi lồng route để thực thi quan hệ cha-con.
 
 ```php
 use App\Http\Controllers\Api\ConversationController;
@@ -146,7 +146,7 @@ Route::middleware('auth:sanctum')->prefix('conversations')->group(function () {
 });
 ```
 
-If you want a parameter to resolve to a different model class, define explicit binding. For custom binding logic, use `Route::bind()` or implement `resolveRouteBinding()` on the model.
+Nếu muốn một tham số resolve sang một class model khác, hãy định nghĩa binding tường minh. Với logic binding tùy chỉnh, dùng `Route::bind()` hoặc triển khai `resolveRouteBinding()` trên model.
 
 ```php
 use App\Models\AiConversation;
@@ -155,9 +155,9 @@ use Illuminate\Support\Facades\Route;
 Route::model('conversation', AiConversation::class);
 ```
 
-### Service Container Bindings
+### Binding của Service Container
 
-Bind interfaces to implementations in a service provider for clear dependency wiring.
+Bind interface với phần triển khai trong service provider để wiring dependency rõ ràng.
 
 ```php
 use App\Repositories\EloquentOrderRepository;
@@ -173,9 +173,9 @@ final class AppServiceProvider extends ServiceProvider
 }
 ```
 
-### Eloquent Model Patterns
+### Các pattern Eloquent Model
 
-### Model Configuration
+### Cấu hình Model
 
 ```php
 final class Project extends Model
@@ -201,9 +201,9 @@ final class Project extends Model
 }
 ```
 
-### Custom Casts and Value Objects
+### Custom Cast và Value Object
 
-Use enums or value objects for strict typing.
+Dùng enum hoặc value object để định kiểu chặt chẽ.
 
 ```php
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -223,7 +223,7 @@ protected function budgetCents(): Attribute
 }
 ```
 
-### Eager Loading to Avoid N+1
+### Eager Loading để tránh N+1
 
 ```php
 $orders = Order::query()
@@ -232,7 +232,7 @@ $orders = Order::query()
     ->paginate(25);
 ```
 
-### Query Objects for Complex Filters
+### Query Object cho các bộ lọc phức tạp
 
 ```php
 final class ProjectQuery
@@ -260,10 +260,10 @@ final class ProjectQuery
 }
 ```
 
-### Global Scopes and Soft Deletes
+### Global Scope và Soft Delete
 
-Use global scopes for default filtering and `SoftDeletes` for recoverable records.
-Use either a global scope or a named scope for the same filter, not both, unless you intend layered behavior.
+Dùng global scope cho lọc mặc định và `SoftDeletes` cho các bản ghi có thể khôi phục.
+Dùng global scope hoặc named scope cho cùng một bộ lọc, không dùng cả hai, trừ khi bạn chủ ý muốn hành vi nhiều lớp.
 
 ```php
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -282,7 +282,7 @@ final class Project extends Model
 }
 ```
 
-### Query Scopes for Reusable Filters
+### Query Scope cho bộ lọc tái sử dụng
 
 ```php
 use Illuminate\Database\Eloquent\Builder;
@@ -299,7 +299,7 @@ final class Project extends Model
 $projects = Project::ownedBy($user->id)->get();
 ```
 
-### Transactions for Multi-Step Updates
+### Transaction cho cập nhật nhiều bước
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -310,15 +310,15 @@ DB::transaction(function (): void {
 });
 ```
 
-### Migrations
+### Migration
 
-### Naming Convention
+### Quy ước đặt tên
 
-- File names use timestamps: `YYYY_MM_DD_HHMMSS_create_users_table.php`
-- Migrations use anonymous classes (no named class); the filename communicates intent
-- Table names are `snake_case` and plural by default
+- Tên file dùng timestamp: `YYYY_MM_DD_HHMMSS_create_users_table.php`
+- Migration dùng anonymous class (không đặt tên class); tên file thể hiện mục đích
+- Tên bảng mặc định là `snake_case` và ở dạng số nhiều
 
-### Example Migration
+### Ví dụ Migration
 
 ```php
 use Illuminate\Database\Migrations\Migration;
@@ -345,9 +345,9 @@ return new class extends Migration
 };
 ```
 
-### Form Requests and Validation
+### Form Request và Validation
 
-Keep validation in form requests and transform inputs to DTOs.
+Giữ validation trong form request và chuyển đầu vào thành DTO.
 
 ```php
 use App\Models\Order;
@@ -379,9 +379,9 @@ final class StoreOrderRequest extends FormRequest
 }
 ```
 
-### API Resources
+### API Resource
 
-Keep API responses consistent with resources and pagination.
+Giữ API response nhất quán bằng resource và pagination.
 
 ```php
 $projects = Project::query()->active()->paginate(25);
@@ -398,19 +398,19 @@ return response()->json([
 ]);
 ```
 
-### Events, Jobs, and Queues
+### Event, Job và Queue
 
-- Emit domain events for side effects (emails, analytics)
-- Use queued jobs for slow work (reports, exports, webhooks)
-- Prefer idempotent handlers with retries and backoff
+- Phát domain event cho các side effect (email, analytics)
+- Dùng queued job cho công việc chậm (báo cáo, export, webhook)
+- Ưu tiên handler idempotent có retry và backoff
 
 ### Caching
 
-- Cache read-heavy endpoints and expensive queries
-- Invalidate caches on model events (created/updated/deleted)
-- Use tags when caching related data for easy invalidation
+- Cache các endpoint đọc nhiều và các query tốn kém
+- Vô hiệu hóa cache theo model event (created/updated/deleted)
+- Dùng tag khi cache dữ liệu liên quan để dễ vô hiệu hóa
 
-### Configuration and Environments
+### Cấu hình và môi trường
 
-- Keep secrets in `.env` and config in `config/*.php`
-- Use per-environment config overrides and `config:cache` in production
+- Giữ secret trong `.env` và config trong `config/*.php`
+- Dùng override config theo từng môi trường và `config:cache` trong production

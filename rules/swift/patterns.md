@@ -3,13 +3,13 @@ paths:
   - "**/*.swift"
   - "**/Package.swift"
 ---
-# Swift Patterns
+# Pattern Swift
 
-> This file extends [common/patterns.md](../common/patterns.md) with Swift specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung riêng cho Swift.
 
-## Protocol-Oriented Design
+## Thiết kế hướng Protocol
 
-Define small, focused protocols. Use protocol extensions for shared defaults:
+Định nghĩa các protocol nhỏ, tập trung. Dùng protocol extension cho các mặc định dùng chung:
 
 ```swift
 protocol Repository: Sendable {
@@ -19,10 +19,10 @@ protocol Repository: Sendable {
 }
 ```
 
-## Value Types
+## Value Type
 
-- Use structs for data transfer objects and models
-- Use enums with associated values to model distinct states:
+- Dùng struct cho data transfer object và model
+- Dùng enum với associated value để mô hình hóa các trạng thái riêng biệt:
 
 ```swift
 enum LoadState<T: Sendable>: Sendable {
@@ -35,7 +35,7 @@ enum LoadState<T: Sendable>: Sendable {
 
 ## Actor Pattern
 
-Use actors for shared mutable state instead of locks or dispatch queues:
+Dùng actor cho shared mutable state thay vì lock hoặc dispatch queue:
 
 ```swift
 actor Cache<Key: Hashable & Sendable, Value: Sendable> {
@@ -48,7 +48,7 @@ actor Cache<Key: Hashable & Sendable, Value: Sendable> {
 
 ## Dependency Injection
 
-Inject protocols with default parameters — production uses defaults, tests inject mocks:
+Inject protocol với tham số mặc định — production dùng mặc định, test inject mock:
 
 ```swift
 struct UserService {
@@ -60,7 +60,7 @@ struct UserService {
 }
 ```
 
-## References
+## Tham chiếu
 
-See skill: `swift-actor-persistence` for actor-based persistence patterns.
-See skill: `swift-protocol-di-testing` for protocol-based DI and testing.
+Xem skill: `swift-actor-persistence` để biết các pattern persistence dựa trên actor.
+Xem skill: `swift-protocol-di-testing` để biết DI và kiểm thử dựa trên protocol.

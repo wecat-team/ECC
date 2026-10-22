@@ -1,71 +1,71 @@
 ---
 name: coding-standards
-description: Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns. Use when reviewing code quality or naming with no framework-specific skill that applies.
+description: Các convention coding nền tảng dùng chung cho nhiều dự án về đặt tên, độ dễ đọc, tính bất biến (immutable) và review chất lượng code. Dùng các skill frontend hoặc backend chi tiết cho pattern đặc thù framework. Dùng khi review chất lượng code hoặc đặt tên mà không có skill đặc thù framework nào áp dụng.
 metadata:
   origin: ECC
 ---
 
-# Coding Standards & Best Practices
+# Coding Standards & Best Practice
 
-Baseline coding conventions applicable across projects.
+Các convention coding nền tảng áp dụng cho nhiều dự án.
 
-This skill is the shared floor, not the detailed framework playbook.
+Skill này là nền chung, không phải playbook chi tiết cho từng framework.
 
-- Use `frontend-patterns` for React, state, forms, rendering, and UI architecture.
-- Use `backend-patterns` or `api-design` for repository/service layers, endpoint design, validation, and server-specific concerns.
-- Use `rules/common/coding-style.md` when you need the shortest reusable rule layer instead of a full skill walkthrough.
+- Dùng `frontend-patterns` cho React, state, form, rendering và kiến trúc UI.
+- Dùng `backend-patterns` hoặc `api-design` cho các lớp repository/service, thiết kế endpoint, validation và các mối quan tâm đặc thù của server.
+- Dùng `rules/common/coding-style.md` khi bạn cần lớp rule tái sử dụng ngắn nhất thay vì một walkthrough skill đầy đủ.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Starting a new project or module
-- Reviewing code for quality and maintainability
-- Refactoring existing code to follow conventions
-- Enforcing naming, formatting, or structural consistency
-- Setting up linting, formatting, or type-checking rules
-- Onboarding new contributors to coding conventions
+- Bắt đầu một dự án hoặc module mới
+- Review code về chất lượng và khả năng bảo trì
+- Refactor code hiện có để tuân theo convention
+- Thực thi sự nhất quán về đặt tên, định dạng hoặc cấu trúc
+- Thiết lập các rule về linting, formatting hoặc type-checking
+- Onboard contributor mới vào các coding convention
 
-## Scope Boundaries
+## Phạm vi
 
-Activate this skill for:
-- descriptive naming
-- immutability defaults
-- readability, KISS, DRY, and YAGNI enforcement
-- error-handling expectations and code-smell review
+Kích hoạt skill này cho:
+- đặt tên có tính mô tả
+- mặc định bất biến (immutable)
+- thực thi độ dễ đọc, KISS, DRY và YAGNI
+- kỳ vọng về xử lý lỗi và review code smell
 
-Do not use this skill as the primary source for:
-- React composition, hooks, or rendering patterns
-- backend architecture, API design, or database layering
-- domain-specific framework guidance when a narrower ECC skill already exists
+KHÔNG dùng skill này làm nguồn chính cho:
+- composition, hook hoặc pattern rendering của React
+- kiến trúc backend, thiết kế API hoặc phân lớp database
+- hướng dẫn riêng theo domain của framework khi đã có một skill ECC hẹp hơn
 
-## Code Quality Principles
+## Nguyên tắc chất lượng code
 
-### 1. Readability First
-- Code is read more than written
-- Clear variable and function names
-- Self-documenting code preferred over comments
-- Consistent formatting
+### 1. Ưu tiên độ dễ đọc
+- Code được đọc nhiều hơn được viết
+- Tên biến và hàm rõ ràng
+- Ưu tiên code tự giải thích hơn comment
+- Định dạng nhất quán
 
 ### 2. KISS (Keep It Simple, Stupid)
-- Simplest solution that works
-- Avoid over-engineering
-- No premature optimization
-- Easy to understand > clever code
+- Giải pháp đơn giản nhất mà hoạt động
+- Tránh over-engineering
+- Không tối ưu hóa sớm
+- Dễ hiểu > code thông minh
 
 ### 3. DRY (Don't Repeat Yourself)
-- Extract common logic into functions
-- Create reusable components
-- Share utilities across modules
-- Avoid copy-paste programming
+- Tách logic chung ra thành hàm
+- Tạo các component tái sử dụng được
+- Chia sẻ utility giữa các module
+- Tránh lập trình copy-paste
 
 ### 4. YAGNI (You Aren't Gonna Need It)
-- Don't build features before they're needed
-- Avoid speculative generality
-- Add complexity only when required
-- Start simple, refactor when needed
+- Không xây dựng tính năng trước khi cần
+- Tránh tính tổng quát mang tính suy đoán
+- Chỉ thêm độ phức tạp khi cần thiết
+- Bắt đầu đơn giản, refactor khi cần
 
-## TypeScript/JavaScript Standards
+## Tiêu chuẩn TypeScript/JavaScript
 
-### Variable Naming
+### Đặt tên biến
 
 ```typescript
 // PASS: GOOD: Descriptive names
@@ -79,7 +79,7 @@ const flag = true
 const x = 1000
 ```
 
-### Function Naming
+### Đặt tên hàm
 
 ```typescript
 // PASS: GOOD: Verb-noun pattern
@@ -93,7 +93,7 @@ function similarity(a, b) { }
 function email(e) { }
 ```
 
-### Immutability Pattern (CRITICAL)
+### Pattern bất biến (Immutability) (CRITICAL)
 
 ```typescript
 // PASS: ALWAYS use spread operator
@@ -109,7 +109,7 @@ user.name = 'New Name'  // BAD
 items.push(newItem)     // BAD
 ```
 
-### Error Handling
+### Xử lý lỗi
 
 ```typescript
 // PASS: GOOD: Comprehensive error handling
@@ -135,7 +135,7 @@ async function fetchData(url) {
 }
 ```
 
-### Async/Await Best Practices
+### Best practice cho Async/Await
 
 ```typescript
 // PASS: GOOD: Parallel execution when possible
@@ -151,7 +151,7 @@ const markets = await fetchMarkets()
 const stats = await fetchStats()
 ```
 
-### Type Safety
+### An toàn kiểu (Type Safety)
 
 ```typescript
 // PASS: GOOD: Proper types
@@ -172,9 +172,9 @@ function getMarket(id: any): Promise<any> {
 }
 ```
 
-## React Best Practices
+## Best practice cho React
 
-### Component Structure
+### Cấu trúc component
 
 ```typescript
 // PASS: GOOD: Functional component with types
@@ -208,7 +208,7 @@ export function Button(props) {
 }
 ```
 
-### Custom Hooks
+### Custom Hook
 
 ```typescript
 // PASS: GOOD: Reusable custom hook
@@ -230,7 +230,7 @@ export function useDebounce<T>(value: T, delay: number): T {
 const debouncedQuery = useDebounce(searchQuery, 500)
 ```
 
-### State Management
+### Quản lý state
 
 ```typescript
 // PASS: GOOD: Proper state updates
@@ -255,9 +255,9 @@ setCount(count + 1)  // Can be stale in async scenarios
 {isLoading ? <Spinner /> : error ? <ErrorMessage error={error} /> : data ? <DataDisplay data={data} /> : null}
 ```
 
-## API Design Standards
+## Tiêu chuẩn thiết kế API
 
-### REST API Conventions
+### Convention REST API
 
 ```
 GET    /api/markets              # List all markets
@@ -271,7 +271,7 @@ DELETE /api/markets/:id          # Delete market
 GET /api/markets?status=active&limit=10&offset=0
 ```
 
-### Response Format
+### Định dạng response
 
 ```typescript
 // PASS: GOOD: Consistent response structure
@@ -300,7 +300,7 @@ return NextResponse.json({
 }, { status: 400 })
 ```
 
-### Input Validation
+### Kiểm tra đầu vào (Input Validation)
 
 ```typescript
 import { z } from 'zod'
@@ -331,9 +331,9 @@ export async function POST(request: Request) {
 }
 ```
 
-## File Organization
+## Tổ chức file
 
-### Project Structure
+### Cấu trúc dự án
 
 ```
 src/
@@ -354,7 +354,7 @@ src/
 └── styles/              # Global styles
 ```
 
-### File Naming
+### Đặt tên file
 
 ```
 components/Button.tsx          # PascalCase for components
@@ -363,9 +363,9 @@ lib/formatDate.ts             # camelCase for utilities
 types/market.types.ts         # camelCase with .types suffix
 ```
 
-## Comments & Documentation
+## Comment & Tài liệu
 
-### When to Comment
+### Khi nào nên comment
 
 ```typescript
 // PASS: GOOD: Explain WHY, not WHAT
@@ -383,7 +383,7 @@ count++
 name = user.name
 ```
 
-### JSDoc for Public APIs
+### JSDoc cho Public API
 
 ```typescript
 /**
@@ -408,7 +408,7 @@ export async function searchMarkets(
 }
 ```
 
-## Performance Best Practices
+## Best practice về hiệu năng
 
 ### Memoization
 
@@ -444,7 +444,7 @@ export function Dashboard() {
 }
 ```
 
-### Database Queries
+### Database Query
 
 ```typescript
 // PASS: GOOD: Select only needed columns
@@ -459,9 +459,9 @@ const { data } = await supabase
   .select('*')
 ```
 
-## Testing Standards
+## Tiêu chuẩn Testing
 
-### Test Structure (AAA Pattern)
+### Cấu trúc test (Pattern AAA)
 
 ```typescript
 test('calculates similarity correctly', () => {
@@ -477,7 +477,7 @@ test('calculates similarity correctly', () => {
 })
 ```
 
-### Test Naming
+### Đặt tên test
 
 ```typescript
 // PASS: GOOD: Descriptive test names
@@ -490,11 +490,11 @@ test('works', () => { })
 test('test search', () => { })
 ```
 
-## Code Smell Detection
+## Phát hiện Code Smell
 
-Watch for these anti-patterns:
+Hãy chú ý các anti-pattern sau:
 
-### 1. Long Functions
+### 1. Hàm quá dài
 ```typescript
 // FAIL: BAD: Function > 50 lines
 function processMarketData() {
@@ -509,7 +509,7 @@ function processMarketData() {
 }
 ```
 
-### 2. Deep Nesting
+### 2. Lồng nhau quá sâu
 ```typescript
 // FAIL: BAD: 5+ levels of nesting
 if (user) {
@@ -534,7 +534,7 @@ if (!hasPermission) return
 // Do something
 ```
 
-### 3. Magic Numbers
+### 3. Magic Number
 ```typescript
 // FAIL: BAD: Unexplained numbers
 if (retryCount > 3) { }
@@ -548,4 +548,4 @@ if (retryCount > MAX_RETRIES) { }
 setTimeout(callback, DEBOUNCE_DELAY_MS)
 ```
 
-**Remember**: Code quality is not negotiable. Clear, maintainable code enables rapid development and confident refactoring.
+**Hãy nhớ**: Chất lượng code là không thể thương lượng. Code rõ ràng, dễ bảo trì giúp phát triển nhanh và refactor tự tin.

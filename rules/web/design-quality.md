@@ -10,66 +10,66 @@ paths:
   - "**/*.vue"
   - "**/*.svelte"
 ---
-> This file extends [common/patterns.md](../common/patterns.md) with web-specific design-quality guidance.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với hướng dẫn chất lượng thiết kế riêng cho web.
 
-# Web Design Quality Standards
+# Tiêu chuẩn chất lượng thiết kế Web
 
-## Anti-Template Policy
+## Chính sách chống Template
 
-Do not ship generic template-looking UI. Frontend output should look intentional, opinionated, and specific to the product.
+Không phát hành UI trông như template chung chung. Output frontend phải trông có chủ đích, có chính kiến và đặc thù cho sản phẩm.
 
-### Banned Patterns
+### Các pattern bị cấm
 
-- Default card grids with uniform spacing and no hierarchy
-- Stock hero section with centered headline, gradient blob, and generic CTA
-- Unmodified library defaults passed off as finished design
-- Flat layouts with no layering, depth, or motion
-- Uniform radius, spacing, and shadows across every component
-- Safe gray-on-white styling with one decorative accent color
-- Dashboard-by-numbers layouts with sidebar + cards + charts and no point of view
-- Default font stacks used without a deliberate reason
+- Lưới card mặc định với khoảng cách đồng đều và không có thứ bậc
+- Hero section kiểu có sẵn với headline căn giữa, gradient blob và CTA chung chung
+- Mặc định của thư viện không chỉnh sửa mà được coi như thiết kế hoàn chỉnh
+- Layout phẳng không có lớp (layering), chiều sâu hay chuyển động
+- Bo góc, khoảng cách và đổ bóng đồng nhất trên mọi component
+- Phong cách xám-trên-trắng an toàn với một màu nhấn trang trí
+- Layout dashboard làm theo công thức với sidebar + card + biểu đồ và không có quan điểm riêng
+- Font stack mặc định được dùng mà không có lý do cân nhắc
 
-### Required Qualities
+### Các phẩm chất bắt buộc
 
-Every meaningful frontend surface should demonstrate at least four of these:
+Mỗi bề mặt frontend có ý nghĩa nên thể hiện ít nhất bốn trong số các điểm sau:
 
-1. Clear hierarchy through scale contrast
-2. Intentional rhythm in spacing, not uniform padding everywhere
-3. Depth or layering through overlap, shadows, surfaces, or motion
-4. Typography with character and a real pairing strategy
-5. Color used semantically, not just decoratively
-6. Hover, focus, and active states that feel designed
-7. Grid-breaking editorial or bento composition where appropriate
-8. Texture, grain, or atmosphere when it fits the visual direction
-9. Motion that clarifies flow instead of distracting from it
-10. Data visualization treated as part of the design system, not an afterthought
+1. Thứ bậc rõ ràng thông qua tương phản về tỷ lệ (scale)
+2. Nhịp điệu khoảng cách có chủ đích, không phải padding đồng đều ở mọi nơi
+3. Chiều sâu hoặc lớp thông qua chồng lấp, đổ bóng, bề mặt hoặc chuyển động
+4. Typography có cá tính và chiến lược phối font thực sự
+5. Màu sắc được dùng có ngữ nghĩa, không chỉ để trang trí
+6. Trạng thái hover, focus và active có cảm giác được thiết kế
+7. Bố cục editorial hoặc bento phá lưới khi phù hợp
+8. Texture, grain hoặc bầu không khí khi hợp với định hướng thị giác
+9. Chuyển động làm rõ luồng thay vì gây xao nhãng
+10. Trực quan hóa dữ liệu được xem là một phần của design system, không phải việc nghĩ sau
 
-## Before Writing Frontend Code
+## Trước khi viết code Frontend
 
-1. Pick a specific style direction. Avoid vague defaults like "clean minimal".
-2. Define a palette intentionally.
-3. Choose typography deliberately.
-4. Gather at least a small set of real references.
-5. Use ECC design/frontend skills where relevant.
+1. Chọn một định hướng phong cách cụ thể. Tránh các mặc định mơ hồ như "clean minimal".
+2. Định nghĩa bảng màu có chủ đích.
+3. Chọn typography một cách cân nhắc.
+4. Thu thập ít nhất một tập nhỏ tham chiếu thực tế.
+5. Dùng các skill thiết kế/frontend của ECC khi liên quan.
 
-## Worthwhile Style Directions
+## Các định hướng phong cách đáng cân nhắc
 
 - Editorial / magazine
 - Neo-brutalism
-- Glassmorphism with real depth
-- Dark luxury or light luxury with disciplined contrast
-- Bento layouts
+- Glassmorphism với chiều sâu thực sự
+- Dark luxury hoặc light luxury với độ tương phản có kỷ luật
+- Layout bento
 - Scrollytelling
-- 3D integration
+- Tích hợp 3D
 - Swiss / International
 - Retro-futurism
 
-Do not default to dark mode automatically. Choose the visual direction the product actually wants.
+Đừng mặc định chuyển sang dark mode. Hãy chọn định hướng thị giác mà sản phẩm thực sự cần.
 
-## Component Checklist
+## Checklist cho Component
 
-- [ ] Does it avoid looking like a default Tailwind or shadcn template?
-- [ ] Does it have intentional hover/focus/active states?
-- [ ] Does it use hierarchy rather than uniform emphasis?
-- [ ] Would this look believable in a real product screenshot?
-- [ ] If it supports both themes, do both light and dark feel intentional?
+- [ ] Nó có tránh trông như một template Tailwind hay shadcn mặc định không?
+- [ ] Nó có các trạng thái hover/focus/active có chủ đích không?
+- [ ] Nó có dùng thứ bậc thay vì nhấn mạnh đồng đều không?
+- [ ] Nó có trông đáng tin trong ảnh chụp màn hình sản phẩm thật không?
+- [ ] Nếu hỗ trợ cả hai theme, cả light và dark có cảm giác có chủ đích không?

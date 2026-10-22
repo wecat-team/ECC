@@ -1,23 +1,23 @@
 ---
-description: Sync epic issue bodies, labels, and local coordination snapshots from GitHub.
+description: Đồng bộ nội dung epic issue, label và snapshot điều phối cục bộ từ GitHub.
 ---
 
 # /epic-sync
 
-Run a deterministic sync for epic issues.
+Chạy một lần đồng bộ xác định (deterministic) cho các epic issue.
 
 ```bash
 node scripts/github-coordination.js sync --repo <owner/repo>
 ```
 
-What this does:
+Việc này làm gì:
 
-1. Reads issue bodies as the canonical epic state.
-2. Reconciles the coordination block with labels.
-3. Writes a fresh local snapshot for each epic issue.
-4. Keeps the SQLite cache aligned with GitHub.
+1. Đọc nội dung issue làm trạng thái epic chuẩn.
+2. Đối chiếu khối điều phối với các label.
+3. Ghi một snapshot cục bộ mới cho từng epic issue.
+4. Giữ cache SQLite khớp với GitHub.
 
-Compatibility aliases:
+Alias tương thích:
 
 - `/projects`
 - `/work-items sync-github`

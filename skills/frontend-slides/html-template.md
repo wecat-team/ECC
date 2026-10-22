@@ -1,8 +1,8 @@
-# HTML Presentation Template
+# Template bài thuyết trình HTML
 
-Reference architecture for generating slide presentations. Every presentation follows this structure.
+Kiến trúc tham chiếu để tạo bài thuyết trình dạng slide. Mọi bài thuyết trình đều theo cấu trúc này.
 
-## Base HTML Structure
+## Cấu trúc HTML cơ bản
 
 ```html
 <!DOCTYPE html>
@@ -159,42 +159,42 @@ Reference architecture for generating slide presentations. Every presentation fo
 </html>
 ```
 
-## Required JavaScript Features
+## Tính năng JavaScript bắt buộc
 
-Every presentation must include:
+Mọi bài thuyết trình phải bao gồm:
 
-1. **SlidePresentation Class** — Main controller with:
-   - Keyboard navigation (arrows, space, page up/down)
-   - Touch/swipe support
-   - Mouse wheel navigation
-   - Progress bar updates
-   - Navigation dots
+1. **Class SlidePresentation** — Controller chính với:
+   - Điều hướng bằng bàn phím (phím mũi tên, space, page up/down)
+   - Hỗ trợ touch/swipe
+   - Điều hướng bằng wheel chuột
+   - Cập nhật thanh tiến độ
+   - Các chấm điều hướng
 
-2. **Intersection Observer** — For scroll-triggered animations:
-   - Add `.visible` class when slides enter viewport
-   - Trigger CSS transitions efficiently
+2. **Intersection Observer** — Cho animation kích hoạt khi cuộn:
+   - Thêm class `.visible` khi slide đi vào viewport
+   - Kích hoạt CSS transition một cách hiệu quả
 
-3. **Optional Enhancements** (match to chosen style):
-   - Custom cursor with trail
-   - Particle system background (canvas)
-   - Parallax effects
-   - 3D tilt on hover
-   - Magnetic buttons
-   - Counter animations
+3. **Tính năng tăng cường tùy chọn** (khớp với phong cách đã chọn):
+   - Con trỏ tùy chỉnh có vệt đuôi
+   - Nền hệ thống hạt (canvas)
+   - Hiệu ứng parallax
+   - 3D tilt khi hover
+   - Nút từ tính (magnetic)
+   - Animation bộ đếm
 
-4. **Inline Editing** (only if user opted in during Phase 1 — skip entirely if they said No):
-   - Edit toggle button (hidden by default, revealed via hover hotzone or `E` key)
-   - Auto-save to localStorage
-   - Export/save file functionality
-   - See "Inline Editing Implementation" section below
+4. **Chỉnh sửa Inline** (chỉ khi người dùng chọn dùng ở Phase 1 — bỏ qua hoàn toàn nếu họ trả lời Không):
+   - Nút bật/tắt chỉnh sửa (ẩn mặc định, hiện qua vùng hotzone khi hover hoặc phím `E`)
+   - Tự động lưu vào localStorage
+   - Chức năng export/lưu file
+   - Xem phần "Triển khai Chỉnh sửa Inline" bên dưới
 
-## Inline Editing Implementation (Opt-In Only)
+## Triển khai Chỉnh sửa Inline (Chỉ khi người dùng chọn dùng)
 
-**If the user chose "No" for inline editing in Phase 1, do NOT generate any edit-related HTML, CSS, or JS.**
+**Nếu người dùng chọn "No" cho chỉnh sửa inline ở Phase 1, KHÔNG tạo bất kỳ HTML, CSS hay JS nào liên quan đến chỉnh sửa.**
 
-**Do NOT use CSS `~` sibling selector for hover-based show/hide.** The CSS-only approach (`edit-hotzone:hover ~ .edit-toggle`) fails because `pointer-events: none` on the toggle button breaks the hover chain: user hovers hotzone -> button becomes visible -> mouse moves toward button -> leaves hotzone -> button disappears before click.
+**KHÔNG dùng CSS selector anh em `~` để hiện/ẩn dựa trên hover.** Cách chỉ dùng CSS (`edit-hotzone:hover ~ .edit-toggle`) thất bại vì `pointer-events: none` trên nút toggle làm đứt chuỗi hover: người dùng hover hotzone -> nút hiện ra -> chuột di chuyển về phía nút -> rời khỏi hotzone -> nút biến mất trước khi kịp click.
 
-**Required approach: JS-based hover with 400ms delay timeout.**
+**Cách tiếp cận bắt buộc: hover dựa trên JS với timeout trễ 400ms.**
 
 HTML:
 
@@ -203,7 +203,7 @@ HTML:
 <button class="edit-toggle" id="editToggle" title="Edit mode (E)">Edit</button>
 ```
 
-CSS (visibility controlled by JS classes only):
+CSS (hiển thị chỉ được điều khiển bằng các class do JS thêm):
 
 ```css
 /* Do NOT use CSS ~ sibling selector for this!
@@ -231,7 +231,7 @@ CSS (visibility controlled by JS classes only):
 }
 ```
 
-JS (three interaction methods):
+JS (ba cách tương tác):
 
 ```javascript
 // 1. Click handler on the toggle button
@@ -278,14 +278,14 @@ document.addEventListener("keydown", (e) => {
 });
 ```
 
-**CRITICAL: `exportFile()` must strip edit state before capturing outerHTML.**
+**QUAN TRỌNG: `exportFile()` phải gỡ trạng thái chỉnh sửa trước khi lấy outerHTML.**
 
-When the user presses Ctrl+S in edit mode, `document.documentElement.outerHTML` captures the live DOM —
-including `body.edit-active`, `contenteditable="true"` on every text element, and `.active`/`.show` classes on
-the toggle button and banner. Anyone opening the saved file sees dashed outlines, a checkmark button, and an
-edit banner, as if permanently stuck in edit mode.
+Khi người dùng nhấn Ctrl+S trong chế độ chỉnh sửa, `document.documentElement.outerHTML` ghi lại DOM đang chạy —
+bao gồm `body.edit-active`, `contenteditable="true"` trên mọi phần tử văn bản, và các class `.active`/`.show` trên
+nút toggle và banner. Bất kỳ ai mở file đã lưu sẽ thấy viền đứt nét, nút dấu tích và
+banner chỉnh sửa, như thể bị kẹt vĩnh viễn trong chế độ chỉnh sửa.
 
-Always implement `exportFile()` like this:
+Luôn triển khai `exportFile()` như sau:
 
 ```javascript
 exportFile() {
@@ -317,13 +317,13 @@ exportFile() {
 }
 ```
 
-## Image Pipeline (Skip If No Images)
+## Pipeline xử lý ảnh (Bỏ qua nếu không có ảnh)
 
-If user chose "No images" in Phase 1, skip this entirely. If images were provided, process them before generating HTML.
+Nếu người dùng chọn "No images" ở Phase 1, bỏ qua hoàn toàn phần này. Nếu có cung cấp ảnh, hãy xử lý chúng trước khi tạo HTML.
 
 **Dependency:** `pip install Pillow`
 
-### Image Processing
+### Xử lý ảnh
 
 ```python
 from PIL import Image, ImageDraw
@@ -347,17 +347,17 @@ def resize_max(input_path, output_path, max_dim=1200):
     img.save(output_path, quality=85)
 ```
 
-| Situation                        | Operation                     |
+| Tình huống                        | Thao tác                     |
 | -------------------------------- | ----------------------------- |
-| Square logo on rounded aesthetic | `crop_circle()`               |
-| Image > 1MB                      | `resize_max(max_dim=1200)`    |
-| Wrong aspect ratio               | Manual crop with `img.crop()` |
+| Logo vuông trên phong cách bo tròn | `crop_circle()`               |
+| Ảnh > 1MB                      | `resize_max(max_dim=1200)`    |
+| Sai tỷ lệ khung hình               | Cắt thủ công bằng `img.crop()` |
 
-Save processed images with `_processed` suffix. Never overwrite originals.
+Lưu ảnh đã xử lý với hậu tố `_processed`. KHÔNG BAO GIỜ ghi đè bản gốc.
 
-### Image Placement
+### Đặt ảnh
 
-**Use direct file paths** (not base64) — presentations are viewed locally:
+**Dùng đường dẫn file trực tiếp** (không dùng base64) — bài thuyết trình được xem cục bộ:
 
 ```html
 <img src="assets/logo_round.png" alt="Logo" class="slide-image logo" />
@@ -385,33 +385,33 @@ Save processed images with `_processed` suffix. Never overwrite originals.
 }
 ```
 
-**Adapt border/shadow colors to match the chosen style's accent.** Never repeat the same image on multiple slides (except logos on title + closing).
+**Điều chỉnh màu viền/đổ bóng cho khớp với màu nhấn của phong cách đã chọn.** KHÔNG BAO GIỜ lặp lại cùng một ảnh trên nhiều slide (trừ logo ở slide tiêu đề + slide kết).
 
-**Placement patterns:** Logo centered on title slide. Screenshots in two-column layouts with text. Full-bleed images as slide backgrounds with text overlay (use sparingly).
+**Pattern đặt ảnh:** Logo căn giữa ở slide tiêu đề. Screenshot trong layout hai cột kèm văn bản. Ảnh full-bleed làm nền slide với văn bản phủ lên (dùng tiết kiệm).
 
 ---
 
-## Code Quality
+## Chất lượng code
 
-**Comments:** Every section needs clear comments explaining what it does and how to modify it.
+**Comment:** Mỗi section cần comment rõ ràng giải thích nó làm gì và cách sửa đổi.
 
 **Accessibility:**
 
-- Semantic HTML (`<section>`, `<nav>`, `<main>`)
-- Keyboard navigation works fully
-- ARIA labels where needed
-- `prefers-reduced-motion` support (included in viewport-base.css)
+- HTML ngữ nghĩa (`<section>`, `<nav>`, `<main>`)
+- Điều hướng bàn phím hoạt động đầy đủ
+- Nhãn ARIA khi cần
+- Hỗ trợ `prefers-reduced-motion` (có trong viewport-base.css)
 
-## File Structure
+## Cấu trúc file
 
-Single presentations:
+Bài thuyết trình đơn lẻ:
 
 ```
 presentation.html    # Self-contained, all CSS/JS inline
 assets/              # Images only, if any
 ```
 
-Multiple presentations in one project:
+Nhiều bài thuyết trình trong một project:
 
 ```
 [name].html

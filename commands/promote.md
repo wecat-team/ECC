@@ -1,28 +1,28 @@
 ---
 name: promote
-description: Promote project-scoped instincts to global scope
+description: Nâng cấp các instinct phạm vi project lên phạm vi global
 command: true
 ---
 
-# Promote Command
+# Lệnh Promote
 
-Promote instincts from project scope to global scope in continuous-learning-v2.
+Nâng cấp (promote) instinct từ phạm vi project lên phạm vi global trong continuous-learning-v2.
 
-## Implementation
+## Triển khai
 
-Run the instinct CLI using the plugin root path:
+Chạy instinct CLI bằng đường dẫn plugin root:
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" promote [instinct-id] [--force] [--dry-run]
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
+Hoặc nếu `CLAUDE_PLUGIN_ROOT` chưa được đặt (cài đặt thủ công):
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py promote [instinct-id] [--force] [--dry-run]
 ```
 
-## Usage
+## Cách dùng
 
 ```bash
 /promote                      # Auto-detect promotion candidates
@@ -31,11 +31,11 @@ python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py promote 
 /promote grep-before-edit     # Promote one specific instinct from current project
 ```
 
-## What to Do
+## Cần làm gì
 
-1. Detect current project
-2. If `instinct-id` is provided, promote only that instinct (if present in current project)
-3. Otherwise, find cross-project candidates that:
-   - Appear in at least 2 projects
-   - Meet confidence threshold
-4. Write promoted instincts to `~/.claude/homunculus/instincts/personal/` with `scope: global`
+1. Phát hiện project hiện tại
+2. Nếu có `instinct-id`, chỉ promote instinct đó (nếu nó tồn tại trong project hiện tại)
+3. Nếu không, tìm các ứng viên xuyên project thỏa mãn:
+   - Xuất hiện trong ít nhất 2 project
+   - Đạt ngưỡng confidence
+4. Ghi các instinct đã promote vào `~/.claude/homunculus/instincts/personal/` với `scope: global`

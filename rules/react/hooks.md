@@ -9,28 +9,28 @@ paths:
 ---
 # React Hooks
 
-> This file covers **React hooks** (`useState`, `useEffect`, `useMemo`, `useCallback`, custom hooks) — NOT the Claude Code `hooks/` runtime system. Naming matches the per-language convention `rules/<lang>/hooks.md` used across this repo.
+> File này nói về **React hook** (`useState`, `useEffect`, `useMemo`, `useCallback`, custom hook) — KHÔNG phải hệ thống runtime `hooks/` của Claude Code. Cách đặt tên khớp với quy ước theo ngôn ngữ `rules/<lang>/hooks.md` dùng xuyên suốt repo này.
 >
-> Extends [typescript/patterns.md](../typescript/patterns.md) and [common/patterns.md](../common/patterns.md).
+> Mở rộng [typescript/patterns.md](../typescript/patterns.md) và [common/patterns.md](../common/patterns.md).
 
-## Rules of Hooks
+## Quy tắc của Hook
 
-Enforce `eslint-plugin-react-hooks` with `react-hooks/rules-of-hooks` set to error.
+Thực thi `eslint-plugin-react-hooks` với `react-hooks/rules-of-hooks` đặt ở mức error.
 
-1. Hooks only at the top level of a function component or another hook
-2. Never in loops, conditionals, nested functions, or after early returns
-3. Always called in the same order on every render
-4. Only inside React function components or custom hooks (functions starting with `use`)
+1. Hook chỉ được gọi ở cấp cao nhất của function component hoặc của một hook khác
+2. Không bao giờ gọi trong vòng lặp, điều kiện, hàm lồng nhau, hay sau early return
+3. Luôn được gọi theo cùng một thứ tự ở mọi lần render
+4. Chỉ gọi bên trong React function component hoặc custom hook (hàm bắt đầu bằng `use`)
 
 ```tsx
-// WRONG: conditional hook
+// SAI: hook có điều kiện
 function Foo({ enabled }: { enabled: boolean }) {
   if (enabled) {
     const [x, setX] = useState(0); // rule violation
   }
 }
 
-// CORRECT: hook unconditional, condition inside
+// ĐÚNG: hook không điều kiện, điều kiện nằm bên trong
 function Foo({ enabled }: { enabled: boolean }) {
   const [x, setX] = useState(0);
   if (!enabled) return null;
@@ -38,37 +38,37 @@ function Foo({ enabled }: { enabled: boolean }) {
 }
 ```
 
-## `useEffect` — When NOT to Use
+## `useEffect` — Khi nào KHÔNG nên dùng
 
-`useEffect` is for synchronizing with external systems (subscriptions, browser APIs, third-party libraries). It is **not** the right tool for:
+`useEffect` dùng để đồng bộ với hệ thống bên ngoài (subscription, browser API, thư viện bên thứ ba). Nó **không** phải công cụ phù hợp cho:
 
-- Derived state — compute it during render
-- Transforming data for rendering — compute it during render
-- Resetting state when a prop changes — use a `key` on the parent or derive from props
-- Notifying parents of state changes — call the callback in the event handler
-- Initializing app-level singletons — call the function module-side or in `main.tsx`
+- Derived state — hãy tính trong lúc render
+- Biến đổi dữ liệu để render — hãy tính trong lúc render
+- Reset state khi prop thay đổi — dùng `key` ở component cha hoặc suy ra từ props
+- Thông báo cho component cha về thay đổi state — gọi callback trong event handler
+- Khởi tạo singleton cấp app — gọi hàm ở phía module hoặc trong `main.tsx`
 
 ```tsx
-// WRONG: effect for derived state
+// SAI: dùng effect cho derived state
 const [fullName, setFullName] = useState("");
 useEffect(() => {
   setFullName(`${first} ${last}`);
 }, [first, last]);
 
-// CORRECT: derive during render
+// ĐÚNG: suy ra trong lúc render
 const fullName = `${first} ${last}`;
 ```
 
-## Dependency Arrays
+## Dependency array
 
-- Always include every reactive value referenced inside the effect/callback
-- Enable `react-hooks/exhaustive-deps` lint rule — never silence it without a comment explaining why
-- If the dep array grows unwieldy, the effect is doing too much — split it
-- Stable identity for functions passed in deps: wrap in `useCallback` only when the function is itself a dependency of another hook or passed to a memoized child
+- Luôn bao gồm mọi giá trị reactive được tham chiếu bên trong effect/callback
+- Bật lint rule `react-hooks/exhaustive-deps` — không bao giờ tắt nó mà không có comment giải thích lý do
+- Nếu dep array phình to khó kiểm soát, effect đang làm quá nhiều việc — hãy tách nó ra
+- Danh tính (identity) ổn định cho hàm truyền vào deps: chỉ bọc bằng `useCallback` khi chính hàm đó là dependency của hook khác hoặc được truyền cho child đã memo
 
 ## Cleanup
 
-Every subscription, interval, listener, or in-flight request must clean up.
+Mọi subscription, interval, listener hoặc request đang chạy phải được dọn dẹp.
 
 ```tsx
 useEffect(() => {
@@ -85,30 +85,30 @@ useEffect(() => {
 }, []);
 ```
 
-Missing cleanup = race conditions when deps change, memory leaks on unmount.
+Thiếu cleanup = race condition khi deps thay đổi, memory leak khi unmount.
 
-## `useMemo` and `useCallback` — When Worth It
+## `useMemo` và `useCallback` — Khi nào đáng dùng
 
-Default position: **do not memoize**. Add `useMemo` / `useCallback` only when:
+Quan điểm mặc định: **không memoize**. Chỉ thêm `useMemo` / `useCallback` khi:
 
-1. The value is passed to a `React.memo`-wrapped child as a prop, and identity matters
-2. The value is a dependency of another `useEffect` / `useMemo` / `useCallback`
-3. The computation is measurably expensive (profile before assuming)
+1. Giá trị được truyền làm prop cho child bọc `React.memo`, và identity có ý nghĩa
+2. Giá trị là dependency của một `useEffect` / `useMemo` / `useCallback` khác
+3. Phép tính tốn kém đo đạc được (hãy profile trước khi giả định)
 
-Premature memoization adds noise, hides bugs, and can be slower than the recompute it replaces.
+Memoize sớm làm thêm nhiễu, che giấu bug, và có thể chậm hơn chính phép tính lại mà nó thay thế.
 
-## Custom Hooks
+## Custom Hook
 
-Extract a custom hook when:
+Tách custom hook khi:
 
-- The same hook sequence (state + effect + computed) appears in 2+ components
-- The logic has a clear, nameable purpose (`useDebounce`, `useOnClickOutside`, `useLocalStorage`)
-- You want to test the logic independently of any component
+- Cùng một chuỗi hook (state + effect + computed) xuất hiện ở 2+ component
+- Logic có mục đích rõ ràng, đặt tên được (`useDebounce`, `useOnClickOutside`, `useLocalStorage`)
+- Bạn muốn test logic độc lập với bất kỳ component nào
 
-Do NOT extract when:
+KHÔNG tách khi:
 
-- It would have a single caller — inline it
-- The "hook" is just `useState` with a different name — adds indirection, no value
+- Nó chỉ có một nơi gọi — hãy inline
+- "Hook" chỉ là `useState` với tên khác — thêm một tầng gián tiếp mà không có giá trị
 
 ```tsx
 export function useDebounce<T>(value: T, delay: number): T {
@@ -121,23 +121,23 @@ export function useDebounce<T>(value: T, delay: number): T {
 }
 ```
 
-## `useState` Patterns
+## Pattern của `useState`
 
-- Initial state from prop only at mount: pass a function `useState(() => computeInitial(prop))` when computation is expensive
-- Functional updater when the new state depends on the old: `setCount(c => c + 1)` — never `setCount(count + 1)` inside async or batched contexts
-- Group related state into one object only when they always change together; otherwise split into multiple `useState` calls
-- Use `useReducer` once state transitions are conditional on the previous state or there are 3+ related values
+- State khởi tạo từ prop chỉ tại lúc mount: truyền một hàm `useState(() => computeInitial(prop))` khi phép tính tốn kém
+- Dùng functional updater khi state mới phụ thuộc state cũ: `setCount(c => c + 1)` — không bao giờ `setCount(count + 1)` trong ngữ cảnh async hoặc batched
+- Chỉ gộp các state liên quan thành một object khi chúng luôn thay đổi cùng nhau; ngược lại hãy tách thành nhiều lời gọi `useState`
+- Dùng `useReducer` khi các chuyển trạng thái phụ thuộc vào state trước đó hoặc có từ 3 giá trị liên quan trở lên
 
-## `useRef` Patterns
+## Pattern của `useRef`
 
-- DOM refs for imperative APIs (focus, scroll, third-party libs)
-- Mutable container that does not trigger re-render (timer ids, previous values, "is mounted" flags)
-- Never read or write `ref.current` during render — only inside effects or event handlers
-- `useImperativeHandle` only when exposing a child API to a parent ref — last-resort escape hatch
+- DOM ref cho API mệnh lệnh (focus, scroll, thư viện bên thứ ba)
+- Container có thể thay đổi mà không kích hoạt re-render (timer id, giá trị trước đó, cờ "is mounted")
+- Không bao giờ đọc hoặc ghi `ref.current` trong lúc render — chỉ trong effect hoặc event handler
+- `useImperativeHandle` chỉ khi cần expose API của child cho ref của cha — là lối thoát cuối cùng (last-resort escape hatch)
 
 ## `useSyncExternalStore`
 
-Use this hook to subscribe to any external store (browser API, third-party state lib, custom event emitter). It is the supported way to make external state safe with concurrent rendering.
+Dùng hook này để subscribe vào bất kỳ external store nào (browser API, thư viện state bên thứ ba, event emitter tự viết). Đây là cách được hỗ trợ để làm cho external state an toàn với concurrent rendering.
 
 ```tsx
 const isOnline = useSyncExternalStore(
@@ -154,26 +154,26 @@ const isOnline = useSyncExternalStore(
 );
 ```
 
-## React 19 Additions
+## Bổ sung của React 19
 
-- `use()` — unwrap promises and contexts inline; usable conditionally (only hook with that property)
-- `useFormStatus()` / `useFormState()` (or `useActionState`) — form submission state without prop drilling
-- `useOptimistic()` — optimistic UI updates while a server action is pending
-- `useTransition()` — mark non-urgent state updates so urgent ones stay responsive
+- `use()` — mở (unwrap) promise và context ngay tại chỗ; dùng được có điều kiện (hook duy nhất có tính chất này)
+- `useFormStatus()` / `useFormState()` (hoặc `useActionState`) — trạng thái submit form mà không cần prop drilling
+- `useOptimistic()` — cập nhật UI lạc quan (optimistic) trong khi server action đang chờ
+- `useTransition()` — đánh dấu các cập nhật state không khẩn cấp để các cập nhật khẩn cấp vẫn phản hồi mượt
 
-When the project targets React 19+, prefer these over hand-rolled equivalents.
+Khi dự án nhắm tới React 19+, hãy ưu tiên những hook này hơn các giải pháp tự viết tương đương.
 
-## Stale Closure Trap
+## Bẫy stale closure
 
-Async handlers and intervals capture the values from the render where they were created. Fix by:
+Async handler và interval capture giá trị từ lần render nơi chúng được tạo. Cách sửa:
 
-1. Using the functional updater form of `setState`
-2. Putting the changing value in the dep array of `useEffect` and rebuilding the handler
-3. Reading from a ref that is kept in sync
+1. Dùng dạng functional updater của `setState`
+2. Đưa giá trị thay đổi vào dep array của `useEffect` và dựng lại handler
+3. Đọc từ một ref được giữ đồng bộ
 
-## Lint Configuration
+## Cấu hình Lint
 
-Required rules:
+Các rule bắt buộc:
 
 ```json
 {
@@ -184,4 +184,4 @@ Required rules:
 }
 ```
 
-Treat `exhaustive-deps` warnings as errors in CI for new code.
+Hãy coi cảnh báo `exhaustive-deps` là lỗi trong CI đối với code mới.

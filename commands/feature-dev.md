@@ -1,49 +1,49 @@
 ---
-description: Guided feature development with codebase understanding and architecture focus
+description: Phát triển tính năng có hướng dẫn, tập trung vào việc hiểu codebase và kiến trúc
 ---
 
-A structured feature-development workflow that emphasizes understanding existing code before writing new code.
+Một workflow phát triển tính năng có cấu trúc, nhấn mạnh việc hiểu code hiện có trước khi viết code mới.
 
-## Phases
+## Các giai đoạn
 
-### 1. Discovery
+### 1. Khám phá (Discovery)
 
-- read the feature request carefully
-- identify requirements, constraints, and acceptance criteria
-- ask clarifying questions if the request is ambiguous
+- đọc kỹ yêu cầu tính năng
+- xác định yêu cầu, ràng buộc và tiêu chí chấp nhận (acceptance criteria)
+- đặt câu hỏi làm rõ nếu yêu cầu còn mơ hồ
 
-### 2. Codebase Exploration
+### 2. Khám phá codebase
 
-- use `code-explorer` to analyze the relevant existing code
-- trace execution paths and architecture layers
-- understand integration points and conventions
+- dùng `code-explorer` để phân tích phần code hiện có liên quan
+- lần theo các đường thực thi và các tầng kiến trúc
+- hiểu các điểm tích hợp và quy ước
 
-### 3. Clarifying Questions
+### 3. Câu hỏi làm rõ
 
-- present findings from exploration
-- ask targeted design and edge-case questions
-- wait for user response before proceeding
+- trình bày các phát hiện từ bước khám phá
+- đặt các câu hỏi có trọng tâm về thiết kế và edge case
+- chờ người dùng phản hồi trước khi tiếp tục
 
-### 4. Architecture Design
+### 4. Thiết kế kiến trúc
 
-- use `code-architect` to design the feature
-- provide the implementation blueprint
-- wait for approval before implementing
+- dùng `code-architect` để thiết kế tính năng
+- cung cấp bản thiết kế triển khai (implementation blueprint)
+- chờ được duyệt trước khi triển khai
 
-### 5. Implementation
+### 5. Triển khai
 
-- implement the feature following the approved design
-- prefer TDD where appropriate
-- keep commits small and focused
+- triển khai tính năng theo thiết kế đã được duyệt
+- ưu tiên TDD khi phù hợp
+- giữ các commit nhỏ và tập trung
 
-### 6. Quality Review
+### 6. Review chất lượng
 
-- use `code-reviewer` to review the implementation
-- address critical and important issues
-- verify test coverage
+- dùng `code-reviewer` để review phần triển khai
+- xử lý các vấn đề critical và important
+- xác minh test coverage
 
-### 7. Summary
+### 7. Tóm tắt
 
-- summarize what was built
-- list follow-up items or limitations
-- provide testing instructions
+- tóm tắt những gì đã xây dựng
+- liệt kê các hạng mục tiếp theo hoặc hạn chế
+- cung cấp hướng dẫn kiểm thử

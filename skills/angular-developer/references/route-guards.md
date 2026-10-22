@@ -1,17 +1,17 @@
-# Route Guards
+# Route Guard
 
-Route guards control whether a user can navigate to or leave a route.
+Route guard kiểm soát việc người dùng có thể điều hướng tới hoặc rời khỏi một route hay không.
 
-## Types of Guards
+## Các loại Guard
 
-- **`CanActivate`**: Can the user access this route? (e.g., Auth check).
-- **`CanActivateChild`**: Can the user access children of this route?
-- **`CanDeactivate`**: Can the user leave this route? (e.g., Unsaved changes).
-- **`CanMatch`**: Should this route even be considered for matching? (e.g., Feature flags). If it returns `false`, the router continues checking other routes.
+- **`CanActivate`**: Người dùng có được truy cập route này không? (ví dụ: kiểm tra xác thực).
+- **`CanActivateChild`**: Người dùng có được truy cập các route con của route này không?
+- **`CanDeactivate`**: Người dùng có được rời khỏi route này không? (ví dụ: có thay đổi chưa lưu).
+- **`CanMatch`**: Route này có nên được xem xét để khớp hay không? (ví dụ: feature flag). Nếu trả về `false`, router tiếp tục kiểm tra các route khác.
 
-## Creating a Guard
+## Tạo một Guard
 
-Guards are typically functional since Angular 15.
+Guard thường ở dạng functional kể từ Angular 15.
 
 ```ts
 export const authGuard: CanActivateFn = (route, state) => {
@@ -27,9 +27,9 @@ export const authGuard: CanActivateFn = (route, state) => {
 };
 ```
 
-## Applying Guards
+## Áp dụng Guard
 
-Add them to the route configuration as an array. They execute in order.
+Thêm chúng vào cấu hình route dưới dạng mảng. Chúng thực thi theo thứ tự.
 
 ```ts
 {
@@ -41,12 +41,12 @@ Add them to the route configuration as an array. They execute in order.
 }
 ```
 
-## Return Values
+## Giá trị trả về
 
-- `boolean`: `true` to allow, `false` to block.
-- `UrlTree` or `RedirectCommand`: Redirect to a different route.
-- `Observable` or `Promise`: Resolves to the above types.
+- `boolean`: `true` để cho phép, `false` để chặn.
+- `UrlTree` hoặc `RedirectCommand`: Chuyển hướng sang một route khác.
+- `Observable` hoặc `Promise`: Resolve ra các type ở trên.
 
-## Security Note
+## Lưu ý bảo mật
 
-**Client-side guards are NOT a substitute for server-side security.** Always verify permissions on the server.
+**Guard phía client KHÔNG thay thế được bảo mật phía server.** Luôn kiểm tra quyền trên server.

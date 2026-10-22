@@ -1,48 +1,48 @@
 ---
 name: postgres-patterns
-description: PostgreSQL database patterns for query optimization, schema design, indexing, and security. Based on Supabase best practices. Use when designing PostgreSQL schemas, indexes, or RLS policies, or when a query is too slow.
+description: Các pattern cơ sở dữ liệu PostgreSQL cho tối ưu query, thiết kế schema, indexing và bảo mật. Dựa trên best practice của Supabase. Dùng khi thiết kế schema, index hoặc RLS policy cho PostgreSQL, hoặc khi một query quá chậm.
 metadata:
   origin: ECC
 ---
 
 # PostgreSQL Patterns
 
-Quick reference for PostgreSQL best practices. For detailed guidance, use the `database-reviewer` agent.
+Tham khảo nhanh các best practice của PostgreSQL. Để có hướng dẫn chi tiết, hãy dùng agent `database-reviewer`.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing SQL queries or migrations
-- Designing database schemas
-- Troubleshooting slow queries
-- Implementing Row Level Security
-- Setting up connection pooling
+- Viết SQL query hoặc migration
+- Thiết kế database schema
+- Xử lý sự cố query chậm
+- Triển khai Row Level Security
+- Thiết lập connection pooling
 
-## Quick Reference
+## Tham khảo nhanh
 
-### Index Cheat Sheet
+### Bảng tra cứu Index
 
-| Query Pattern | Index Type | Example |
+| Pattern của query | Loại index | Ví dụ |
 |--------------|------------|---------|
-| `WHERE col = value` | B-tree (default) | `CREATE INDEX idx ON t (col)` |
+| `WHERE col = value` | B-tree (mặc định) | `CREATE INDEX idx ON t (col)` |
 | `WHERE col > value` | B-tree | `CREATE INDEX idx ON t (col)` |
 | `WHERE a = x AND b > y` | Composite | `CREATE INDEX idx ON t (a, b)` |
 | `WHERE jsonb @> '{}'` | GIN | `CREATE INDEX idx ON t USING gin (col)` |
 | `WHERE tsv @@ query` | GIN | `CREATE INDEX idx ON t USING gin (col)` |
-| Time-series ranges | BRIN | `CREATE INDEX idx ON t USING brin (col)` |
+| Khoảng thời gian (time-series) | BRIN | `CREATE INDEX idx ON t USING brin (col)` |
 
-### Data Type Quick Reference
+### Tham khảo nhanh kiểu dữ liệu
 
-| Use Case | Correct Type | Avoid |
+| Trường hợp dùng | Kiểu đúng | Nên tránh |
 |----------|-------------|-------|
-| IDs | `bigint` | `int`, random UUID |
-| Strings | `text` | `varchar(255)` |
-| Timestamps | `timestamptz` | `timestamp` |
-| Money | `numeric(10,2)` | `float` |
-| Flags | `boolean` | `varchar`, `int` |
+| ID | `bigint` | `int`, random UUID |
+| Chuỗi | `text` | `varchar(255)` |
+| Timestamp | `timestamptz` | `timestamp` |
+| Tiền tệ | `numeric(10,2)` | `float` |
+| Cờ (flag) | `boolean` | `varchar`, `int` |
 
-### Common Patterns
+### Các pattern thường gặp
 
-**Composite Index Order:**
+**Thứ tự Composite Index:**
 ```sql
 -- Equality columns first, then range columns
 CREATE INDEX idx ON orders (status, created_at);
@@ -61,7 +61,7 @@ CREATE INDEX idx ON users (email) WHERE deleted_at IS NULL;
 -- Smaller index, only includes active users
 ```
 
-**RLS Policy (Optimized):**
+**RLS Policy (đã tối ưu):**
 ```sql
 CREATE POLICY policy ON orders
   USING ((SELECT auth.uid()) = user_id);  -- Wrap in SELECT!
@@ -75,13 +75,13 @@ ON CONFLICT (user_id, key)
 DO UPDATE SET value = EXCLUDED.value;
 ```
 
-**Cursor Pagination:**
+**Cursor Pagination (phân trang bằng cursor):**
 ```sql
 SELECT * FROM products WHERE id > $last_id ORDER BY id LIMIT 20;
 -- O(1) vs OFFSET which is O(n)
 ```
 
-**Queue Processing:**
+**Xử lý queue:**
 ```sql
 UPDATE jobs SET status = 'processing'
 WHERE id = (
@@ -91,7 +91,7 @@ WHERE id = (
 ) RETURNING *;
 ```
 
-### Anti-Pattern Detection
+### Phát hiện anti-pattern
 
 ```sql
 -- Find unindexed foreign keys
@@ -117,7 +117,7 @@ WHERE n_dead_tup > 1000
 ORDER BY n_dead_tup DESC;
 ```
 
-### Configuration Template
+### Mẫu cấu hình
 
 ```sql
 -- Connection limits (adjust for RAM)
@@ -137,12 +137,12 @@ REVOKE ALL ON SCHEMA public FROM public;
 SELECT pg_reload_conf();
 ```
 
-## Related
+## Liên quan
 
-- Agent: `database-reviewer` - Full database review workflow
-- Skill: `clickhouse-io` - ClickHouse analytics patterns
-- Skill: `backend-patterns` - API and backend patterns
+- Agent: `database-reviewer` - Quy trình review database đầy đủ
+- Skill: `clickhouse-io` - Các pattern phân tích dữ liệu với ClickHouse
+- Skill: `backend-patterns` - Các pattern cho API và backend
 
 ---
 
-*Based on Supabase Agent Skills (credit: Supabase team) (MIT License)*
+*Dựa trên Supabase Agent Skills (ghi công: đội ngũ Supabase) (MIT License)*

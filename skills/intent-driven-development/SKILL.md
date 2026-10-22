@@ -1,35 +1,35 @@
 ---
 name: intent-driven-development
-description: Turn ambiguous or high-impact product and engineering changes into scoped, verifiable acceptance criteria before or alongside implementation. Use when a user asks to clarify a feature, define acceptance criteria, de-risk a security/data/migration/integration change, prepare implementation requirements for another agent, or make a complex request testable. Do not trigger for trivial edits, straightforward fixes, active debugging, code review, or implementation requests whose acceptance conditions are already clear unless the user explicitly invokes this skill.
+description: "Biến các thay đổi sản phẩm và kỹ thuật mơ hồ hoặc có tác động lớn thành tiêu chí chấp nhận (acceptance criteria) có phạm vi rõ ràng, kiểm chứng được trước hoặc song song với triển khai. Dùng khi người dùng yêu cầu làm rõ một tính năng, định nghĩa acceptance criteria, giảm rủi ro cho thay đổi liên quan đến security/data/migration/integration, chuẩn bị yêu cầu triển khai cho agent khác, hoặc làm cho một yêu cầu phức tạp trở nên kiểm thử được. Không kích hoạt cho các chỉnh sửa tầm thường, sửa lỗi đơn giản, debug đang diễn ra, code review, hoặc yêu cầu triển khai mà điều kiện chấp nhận đã rõ ràng, trừ khi người dùng gọi skill này một cách tường minh."
 ---
 
 # Intent-Driven Development
 
-Produce useful acceptance criteria without turning specification into ceremony. Inspect
-available context first, expose genuine ambiguity, and choose verification methods that fit
-the work and its risk.
+Tạo ra acceptance criteria hữu ích mà không biến việc đặc tả thành nghi thức. Kiểm tra
+context sẵn có trước, phơi bày sự mơ hồ thực sự, và chọn phương pháp xác minh phù hợp
+với công việc và rủi ro của nó.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- User asks to clarify a feature, define acceptance criteria, or de-risk a change before implementation
-- Request touches security, authentication, persistent data, migrations, external APIs, or compliance
-- User wants to prepare a handoff artifact for another agent or team
-- Request is ambiguous enough that the expected outcome is not yet observable or testable
-- User explicitly invokes this skill with `/intent-driven-development`
+- Người dùng yêu cầu làm rõ một tính năng, định nghĩa acceptance criteria, hoặc giảm rủi ro cho một thay đổi trước khi triển khai
+- Yêu cầu động đến security, authentication, dữ liệu lưu trữ bền vững, migration, API bên ngoài hoặc compliance
+- Người dùng muốn chuẩn bị một artifact bàn giao cho agent hoặc team khác
+- Yêu cầu mơ hồ đến mức kết quả mong đợi chưa quan sát được hoặc chưa kiểm thử được
+- Người dùng gọi skill này một cách tường minh bằng `/intent-driven-development`
 
-Do not activate for trivial edits, straightforward one-line fixes, active debugging sessions,
-code review requests, or implementation requests whose acceptance conditions are already clear.
+Không kích hoạt cho các chỉnh sửa tầm thường, sửa lỗi một dòng đơn giản, phiên debug đang diễn ra,
+yêu cầu code review, hoặc yêu cầu triển khai mà điều kiện chấp nhận đã rõ ràng.
 
-## How It Works
+## Cách hoạt động
 
-1. **Inspect context first** — reads the repository, docs, schemas, and test infrastructure for technical facts before asking any question, while treating product/business constraints as something only the user or a product artifact can supply
-2. **Choose depth** — selects Quick Capture (3-7 criteria, low/moderate risk) or Full Acceptance Brief (security, data, migration, cross-system changes) based on the risk profile
-3. **Ask minimally** — only asks questions whose answers cannot be inferred and that materially change scope or behavior
-4. **Write observable criteria** — each AC-NNN describes a starting condition, trigger, expected outcome, prohibited side effect, verification method, and priority; no vague words like "correctly" or "securely" without evidence
-5. **Proceed or hand off** — for clear requests with no blocking risks, records criteria and continues; for risky changes, presents blockers and waits for confirmation
-6. **Handle revision** — if an AC fails mid-implementation due to architectural constraints, marks it `[revised]`, updates scope or verification method, increments the revision number, and re-presents only the changed criteria
+1. **Kiểm tra context trước** — đọc repository, tài liệu, schema và hạ tầng test để lấy các sự kiện kỹ thuật trước khi hỏi bất kỳ câu nào, đồng thời coi các ràng buộc sản phẩm/nghiệp vụ là thứ chỉ người dùng hoặc một artifact sản phẩm mới cung cấp được
+2. **Chọn độ sâu** — chọn Quick Capture (3-7 tiêu chí, rủi ro thấp/vừa) hoặc Full Acceptance Brief (thay đổi về security, dữ liệu, migration, liên hệ thống) dựa trên hồ sơ rủi ro
+3. **Hỏi tối thiểu** — chỉ hỏi những câu mà đáp án không thể suy ra được và làm thay đổi đáng kể phạm vi hoặc hành vi
+4. **Viết tiêu chí quan sát được** — mỗi AC-NNN mô tả điều kiện bắt đầu, trigger, kết quả mong đợi, side effect bị cấm, phương pháp xác minh và mức ưu tiên; không dùng các từ mơ hồ như "correctly" hay "securely" khi không có bằng chứng
+5. **Tiếp tục hoặc bàn giao** — với yêu cầu rõ ràng không có rủi ro chặn, ghi lại tiêu chí và tiếp tục; với thay đổi rủi ro, trình bày các điểm chặn và chờ xác nhận
+6. **Xử lý sửa đổi** — nếu một AC thất bại giữa chừng triển khai do ràng buộc kiến trúc, đánh dấu `[revised]`, cập nhật phạm vi hoặc phương pháp xác minh, tăng số revision và chỉ trình bày lại các tiêu chí đã thay đổi
 
-## Examples
+## Ví dụ
 
 **Quick Capture — "Add CSV export to the dashboard"**
 
@@ -48,176 +48,176 @@ AC-001: Export generates file with correct headers
 - Priority: Required
 ```
 
-**Full Acceptance Brief trigger — "Migrate user auth to OAuth"**
+**Trigger cho Full Acceptance Brief — "Migrate user auth to OAuth"**
 
-Auth change + external dependency + existing session data → Full Brief with Risk Review table,
-blocking decisions on session invalidation strategy, and explicit rollback AC.
+Thay đổi auth + dependency bên ngoài + dữ liệu session hiện có → Full Brief với bảng Risk Review,
+các quyết định chặn về chiến lược vô hiệu hóa session, và AC rollback tường minh.
 
-**Existing spec review — user pastes a PRD**
+**Review đặc tả hiện có — người dùng dán một PRD**
 
-Skill reviews it for missing scope boundaries, unverifiable requirements ("the system shall be fast"),
-and silent assumptions, then returns corrected or supplemental criteria without restarting discovery.
+Skill review nó để tìm các ranh giới phạm vi còn thiếu, các yêu cầu không kiểm chứng được ("the system shall be fast"),
+và các giả định ngầm, rồi trả về các tiêu chí đã sửa hoặc bổ sung mà không bắt đầu lại giai đoạn khám phá.
 
-## Operating Rules
+## Quy tắc vận hành
 
-1. Inspect the available repository, documentation, issue, design, and test context before
-   asking for technical facts that can be discovered locally.
-2. Do not infer product or business constraints from code. Business rules, compliance and
-   regulatory obligations, contractual SLAs, pricing, data-retention policy, prioritization,
-   and target users cannot be read from a repository. Treat them as unknown until the user
-   supplies them or an authoritative product artifact (PRD, contract, policy document) states
-   them. Record them as assumptions flagged for confirmation, never as discovered facts. The
-   repository tells you how the system behaves today, not what the business requires it to do.
-3. Ask only questions whose answers are required and cannot be safely inferred. Group short,
-   related questions when that saves unnecessary turns.
-4. Do not block implementation by default. When the user has asked to implement a sufficiently
-   clear change, record key assumptions and acceptance criteria briefly, then proceed or hand
-   them to the implementation workflow.
-5. Require explicit user confirmation before proceeding only when an unresolved decision could
-   create material security exposure, data loss, irreversible migration, contractual/API
-   breakage, meaningful cost, or destructive external action.
-6. Do not write an acceptance document into a repository, alter project files, create a branch,
-   commit, or invoke another skill unless the user requests it or the active repository
-   workflow explicitly requires it.
-7. Treat automated tests as evidence, not truth. Prefer automation when reliable and
-   proportionate; allow manual UX, accessibility, security, legal, or operational verification
-   where automation cannot establish the outcome.
-8. Never include real secrets, credentials, tokens, private keys, personal data, or sensitive
-   production payloads in acceptance criteria, fixtures, examples, or saved artifacts. Use
-   redacted or synthetic values.
-9. Do not run destructive tests, migrations, security probes, load tests, paid external calls,
-   or operations against production/live data without explicit authorization and an identified
-   safe environment.
-10. When an acceptance criterion cannot be satisfied due to an architectural, platform, or
-   external constraint discovered during implementation, do not silently drop or workaround it.
-   Update the affected criterion (mark it `[revised]`, state the constraint, and adjust scope or
-   verification method), increment the revision number, and re-present only the changed criteria
-   to the user before continuing. Require explicit confirmation only if the revision changes a
-   blocking decision or materially reduces safety or correctness guarantees.
+1. Kiểm tra context của repository, tài liệu, issue, thiết kế và test sẵn có trước khi
+   hỏi về các sự kiện kỹ thuật có thể khám phá được tại chỗ.
+2. Không suy ra các ràng buộc sản phẩm hay nghiệp vụ từ code. Business rule, nghĩa vụ compliance
+   và quy định pháp lý, SLA theo hợp đồng, giá cả, chính sách lưu giữ dữ liệu, thứ tự ưu tiên,
+   và người dùng mục tiêu không thể đọc được từ repository. Coi chúng là chưa biết cho đến khi người dùng
+   cung cấp hoặc một artifact sản phẩm có thẩm quyền (PRD, hợp đồng, tài liệu chính sách) nêu rõ.
+   Ghi chúng như các giả định được đánh dấu cần xác nhận, KHÔNG BAO GIỜ như sự kiện đã khám phá. Repository
+   cho bạn biết hệ thống hành xử thế nào hiện nay, không phải doanh nghiệp yêu cầu nó làm gì.
+3. Chỉ hỏi những câu mà đáp án là bắt buộc và không thể suy ra an toàn. Gom nhóm các câu hỏi ngắn,
+   liên quan khi điều đó tiết kiệm được các lượt không cần thiết.
+4. Không chặn triển khai theo mặc định. Khi người dùng đã yêu cầu triển khai một thay đổi đủ rõ ràng,
+   hãy ghi ngắn gọn các giả định chính và acceptance criteria, rồi tiếp tục hoặc chuyển chúng
+   cho workflow triển khai.
+5. Chỉ yêu cầu người dùng xác nhận tường minh trước khi tiếp tục khi một quyết định chưa giải quyết có thể
+   gây ra rủi ro security đáng kể, mất dữ liệu, migration không thể đảo ngược, phá vỡ hợp đồng/API,
+   chi phí đáng kể, hoặc hành động phá hủy bên ngoài.
+6. Không ghi tài liệu acceptance vào repository, không sửa file dự án, không tạo branch,
+   commit, hay gọi skill khác trừ khi người dùng yêu cầu hoặc workflow của repository đang dùng
+   yêu cầu tường minh.
+7. Coi test tự động là bằng chứng, không phải sự thật. Ưu tiên tự động hóa khi đáng tin cậy và
+   tương xứng; cho phép xác minh thủ công về UX, accessibility, security, pháp lý hoặc vận hành
+   khi tự động hóa không thể xác lập kết quả.
+8. KHÔNG BAO GIỜ đưa secret thật, credential, token, private key, dữ liệu cá nhân, hay payload production
+   nhạy cảm vào acceptance criteria, fixture, ví dụ hoặc artifact được lưu. Dùng giá trị đã che
+   (redacted) hoặc giá trị tổng hợp.
+9. Không chạy test phá hủy, migration, security probe, load test, lệnh gọi bên ngoài có tính phí,
+   hay thao tác trên dữ liệu production/live nếu không có ủy quyền tường minh và một môi trường
+   an toàn đã được xác định.
+10. Khi một acceptance criterion không thể thỏa mãn do ràng buộc về kiến trúc, nền tảng hoặc
+   bên ngoài được phát hiện trong quá trình triển khai, không được âm thầm bỏ hoặc né tránh nó.
+   Cập nhật tiêu chí bị ảnh hưởng (đánh dấu `[revised]`, nêu ràng buộc, và điều chỉnh phạm vi hoặc
+   phương pháp xác minh), tăng số revision, và chỉ trình bày lại các tiêu chí đã thay đổi
+   cho người dùng trước khi tiếp tục. Chỉ yêu cầu xác nhận tường minh nếu bản sửa đổi thay đổi
+   một quyết định chặn hoặc làm giảm đáng kể các đảm bảo về an toàn hoặc tính đúng đắn.
 
-## Choose The Depth
+## Chọn độ sâu
 
-Use the smallest useful output.
+Dùng đầu ra nhỏ nhất mà hữu ích.
 
 ### Quick Capture
 
-Use for a clear but non-trivial change with low or moderate risk. Produce:
+Dùng cho thay đổi rõ ràng nhưng không tầm thường với rủi ro thấp hoặc vừa. Tạo ra:
 
 - Goal
 - In scope / out of scope
 - Assumptions
-- 3-7 acceptance criteria with verification methods
-- Blocking questions, if any
+- 3-7 acceptance criteria kèm phương pháp xác minh
+- Các câu hỏi chặn, nếu có
 
-Do not delay implementation for approval unless a blocking risk from the operating rules
-exists or the user specifically asked for a specification first.
+Không trì hoãn triển khai để chờ phê duyệt trừ khi tồn tại một rủi ro chặn theo các quy tắc vận hành
+hoặc người dùng yêu cầu cụ thể một bản đặc tả trước.
 
 ### Full Acceptance Brief
 
-Use for ambiguous, cross-system, security-sensitive, data-changing, migration, compliance,
-or high-cost changes, or when the user requests a handoff artifact. Produce the full template
-below and request confirmation for unresolved blocking decisions before risky implementation.
+Dùng cho thay đổi mơ hồ, liên hệ thống, nhạy cảm về security, thay đổi dữ liệu, migration, compliance,
+hoặc chi phí cao, hoặc khi người dùng yêu cầu một artifact bàn giao. Tạo ra template đầy đủ
+bên dưới và yêu cầu xác nhận cho các quyết định chặn chưa giải quyết trước khi triển khai rủi ro.
 
-### Existing Specification Review
+### Review đặc tả hiện có
 
-When the user already supplied a PRD, issue, plan, or acceptance criteria:
+Khi người dùng đã cung cấp một PRD, issue, kế hoạch hoặc acceptance criteria:
 
-1. Review it instead of restarting discovery.
-2. Identify missing scope boundaries, unsafe assumptions, contradictions, and unverifiable
-   requirements.
-3. Return corrected or supplemental criteria.
+1. Review nó thay vì bắt đầu lại giai đoạn khám phá.
+2. Xác định các ranh giới phạm vi còn thiếu, giả định không an toàn, mâu thuẫn và các yêu cầu
+   không kiểm chứng được.
+3. Trả về các tiêu chí đã sửa hoặc bổ sung.
 
 ## Workflow
 
-### 1. Establish Goal And Risk
+### 1. Xác lập Goal và rủi ro
 
-Extract or ask for:
+Trích xuất hoặc hỏi về:
 
-- The observable outcome for the user or system.
-- The actors affected.
-- The main failure consequence.
-- Risk dimensions that actually apply: security/privacy, persistent data, compatibility/API,
-  migration, external dependencies, cost, concurrency, performance, usability/accessibility.
+- Kết quả quan sát được đối với người dùng hoặc hệ thống.
+- Các tác nhân (actor) bị ảnh hưởng.
+- Hậu quả thất bại chính.
+- Các chiều rủi ro thực sự áp dụng: security/privacy, dữ liệu lưu trữ bền vững, compatibility/API,
+  migration, dependency bên ngoài, chi phí, concurrency, hiệu năng, usability/accessibility.
 
-Avoid asking generic questions about irrelevant risks.
+Tránh hỏi các câu chung chung về những rủi ro không liên quan.
 
-### 2. Discover Context
+### 2. Khám phá context
 
-When local or connected artifacts are available, inspect only what is needed:
+Khi có sẵn các artifact cục bộ hoặc đã kết nối, chỉ kiểm tra những gì cần thiết:
 
-- Existing behavior and directly related files or interfaces.
-- Repository conventions, product docs, API contracts, data schemas, or migration history.
-- Existing verification infrastructure and realistic commands.
-- External dependencies and whether they are testable in isolation.
+- Hành vi hiện có và các file hoặc interface liên quan trực tiếp.
+- Convention của repository, tài liệu sản phẩm, API contract, schema dữ liệu hoặc lịch sử migration.
+- Hạ tầng xác minh hiện có và các lệnh thực tế.
+- Dependency bên ngoài và liệu chúng có thể test cô lập hay không.
 
-Record discovered facts separately from user-provided assumptions. If context cannot be
-inspected, say what is unknown and ask focused questions.
+Ghi các sự kiện đã khám phá tách biệt với các giả định do người dùng cung cấp. Nếu không thể
+kiểm tra context, hãy nêu điều gì chưa biết và hỏi các câu hỏi có trọng tâm.
 
-The repository reveals technical facts — how the system behaves today, its conventions, and
-its contracts. It does not reveal product or business constraints: business rules, compliance
-and regulatory obligations, contractual SLAs, pricing, data-retention policy, prioritization,
-and target users. Never reconstruct these from code or naming. Capture them only from the user
-or an authoritative product artifact, and list them as assumptions to confirm until then.
+Repository tiết lộ các sự kiện kỹ thuật — hệ thống hành xử thế nào hiện nay, convention và
+contract của nó. Nó không tiết lộ các ràng buộc sản phẩm hay nghiệp vụ: business rule, nghĩa vụ
+compliance và quy định pháp lý, SLA theo hợp đồng, giá cả, chính sách lưu giữ dữ liệu, thứ tự ưu tiên,
+và người dùng mục tiêu. KHÔNG BAO GIỜ dựng lại những thứ này từ code hay cách đặt tên. Chỉ ghi nhận chúng từ người dùng
+hoặc một artifact sản phẩm có thẩm quyền, và liệt kê chúng như các giả định cần xác nhận cho đến lúc đó.
 
-### 3. Define Scope
+### 3. Xác định phạm vi
 
-State:
+Nêu rõ:
 
-- Goal: one sentence describing the intended outcome.
-- In scope: behavior this change must deliver.
-- Out of scope: tempting adjacent work explicitly excluded.
-- Assumptions: claims not yet proven.
-- Blocking decisions: unresolved choices that materially affect safety or behavior.
+- Goal: một câu mô tả kết quả dự định.
+- In scope: hành vi mà thay đổi này phải mang lại.
+- Out of scope: công việc liền kề hấp dẫn nhưng bị loại trừ tường minh.
+- Assumptions: các khẳng định chưa được chứng minh.
+- Blocking decisions: các lựa chọn chưa giải quyết ảnh hưởng đáng kể đến an toàn hoặc hành vi.
 
-### 4. Write Acceptance Criteria
+### 4. Viết Acceptance Criteria
 
-Use `AC-001`, `AC-002`, and so on. Each criterion must describe observable behavior and an
-appropriate verification method; criteria and tests are not required to map one-to-one.
+Dùng `AC-001`, `AC-002`, v.v. Mỗi tiêu chí phải mô tả hành vi quan sát được và một
+phương pháp xác minh phù hợp; tiêu chí và test không bắt buộc ánh xạ một-một.
 
-For each applicable criterion include:
+Với mỗi tiêu chí áp dụng được, bao gồm:
 
-- Scenario or starting condition.
-- Action or trigger.
-- Expected observable behavior.
-- Prohibited side effect when meaningful.
-- Verification method: automated test, integration check, manual UX review, accessibility
-  check, security review, operational check, or stakeholder acceptance.
-- Environment/safety constraint when verification could affect data, services, cost, or secrets.
-- Priority: required, important, or optional.
+- Kịch bản hoặc điều kiện bắt đầu.
+- Hành động hoặc trigger.
+- Hành vi quan sát được mong đợi.
+- Side effect bị cấm khi có ý nghĩa.
+- Phương pháp xác minh: test tự động, kiểm tra integration, review UX thủ công, kiểm tra
+  accessibility, security review, kiểm tra vận hành, hoặc stakeholder chấp nhận.
+- Ràng buộc môi trường/an toàn khi việc xác minh có thể ảnh hưởng đến dữ liệu, dịch vụ, chi phí hoặc secret.
+- Ưu tiên: required, important, hoặc optional.
 
-Do not use words such as "correctly", "securely", "fast", "intuitive", or "robust" without
-defining observable evidence or recording them as a human-review judgment.
+Không dùng các từ như "correctly", "securely", "fast", "intuitive", hay "robust" nếu không
+định nghĩa bằng chứng quan sát được hoặc ghi chúng như một phán đoán do con người review.
 
-### 5. Cover Only Relevant Boundaries
+### 5. Chỉ bao phủ các ranh giới liên quan
 
-Consider these categories, but include only categories that apply:
+Xem xét các danh mục này, nhưng chỉ đưa vào những danh mục áp dụng:
 
-| Category | Include when | Typical evidence |
+| Danh mục | Đưa vào khi | Bằng chứng điển hình |
 | --- | --- | --- |
-| Happy path | New or changed user-visible behavior | Successful workflow or state transition |
-| Validation | The change accepts input | Rejected malformed or boundary value without mutation |
-| Authorization/privacy | Data or actions have access boundaries | Denied access and no sensitive disclosure |
-| Persistence/migration | Stored data or schemas change | Backward read, migration, rollback or backup behavior |
-| Compatibility | Public APIs, files, events, or clients may break | Existing contract or fixture remains valid |
-| Failure recovery | Network, service, or asynchronous failure exists | No partial state or clear retry/degraded behavior |
-| Idempotency/concurrency | Repeats or simultaneous writes are plausible | No duplicate side effect or invalid final state |
-| Performance | A user or service threshold matters | Defined measurement conditions and threshold |
-| UX/accessibility | A person interacts with the result | Keyboard, feedback, error recovery, visual/manual review |
+| Happy path | Hành vi mới hoặc thay đổi mà người dùng nhìn thấy | Workflow thành công hoặc chuyển trạng thái |
+| Validation | Thay đổi nhận đầu vào | Từ chối giá trị sai định dạng hoặc ở biên mà không biến đổi dữ liệu |
+| Authorization/privacy | Dữ liệu hoặc hành động có ranh giới truy cập | Truy cập bị từ chối và không rò rỉ thông tin nhạy cảm |
+| Persistence/migration | Dữ liệu lưu trữ hoặc schema thay đổi | Đọc ngược tương thích, migration, hành vi rollback hoặc backup |
+| Compatibility | API công khai, file, event hoặc client có thể bị phá vỡ | Contract hoặc fixture hiện có vẫn hợp lệ |
+| Failure recovery | Tồn tại lỗi mạng, dịch vụ hoặc bất đồng bộ | Không có trạng thái dở dang hoặc hành vi retry/suy giảm rõ ràng |
+| Idempotency/concurrency | Có khả năng lặp lại hoặc ghi đồng thời | Không có side effect trùng lặp hoặc trạng thái cuối không hợp lệ |
+| Performance | Ngưỡng của người dùng hoặc dịch vụ là quan trọng | Điều kiện đo lường và ngưỡng được định nghĩa |
+| UX/accessibility | Một người tương tác với kết quả | Bàn phím, phản hồi, khôi phục lỗi, review trực quan/thủ công |
 
-### 6. Present And Continue
+### 6. Trình bày và tiếp tục
 
-- For a clarification/specification request, present the brief and ask for decisions only on
-  listed blockers.
-- For an implementation request with no blocker, present a compact criteria summary as part of
-  the work and continue with implementation.
-- For handoff to another agent or team, include enough context and verification detail for them
-  to act without inventing requirements.
-- Save the brief to a file only when requested. Use a repository-approved path when one exists;
-  otherwise ask for or state the chosen destination before writing.
+- Với yêu cầu làm rõ/đặc tả, trình bày brief và chỉ xin quyết định cho các điểm chặn
+  đã liệt kê.
+- Với yêu cầu triển khai không có điểm chặn, trình bày bản tóm tắt tiêu chí gọn như một phần của
+  công việc và tiếp tục triển khai.
+- Với việc bàn giao cho agent hoặc team khác, đưa vào đủ context và chi tiết xác minh để họ
+  hành động mà không phải tự bịa ra yêu cầu.
+- Chỉ lưu brief vào file khi được yêu cầu. Dùng đường dẫn đã được repository chấp thuận nếu có;
+  nếu không, hãy hỏi hoặc nêu nơi lưu đã chọn trước khi ghi.
 
-## Output Template
+## Template đầu ra
 
-Use this template for a Full Acceptance Brief. Omit irrelevant sections for Quick Capture.
+Dùng template này cho Full Acceptance Brief. Bỏ qua các mục không liên quan cho Quick Capture.
 
 ```markdown
 # Acceptance Brief: <Change Name>
@@ -291,21 +291,21 @@ Use this template for a Full Acceptance Brief. Omit irrelevant sections for Quic
 | AC-001 | <test/check/review command or evidence type> | Pending |
 ```
 
-## Pass/Fail Examples
+## Ví dụ Pass/Fail
 
-Use these to judge whether the skill actually produced a verifiable brief, not planning prose.
+Dùng các ví dụ này để đánh giá liệu skill có thực sự tạo ra một brief kiểm chứng được hay chỉ là văn xuôi kế hoạch.
 
-**A failing acceptance criterion**
+**Một acceptance criterion thất bại**
 
 ```
 AC-001: The export works correctly and is secure.
 ```
 
-Fails — "works correctly" and "secure" are not observable, there is no scenario, trigger,
-expected result, or verification method, and nothing states what must not happen. A reader
-cannot tell whether the implementation satisfied it.
+Thất bại — "works correctly" và "secure" không quan sát được, không có kịch bản, trigger,
+kết quả mong đợi hay phương pháp xác minh, và không có gì nêu điều gì không được xảy ra. Người đọc
+không thể biết liệu bản triển khai có thỏa mãn nó hay không.
 
-**A passing acceptance criterion**
+**Một acceptance criterion đạt**
 
 ```
 AC-001: Export generates file with correct headers
@@ -317,44 +317,44 @@ AC-001: Export generates file with correct headers
 - Priority: Required
 ```
 
-Passes — a concrete observable outcome, a prohibited side effect, and a named verification
-method. Two people would agree on whether it was met.
+Đạt — có kết quả quan sát được cụ thể, một side effect bị cấm, và một phương pháp xác minh
+được nêu tên. Hai người sẽ đồng ý về việc nó có được đáp ứng hay không.
 
-**A failing context entry**
+**Một mục context thất bại**
 
 ```
 Discovered facts: Users on the free tier are limited to 100 exports per month.
 ```
 
-Fails — a per-tier limit is a business rule. It must not appear under discovered facts inferred
-from code; it belongs under Product/business constraints, supplied by the user, or be listed as
-an assumption to confirm.
+Thất bại — giới hạn theo từng tier là một business rule. Nó không được xuất hiện dưới discovered facts
+suy ra từ code; nó thuộc về Product/business constraints, do người dùng cung cấp, hoặc được liệt kê như
+một giả định cần xác nhận.
 
-### Pass/Fail Rubric
+### Thang đánh giá Pass/Fail
 
-A brief passes only if every answer is "yes". Any "no" means revise before returning it.
+Một brief chỉ đạt khi mọi câu trả lời đều là "có". Bất kỳ "không" nào có nghĩa là phải sửa trước khi trả về.
 
-- [ ] Does every required criterion have a scenario, an observable expected result, and a named verification method?
-- [ ] Are all vague terms ("correctly", "secure", "fast", "robust") either replaced with observable evidence or marked as human judgment?
-- [ ] Are product/business constraints listed as supplied/assumed, with none silently inferred from code?
-- [ ] Is scope explicit, with out-of-scope items named?
-- [ ] Are blocking decisions limited to choices that actually affect safety or correctness, not preferences?
+- [ ] Mỗi tiêu chí required có một kịch bản, một kết quả mong đợi quan sát được và một phương pháp xác minh được nêu tên?
+- [ ] Mọi từ mơ hồ ("correctly", "secure", "fast", "robust") đã được thay bằng bằng chứng quan sát được hoặc đánh dấu là phán đoán của con người?
+- [ ] Các ràng buộc sản phẩm/nghiệp vụ được liệt kê là do người dùng cung cấp/giả định, không cái nào bị âm thầm suy ra từ code?
+- [ ] Phạm vi tường minh, với các mục out-of-scope được nêu tên?
+- [ ] Các quyết định chặn chỉ giới hạn ở những lựa chọn thực sự ảnh hưởng đến an toàn hoặc tính đúng đắn, không phải sở thích?
 
-## Quality Check
+## Kiểm tra chất lượng
 
-Before returning the brief, check:
+Trước khi trả về brief, hãy kiểm tra:
 
-- The goal describes an outcome rather than an implementation choice.
-- Scope boundaries and assumptions are explicit.
-- Every required criterion is observable or clearly marked for human judgment.
-- Security, privacy, data, compatibility, external-effect, and UX risks were considered only
-  where relevant and not silently ignored.
-- Verification methods identify safe environments for risky operations.
-- No secret or production-sensitive information was copied into the output.
-- No repository mutation or implementation block is imposed without justification or request.
+- Goal mô tả một kết quả chứ không phải một lựa chọn triển khai.
+- Ranh giới phạm vi và giả định tường minh.
+- Mỗi tiêu chí required quan sát được hoặc được đánh dấu rõ ràng cho phán đoán của con người.
+- Các rủi ro về security, privacy, dữ liệu, compatibility, tác động bên ngoài và UX chỉ được xem xét
+  khi liên quan và không bị âm thầm bỏ qua.
+- Các phương pháp xác minh xác định môi trường an toàn cho các thao tác rủi ro.
+- Không có secret hay thông tin nhạy cảm của production nào bị sao chép vào đầu ra.
+- Không áp đặt thay đổi repository hay chặn triển khai mà không có lý do chính đáng hoặc yêu cầu.
 
-## Handoff
+## Bàn giao
 
-When another planning or implementation workflow is available, pass the acceptance brief or
-criterion IDs to it. When no dedicated workflow exists, provide the brief directly as the
-implementation reference. Do not assume any named skill or tool is installed.
+Khi có sẵn một workflow lập kế hoạch hoặc triển khai khác, hãy truyền acceptance brief hoặc
+các ID tiêu chí cho nó. Khi không có workflow chuyên dụng, hãy cung cấp trực tiếp brief như
+tài liệu tham chiếu triển khai. Không giả định bất kỳ skill hay tool nào có tên đã được cài đặt.

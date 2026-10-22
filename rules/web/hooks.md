@@ -10,17 +10,17 @@ paths:
   - "**/*.vue"
   - "**/*.svelte"
 ---
-> This file extends [common/hooks.md](../common/hooks.md) with web-specific hook recommendations.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với các khuyến nghị về hook riêng cho web.
 
-# Web Hooks
+# Hook Web
 
-## Recommended PostToolUse Hooks
+## Các hook PostToolUse được khuyến nghị
 
-Prefer project-local tooling. Do not wire hooks to remote one-off package execution.
+Ưu tiên công cụ cục bộ của dự án. Không nối hook với việc thực thi package từ xa dùng một lần.
 
-### Format on Save
+### Format khi lưu
 
-Use the project's existing formatter entrypoint after edits:
+Dùng entrypoint formatter sẵn có của dự án sau khi sửa:
 
 ```json
 {
@@ -36,9 +36,9 @@ Use the project's existing formatter entrypoint after edits:
 }
 ```
 
-Equivalent local commands via `yarn prettier` or `npm exec prettier --` are fine when they use repo-owned dependencies.
+Các lệnh cục bộ tương đương qua `yarn prettier` hoặc `npm exec prettier --` đều ổn khi chúng dùng dependency do repo sở hữu.
 
-### Lint Check
+### Kiểm tra Lint
 
 ```json
 {
@@ -54,9 +54,9 @@ Equivalent local commands via `yarn prettier` or `npm exec prettier --` are fine
 }
 ```
 
-### Type Check
+### Kiểm tra Type
 
-Use `--incremental` so re-runs reuse the previous `.tsbuildinfo` (1-3s on unchanged code instead of 30-60s every time). Wrap in `timeout` so a stuck tsc gets reaped by the OS instead of accumulating across edits — this prevents the multi-process buildup that happens when edits fire faster than tsc finishes.
+Dùng `--incremental` để các lần chạy lại tái sử dụng `.tsbuildinfo` trước đó (1-3 giây trên code không đổi thay vì 30-60 giây mỗi lần). Bọc trong `timeout` để một tsc bị treo được OS dọn đi thay vì tích tụ qua các lần sửa — việc này ngăn tình trạng dồn nhiều process xảy ra khi các lần sửa kích hoạt nhanh hơn tốc độ tsc hoàn tất.
 
 ```json
 {
@@ -72,14 +72,14 @@ Use `--incremental` so re-runs reuse the previous `.tsbuildinfo` (1-3s on unchan
 }
 ```
 
-**Why both flags matter:**
-- Without `--incremental`, every edit re-checks the entire program from scratch. On a real Next.js project this stacks fast: edits at 5-10s intervals + 30-60s tsc runs = N concurrent tsc processes.
-- Without `timeout`, a tsc that hangs (transitive dep change, type-checker stuck on a recursive type) never exits and orphans when the parent shell does.
-- `--tsBuildInfoFile` is required because `--noEmit` normally suppresses the buildinfo write; specifying the path explicitly keeps incremental working.
+**Vì sao cả hai flag đều quan trọng:**
+- Không có `--incremental`, mỗi lần sửa phải kiểm tra lại toàn bộ chương trình từ đầu. Trên một dự án Next.js thực tế, điều này chồng chất rất nhanh: sửa cách nhau 5-10 giây + tsc chạy 30-60 giây = N process tsc chạy đồng thời.
+- Không có `timeout`, một tsc bị treo (thay đổi dependency bắc cầu, type-checker kẹt ở một type đệ quy) sẽ không bao giờ thoát và bị mồ côi khi shell cha thoát.
+- `--tsBuildInfoFile` là bắt buộc vì `--noEmit` thường chặn việc ghi buildinfo; chỉ định đường dẫn tường minh giúp incremental tiếp tục hoạt động.
 
-If you're on Windows without GNU coreutils, swap `timeout 60` for a PowerShell wrapper or rely on a Stop/SessionEnd hook to sweep stale tsc processes.
+Nếu bạn dùng Windows không có GNU coreutils, hãy thay `timeout 60` bằng một wrapper PowerShell hoặc dựa vào hook Stop/SessionEnd để dọn các process tsc cũ.
 
-### CSS Lint
+### Lint CSS
 
 ```json
 {
@@ -95,11 +95,11 @@ If you're on Windows without GNU coreutils, swap `timeout 60` for a PowerShell w
 }
 ```
 
-## PreToolUse Hooks
+## Hook PreToolUse
 
-### Guard File Size
+### Chặn kích thước file
 
-Block oversized writes from tool input content, not from a file that may not exist yet:
+Chặn các lần ghi quá lớn dựa trên nội dung đầu vào của tool, không dựa trên một file có thể chưa tồn tại:
 
 ```json
 {
@@ -115,9 +115,9 @@ Block oversized writes from tool input content, not from a file that may not exi
 }
 ```
 
-## Stop Hooks
+## Hook Stop
 
-### Final Build Verification
+### Xác minh build cuối cùng
 
 ```json
 {
@@ -132,10 +132,10 @@ Block oversized writes from tool input content, not from a file that may not exi
 }
 ```
 
-## Ordering
+## Thứ tự
 
-Recommended order:
+Thứ tự khuyến nghị:
 1. format
 2. lint
 3. type check
-4. build verification
+4. xác minh build

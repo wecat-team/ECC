@@ -1,33 +1,33 @@
 ---
 name: error-handling
-description: Patterns for robust error handling across TypeScript, Python, and Go. Covers typed errors, error boundaries, retries, circuit breakers, and user-facing error messages. Use when designing error types, retries, circuit breakers, or user-facing failure messages in TypeScript, Python, or Go.
+description: "Các pattern xử lý lỗi (error handling) vững chắc cho TypeScript, Python và Go. Bao gồm typed error, error boundary, retry, circuit breaker và thông báo lỗi hướng tới người dùng. Dùng khi thiết kế error type, retry, circuit breaker hoặc thông báo lỗi cho người dùng trong TypeScript, Python hoặc Go."
 metadata:
   origin: ECC
 ---
 
-# Error Handling Patterns
+# Pattern xử lý lỗi
 
-Consistent, robust error handling patterns for production applications.
+Các pattern xử lý lỗi nhất quán, vững chắc cho ứng dụng production.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Designing error types or exception hierarchies for a new module or service
-- Adding retry logic or circuit breakers for unreliable external dependencies
-- Reviewing API endpoints for missing error handling
-- Implementing user-facing error messages and feedback
-- Debugging cascading failures or silent error swallowing
+- Thiết kế error type hoặc phân cấp exception cho module hoặc service mới
+- Thêm logic retry hoặc circuit breaker cho các dependency bên ngoài không đáng tin cậy
+- Review API endpoint thiếu xử lý lỗi
+- Triển khai thông báo lỗi và phản hồi cho người dùng
+- Debug lỗi dây chuyền (cascading failure) hoặc lỗi bị nuốt âm thầm
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
-1. **Fail fast and loudly** — surface errors at the boundary where they occur; don't bury them
-2. **Typed errors over string messages** — errors are first-class values with structure
-3. **User messages ≠ developer messages** — show friendly text to users, log full context server-side
-4. **Never swallow errors silently** — every `catch` block must either handle, re-throw, or log
-5. **Errors are part of your API contract** — document every error code a client may receive
+1. **Fail fast và fail rõ ràng** — đưa lỗi lên ngay tại ranh giới nơi chúng xảy ra; đừng chôn vùi chúng
+2. **Typed error hơn thông báo dạng chuỗi** — lỗi là giá trị hạng nhất (first-class) có cấu trúc
+3. **Thông báo cho người dùng ≠ thông báo cho developer** — hiển thị văn bản thân thiện cho người dùng, log đầy đủ ngữ cảnh phía server
+4. **KHÔNG BAO GIỜ nuốt lỗi âm thầm** — mọi khối `catch` PHẢI xử lý, re-throw hoặc log
+5. **Lỗi là một phần của API contract** — ghi tài liệu mọi mã lỗi mà client có thể nhận
 
 ## TypeScript / JavaScript
 
-### Typed Error Classes
+### Typed Error Class
 
 ```typescript
 // Define an error hierarchy for your domain
@@ -72,9 +72,9 @@ export class RateLimitError extends AppError {
 }
 ```
 
-### Result Pattern (no-throw style)
+### Result Pattern (kiểu không throw)
 
-For operations where failure is expected and common (parsing, external calls):
+Cho các thao tác mà thất bại là điều dự kiến và phổ biến (parsing, gọi bên ngoài):
 
 ```typescript
 type Result<T, E = AppError> =
@@ -206,7 +206,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
 ## Python
 
-### Custom Exception Hierarchy
+### Phân cấp Exception tùy chỉnh
 
 ```python
 class AppError(Exception):
@@ -253,7 +253,7 @@ async def generic_error_handler(request: Request, exc: Exception) -> JSONRespons
 
 ## Go
 
-### Sentinel Errors and Error Wrapping
+### Sentinel Error và Error Wrapping
 
 ```go
 package domain
@@ -298,7 +298,7 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-## Retry with Exponential Backoff
+## Retry với Exponential Backoff
 
 ```typescript
 interface RetryOptions {
@@ -344,9 +344,9 @@ const data = await withRetry(() => fetch('/api/data').then(r => r.json()), {
 })
 ```
 
-## User-Facing Error Messages
+## Thông báo lỗi hướng tới người dùng
 
-Map error codes to human-readable messages. Keep technical details out of user-visible text.
+Ánh xạ mã lỗi sang thông báo dễ đọc với con người. Giữ chi tiết kỹ thuật ra khỏi văn bản người dùng nhìn thấy.
 
 ```typescript
 const USER_ERROR_MESSAGES: Record<string, string> = {
@@ -363,15 +363,15 @@ export function getUserMessage(code: string): string {
 }
 ```
 
-## Error Handling Checklist
+## Checklist xử lý lỗi
 
-Before merging any code that touches error handling:
+Trước khi merge bất kỳ code nào chạm tới xử lý lỗi:
 
-- [ ] Every `catch` block handles, re-throws, or logs — no silent swallowing
-- [ ] API errors follow the standard envelope `{ error: { code, message } }`
-- [ ] User-facing messages contain no stack traces or internal details
-- [ ] Full error context is logged server-side
-- [ ] Custom error classes extend a base `AppError` with a `code` field
-- [ ] Async functions surface errors to callers — no fire-and-forget without fallback
-- [ ] Retry logic only retries retriable errors (not 4xx client errors)
-- [ ] React components are wrapped in `ErrorBoundary` for rendering errors
+- [ ] Mọi khối `catch` đều xử lý, re-throw hoặc log — không nuốt lỗi âm thầm
+- [ ] Lỗi API tuân theo envelope chuẩn `{ error: { code, message } }`
+- [ ] Thông báo hướng tới người dùng không chứa stack trace hay chi tiết nội bộ
+- [ ] Ngữ cảnh lỗi đầy đủ được log phía server
+- [ ] Custom error class kế thừa một `AppError` cơ sở có trường `code`
+- [ ] Hàm async đưa lỗi lên cho caller — không fire-and-forget mà thiếu fallback
+- [ ] Logic retry chỉ retry các lỗi có thể retry (không phải lỗi client 4xx)
+- [ ] Component React được bọc trong `ErrorBoundary` để xử lý lỗi render

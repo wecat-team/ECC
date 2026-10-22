@@ -1,78 +1,78 @@
 ---
 name: hexagonal-architecture
-description: Design, implement, and refactor Ports & Adapters systems with clear domain boundaries, dependency inversion, and testable use-case orchestration across TypeScript, Java, Kotlin, and Go services. Use when introducing or refactoring toward Ports and Adapters, or when domain logic has become entangled with I/O.
+description: "Thiết kế, triển khai và refactor hệ thống Ports & Adapters với ranh giới domain rõ ràng, dependency inversion và điều phối use case dễ kiểm thử cho các service TypeScript, Java, Kotlin và Go. Dùng khi áp dụng hoặc refactor theo hướng Ports and Adapters, hoặc khi logic domain bị vướng víu với I/O."
 metadata:
   origin: ECC
 ---
 
 # Hexagonal Architecture
 
-Hexagonal architecture (Ports and Adapters) keeps business logic independent from frameworks, transport, and persistence details. The core app depends on abstract ports, and adapters implement those ports at the edges.
+Hexagonal architecture (Ports and Adapters) giữ cho business logic độc lập với framework, transport và chi tiết persistence. Phần lõi của ứng dụng phụ thuộc vào các port trừu tượng, còn các adapter triển khai những port đó ở rìa hệ thống.
 
-## When to Use
+## Khi nào dùng
 
-- Building new features where long-term maintainability and testability matter.
-- Refactoring layered or framework-heavy code where domain logic is mixed with I/O concerns.
-- Supporting multiple interfaces for the same use case (HTTP, CLI, queue workers, cron jobs).
-- Replacing infrastructure (database, external APIs, message bus) without rewriting business rules.
+- Xây dựng tính năng mới mà khả năng bảo trì và khả năng kiểm thử dài hạn là quan trọng.
+- Refactor code phân tầng hoặc nặng framework, nơi logic domain bị trộn lẫn với các mối quan tâm về I/O.
+- Hỗ trợ nhiều giao diện cho cùng một use case (HTTP, CLI, queue worker, cron job).
+- Thay thế hạ tầng (database, API bên ngoài, message bus) mà không phải viết lại business rule.
 
-Use this skill when the request involves boundaries, domain-centric design, refactoring tightly coupled services, or decoupling application logic from specific libraries.
+Dùng skill này khi yêu cầu liên quan đến ranh giới, thiết kế lấy domain làm trung tâm, refactor các service gắn kết chặt, hoặc tách logic ứng dụng khỏi các thư viện cụ thể.
 
-## Core Concepts
+## Khái niệm cốt lõi
 
-- **Domain model**: Business rules and entities/value objects. No framework imports.
-- **Use cases (application layer)**: Orchestrate domain behavior and workflow steps.
-- **Inbound ports**: Contracts describing what the application can do (commands/queries/use-case interfaces).
-- **Outbound ports**: Contracts for dependencies the application needs (repositories, gateways, event publishers, clock, UUID, etc.).
-- **Adapters**: Infrastructure and delivery implementations of ports (HTTP controllers, DB repositories, queue consumers, SDK wrappers).
-- **Composition root**: Single wiring location where concrete adapters are bound to use cases.
+- **Domain model**: Business rule và entity/value object. Không import framework.
+- **Use case (tầng application)**: Điều phối hành vi domain và các bước workflow.
+- **Inbound port**: Contract mô tả ứng dụng có thể làm gì (command/query/interface của use case).
+- **Outbound port**: Contract cho các dependency mà ứng dụng cần (repository, gateway, event publisher, clock, UUID, v.v.).
+- **Adapter**: Phần triển khai hạ tầng và delivery của các port (HTTP controller, DB repository, queue consumer, SDK wrapper).
+- **Composition root**: Vị trí wiring duy nhất, nơi các adapter cụ thể được gắn vào use case.
 
-Outbound port interfaces usually live in the application layer (or in domain only when the abstraction is truly domain-level), while infrastructure adapters implement them.
+Interface của outbound port thường nằm ở tầng application (hoặc ở domain chỉ khi abstraction thực sự thuộc mức domain), còn các adapter hạ tầng triển khai chúng.
 
-Dependency direction is always inward:
+Hướng phụ thuộc luôn hướng vào trong:
 
-- Adapters -> application/domain
-- Application -> port interfaces (inbound/outbound contracts)
-- Domain -> domain-only abstractions (no framework or infrastructure dependencies)
-- Domain -> nothing external
+- Adapter -> application/domain
+- Application -> các port interface (contract inbound/outbound)
+- Domain -> các abstraction chỉ thuộc domain (không phụ thuộc framework hay hạ tầng)
+- Domain -> không phụ thuộc gì bên ngoài
 
-## How It Works
+## Cách hoạt động
 
-### Step 1: Model a use case boundary
+### Bước 1: Mô hình hóa ranh giới của một use case
 
-Define a single use case with a clear input and output DTO. Keep transport details (Express `req`, GraphQL `context`, job payload wrappers) outside this boundary.
+Định nghĩa một use case duy nhất với DTO đầu vào và đầu ra rõ ràng. Giữ các chi tiết transport (Express `req`, GraphQL `context`, wrapper payload của job) bên ngoài ranh giới này.
 
-### Step 2: Define outbound ports first
+### Bước 2: Định nghĩa outbound port trước
 
-Identify every side effect as a port:
+Xác định mọi side effect như một port:
 
 - persistence (`UserRepositoryPort`)
-- external calls (`BillingGatewayPort`)
+- lời gọi bên ngoài (`BillingGatewayPort`)
 - cross-cutting (`LoggerPort`, `ClockPort`)
 
-Ports should model capabilities, not technologies.
+Port nên mô hình hóa năng lực (capability), không phải công nghệ.
 
-### Step 3: Implement the use case with pure orchestration
+### Bước 3: Triển khai use case chỉ với điều phối thuần túy
 
-Use case class/function receives ports via constructor/arguments. It validates application-level invariants, coordinates domain rules, and returns plain data structures.
+Class/function của use case nhận các port qua constructor/đối số. Nó kiểm tra các invariant ở mức application, điều phối các domain rule và trả về các cấu trúc dữ liệu thuần.
 
-### Step 4: Build adapters at the edge
+### Bước 4: Xây dựng adapter ở rìa
 
-- Inbound adapter converts protocol input to use-case input.
-- Outbound adapter maps app contracts to concrete APIs/ORM/query builders.
-- Mapping stays in adapters, not inside use cases.
+- Inbound adapter chuyển đổi đầu vào của giao thức thành đầu vào của use case.
+- Outbound adapter ánh xạ contract của ứng dụng sang các API/ORM/query builder cụ thể.
+- Việc mapping nằm trong adapter, không nằm bên trong use case.
 
-### Step 5: Wire everything in a composition root
+### Bước 5: Wiring mọi thứ trong composition root
 
-Instantiate adapters, then inject them into use cases. Keep this wiring centralized to avoid hidden service-locator behavior.
+Khởi tạo các adapter, rồi inject chúng vào use case. Giữ việc wiring này tập trung để tránh hành vi service-locator ẩn.
 
-### Step 6: Test per boundary
+### Bước 6: Test theo từng ranh giới
 
-- Unit test use cases with fake ports.
-- Integration test adapters with real infra dependencies.
-- E2E test user-facing flows through inbound adapters.
+- Unit test use case với các fake port.
+- Integration test adapter với các dependency hạ tầng thật.
+- E2E test các luồng hướng người dùng thông qua inbound adapter.
 
-## Architecture Diagram
+## Sơ đồ kiến trúc
 
 ```mermaid
 flowchart LR
@@ -84,9 +84,9 @@ flowchart LR
   UseCase --> DomainModel["DomainModel"]
 ```
 
-## Suggested Module Layout
+## Bố cục module đề xuất
 
-Use feature-first organization with explicit boundaries:
+Dùng tổ chức theo feature-first với các ranh giới tường minh:
 
 ```text
 src/
@@ -117,9 +117,9 @@ src/
         ordersContainer.ts
 ```
 
-## TypeScript Example
+## Ví dụ TypeScript
 
-### Port definitions
+### Định nghĩa port
 
 ```typescript
 export interface OrderRepositoryPort {
@@ -202,76 +202,76 @@ export const buildCreateOrderUseCase = (deps: { db: SqlClient; stripe: StripeCli
 };
 ```
 
-## Multi-Language Mapping
+## Ánh xạ đa ngôn ngữ
 
-Use the same boundary rules across ecosystems; only syntax and wiring style change.
+Dùng cùng các quy tắc ranh giới cho mọi hệ sinh thái; chỉ có cú pháp và phong cách wiring thay đổi.
 
 - **TypeScript/JavaScript**
-  - Ports: `application/ports/*` as interfaces/types.
-  - Use cases: classes/functions with constructor/argument injection.
-  - Adapters: `adapters/inbound/*`, `adapters/outbound/*`.
-  - Composition: explicit factory/container module (no hidden globals).
+  - Port: `application/ports/*` dưới dạng interface/type.
+  - Use case: class/function với injection qua constructor/đối số.
+  - Adapter: `adapters/inbound/*`, `adapters/outbound/*`.
+  - Composition: module factory/container tường minh (không có global ẩn).
 - **Java**
-  - Packages: `domain`, `application.port.in`, `application.port.out`, `application.usecase`, `adapter.in`, `adapter.out`.
-  - Ports: interfaces in `application.port.*`.
-  - Use cases: plain classes (Spring `@Service` is optional, not required).
-  - Composition: Spring config or manual wiring class; keep wiring out of domain/use-case classes.
+  - Package: `domain`, `application.port.in`, `application.port.out`, `application.usecase`, `adapter.in`, `adapter.out`.
+  - Port: interface trong `application.port.*`.
+  - Use case: class thuần (Spring `@Service` là tùy chọn, không bắt buộc).
+  - Composition: Spring config hoặc class wiring thủ công; giữ wiring ngoài các class domain/use case.
 - **Kotlin**
-  - Modules/packages mirror the Java split (`domain`, `application.port`, `application.usecase`, `adapter`).
-  - Ports: Kotlin interfaces.
-  - Use cases: classes with constructor injection (Koin/Dagger/Spring/manual).
-  - Composition: module definitions or dedicated composition functions; avoid service locator patterns.
+  - Module/package phản chiếu cách chia của Java (`domain`, `application.port`, `application.usecase`, `adapter`).
+  - Port: interface Kotlin.
+  - Use case: class với constructor injection (Koin/Dagger/Spring/thủ công).
+  - Composition: định nghĩa module hoặc các hàm composition chuyên dụng; tránh các pattern service locator.
 - **Go**
-  - Packages: `internal/<feature>/domain`, `application`, `ports`, `adapters/inbound`, `adapters/outbound`.
-  - Ports: small interfaces owned by the consuming application package.
-  - Use cases: structs with interface fields plus explicit `New...` constructors.
-  - Composition: wire in `cmd/<app>/main.go` (or dedicated wiring package), keep constructors explicit.
+  - Package: `internal/<feature>/domain`, `application`, `ports`, `adapters/inbound`, `adapters/outbound`.
+  - Port: interface nhỏ do package application tiêu thụ sở hữu.
+  - Use case: struct với các field interface cùng các constructor `New...` tường minh.
+  - Composition: wiring trong `cmd/<app>/main.go` (hoặc package wiring chuyên dụng), giữ constructor tường minh.
 
-## Anti-Patterns to Avoid
+## Anti-Pattern cần tránh
 
-- Domain entities importing ORM models, web framework types, or SDK clients.
-- Use cases reading directly from `req`, `res`, or queue metadata.
-- Returning database rows directly from use cases without domain/application mapping.
-- Letting adapters call each other directly instead of flowing through use-case ports.
-- Spreading dependency wiring across many files with hidden global singletons.
+- Domain entity import ORM model, kiểu của web framework hoặc SDK client.
+- Use case đọc trực tiếp từ `req`, `res` hoặc metadata của queue.
+- Trả về trực tiếp các dòng database từ use case mà không mapping domain/application.
+- Để các adapter gọi trực tiếp lẫn nhau thay vì đi qua các port của use case.
+- Rải wiring dependency ra nhiều file với các global singleton ẩn.
 
-## Migration Playbook
+## Playbook di chuyển (Migration)
 
-1. Pick one vertical slice (single endpoint/job) with frequent change pain.
-2. Extract a use-case boundary with explicit input/output types.
-3. Introduce outbound ports around existing infrastructure calls.
-4. Move orchestration logic from controllers/services into the use case.
-5. Keep old adapters, but make them delegate to the new use case.
-6. Add tests around the new boundary (unit + adapter integration).
-7. Repeat slice-by-slice; avoid full rewrites.
+1. Chọn một vertical slice (một endpoint/job) có nhiều đau đớn khi thay đổi thường xuyên.
+2. Tách một ranh giới use case với các kiểu input/output tường minh.
+3. Đưa vào các outbound port bao quanh các lời gọi hạ tầng hiện có.
+4. Chuyển logic điều phối từ controller/service vào use case.
+5. Giữ các adapter cũ, nhưng cho chúng ủy quyền (delegate) sang use case mới.
+6. Thêm test quanh ranh giới mới (unit + adapter integration).
+7. Lặp lại từng slice một; tránh viết lại toàn bộ.
 
-### Refactoring Existing Systems
+### Refactor các hệ thống hiện có
 
-- **Strangler approach**: keep current endpoints, route one use case at a time through new ports/adapters.
-- **No big-bang rewrites**: migrate per feature slice and preserve behavior with characterization tests.
-- **Facade first**: wrap legacy services behind outbound ports before replacing internals.
-- **Composition freeze**: centralize wiring early so new dependencies do not leak into domain/use-case layers.
-- **Slice selection rule**: prioritize high-churn, low-blast-radius flows first.
-- **Rollback path**: keep a reversible toggle or route switch per migrated slice until production behavior is verified.
+- **Cách tiếp cận Strangler**: giữ các endpoint hiện tại, định tuyến từng use case một qua các port/adapter mới.
+- **Không viết lại kiểu big-bang**: di chuyển theo từng feature slice và bảo toàn hành vi bằng characterization test.
+- **Facade trước**: bọc các service legacy sau các outbound port trước khi thay thế phần bên trong.
+- **Đóng băng composition**: tập trung wiring sớm để các dependency mới không rò rỉ vào tầng domain/use case.
+- **Quy tắc chọn slice**: ưu tiên các luồng thay đổi nhiều, phạm vi ảnh hưởng nhỏ trước.
+- **Đường rollback**: giữ một toggle hoặc route switch có thể đảo ngược cho mỗi slice đã di chuyển cho đến khi hành vi production được xác minh.
 
-## Testing Guidance (Same Hexagonal Boundaries)
+## Hướng dẫn kiểm thử (Cùng các ranh giới Hexagonal)
 
-- **Domain tests**: test entities/value objects as pure business rules (no mocks, no framework setup).
-- **Use-case unit tests**: test orchestration with fakes/stubs for outbound ports; assert business outcomes and port interactions.
-- **Outbound adapter contract tests**: define shared contract suites at port level and run them against each adapter implementation.
-- **Inbound adapter tests**: verify protocol mapping (HTTP/CLI/queue payload to use-case input and output/error mapping back to protocol).
-- **Adapter integration tests**: run against real infrastructure (DB/API/queue) for serialization, schema/query behavior, retries, and timeouts.
-- **End-to-end tests**: cover critical user journeys through inbound adapter -> use case -> outbound adapter.
-- **Refactor safety**: add characterization tests before extraction; keep them until new boundary behavior is stable and equivalent.
+- **Domain test**: test entity/value object như các business rule thuần (không mock, không cần cấu hình framework).
+- **Use-case unit test**: test việc điều phối với fake/stub cho các outbound port; assert kết quả nghiệp vụ và các tương tác với port.
+- **Outbound adapter contract test**: định nghĩa các contract suite dùng chung ở mức port và chạy chúng với từng phần triển khai adapter.
+- **Inbound adapter test**: xác minh việc mapping giao thức (payload HTTP/CLI/queue sang đầu vào use case, và mapping đầu ra/lỗi ngược lại giao thức).
+- **Adapter integration test**: chạy trên hạ tầng thật (DB/API/queue) để kiểm tra serialization, hành vi schema/query, retry và timeout.
+- **End-to-end test**: bao phủ các hành trình người dùng quan trọng qua inbound adapter -> use case -> outbound adapter.
+- **An toàn khi refactor**: thêm characterization test trước khi tách; giữ chúng cho đến khi hành vi của ranh giới mới ổn định và tương đương.
 
-## Best Practices Checklist
+## Checklist Best Practice
 
-- Domain and use-case layers import only internal types and ports.
-- Every external dependency is represented by an outbound port.
-- Validation occurs at boundaries (inbound adapter + use-case invariants).
-- Use immutable transformations (return new values/entities instead of mutating shared state).
-- Errors are translated across boundaries (infra errors -> application/domain errors).
-- Composition root is explicit and easy to audit.
-- Use cases are testable with simple in-memory fakes for ports.
-- Refactoring starts from one vertical slice with behavior-preserving tests.
-- Language/framework specifics stay in adapters, never in domain rules.
+- Tầng domain và use case chỉ import các kiểu nội bộ và port.
+- Mọi dependency bên ngoài đều được biểu diễn bằng một outbound port.
+- Validation xảy ra tại các ranh giới (inbound adapter + invariant của use case).
+- Dùng các phép biến đổi bất biến (immutable) (trả về giá trị/entity mới thay vì thay đổi state dùng chung).
+- Lỗi được chuyển đổi khi vượt qua các ranh giới (lỗi hạ tầng -> lỗi application/domain).
+- Composition root tường minh và dễ audit.
+- Use case có thể test với các fake in-memory đơn giản cho các port.
+- Refactor bắt đầu từ một vertical slice với các test bảo toàn hành vi.
+- Chi tiết riêng của ngôn ngữ/framework ở lại trong adapter, không bao giờ đưa vào domain rule.

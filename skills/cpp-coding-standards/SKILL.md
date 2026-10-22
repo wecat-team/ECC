@@ -1,58 +1,58 @@
 ---
 name: cpp-coding-standards
-description: C++ coding standards based on the C++ Core Guidelines (isocpp.github.io). Use when writing, reviewing, or refactoring C++ code to enforce modern, safe, and idiomatic practices.
+description: Tiêu chuẩn coding C++ dựa trên C++ Core Guidelines (isocpp.github.io). Dùng khi viết, review hoặc refactor code C++ để thực thi các thực hành hiện đại, an toàn và idiomatic.
 metadata:
   origin: ECC
 ---
 
-# C++ Coding Standards (C++ Core Guidelines)
+# Tiêu chuẩn Coding C++ (C++ Core Guidelines)
 
-Comprehensive coding standards for modern C++ (C++17/20/23) derived from the [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines). Enforces type safety, resource safety, immutability, and clarity.
+Tiêu chuẩn coding toàn diện cho C++ hiện đại (C++17/20/23) được rút ra từ [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines). Thực thi type safety, resource safety, tính bất biến (immutable) và sự rõ ràng.
 
-## When to Use
+## Khi nào dùng
 
-- Writing new C++ code (classes, functions, templates)
-- Reviewing or refactoring existing C++ code
-- Making architectural decisions in C++ projects
-- Enforcing consistent style across a C++ codebase
-- Choosing between language features (e.g., `enum` vs `enum class`, raw pointer vs smart pointer)
+- Viết code C++ mới (class, hàm, template)
+- Review hoặc refactor code C++ hiện có
+- Đưa ra các quyết định kiến trúc trong dự án C++
+- Thực thi phong cách nhất quán trên một codebase C++
+- Lựa chọn giữa các tính năng ngôn ngữ (ví dụ `enum` vs `enum class`, raw pointer vs smart pointer)
 
-### When NOT to Use
+### Khi nào KHÔNG dùng
 
-- Non-C++ projects
-- Legacy C codebases that cannot adopt modern C++ features
-- Embedded/bare-metal contexts where specific guidelines conflict with hardware constraints (adapt selectively)
+- Dự án không phải C++
+- Codebase C legacy không thể áp dụng các tính năng C++ hiện đại
+- Ngữ cảnh embedded/bare-metal nơi một số guideline xung đột với ràng buộc phần cứng (hãy áp dụng có chọn lọc)
 
-## Cross-Cutting Principles
+## Nguyên tắc xuyên suốt
 
-These themes recur across the entire guidelines and form the foundation:
+Các chủ đề này lặp lại xuyên suốt toàn bộ guideline và tạo thành nền tảng:
 
-1. **RAII everywhere** (P.8, R.1, E.6, CP.20): Bind resource lifetime to object lifetime
-2. **Immutability by default** (P.10, Con.1-5, ES.25): Start with `const`/`constexpr`; mutability is the exception
-3. **Type safety** (P.4, I.4, ES.46-49, Enum.3): Use the type system to prevent errors at compile time
-4. **Express intent** (P.3, F.1, NL.1-2, T.10): Names, types, and concepts should communicate purpose
-5. **Minimize complexity** (F.2-3, ES.5, Per.4-5): Simple code is correct code
-6. **Value semantics over pointer semantics** (C.10, R.3-5, F.20, CP.31): Prefer returning by value and scoped objects
+1. **RAII ở mọi nơi** (P.8, R.1, E.6, CP.20): Gắn vòng đời tài nguyên với vòng đời đối tượng
+2. **Bất biến (immutable) theo mặc định** (P.10, Con.1-5, ES.25): Bắt đầu với `const`/`constexpr`; tính khả biến là ngoại lệ
+3. **Type safety** (P.4, I.4, ES.46-49, Enum.3): Dùng hệ thống type để ngăn lỗi ngay lúc compile
+4. **Thể hiện ý định** (P.3, F.1, NL.1-2, T.10): Tên, type và concept nên truyền đạt mục đích
+5. **Giảm thiểu độ phức tạp** (F.2-3, ES.5, Per.4-5): Code đơn giản là code đúng
+6. **Value semantics hơn pointer semantics** (C.10, R.3-5, F.20, CP.31): Ưu tiên trả về theo giá trị và các đối tượng có scope
 
-## Philosophy & Interfaces (P.*, I.*)
+## Triết lý & Interface (P.*, I.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **P.1** | Express ideas directly in code |
-| **P.3** | Express intent |
-| **P.4** | Ideally, a program should be statically type safe |
-| **P.5** | Prefer compile-time checking to run-time checking |
-| **P.8** | Don't leak any resources |
-| **P.10** | Prefer immutable data to mutable data |
-| **I.1** | Make interfaces explicit |
-| **I.2** | Avoid non-const global variables |
-| **I.4** | Make interfaces precisely and strongly typed |
-| **I.11** | Never transfer ownership by a raw pointer or reference |
-| **I.23** | Keep the number of function arguments low |
+| **P.1** | Thể hiện ý tưởng trực tiếp trong code |
+| **P.3** | Thể hiện ý định |
+| **P.4** | Lý tưởng nhất, một chương trình nên an toàn về type một cách tĩnh |
+| **P.5** | Ưu tiên kiểm tra lúc compile hơn kiểm tra lúc chạy |
+| **P.8** | Đừng làm rò rỉ bất kỳ tài nguyên nào |
+| **P.10** | Ưu tiên dữ liệu bất biến hơn dữ liệu khả biến |
+| **I.1** | Làm cho interface tường minh |
+| **I.2** | Tránh biến global không phải const |
+| **I.4** | Làm cho interface có type chính xác và mạnh |
+| **I.11** | KHÔNG BAO GIỜ chuyển quyền sở hữu bằng raw pointer hoặc reference |
+| **I.23** | Giữ số lượng tham số hàm ở mức thấp |
 
-### DO
+### NÊN
 
 ```cpp
 // P.10 + I.4: Immutable, strongly typed interface
@@ -63,7 +63,7 @@ struct Temperature {
 Temperature boil(const Temperature& water);
 ```
 
-### DON'T
+### KHÔNG NÊN
 
 ```cpp
 // Weak interface: unclear ownership, unclear units
@@ -73,24 +73,24 @@ double boil(double* temp);
 int g_counter = 0;  // I.2 violation
 ```
 
-## Functions (F.*)
+## Hàm (F.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **F.1** | Package meaningful operations as carefully named functions |
-| **F.2** | A function should perform a single logical operation |
-| **F.3** | Keep functions short and simple |
-| **F.4** | If a function might be evaluated at compile time, declare it `constexpr` |
-| **F.6** | If your function must not throw, declare it `noexcept` |
-| **F.8** | Prefer pure functions |
-| **F.16** | For "in" parameters, pass cheaply-copied types by value and others by `const&` |
-| **F.20** | For "out" values, prefer return values to output parameters |
-| **F.21** | To return multiple "out" values, prefer returning a struct |
-| **F.43** | Never return a pointer or reference to a local object |
+| **F.1** | Đóng gói các thao tác có ý nghĩa thành các hàm được đặt tên cẩn thận |
+| **F.2** | Một hàm nên thực hiện một thao tác logic duy nhất |
+| **F.3** | Giữ hàm ngắn và đơn giản |
+| **F.4** | Nếu một hàm có thể được đánh giá lúc compile, hãy khai báo nó `constexpr` |
+| **F.6** | Nếu hàm của bạn không được phép throw, hãy khai báo nó `noexcept` |
+| **F.8** | Ưu tiên hàm thuần (pure function) |
+| **F.16** | Với tham số "in", truyền các type copy rẻ theo giá trị và các type còn lại theo `const&` |
+| **F.20** | Với giá trị "out", ưu tiên giá trị trả về hơn tham số output |
+| **F.21** | Để trả về nhiều giá trị "out", ưu tiên trả về một struct |
+| **F.43** | KHÔNG BAO GIỜ trả về pointer hoặc reference tới một đối tượng cục bộ |
 
-### Parameter Passing
+### Truyền tham số
 
 ```cpp
 // F.16: Cheap types by value, others by const&
@@ -111,7 +111,7 @@ void parse(std::string_view input,
            std::string& token, int& pos);    // avoid this
 ```
 
-### Pure Functions and constexpr
+### Hàm thuần và constexpr
 
 ```cpp
 // F.4 + F.8: Pure, constexpr where possible
@@ -122,28 +122,28 @@ constexpr int factorial(int n) noexcept {
 static_assert(factorial(5) == 120);
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
-- Returning `T&&` from functions (F.45)
-- Using `va_arg` / C-style variadics (F.55)
-- Capturing by reference in lambdas passed to other threads (F.53)
-- Returning `const T` which inhibits move semantics (F.49)
+- Trả về `T&&` từ hàm (F.45)
+- Dùng `va_arg` / variadic kiểu C (F.55)
+- Capture theo reference trong lambda được truyền cho thread khác (F.53)
+- Trả về `const T` làm cản trở move semantics (F.49)
 
-## Classes & Class Hierarchies (C.*)
+## Class & Phân cấp Class (C.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **C.2** | Use `class` if invariant exists; `struct` if data members vary independently |
-| **C.9** | Minimize exposure of members |
-| **C.20** | If you can avoid defining default operations, do (Rule of Zero) |
-| **C.21** | If you define or `=delete` any copy/move/destructor, handle them all (Rule of Five) |
-| **C.35** | Base class destructor: public virtual or protected non-virtual |
-| **C.41** | A constructor should create a fully initialized object |
-| **C.46** | Declare single-argument constructors `explicit` |
-| **C.67** | A polymorphic class should suppress public copy/move |
-| **C.128** | Virtual functions: specify exactly one of `virtual`, `override`, or `final` |
+| **C.2** | Dùng `class` nếu tồn tại invariant; `struct` nếu các data member biến đổi độc lập |
+| **C.9** | Giảm thiểu việc phơi bày member |
+| **C.20** | Nếu có thể tránh định nghĩa các thao tác mặc định, hãy tránh (Rule of Zero) |
+| **C.21** | Nếu bạn định nghĩa hoặc `=delete` bất kỳ copy/move/destructor nào, hãy xử lý tất cả (Rule of Five) |
+| **C.35** | Destructor của base class: public virtual hoặc protected non-virtual |
+| **C.41** | Một constructor nên tạo ra một đối tượng được khởi tạo đầy đủ |
+| **C.46** | Khai báo constructor một tham số là `explicit` |
+| **C.67** | Một class đa hình nên chặn copy/move công khai |
+| **C.128** | Hàm virtual: chỉ định đúng một trong `virtual`, `override` hoặc `final` |
 
 ### Rule of Zero
 
@@ -192,7 +192,7 @@ private:
 };
 ```
 
-### Class Hierarchy
+### Phân cấp Class
 
 ```cpp
 // C.35 + C.128: Virtual destructor, use override
@@ -212,29 +212,29 @@ private:
 };
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
-- Calling virtual functions in constructors/destructors (C.82)
-- Using `memset`/`memcpy` on non-trivial types (C.90)
-- Providing different default arguments for virtual function and overrider (C.140)
-- Making data members `const` or references, which suppresses move/copy (C.12)
+- Gọi hàm virtual trong constructor/destructor (C.82)
+- Dùng `memset`/`memcpy` trên các type không tầm thường (C.90)
+- Cung cấp các đối số mặc định khác nhau cho hàm virtual và hàm override nó (C.140)
+- Biến data member thành `const` hoặc reference, làm chặn move/copy (C.12)
 
-## Resource Management (R.*)
+## Quản lý tài nguyên (R.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **R.1** | Manage resources automatically using RAII |
-| **R.3** | A raw pointer (`T*`) is non-owning |
-| **R.5** | Prefer scoped objects; don't heap-allocate unnecessarily |
-| **R.10** | Avoid `malloc()`/`free()` |
-| **R.11** | Avoid calling `new` and `delete` explicitly |
-| **R.20** | Use `unique_ptr` or `shared_ptr` to represent ownership |
-| **R.21** | Prefer `unique_ptr` over `shared_ptr` unless sharing ownership |
-| **R.22** | Use `make_shared()` to make `shared_ptr`s |
+| **R.1** | Quản lý tài nguyên tự động bằng RAII |
+| **R.3** | Một raw pointer (`T*`) là không sở hữu (non-owning) |
+| **R.5** | Ưu tiên các đối tượng có scope; đừng cấp phát heap không cần thiết |
+| **R.10** | Tránh `malloc()`/`free()` |
+| **R.11** | Tránh gọi `new` và `delete` một cách tường minh |
+| **R.20** | Dùng `unique_ptr` hoặc `shared_ptr` để biểu diễn quyền sở hữu |
+| **R.21** | Ưu tiên `unique_ptr` hơn `shared_ptr` trừ khi chia sẻ quyền sở hữu |
+| **R.22** | Dùng `make_shared()` để tạo `shared_ptr` |
 
-### Smart Pointer Usage
+### Cách dùng Smart Pointer
 
 ```cpp
 // R.11 + R.20 + R.21: RAII with smart pointers
@@ -249,7 +249,7 @@ void render(const Widget* w) {  // does NOT own w
 render(widget.get());
 ```
 
-### RAII Pattern
+### Pattern RAII
 
 ```cpp
 // R.1: Resource acquisition is initialization
@@ -281,31 +281,31 @@ private:
 };
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
-- Naked `new`/`delete` (R.11)
-- `malloc()`/`free()` in C++ code (R.10)
-- Multiple resource allocations in a single expression (R.13 -- exception safety hazard)
-- `shared_ptr` where `unique_ptr` suffices (R.21)
+- `new`/`delete` trần (R.11)
+- `malloc()`/`free()` trong code C++ (R.10)
+- Nhiều lần cấp phát tài nguyên trong một biểu thức duy nhất (R.13 -- nguy cơ về exception safety)
+- `shared_ptr` ở nơi `unique_ptr` là đủ (R.21)
 
-## Expressions & Statements (ES.*)
+## Biểu thức & Câu lệnh (ES.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **ES.5** | Keep scopes small |
-| **ES.20** | Always initialize an object |
-| **ES.23** | Prefer `{}` initializer syntax |
-| **ES.25** | Declare objects `const` or `constexpr` unless modification is intended |
-| **ES.28** | Use lambdas for complex initialization of `const` variables |
-| **ES.45** | Avoid magic constants; use symbolic constants |
-| **ES.46** | Avoid narrowing/lossy arithmetic conversions |
-| **ES.47** | Use `nullptr` rather than `0` or `NULL` |
-| **ES.48** | Avoid casts |
-| **ES.50** | Don't cast away `const` |
+| **ES.5** | Giữ scope nhỏ |
+| **ES.20** | Luôn khởi tạo một đối tượng |
+| **ES.23** | Ưu tiên cú pháp khởi tạo `{}` |
+| **ES.25** | Khai báo đối tượng `const` hoặc `constexpr` trừ khi có ý định sửa đổi |
+| **ES.28** | Dùng lambda để khởi tạo phức tạp cho các biến `const` |
+| **ES.45** | Tránh hằng số ma thuật; dùng hằng số có tên |
+| **ES.46** | Tránh các phép chuyển đổi số học narrowing/mất dữ liệu |
+| **ES.47** | Dùng `nullptr` thay vì `0` hoặc `NULL` |
+| **ES.48** | Tránh cast |
+| **ES.50** | Đừng cast bỏ `const` |
 
-### Initialization
+### Khởi tạo
 
 ```cpp
 // ES.20 + ES.23 + ES.25: Always initialize, prefer {}, default to const
@@ -323,32 +323,32 @@ const auto config = [&] {
 }();
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
-- Uninitialized variables (ES.20)
-- Using `0` or `NULL` as pointer (ES.47 -- use `nullptr`)
-- C-style casts (ES.48 -- use `static_cast`, `const_cast`, etc.)
-- Casting away `const` (ES.50)
-- Magic numbers without named constants (ES.45)
-- Mixing signed and unsigned arithmetic (ES.100)
-- Reusing names in nested scopes (ES.12)
+- Biến chưa khởi tạo (ES.20)
+- Dùng `0` hoặc `NULL` làm pointer (ES.47 -- dùng `nullptr`)
+- Cast kiểu C (ES.48 -- dùng `static_cast`, `const_cast`, v.v.)
+- Cast bỏ `const` (ES.50)
+- Magic number không có hằng số có tên (ES.45)
+- Trộn số học signed và unsigned (ES.100)
+- Dùng lại tên trong các scope lồng nhau (ES.12)
 
-## Error Handling (E.*)
+## Xử lý lỗi (E.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **E.1** | Develop an error-handling strategy early in a design |
-| **E.2** | Throw an exception to signal that a function can't perform its assigned task |
-| **E.6** | Use RAII to prevent leaks |
-| **E.12** | Use `noexcept` when throwing is impossible or unacceptable |
-| **E.14** | Use purpose-designed user-defined types as exceptions |
-| **E.15** | Throw by value, catch by reference |
-| **E.16** | Destructors, deallocation, and swap must never fail |
-| **E.17** | Don't try to catch every exception in every function |
+| **E.1** | Phát triển chiến lược xử lý lỗi sớm trong thiết kế |
+| **E.2** | Throw một exception để báo hiệu rằng một hàm không thể thực hiện nhiệm vụ được giao |
+| **E.6** | Dùng RAII để ngăn rò rỉ |
+| **E.12** | Dùng `noexcept` khi việc throw là bất khả thi hoặc không thể chấp nhận |
+| **E.14** | Dùng các type do người dùng định nghĩa có mục đích thiết kế riêng làm exception |
+| **E.15** | Throw theo giá trị, catch theo reference |
+| **E.16** | Destructor, giải phóng bộ nhớ và swap không bao giờ được thất bại |
+| **E.17** | Đừng cố catch mọi exception trong mọi hàm |
 
-### Exception Hierarchy
+### Phân cấp Exception
 
 ```cpp
 // E.14 + E.15: Custom exception types, throw by value, catch by reference
@@ -381,25 +381,25 @@ void run() {
 }
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
-- Throwing built-in types like `int` or string literals (E.14)
-- Catching by value (slicing risk) (E.15)
-- Empty catch blocks that silently swallow errors
-- Using exceptions for flow control (E.3)
-- Error handling based on global state like `errno` (E.28)
+- Throw các type built-in như `int` hoặc string literal (E.14)
+- Catch theo giá trị (nguy cơ slicing) (E.15)
+- Các block catch rỗng âm thầm nuốt lỗi
+- Dùng exception để điều khiển luồng (E.3)
+- Xử lý lỗi dựa trên trạng thái global như `errno` (E.28)
 
-## Constants & Immutability (Con.*)
+## Hằng số & Tính bất biến (Con.*)
 
-### All Rules
+### Tất cả các rule
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **Con.1** | By default, make objects immutable |
-| **Con.2** | By default, make member functions `const` |
-| **Con.3** | By default, pass pointers and references to `const` |
-| **Con.4** | Use `const` for values that don't change after construction |
-| **Con.5** | Use `constexpr` for values computable at compile time |
+| **Con.1** | Theo mặc định, làm cho đối tượng bất biến |
+| **Con.2** | Theo mặc định, làm cho member function `const` |
+| **Con.3** | Theo mặc định, truyền pointer và reference tới `const` |
+| **Con.4** | Dùng `const` cho các giá trị không thay đổi sau khi construct |
+| **Con.5** | Dùng `constexpr` cho các giá trị có thể tính lúc compile |
 
 ```cpp
 // Con.1 through Con.5: Immutability by default
@@ -429,24 +429,24 @@ constexpr double PI = 3.14159265358979;
 constexpr int MAX_SENSORS = 256;
 ```
 
-## Concurrency & Parallelism (CP.*)
+## Đồng thời & Song song (CP.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **CP.2** | Avoid data races |
-| **CP.3** | Minimize explicit sharing of writable data |
-| **CP.4** | Think in terms of tasks, rather than threads |
-| **CP.8** | Don't use `volatile` for synchronization |
-| **CP.20** | Use RAII, never plain `lock()`/`unlock()` |
-| **CP.21** | Use `std::scoped_lock` to acquire multiple mutexes |
-| **CP.22** | Never call unknown code while holding a lock |
-| **CP.42** | Don't wait without a condition |
-| **CP.44** | Remember to name your `lock_guard`s and `unique_lock`s |
-| **CP.100** | Don't use lock-free programming unless you absolutely have to |
+| **CP.2** | Tránh data race |
+| **CP.3** | Giảm thiểu việc chia sẻ tường minh dữ liệu có thể ghi |
+| **CP.4** | Hãy nghĩ theo task, thay vì theo thread |
+| **CP.8** | Đừng dùng `volatile` để đồng bộ hóa |
+| **CP.20** | Dùng RAII, đừng bao giờ dùng `lock()`/`unlock()` trần |
+| **CP.21** | Dùng `std::scoped_lock` để lấy nhiều mutex |
+| **CP.22** | KHÔNG BAO GIỜ gọi code không xác định trong khi đang giữ lock |
+| **CP.42** | Đừng wait mà không có điều kiện |
+| **CP.44** | Nhớ đặt tên cho các `lock_guard` và `unique_lock` của bạn |
+| **CP.100** | Đừng dùng lập trình lock-free trừ khi thực sự bắt buộc |
 
-### Safe Locking
+### Khóa an toàn
 
 ```cpp
 // CP.20 + CP.44: RAII locks, always named
@@ -474,7 +474,7 @@ private:
 };
 ```
 
-### Multiple Mutexes
+### Nhiều Mutex
 
 ```cpp
 // CP.21: std::scoped_lock for multiple mutexes (deadlock-free)
@@ -485,30 +485,30 @@ void transfer(Account& from, Account& to, double amount) {
 }
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
-- `volatile` for synchronization (CP.8 -- it's for hardware I/O only)
-- Detaching threads (CP.26 -- lifetime management becomes nearly impossible)
-- Unnamed lock guards: `std::lock_guard<std::mutex>(m);` destroys immediately (CP.44)
-- Holding locks while calling callbacks (CP.22 -- deadlock risk)
-- Lock-free programming without deep expertise (CP.100)
+- `volatile` để đồng bộ hóa (CP.8 -- nó chỉ dành cho hardware I/O)
+- Detach thread (CP.26 -- việc quản lý vòng đời gần như bất khả thi)
+- Lock guard không đặt tên: `std::lock_guard<std::mutex>(m);` bị hủy ngay lập tức (CP.44)
+- Giữ lock trong khi gọi callback (CP.22 -- nguy cơ deadlock)
+- Lập trình lock-free khi không có chuyên môn sâu (CP.100)
 
-## Templates & Generic Programming (T.*)
+## Template & Lập trình tổng quát (T.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **T.1** | Use templates to raise the level of abstraction |
-| **T.2** | Use templates to express algorithms for many argument types |
-| **T.10** | Specify concepts for all template arguments |
-| **T.11** | Use standard concepts whenever possible |
-| **T.13** | Prefer shorthand notation for simple concepts |
-| **T.43** | Prefer `using` over `typedef` |
-| **T.120** | Use template metaprogramming only when you really need to |
-| **T.144** | Don't specialize function templates (overload instead) |
+| **T.1** | Dùng template để nâng cao mức trừu tượng |
+| **T.2** | Dùng template để biểu diễn thuật toán cho nhiều type đối số |
+| **T.10** | Chỉ định concept cho mọi đối số template |
+| **T.11** | Dùng concept chuẩn bất cứ khi nào có thể |
+| **T.13** | Ưu tiên ký hiệu viết tắt cho các concept đơn giản |
+| **T.43** | Ưu tiên `using` hơn `typedef` |
+| **T.120** | Chỉ dùng template metaprogramming khi thực sự cần |
+| **T.144** | Đừng specialize function template (hãy overload thay vào đó) |
 
-### Concepts (C++20)
+### Concept (C++20)
 
 ```cpp
 #include <concepts>
@@ -537,26 +537,26 @@ template<Serializable T>
 void save(const T& obj, const std::string& path);
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
-- Unconstrained templates in visible namespaces (T.47)
-- Specializing function templates instead of overloading (T.144)
-- Template metaprogramming where `constexpr` suffices (T.120)
-- `typedef` instead of `using` (T.43)
+- Template không ràng buộc trong các namespace hiển thị (T.47)
+- Specialize function template thay vì overload (T.144)
+- Template metaprogramming ở nơi `constexpr` là đủ (T.120)
+- `typedef` thay vì `using` (T.43)
 
-## Standard Library (SL.*)
+## Thư viện chuẩn (SL.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **SL.1** | Use libraries wherever possible |
-| **SL.2** | Prefer the standard library to other libraries |
-| **SL.con.1** | Prefer `std::array` or `std::vector` over C arrays |
-| **SL.con.2** | Prefer `std::vector` by default |
-| **SL.str.1** | Use `std::string` to own character sequences |
-| **SL.str.2** | Use `std::string_view` to refer to character sequences |
-| **SL.io.50** | Avoid `endl` (use `'\n'` -- `endl` forces a flush) |
+| **SL.1** | Dùng thư viện bất cứ khi nào có thể |
+| **SL.2** | Ưu tiên thư viện chuẩn hơn các thư viện khác |
+| **SL.con.1** | Ưu tiên `std::array` hoặc `std::vector` hơn mảng C |
+| **SL.con.2** | Ưu tiên `std::vector` theo mặc định |
+| **SL.str.1** | Dùng `std::string` để sở hữu chuỗi ký tự |
+| **SL.str.2** | Dùng `std::string_view` để tham chiếu tới chuỗi ký tự |
+| **SL.io.50** | Tránh `endl` (dùng `'\n'` -- `endl` buộc phải flush) |
 
 ```cpp
 // SL.con.1 + SL.con.2: Prefer vector/array over C arrays
@@ -572,16 +572,16 @@ std::string build_greeting(std::string_view name) {
 std::cout << "result: " << value << '\n';
 ```
 
-## Enumerations (Enum.*)
+## Enumeration (Enum.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **Enum.1** | Prefer enumerations over macros |
-| **Enum.3** | Prefer `enum class` over plain `enum` |
-| **Enum.5** | Don't use ALL_CAPS for enumerators |
-| **Enum.6** | Avoid unnamed enumerations |
+| **Enum.1** | Ưu tiên enumeration hơn macro |
+| **Enum.3** | Ưu tiên `enum class` hơn `enum` thường |
+| **Enum.5** | Đừng dùng ALL_CAPS cho enumerator |
+| **Enum.6** | Tránh enumeration không tên |
 
 ```cpp
 // Enum.3 + Enum.5: Scoped enum, no ALL_CAPS
@@ -593,20 +593,20 @@ enum { RED, GREEN, BLUE };           // Enum.3 + Enum.5 + Enum.6 violation
 #define MAX_SIZE 100                  // Enum.1 violation -- use constexpr
 ```
 
-## Source Files & Naming (SF.*, NL.*)
+## File nguồn & Đặt tên (SF.*, NL.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **SF.1** | Use `.cpp` for code files and `.h` for interface files |
-| **SF.7** | Don't write `using namespace` at global scope in a header |
-| **SF.8** | Use `#include` guards for all `.h` files |
-| **SF.11** | Header files should be self-contained |
-| **NL.5** | Avoid encoding type information in names (no Hungarian notation) |
-| **NL.8** | Use a consistent naming style |
-| **NL.9** | Use ALL_CAPS for macro names only |
-| **NL.10** | Prefer `underscore_style` names |
+| **SF.1** | Dùng `.cpp` cho file code và `.h` cho file interface |
+| **SF.7** | Đừng viết `using namespace` ở scope global trong header |
+| **SF.8** | Dùng `#include` guard cho mọi file `.h` |
+| **SF.11** | File header nên tự chứa (self-contained) |
+| **NL.5** | Tránh mã hóa thông tin type vào tên (không dùng Hungarian notation) |
+| **NL.8** | Dùng phong cách đặt tên nhất quán |
+| **NL.9** | Chỉ dùng ALL_CAPS cho tên macro |
+| **NL.10** | Ưu tiên tên theo `underscore_style` |
 
 ### Header Guard
 
@@ -635,7 +635,7 @@ private:
 #endif  // PROJECT_MODULE_WIDGET_H
 ```
 
-### Naming Conventions
+### Quy ước đặt tên
 
 ```cpp
 // NL.8 + NL.10: Consistent underscore_style
@@ -656,28 +656,28 @@ private:
 }  // namespace my_project
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
-- `using namespace std;` in a header at global scope (SF.7)
-- Headers that depend on inclusion order (SF.10, SF.11)
-- Hungarian notation like `strName`, `iCount` (NL.5)
-- ALL_CAPS for anything other than macros (NL.9)
+- `using namespace std;` trong header ở scope global (SF.7)
+- Header phụ thuộc vào thứ tự include (SF.10, SF.11)
+- Hungarian notation như `strName`, `iCount` (NL.5)
+- ALL_CAPS cho bất cứ thứ gì ngoài macro (NL.9)
 
-## Performance (Per.*)
+## Hiệu năng (Per.*)
 
-### Key Rules
+### Các rule chính
 
-| Rule | Summary |
+| Rule | Tóm tắt |
 |------|---------|
-| **Per.1** | Don't optimize without reason |
-| **Per.2** | Don't optimize prematurely |
-| **Per.6** | Don't make claims about performance without measurements |
-| **Per.7** | Design to enable optimization |
-| **Per.10** | Rely on the static type system |
-| **Per.11** | Move computation from run time to compile time |
-| **Per.19** | Access memory predictably |
+| **Per.1** | Đừng tối ưu hóa mà không có lý do |
+| **Per.2** | Đừng tối ưu hóa sớm |
+| **Per.6** | Đừng đưa ra khẳng định về hiệu năng mà không có đo đạc |
+| **Per.7** | Thiết kế để cho phép tối ưu hóa |
+| **Per.10** | Dựa vào hệ thống type tĩnh |
+| **Per.11** | Chuyển tính toán từ lúc chạy sang lúc compile |
+| **Per.19** | Truy cập bộ nhớ một cách có thể dự đoán |
 
-### Guidelines
+### Hướng dẫn
 
 ```cpp
 // Per.11: Compile-time computation where possible
@@ -694,31 +694,31 @@ std::vector<Point> points;           // GOOD: contiguous
 std::vector<std::unique_ptr<Point>> indirect_points; // BAD: pointer chasing
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
-- Optimizing without profiling data (Per.1, Per.6)
-- Choosing "clever" low-level code over clear abstractions (Per.4, Per.5)
-- Ignoring data layout and cache behavior (Per.19)
+- Tối ưu hóa mà không có dữ liệu profiling (Per.1, Per.6)
+- Chọn code mức thấp "thông minh" thay vì các abstraction rõ ràng (Per.4, Per.5)
+- Bỏ qua bố cục dữ liệu và hành vi cache (Per.19)
 
-## Quick Reference Checklist
+## Checklist tham khảo nhanh
 
-Before marking C++ work complete:
+Trước khi đánh dấu công việc C++ hoàn thành:
 
-- [ ] No raw `new`/`delete` -- use smart pointers or RAII (R.11)
-- [ ] Objects initialized at declaration (ES.20)
-- [ ] Variables are `const`/`constexpr` by default (Con.1, ES.25)
-- [ ] Member functions are `const` where possible (Con.2)
-- [ ] `enum class` instead of plain `enum` (Enum.3)
-- [ ] `nullptr` instead of `0`/`NULL` (ES.47)
-- [ ] No narrowing conversions (ES.46)
-- [ ] No C-style casts (ES.48)
-- [ ] Single-argument constructors are `explicit` (C.46)
-- [ ] Rule of Zero or Rule of Five applied (C.20, C.21)
-- [ ] Base class destructors are public virtual or protected non-virtual (C.35)
-- [ ] Templates are constrained with concepts (T.10)
-- [ ] No `using namespace` in headers at global scope (SF.7)
-- [ ] Headers have include guards and are self-contained (SF.8, SF.11)
-- [ ] Locks use RAII (`scoped_lock`/`lock_guard`) (CP.20)
-- [ ] Exceptions are custom types, thrown by value, caught by reference (E.14, E.15)
-- [ ] `'\n'` instead of `std::endl` (SL.io.50)
-- [ ] No magic numbers (ES.45)
+- [ ] Không có `new`/`delete` trần -- dùng smart pointer hoặc RAII (R.11)
+- [ ] Đối tượng được khởi tạo ngay khi khai báo (ES.20)
+- [ ] Biến là `const`/`constexpr` theo mặc định (Con.1, ES.25)
+- [ ] Member function là `const` khi có thể (Con.2)
+- [ ] `enum class` thay vì `enum` thường (Enum.3)
+- [ ] `nullptr` thay vì `0`/`NULL` (ES.47)
+- [ ] Không có narrowing conversion (ES.46)
+- [ ] Không có cast kiểu C (ES.48)
+- [ ] Constructor một tham số là `explicit` (C.46)
+- [ ] Đã áp dụng Rule of Zero hoặc Rule of Five (C.20, C.21)
+- [ ] Destructor của base class là public virtual hoặc protected non-virtual (C.35)
+- [ ] Template được ràng buộc bằng concept (T.10)
+- [ ] Không có `using namespace` trong header ở scope global (SF.7)
+- [ ] Header có include guard và tự chứa (SF.8, SF.11)
+- [ ] Lock dùng RAII (`scoped_lock`/`lock_guard`) (CP.20)
+- [ ] Exception là type tùy chỉnh, throw theo giá trị, catch theo reference (E.14, E.15)
+- [ ] `'\n'` thay vì `std::endl` (SL.io.50)
+- [ ] Không có magic number (ES.45)

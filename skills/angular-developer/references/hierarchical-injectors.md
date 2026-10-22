@@ -1,28 +1,28 @@
-# Hierarchical Injectors
+# Hierarchical Injector
 
-Angular's dependency injection system is hierarchical, meaning services can be scoped to different levels of the application.
+Hệ thống dependency injection của Angular có tính phân cấp, nghĩa là service có thể được giới hạn phạm vi ở các cấp khác nhau của ứng dụng.
 
-## Types of Injector Hierarchies
+## Các loại phân cấp Injector
 
-1. **`EnvironmentInjector` Hierarchy**: Configured via `@Injectable({ providedIn: 'root' })` or `ApplicationConfig.providers` during bootstrap. These are global singletons.
-2. **`ElementInjector` Hierarchy**: Created implicitly at each DOM element. Configured via the `providers` or `viewProviders` array in `@Component()` or `@Directive()`.
+1. **Phân cấp `EnvironmentInjector`**: Được cấu hình qua `@Injectable({ providedIn: 'root' })` hoặc `ApplicationConfig.providers` khi bootstrap. Đây là các singleton toàn cục.
+2. **Phân cấp `ElementInjector`**: Được tạo ngầm định tại mỗi phần tử DOM. Được cấu hình qua mảng `providers` hoặc `viewProviders` trong `@Component()` hoặc `@Directive()`.
 
-## Resolution Rules
+## Quy tắc resolve
 
-When a dependency is requested, Angular resolves it in two phases:
+Khi một dependency được yêu cầu, Angular resolve nó qua hai pha:
 
-1. It searches up the **`ElementInjector`** tree, starting from the requesting component/directive up to the root element.
-2. If not found, it searches the **`EnvironmentInjector`** tree, starting from the closest environment injector up to the root.
-3. If still not found, it throws an error (unless marked optional).
+1. Tìm ngược lên cây **`ElementInjector`**, bắt đầu từ component/directive yêu cầu lên đến root element.
+2. Nếu không tìm thấy, tìm trong cây **`EnvironmentInjector`**, bắt đầu từ environment injector gần nhất lên đến root.
+3. Nếu vẫn không tìm thấy, ném lỗi (trừ khi được đánh dấu optional).
 
-## Resolution Modifiers
+## Resolution Modifier
 
-You can alter how Angular searches for a dependency using the options object in `inject()`:
+Bạn có thể thay đổi cách Angular tìm một dependency bằng object tùy chọn trong `inject()`:
 
-- **`optional`**: If the dependency isn't found, return `null` instead of throwing an error.
-- **`self`**: Only check the current `ElementInjector`. Do not look up the parent tree.
-- **`skipSelf`**: Start searching in the parent `ElementInjector`, skipping the current element.
-- **`host`**: Stop searching when reaching the host component's view boundary.
+- **`optional`**: Nếu không tìm thấy dependency, trả về `null` thay vì ném lỗi.
+- **`self`**: Chỉ kiểm tra `ElementInjector` hiện tại. Không tìm lên cây cha.
+- **`skipSelf`**: Bắt đầu tìm từ `ElementInjector` cha, bỏ qua phần tử hiện tại.
+- **`host`**: Dừng tìm kiếm khi chạm tới ranh giới view của host component.
 
 ```ts
 @Component({...})
@@ -35,9 +35,9 @@ export class Example {
 }
 ```
 
-## `providers` vs `viewProviders`
+## `providers` so với `viewProviders`
 
-When providing a service at the component level:
+Khi cung cấp một service ở cấp component:
 
-- **`providers`**: The service is available to the component, its view (template), and any **projected content** (`<ng-content>`).
-- **`viewProviders`**: The service is available to the component and its view, but **NOT** to projected content. Use this to isolate services from content passed in by consumers.
+- **`providers`**: Service khả dụng cho component, view (template) của nó và mọi **nội dung được project** (`<ng-content>`).
+- **`viewProviders`**: Service khả dụng cho component và view của nó, nhưng **KHÔNG** khả dụng cho nội dung được project. Dùng cách này để cô lập service khỏi nội dung do bên sử dụng truyền vào.

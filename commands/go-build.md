@@ -1,29 +1,29 @@
 ---
-description: Fix Go build errors, go vet warnings, and linter issues incrementally. Invokes the go-build-resolver agent for minimal, surgical fixes.
+description: Sửa từng bước các lỗi build Go, warning của go vet và vấn đề linter. Gọi agent go-build-resolver để sửa tối thiểu, chính xác.
 ---
 
-# Go Build and Fix
+# Go Build và Fix
 
-This command invokes the **go-build-resolver** agent to incrementally fix Go build errors with minimal changes.
+Command này gọi agent **go-build-resolver** để sửa từng bước các lỗi build Go với thay đổi tối thiểu.
 
-## What This Command Does
+## Command này làm gì
 
-1. **Run Diagnostics**: Execute `go build`, `go vet`, `staticcheck`
-2. **Parse Errors**: Group by file and sort by severity
-3. **Fix Incrementally**: One error at a time
-4. **Verify Each Fix**: Re-run build after each change
-5. **Report Summary**: Show what was fixed and what remains
+1. **Chạy chẩn đoán**: Thực thi `go build`, `go vet`, `staticcheck`
+2. **Phân tích lỗi**: Nhóm theo file và sắp xếp theo mức độ nghiêm trọng
+3. **Sửa từng bước**: Mỗi lần một lỗi
+4. **Xác minh từng bản sửa**: Chạy lại build sau mỗi thay đổi
+5. **Báo cáo tóm tắt**: Hiển thị những gì đã sửa và những gì còn lại
 
-## When to Use
+## Khi nào dùng
 
-Use `/go-build` when:
-- `go build ./...` fails with errors
-- `go vet ./...` reports issues
-- `golangci-lint run` shows warnings
-- Module dependencies are broken
-- After pulling changes that break the build
+Dùng `/go-build` khi:
+- `go build ./...` thất bại với lỗi
+- `go vet ./...` báo vấn đề
+- `golangci-lint run` hiển thị warning
+- Module dependency bị hỏng
+- Sau khi pull các thay đổi làm hỏng build
 
-## Diagnostic Commands Run
+## Các lệnh chẩn đoán được chạy
 
 ```bash
 # Primary build check
@@ -41,7 +41,7 @@ go mod verify
 go mod tidy -v
 ```
 
-## Example Session
+## Phiên làm việc ví dụ
 
 ```text
 User: /go-build
@@ -143,41 +143,41 @@ ok      project/internal/handler   0.023s
 Build Status: PASS: SUCCESS
 ```
 
-## Common Errors Fixed
+## Các lỗi thường gặp đã sửa
 
-| Error | Typical Fix |
+| Lỗi | Cách sửa điển hình |
 |-------|-------------|
-| `undefined: X` | Add import or fix typo |
-| `cannot use X as Y` | Type conversion or fix assignment |
-| `missing return` | Add return statement |
-| `X does not implement Y` | Add missing method |
-| `import cycle` | Restructure packages |
-| `declared but not used` | Remove or use variable |
+| `undefined: X` | Thêm import hoặc sửa lỗi gõ |
+| `cannot use X as Y` | Chuyển đổi kiểu hoặc sửa phép gán |
+| `missing return` | Thêm câu lệnh return |
+| `X does not implement Y` | Thêm method còn thiếu |
+| `import cycle` | Tái cấu trúc package |
+| `declared but not used` | Xóa hoặc sử dụng biến |
 | `cannot find package` | `go get` or `go mod tidy` |
 
-## Fix Strategy
+## Chiến lược sửa lỗi
 
-1. **Build errors first** - Code must compile
-2. **Vet warnings second** - Fix suspicious constructs
-3. **Lint warnings third** - Style and best practices
-4. **One fix at a time** - Verify each change
-5. **Minimal changes** - Don't refactor, just fix
+1. **Lỗi build trước** - Code phải compile được
+2. **Warning của vet thứ hai** - Sửa các cấu trúc đáng ngờ
+3. **Warning của lint thứ ba** - Style và best practice
+4. **Mỗi lần một bản sửa** - Xác minh từng thay đổi
+5. **Thay đổi tối thiểu** - Không refactor, chỉ sửa
 
-## Stop Conditions
+## Điều kiện dừng
 
-The agent will stop and report if:
-- Same error persists after 3 attempts
-- Fix introduces more errors
-- Requires architectural changes
-- Missing external dependencies
+Agent sẽ dừng và báo cáo nếu:
+- Cùng một lỗi vẫn còn sau 3 lần thử
+- Bản sửa gây thêm lỗi
+- Cần thay đổi kiến trúc
+- Thiếu dependency bên ngoài
 
-## Related Commands
+## Các command liên quan
 
-- `/go-test` - Run tests after build succeeds
-- `/go-review` - Review code quality
-- `verification-loop` skill - Full verification loop
+- `/go-test` - Chạy test sau khi build thành công
+- `/go-review` - Review chất lượng code
+- skill `verification-loop` - Vòng lặp xác minh đầy đủ
 
-## Related
+## Liên quan
 
 - Agent: `agents/go-build-resolver.md`
 - Skill: `skills/golang-patterns/`

@@ -1,48 +1,48 @@
 ---
 name: strategic-compact
-description: Suggests manual context compaction at logical intervals to preserve context through task phases rather than arbitrary auto-compaction. Use when a session is approaching a context limit and a task phase is a natural place to compact.
+description: Gợi ý compact context thủ công tại các điểm hợp lý để giữ context xuyên suốt các giai đoạn của tác vụ, thay vì auto-compaction tùy tiện. Dùng khi một phiên làm việc sắp chạm giới hạn context và một giai đoạn của tác vụ là thời điểm tự nhiên để compact.
 metadata:
   origin: ECC
 ---
 
-# Strategic Compact Skill
+# Skill Strategic Compact
 
-Suggests manual `/compact` at strategic points in your workflow rather than relying on arbitrary auto-compaction.
+Gợi ý chạy `/compact` thủ công tại các điểm chiến lược trong workflow của bạn thay vì dựa vào auto-compaction tùy tiện.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Running long sessions that approach context limits (200K+ tokens)
-- Working on multi-phase tasks (research → plan → implement → test)
-- Switching between unrelated tasks within the same session
-- After completing a major milestone and starting new work
-- When responses slow down or become less coherent (context pressure)
+- Chạy các phiên dài sắp chạm giới hạn context (200K+ token)
+- Làm việc trên các tác vụ nhiều giai đoạn (research → plan → implement → test)
+- Chuyển đổi giữa các tác vụ không liên quan trong cùng một phiên
+- Sau khi hoàn thành một cột mốc lớn và bắt đầu công việc mới
+- Khi phản hồi chậm lại hoặc kém mạch lạc hơn (áp lực context)
 
-## Why Strategic Compaction?
+## Vì sao cần Strategic Compaction?
 
-Auto-compaction triggers at arbitrary points:
-- Often mid-task, losing important context
-- No awareness of logical task boundaries
-- Can interrupt complex multi-step operations
+Auto-compaction kích hoạt ở những thời điểm tùy ý:
+- Thường là giữa chừng một tác vụ, làm mất context quan trọng
+- Không nhận biết được ranh giới logic của tác vụ
+- Có thể làm gián đoạn các thao tác nhiều bước phức tạp
 
-Strategic compaction at logical boundaries:
-- **After exploration, before execution** — Compact research context, keep implementation plan
-- **After completing a milestone** — Fresh start for next phase
-- **Before major context shifts** — Clear exploration context before different task
+Strategic compaction tại các ranh giới logic:
+- **Sau khi khám phá, trước khi thực thi** — Compact context nghiên cứu, giữ lại kế hoạch triển khai
+- **Sau khi hoàn thành một cột mốc** — Khởi đầu mới cho giai đoạn tiếp theo
+- **Trước những chuyển dịch context lớn** — Xóa context khám phá trước khi sang một tác vụ khác
 
-## How It Works
+## Cách hoạt động
 
-The `suggest-compact.js` script runs on PreToolUse (Edit/Write) and combines two signals:
+Script `suggest-compact.js` chạy ở PreToolUse (Edit/Write) và kết hợp hai tín hiệu:
 
-1. **Context size (primary)** — Reads the latest `usage` record from the session transcript (`transcript_path` in the hook payload) and sums `input_tokens + cache_read_input_tokens + cache_creation_input_tokens` (the true context size of the turn). Suggests `/compact` at a window-scaled threshold — 160k tokens on a 200k window, 250k on a 1M window (detected from a `[1m]` model marker, or inferred when observed tokens already exceed 200k) — and re-reminds after every additional 60k tokens of context growth
-2. **Tool-call count (secondary)** — Counts tool invocations in session; suggests at a configurable threshold (default: 50 calls), then every 25 calls after
+1. **Kích thước context (chính)** — Đọc bản ghi `usage` mới nhất từ transcript của phiên (`transcript_path` trong payload của hook) và cộng `input_tokens + cache_read_input_tokens + cache_creation_input_tokens` (kích thước context thực sự của lượt đó). Gợi ý `/compact` tại ngưỡng co giãn theo cửa sổ — 160k token với cửa sổ 200k, 250k với cửa sổ 1M (phát hiện từ marker model `[1m]`, hoặc suy ra khi số token quan sát được đã vượt 200k) — và nhắc lại sau mỗi 60k token context tăng thêm
+2. **Số lần gọi tool (phụ)** — Đếm số lần gọi tool trong phiên; gợi ý tại một ngưỡng có thể cấu hình (mặc định: 50 lần gọi), sau đó cứ mỗi 25 lần gọi
 
-Tool count alone is a weak proxy for window pressure: a few large file reads or MCP responses can fill the window in very few calls, while many tiny calls can cross 50 with a near-empty window. The context-size signal fires when it actually matters.
+Chỉ riêng số lần gọi tool là một chỉ báo yếu cho áp lực cửa sổ: vài lần đọc file lớn hoặc phản hồi MCP có thể lấp đầy cửa sổ chỉ trong rất ít lần gọi, trong khi nhiều lần gọi nhỏ có thể vượt 50 mà cửa sổ gần như trống. Tín hiệu kích thước context sẽ kích hoạt khi điều đó thực sự quan trọng.
 
-## Hook Setup
+## Thiết lập Hook
 
-**Installed as a plugin?** No setup is needed. The plugin's `hooks/hooks.json` already registers `suggest-compact.js` (hook id `pre:edit-write:suggest-compact`, active in the `standard` and `strict` hook profiles). Do not copy the block below into `~/.claude/settings.json` — `~/.claude/scripts/` does not exist on plugin installs, and duplicating a plugin hook causes double execution.
+**Cài dưới dạng plugin?** Không cần thiết lập gì. `hooks/hooks.json` của plugin đã đăng ký `suggest-compact.js` (hook id `pre:edit-write:suggest-compact`, hoạt động trong các hook profile `standard` và `strict`). KHÔNG sao chép khối bên dưới vào `~/.claude/settings.json` — `~/.claude/scripts/` không tồn tại khi cài plugin, và nhân đôi một plugin hook sẽ gây thực thi hai lần.
 
-**If installed manually** (`./install.sh`), add to your `~/.claude/settings.json`:
+**Nếu cài thủ công** (`./install.sh`), thêm vào `~/.claude/settings.json` của bạn:
 
 ```json
 {
@@ -61,96 +61,96 @@ Tool count alone is a weak proxy for window pressure: a few large file reads or 
 }
 ```
 
-## Configuration
+## Cấu hình
 
-Environment variables:
-- `COMPACT_THRESHOLD` — Tool calls before first suggestion (default: 50)
-- `COMPACT_CONTEXT_THRESHOLD` — Context tokens before the context-size suggestion (default: 160000 on a 200k window, 250000 on a 1M window; `0` disables the context signal)
-- `COMPACT_CONTEXT_INTERVAL` — Additional context tokens before the suggestion repeats (default: 60000)
-- `COMPACT_STATE_TTL_DAYS` — Days before stale per-session state files in the temp dir are swept (default: 14)
-- `ECC_CONTEXT_WINDOW_TOKENS` — Explicit context-window size, in tokens, overriding auto-detection. Set this for large-window models whose reported id lacks a `[1m]` marker (e.g. 400k Opus 4.x, or a new 1M-window model family) so the threshold scales to the real window instead of defaulting to 200k and overstating context usage.
-- `CLAUDE_CODE_AUTO_COMPACT_WINDOW` — Claude Code's native window-size override, in tokens; honored as a fallback when `ECC_CONTEXT_WINDOW_TOKENS` is unset.
+Biến môi trường:
+- `COMPACT_THRESHOLD` — Số lần gọi tool trước lần gợi ý đầu tiên (mặc định: 50)
+- `COMPACT_CONTEXT_THRESHOLD` — Số token context trước khi gợi ý theo kích thước context (mặc định: 160000 với cửa sổ 200k, 250000 với cửa sổ 1M; `0` tắt tín hiệu context)
+- `COMPACT_CONTEXT_INTERVAL` — Số token context tăng thêm trước khi gợi ý được lặp lại (mặc định: 60000)
+- `COMPACT_STATE_TTL_DAYS` — Số ngày trước khi các file state cũ của từng phiên trong thư mục temp bị dọn (mặc định: 14)
+- `ECC_CONTEXT_WINDOW_TOKENS` — Kích thước cửa sổ context tường minh, tính bằng token, ghi đè việc tự phát hiện. Hãy đặt biến này cho các model cửa sổ lớn mà id được báo cáo không có marker `[1m]` (ví dụ Opus 4.x 400k, hoặc một dòng model cửa sổ 1M mới) để ngưỡng co giãn theo cửa sổ thực thay vì mặc định 200k và phóng đại mức sử dụng context.
+- `CLAUDE_CODE_AUTO_COMPACT_WINDOW` — Biến ghi đè kích thước cửa sổ gốc của Claude Code, tính bằng token; được dùng làm phương án dự phòng khi `ECC_CONTEXT_WINDOW_TOKENS` chưa được đặt.
 
-> The context window is otherwise auto-detected from a `[1m]` model marker or inferred when observed tokens already exceed 200k. On a large-window model that carries neither signal, set one of the overrides above so the `/compact` suggestion fires at the right point.
+> Cửa sổ context ngoài ra được tự phát hiện từ marker model `[1m]` hoặc suy ra khi số token quan sát được đã vượt 200k. Với model cửa sổ lớn không có tín hiệu nào trong hai tín hiệu đó, hãy đặt một trong các biến ghi đè ở trên để gợi ý `/compact` kích hoạt đúng thời điểm.
 
-## Compaction Decision Guide
+## Hướng dẫn quyết định Compaction
 
-Use this table to decide when to compact:
+Dùng bảng này để quyết định khi nào nên compact:
 
-| Phase Transition | Compact? | Why |
+| Chuyển giai đoạn | Compact? | Vì sao |
 |-----------------|----------|-----|
-| Research → Planning | Yes | Research context is bulky; plan is the distilled output |
-| Planning → Implementation | Yes | Plan is written down (a file, or the task list if you have one); free up context for code |
-| Implementation → Testing | Maybe | Keep if tests reference recent code; compact if switching focus |
-| Debugging → Next feature | Yes | Debug traces pollute context for unrelated work |
-| Mid-implementation | No | Losing variable names, file paths, and partial state is costly |
-| After a failed approach | Yes | Clear the dead-end reasoning before trying a new approach |
+| Research → Planning | Có | Context nghiên cứu cồng kềnh; kế hoạch là đầu ra đã được chắt lọc |
+| Planning → Implementation | Có | Kế hoạch đã được ghi lại (vào một file, hoặc danh sách task nếu có); giải phóng context cho code |
+| Implementation → Testing | Có thể | Giữ lại nếu test tham chiếu code gần đây; compact nếu chuyển trọng tâm |
+| Debugging → Tính năng tiếp theo | Có | Dấu vết debug làm ô nhiễm context cho công việc không liên quan |
+| Giữa chừng implementation | Không | Mất tên biến, đường dẫn file và state dở dang là rất tốn kém |
+| Sau một hướng tiếp cận thất bại | Có | Xóa suy luận ngõ cụt trước khi thử hướng tiếp cận mới |
 
-## What Survives Compaction
+## Điều gì tồn tại sau Compaction
 
-Understanding what persists helps you compact with confidence:
+Hiểu điều gì được giữ lại giúp bạn compact một cách tự tin:
 
-| Persists | Lost |
+| Được giữ lại | Bị mất |
 |----------|------|
-| CLAUDE.md instructions | Intermediate reasoning and analysis |
-| Files on disk | File contents you previously read |
-| Memory files (`~/.claude/memory/`) | Multi-step conversation context |
-| Git state (commits, branches) | Tool call history and counts |
-| The task list — **only if you have the todo tools** (see below) | Nuanced user preferences stated verbally |
+| Chỉ dẫn trong CLAUDE.md | Suy luận và phân tích trung gian |
+| File trên đĩa | Nội dung file mà bạn đã đọc trước đó |
+| File memory (`~/.claude/memory/`) | Context hội thoại nhiều bước |
+| Trạng thái Git (commit, branch) | Lịch sử và số lần gọi tool |
+| Danh sách task — **chỉ khi bạn có các tool todo** (xem bên dưới) | Các sở thích tinh tế của người dùng được nói bằng lời |
 
-> ### Don't rely on the task list surviving — it may not exist
+> ### Đừng dựa vào việc danh sách task còn tồn tại — nó có thể không có
 >
-> Claude Code **2.1.233 removed the todo/task tools by default** on Opus 4.8, Sonnet 5,
-> Fable 5, Mythos 5 and newer models (`TodoWrite`, `TaskCreate/Get/Update/List`).
-> `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` brings them back, but that is a per-machine
-> environment setting — **it does not travel with this skill**, so you cannot assume the
-> reader has it.
+> Claude Code **2.1.233 đã gỡ các tool todo/task theo mặc định** trên Opus 4.8, Sonnet 5,
+> Fable 5, Mythos 5 và các model mới hơn (`TodoWrite`, `TaskCreate/Get/Update/List`).
+> `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` đưa chúng trở lại, nhưng đó là một thiết lập
+> môi trường theo từng máy — **nó không đi kèm với skill này**, nên bạn không thể giả định
+> người đọc có nó.
 >
-> This matters because "my todo list survives compaction" is a reason people compact
-> *instead of* writing state down. If the tools are absent there is no list to survive,
-> and the plan is simply gone. **Write the plan to a file before compacting** — a file
-> persists on every version and every model. Treat the task list as a convenience that
-> may be missing, never as your durable record.
+> Điều này quan trọng vì "todo list của tôi vẫn còn sau compaction" là lý do khiến người ta compact
+> *thay vì* ghi state ra. Nếu các tool vắng mặt thì không có danh sách nào để mà tồn tại,
+> và kế hoạch đơn giản là biến mất. **Hãy ghi kế hoạch vào một file trước khi compact** — một file
+> tồn tại trên mọi phiên bản và mọi model. Hãy coi danh sách task là một tiện ích
+> có thể thiếu, không bao giờ là bản ghi bền vững của bạn.
 
-## Best Practices
+## Best Practice
 
-1. **Compact after planning** — Once the plan is finalized **and written to a file**, compact to start fresh
-2. **Compact after debugging** — Clear error-resolution context before continuing
-3. **Don't compact mid-implementation** — Preserve context for related changes
-4. **Read the suggestion** — The hook tells you *when*, you decide *if*
-5. **Write before compacting** — Save important context to files or memory before compacting
-6. **Use `/compact` with a summary** — Add a custom message: `/compact Focus on implementing auth middleware next`
+1. **Compact sau khi lập kế hoạch** — Khi kế hoạch đã được chốt **và ghi vào một file**, hãy compact để bắt đầu mới
+2. **Compact sau khi debug** — Xóa context xử lý lỗi trước khi tiếp tục
+3. **Không compact giữa chừng implementation** — Giữ context cho các thay đổi liên quan
+4. **Đọc gợi ý** — Hook cho bạn biết *khi nào*, bạn quyết định *có nên không*
+5. **Ghi trước khi compact** — Lưu context quan trọng vào file hoặc memory trước khi compact
+6. **Dùng `/compact` kèm bản tóm tắt** — Thêm một thông điệp tùy chỉnh: `/compact Focus on implementing auth middleware next`
 
-## Token Optimization Patterns
+## Pattern tối ưu Token
 
-### Trigger-Table Lazy Loading
-Instead of loading full skill content at session start, use a trigger table that maps keywords to skill paths. Skills load only when triggered, reducing baseline context by 50%+:
+### Lazy Loading bằng bảng Trigger
+Thay vì nạp toàn bộ nội dung skill khi bắt đầu phiên, hãy dùng một bảng trigger ánh xạ từ khóa tới đường dẫn skill. Skill chỉ được nạp khi được kích hoạt, giúp giảm context nền (baseline) hơn 50%:
 
-| Trigger | Skill | Load When |
+| Trigger | Skill | Nạp khi |
 |---------|-------|-----------|
-| "test", "tdd", "coverage" | tdd-workflow | User mentions testing |
-| "security", "auth", "xss" | security-review | Security-related work |
-| "deploy", "ci/cd" | deployment-patterns | Deployment context |
+| "test", "tdd", "coverage" | tdd-workflow | Người dùng nhắc đến testing |
+| "security", "auth", "xss" | security-review | Công việc liên quan đến bảo mật |
+| "deploy", "ci/cd" | deployment-patterns | Bối cảnh deployment |
 
-### Context Composition Awareness
-Monitor what's consuming your context window:
-- **CLAUDE.md files** — Always loaded, keep lean
-- **Loaded skills** — Each skill adds 1-5K tokens
-- **Conversation history** — Grows with each exchange
-- **Tool results** — File reads, search results add bulk
+### Nhận biết thành phần của Context
+Theo dõi những gì đang tiêu tốn cửa sổ context của bạn:
+- **File CLAUDE.md** — Luôn được nạp, hãy giữ gọn
+- **Skill đã nạp** — Mỗi skill thêm 1-5K token
+- **Lịch sử hội thoại** — Tăng theo mỗi lượt trao đổi
+- **Kết quả tool** — Đọc file, kết quả tìm kiếm làm tăng khối lượng
 
-### Duplicate Instruction Detection
-Common sources of duplicate context:
-- Same rules in both `~/.claude/rules/` and project `.claude/rules/`
-- Skills that repeat CLAUDE.md instructions
-- Multiple skills covering overlapping domains
+### Phát hiện chỉ dẫn trùng lặp
+Các nguồn phổ biến gây trùng lặp context:
+- Cùng một rule ở cả `~/.claude/rules/` và `.claude/rules/` của dự án
+- Skill lặp lại các chỉ dẫn trong CLAUDE.md
+- Nhiều skill bao phủ các domain chồng lấn nhau
 
-### Context Optimization Tools
-- `token-optimizer` MCP — Automated 95%+ token reduction via content deduplication
-- `context-mode` — Context virtualization (315KB to 5.4KB demonstrated)
+### Công cụ tối ưu Context
+- MCP `token-optimizer` — Giảm token tự động trên 95% thông qua loại bỏ nội dung trùng lặp
+- `context-mode` — Ảo hóa context (đã minh chứng từ 315KB xuống 5.4KB)
 
-## Related
+## Liên quan
 
-- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) — Token optimization section
-- Memory persistence hooks — For state that survives compaction
-- `continuous-learning` skill — Extracts patterns before session ends
+- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) — Phần Token optimization
+- Hook lưu trữ bền vững memory — Cho state cần tồn tại qua compaction
+- Skill `continuous-learning` — Trích xuất pattern trước khi phiên kết thúc

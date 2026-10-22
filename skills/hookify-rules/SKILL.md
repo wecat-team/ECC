@@ -1,21 +1,19 @@
 ---
 name: hookify-rules
-description: Create and configure hookify rules — markdown files with YAML frontmatter that match bash, file, prompt, or stop events by regex or conditions and show warn/block messages to the agent. Use when creating a hookify rule, writing hook rule syntax, configuring hookify, or adding pattern guardrails such as blocking dangerous commands, .env edits, or debug code.
+description: "Tạo và cấu hình hookify rule — các file markdown có YAML frontmatter, khớp với sự kiện bash, file, prompt hoặc stop bằng regex hoặc điều kiện và hiển thị thông báo warn/block cho agent. Dùng khi tạo hookify rule, viết cú pháp hook rule, cấu hình hookify, hoặc thêm các guardrail theo pattern như chặn lệnh nguy hiểm, chỉnh sửa .env hoặc debug code."
 ---
 
-# Writing Hookify Rules
+# Viết Hookify Rule
 
-## Overview
+## Tổng quan
 
-ECC evaluates project-local Hookify rules with its built-in Node runtime. No
-separate Hookify plugin or Python installation is required when ECC hooks are
-enabled.
+ECC đánh giá các Hookify rule cục bộ của dự án bằng runtime Node tích hợp sẵn. Không cần cài thêm plugin Hookify riêng hay Python khi các ECC hook được bật.
 
-Hookify rules are markdown files with YAML frontmatter that define patterns to watch for and messages to show when those patterns match. Rules are stored in `.claude/hookify.{rule-name}.local.md` files.
+Hookify rule là các file markdown có YAML frontmatter, định nghĩa các pattern cần theo dõi và thông báo hiển thị khi các pattern đó khớp. Rule được lưu trong các file `.claude/hookify.{rule-name}.local.md`.
 
-## Rule File Format
+## Định dạng file rule
 
-### Basic Structure
+### Cấu trúc cơ bản
 
 ```markdown
 ---
@@ -29,17 +27,17 @@ Message to show Claude when this rule triggers.
 Can include markdown formatting, warnings, suggestions, etc.
 ```
 
-### Frontmatter Fields
+### Các trường frontmatter
 
-| Field | Required | Values | Description |
+| Trường | Bắt buộc | Giá trị | Mô tả |
 |-------|----------|--------|-------------|
-| name | Yes | kebab-case string | Unique identifier (verb-first: warn-*, block-*, require-*) |
-| enabled | Yes | true/false | Toggle without deleting |
-| event | Yes | bash/file/stop/prompt/all | Which hook event triggers this |
-| action | No | warn/block | warn (default) shows message; block prevents operation |
-| pattern | Yes* | regex string | Pattern to match (*or use conditions for complex rules) |
+| name | Có | chuỗi kebab-case | Định danh duy nhất (bắt đầu bằng động từ: warn-*, block-*, require-*) |
+| enabled | Có | true/false | Bật/tắt mà không cần xóa |
+| event | Có | bash/file/stop/prompt/all | Hook event nào kích hoạt rule này |
+| action | Không | warn/block | warn (mặc định) hiển thị thông báo; block ngăn thao tác |
+| pattern | Có* | chuỗi regex | Pattern để khớp (*hoặc dùng conditions cho các rule phức tạp) |
 
-### Advanced Format (Multiple Conditions)
+### Định dạng nâng cao (Nhiều điều kiện)
 
 ```markdown
 ---
@@ -58,86 +56,86 @@ conditions:
 You're adding an API key to a .env file. Ensure this file is in .gitignore!
 ```
 
-**Condition fields by event:**
+**Các trường điều kiện theo event:**
 - bash: `command`
 - file: `file_path`, `new_text`, `old_text`, `content`
 - prompt: `user_prompt`
 
-**Operators:** `regex_match`, `contains`, `equals`, `not_contains`, `starts_with`, `ends_with`
+**Toán tử:** `regex_match`, `contains`, `equals`, `not_contains`, `starts_with`, `ends_with`
 
-All conditions must match for rule to trigger.
+Tất cả điều kiện phải khớp thì rule mới được kích hoạt.
 
-## Event Type Guide
+## Hướng dẫn các loại Event
 
-### bash Events
-Match Bash command patterns:
-- Dangerous commands: `rm\s+-rf`, `dd\s+if=`, `mkfs`
-- Privilege escalation: `sudo\s+`, `su\s+`
-- Permission issues: `chmod\s+777`
+### Event bash
+Khớp với các pattern lệnh Bash:
+- Lệnh nguy hiểm: `rm\s+-rf`, `dd\s+if=`, `mkfs`
+- Leo thang đặc quyền: `sudo\s+`, `su\s+`
+- Vấn đề về quyền: `chmod\s+777`
 
-### file Events
-Match Edit/Write/MultiEdit operations:
+### Event file
+Khớp với các thao tác Edit/Write/MultiEdit:
 - Debug code: `console\.log\(`, `debugger`
-- Security risks: `eval\(`, `innerHTML\s*=`
-- Sensitive files: `\.env$`, `credentials`, `\.pem$`
+- Rủi ro bảo mật: `eval\(`, `innerHTML\s*=`
+- File nhạy cảm: `\.env$`, `credentials`, `\.pem$`
 
-### stop Events
-Completion checks and reminders. Pattern `.*` matches always.
+### Event stop
+Kiểm tra khi hoàn thành và nhắc nhở. Pattern `.*` luôn khớp.
 
-### prompt Events
-Match user prompt content for workflow enforcement.
+### Event prompt
+Khớp với nội dung prompt của người dùng để thực thi workflow.
 
-## Pattern Writing Tips
+## Mẹo viết pattern
 
-### Regex Basics
-- Escape special chars: `.` to `\.`, `(` to `\(`
-- `\s` whitespace, `\d` digit, `\w` word char
-- `+` one or more, `*` zero or more, `?` optional
-- `|` OR operator
+### Cơ bản về Regex
+- Escape ký tự đặc biệt: `.` thành `\.`, `(` thành `\(`
+- `\s` khoảng trắng, `\d` chữ số, `\w` ký tự chữ
+- `+` một hoặc nhiều, `*` không hoặc nhiều, `?` tùy chọn
+- `|` toán tử OR
 
-### Common Pitfalls
-- **Too broad**: `log` matches "login", "dialog" — use `console\.log\(`
-- **Too specific**: `rm -rf /tmp` — use `rm\s+-rf`
-- **YAML escaping**: Use unquoted patterns; quoted strings need `\\s`
+### Lỗi thường gặp
+- **Quá rộng**: `log` khớp "login", "dialog" — hãy dùng `console\.log\(`
+- **Quá cụ thể**: `rm -rf /tmp` — hãy dùng `rm\s+-rf`
+- **Escape trong YAML**: Dùng pattern không có dấu nháy; chuỗi có dấu nháy cần `\\s`
 
-### Testing
+### Kiểm thử
 ```bash
 python3 -c "import re; print(re.search(r'your_pattern', 'test text'))"
 ```
 
-Avoid nested quantifiers such as `(a+)+`. The runtime rejects patterns with
-common catastrophic-backtracking shapes because rules run synchronously in the
-hook path, and every regex evaluation has a 25 ms hard timeout. Invalid,
-symlinked, or oversized local rules fail open and emit a
-diagnostic without disabling other Hookify rules.
+Tránh các quantifier lồng nhau như `(a+)+`. Runtime từ chối các pattern có dạng
+backtracking thảm họa (catastrophic backtracking) phổ biến vì các rule chạy đồng bộ
+trong đường dẫn hook, và mỗi lần đánh giá regex có timeout cứng 25 ms. Các rule cục bộ
+không hợp lệ, là symlink hoặc quá lớn sẽ fail open và phát ra một
+thông báo chẩn đoán mà không vô hiệu hóa các Hookify rule khác.
 
-Git-tracked local rules are disabled by default. Set
-`ECC_HOOKIFY_ALLOW_TRACKED=1` only after reviewing those files; ordinary
-gitignored rules created locally remain active without that override.
+Các rule cục bộ được git theo dõi (git-tracked) bị tắt theo mặc định. Chỉ đặt
+`ECC_HOOKIFY_ALLOW_TRACKED=1` sau khi đã review các file đó; các rule thông thường
+nằm trong gitignore được tạo cục bộ vẫn hoạt động mà không cần override này.
 
-## Runtime Behavior
+## Hành vi runtime
 
-- `warn` injects the message as event-specific additional context and does not block.
-- `block` denies matching Bash, PowerShell, Write, Edit, or MultiEdit calls before execution.
-- On prompt, post-tool, and stop events, `block` uses Claude Code's structured block decision.
-- Stop rules skip recursive `stop_hook_active` events to prevent infinite continuation loops.
+- `warn` chèn thông báo như context bổ sung theo từng event cụ thể và không chặn.
+- `block` từ chối các lệnh gọi Bash, PowerShell, Write, Edit hoặc MultiEdit khớp rule trước khi thực thi.
+- Với các event prompt, post-tool và stop, `block` dùng quyết định block có cấu trúc của Claude Code.
+- Các stop rule bỏ qua các event `stop_hook_active` đệ quy để ngăn vòng lặp tiếp tục vô hạn.
 
-## File Organization
+## Tổ chức file
 
-- **Location**: `.claude/` directory in project root
-- **Naming**: `.claude/hookify.{descriptive-name}.local.md`
-- **Gitignore**: Add `.claude/*.local.md` to `.gitignore`
+- **Vị trí**: thư mục `.claude/` ở thư mục gốc dự án
+- **Đặt tên**: `.claude/hookify.{descriptive-name}.local.md`
+- **Gitignore**: Thêm `.claude/*.local.md` vào `.gitignore`
 
-## Commands
+## Lệnh
 
-- `/hookify [description]` - Create new rules (auto-analyzes conversation if no args)
-- `/hookify-list` - View all rules in table format
-- `/hookify-configure` - Toggle rules on/off interactively
-- `/hookify-help` - Full documentation
+- `/hookify [description]` - Tạo rule mới (tự động phân tích cuộc hội thoại nếu không có đối số)
+- `/hookify-list` - Xem tất cả rule dạng bảng
+- `/hookify-configure` - Bật/tắt rule một cách tương tác
+- `/hookify-help` - Tài liệu đầy đủ
 
-## Quick Reference
+## Tham khảo nhanh
 
-Minimum viable rule:
+Rule tối thiểu khả dụng:
 ```markdown
 ---
 name: my-rule

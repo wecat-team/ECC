@@ -1,25 +1,25 @@
 ---
 name: design-system
-description: "Generate a design system from an existing codebase or audit one for visual consistency: extract tokens (colors, typography, spacing, shadows) into design-tokens.json and CSS custom properties with DESIGN.md rationale and an interactive HTML preview, score the UI across 10 dimensions, and flag AI-slop patterns. Use when starting a design system, auditing visual consistency before a redesign, or reviewing a PR that touches styling."
+description: "Sinh design system từ codebase hiện có hoặc audit tính nhất quán thị giác: trích xuất token (màu sắc, typography, spacing, shadow) vào design-tokens.json và CSS custom properties kèm DESIGN.md giải thích lý do và bản xem trước HTML tương tác, chấm điểm UI trên 10 chiều, và gắn cờ các pattern AI-slop. Dùng khi bắt đầu một design system, audit tính nhất quán thị giác trước khi redesign, hoặc review PR có chạm tới styling."
 metadata:
   origin: ECC
 ---
 
-# Design System — Generate & Audit Visual Systems
+# Design System — Sinh & Audit hệ thống thị giác
 
-## When to Use
+## Khi nào dùng
 
-- Starting a new project that needs a design system
-- Auditing an existing codebase for visual consistency
-- Before a redesign — understand what you have
-- When the UI looks "off" but you can't pinpoint why
-- Reviewing PRs that touch styling
+- Bắt đầu dự án mới cần một design system
+- Audit codebase hiện có về tính nhất quán thị giác
+- Trước khi redesign — hiểu rõ những gì đang có
+- Khi UI trông "lệch" nhưng không chỉ ra được vì sao
+- Review các PR có chạm tới styling
 
-## How It Works
+## Cách hoạt động
 
-### Mode 1: Generate Design System
+### Chế độ 1: Sinh Design System
 
-Analyzes your codebase and generates a cohesive design system:
+Phân tích codebase và sinh ra một design system gắn kết:
 
 ```
 1. Scan CSS/Tailwind/styled-components for existing patterns
@@ -30,11 +30,11 @@ Analyzes your codebase and generates a cohesive design system:
 6. Create an interactive HTML preview page (self-contained, no deps)
 ```
 
-Output: `DESIGN.md` + `design-tokens.json` + `design-preview.html`
+Đầu ra: `DESIGN.md` + `design-tokens.json` + `design-preview.html`
 
-### Mode 2: Visual Audit
+### Chế độ 2: Visual Audit
 
-Scores your UI across 10 dimensions (0-10 each):
+Chấm điểm UI trên 10 chiều (mỗi chiều 0-10):
 
 ```
 1. Color consistency — are you using your palette or random hex values?
@@ -49,11 +49,11 @@ Scores your UI across 10 dimensions (0-10 each):
 10. Polish — hover states, transitions, loading states, empty states
 ```
 
-Each dimension gets a score, specific examples, and a fix with exact file:line.
+Mỗi chiều nhận một điểm số, các ví dụ cụ thể và một cách sửa kèm file:line chính xác.
 
-### Mode 3: AI Slop Detection
+### Chế độ 3: Phát hiện AI Slop
 
-Identifies generic AI-generated design patterns:
+Nhận diện các pattern thiết kế chung chung do AI sinh ra:
 
 ```
 - Gratuitous gradients on everything
@@ -65,19 +65,19 @@ Identifies generic AI-generated design patterns:
 - Sans-serif font stack with no personality
 ```
 
-## Examples
+## Ví dụ
 
-**Generate for a SaaS app:**
+**Sinh cho một ứng dụng SaaS:**
 ```
 /design-system generate --style minimal --palette earth-tones
 ```
 
-**Audit existing UI:**
+**Audit UI hiện có:**
 ```
 /design-system audit --url http://localhost:3000 --pages / /pricing /docs
 ```
 
-**Check for AI slop:**
+**Kiểm tra AI slop:**
 ```
 /design-system slop-check
 ```

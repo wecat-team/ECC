@@ -1,9 +1,9 @@
-# Low-Score Example: Adding Retry Logic
+# Ví dụ điểm thấp: Thêm logic Retry
 
-## Task
-> Add retry logic with exponential backoff to all HTTP requests in the API client. Max 3 retries, initial delay 1s, max delay 30s.
+## Nhiệm vụ
+> Thêm logic retry với exponential backoff cho tất cả HTTP request trong API client. Tối đa 3 lần retry, độ trễ ban đầu 1s, độ trễ tối đa 30s.
 
-## Agent Output
+## Output của Agent
 
 Here's a retry implementation. I think this should work for most cases.
 
@@ -26,7 +26,7 @@ Let me know if you need anything else!
 
 ---
 
-## Evaluation Report
+## Báo cáo đánh giá
 
 ```
 ============================================================
@@ -78,9 +78,9 @@ TOP IMPROVEMENTS (axes scoring < 4):
     unsafe, say so explicitly with reasoning.
 ```
 
-### Why This Scores Poorly
+### Vì sao bị điểm thấp
 
-1. **Accuracy fails at the most basic level** — wrong library. One `grep httpx src/` would have caught this. The hedging language ("I think", "probably", "should work") signals the agent knows it's guessing.
-2. **Not actionable.** The user received a code snippet and a list of things they need to do. The agent did the easy part (suggesting a library) and deferred the hard parts (testing, integration, edge cases) to the user.
-3. **Completeness gaps are acknowledged but not fixed.** "Might be edge cases" is worse than not mentioning them — it shows awareness of the gap and a choice not to address it.
-4. **Information density is low.** 120 words, of which ~60 are hedging/disclaimers/politeness. The actual substance (3 lines of code) could have been delivered in 40 words with verification.
+1. **Accuracy thất bại ở mức cơ bản nhất** — sai thư viện. Chỉ một lệnh `grep httpx src/` là đã phát hiện ra. Ngôn ngữ dè dặt ("I think", "probably", "should work") cho thấy agent biết mình đang đoán.
+2. **Không actionable.** Người dùng nhận được một đoạn code và một danh sách việc họ cần làm. Agent làm phần dễ (gợi ý một thư viện) và đẩy những phần khó (test, tích hợp, edge case) cho người dùng.
+3. **Các lỗ hổng về completeness được thừa nhận nhưng không được sửa.** "Might be edge cases" còn tệ hơn việc không nhắc tới — nó cho thấy đã nhận thức được lỗ hổng và chọn không xử lý.
+4. **Mật độ thông tin thấp.** 120 từ, trong đó khoảng 60 từ là dè dặt/tuyên bố miễn trừ/xã giao. Nội dung thực chất (3 dòng code) có thể được đưa ra trong 40 từ kèm xác minh.

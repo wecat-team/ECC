@@ -1,41 +1,41 @@
-# Agent Orchestration
+# Điều phối Agent
 
-## Available Agents
+## Các Agent khả dụng
 
-ECC agents come either from the `ecc@ecc` plugin (plugin-scoped names, `ecc:<name>`) or from a manual install into `~/.claude/agents/` (bare names, `<name>`). Use the name that matches the install you have; the manual installer strips the `ecc:` prefix from copied files.
-They are invoked through the Agent tool with that `subagent_type`:
+Các agent của ECC đến từ plugin `ecc@ecc` (tên có phạm vi plugin, `ecc:<name>`) hoặc từ cài đặt thủ công vào `~/.claude/agents/` (tên trần, `<name>`). Hãy dùng tên khớp với cách bạn đã cài; trình cài đặt thủ công sẽ loại bỏ tiền tố `ecc:` khỏi các file được sao chép.
+Chúng được gọi qua tool Agent với `subagent_type` tương ứng:
 
 ```text
 Agent(subagent_type: "ecc:planner", prompt: "...")
 ```
 
-| Agent | Purpose | When to Use |
+| Agent | Mục đích | Khi nào dùng |
 |-------|---------|-------------|
-| ecc:planner | Implementation planning | Complex features, refactoring |
-| ecc:architect | System design | Architectural decisions |
-| ecc:tdd-guide | Test-driven development | New features, bug fixes |
-| ecc:code-reviewer | Code review | After writing code |
-| ecc:security-reviewer | Security analysis | Before commits |
-| ecc:build-error-resolver | Fix build errors | When build fails |
-| ecc:e2e-runner | E2E testing | Critical user flows |
-| ecc:refactor-cleaner | Dead code cleanup | Code maintenance |
-| ecc:doc-updater | Documentation | Updating docs |
-| ecc:rust-reviewer | Rust code review | Rust projects |
-| ecc:harmonyos-app-resolver | HarmonyOS app development | HarmonyOS/ArkTS projects |
+| ecc:planner | Lập kế hoạch triển khai | Tính năng phức tạp, refactor |
+| ecc:architect | Thiết kế hệ thống | Quyết định kiến trúc |
+| ecc:tdd-guide | Phát triển hướng kiểm thử (TDD) | Tính năng mới, sửa bug |
+| ecc:code-reviewer | Code review | Sau khi viết code |
+| ecc:security-reviewer | Phân tích bảo mật | Trước khi commit |
+| ecc:build-error-resolver | Sửa lỗi build | Khi build thất bại |
+| ecc:e2e-runner | Kiểm thử E2E | Các luồng người dùng quan trọng |
+| ecc:refactor-cleaner | Dọn dẹp dead code | Bảo trì code |
+| ecc:doc-updater | Tài liệu | Cập nhật tài liệu |
+| ecc:rust-reviewer | Code review Rust | Dự án Rust |
+| ecc:harmonyos-app-resolver | Phát triển ứng dụng HarmonyOS | Dự án HarmonyOS/ArkTS |
 
-For the full roster of 69 agents, see `/ecc:ecc-guide`.
+Để xem danh sách đầy đủ 69 agent, dùng `/ecc:ecc-guide`.
 
-## Immediate Agent Usage
+## Dùng Agent ngay lập tức
 
-No user prompt needed:
-1. Complex feature requests - Use **ecc:planner** agent
-2. Code just written/modified - Use **ecc:code-reviewer** agent
-3. Bug fix or new feature - Use **ecc:tdd-guide** agent
-4. Architectural decision - Use **ecc:architect** agent
+Không cần người dùng nhắc:
+1. Yêu cầu tính năng phức tạp - Dùng agent **ecc:planner**
+2. Code vừa được viết/sửa - Dùng agent **ecc:code-reviewer**
+3. Sửa bug hoặc tính năng mới - Dùng agent **ecc:tdd-guide**
+4. Quyết định kiến trúc - Dùng agent **ecc:architect**
 
-## Parallel Task Execution
+## Thực thi Task song song
 
-ALWAYS use parallel Task execution for independent operations:
+LUÔN LUÔN dùng thực thi Task song song cho các thao tác độc lập:
 
 ```markdown
 # GOOD: Parallel execution
@@ -48,21 +48,21 @@ Launch 3 agents in parallel:
 First agent 1, then agent 2, then agent 3
 ```
 
-## Delegation Completion Contract
+## Hợp đồng hoàn tất khi ủy quyền (Delegation Completion Contract)
 
-Applies to every agent at every depth (parent, child, grandchild):
+Áp dụng cho mọi agent ở mọi độ sâu (cha, con, cháu):
 
-1. **Your final message IS the deliverable.** Never end your turn with "waiting for background agents" — a spawned task is not a completed task. Ending your turn while children are running orphans their results (completed children cannot notify a parent whose turn has ended).
-2. **If you delegate, you own collection.** Wait for results, integrate them, then return. Fire-and-forget delegation is forbidden.
-3. **Decompose only when the work cannot fit in one context.** Do not re-delegate a task already sized for a single agent — depth is an outcome, not a plan.
+1. **Tin nhắn cuối cùng của bạn CHÍNH LÀ sản phẩm bàn giao.** KHÔNG BAO GIỜ kết thúc lượt bằng "đang chờ các agent chạy nền" — một task đã được khởi tạo không phải là task đã hoàn thành. Kết thúc lượt trong khi các agent con vẫn đang chạy sẽ khiến kết quả của chúng bị bỏ rơi (agent con hoàn thành không thể thông báo cho agent cha đã kết thúc lượt).
+2. **Nếu bạn ủy quyền, bạn chịu trách nhiệm thu thập kết quả.** Chờ kết quả, tổng hợp chúng, rồi mới trả về. Ủy quyền kiểu "bắn rồi bỏ" (fire-and-forget) bị cấm.
+3. **Chỉ chia nhỏ khi công việc không thể nằm gọn trong một context.** Không ủy quyền lại một task đã có kích thước vừa cho một agent — độ sâu là kết quả, không phải kế hoạch.
 
-> Rationale: observed failure mode — research agents followed "Parallel Task Execution" above, spawned children, and returned "waiting" as their final answer. All children completed successfully but their results were orphaned. The parallel rule without a completion contract produces zombie tasks.
+> Lý do: failure mode đã quan sát được — các agent nghiên cứu làm theo "Thực thi Task song song" ở trên, tạo ra agent con, rồi trả về "đang chờ" làm câu trả lời cuối cùng. Mọi agent con đều hoàn thành thành công nhưng kết quả của chúng bị bỏ rơi. Quy tắc song song mà không có hợp đồng hoàn tất sẽ tạo ra các task zombie.
 
-## Multi-Perspective Analysis
+## Phân tích đa góc nhìn
 
-For complex problems, use split role sub-agents:
-- Factual reviewer
-- Senior engineer
-- Security expert
-- Consistency reviewer
-- Redundancy checker
+Với các vấn đề phức tạp, dùng các sub-agent chia theo vai trò:
+- Người review tính xác thực (factual reviewer)
+- Kỹ sư cấp cao (senior engineer)
+- Chuyên gia bảo mật
+- Người review tính nhất quán (consistency reviewer)
+- Người kiểm tra trùng lặp (redundancy checker)

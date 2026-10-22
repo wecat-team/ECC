@@ -1,21 +1,21 @@
-# tinystruct Data Handling (JSON)
+# Xử lý dữ liệu (JSON) trong tinystruct
 
-## When to Use
+## Khi nào dùng
 
-Prefer `org.tinystruct.data.component.Builder` and `Builders` for lightweight, zero-dependency JSON. Use `Builder` for JSON objects (`{}`), `Builders` for JSON arrays (`[]`). **Always use `Builders` instead of `List<Builder>`** to avoid generic type erasure issues.
+Ưu tiên `org.tinystruct.data.component.Builder` và `Builders` cho JSON nhẹ, không phụ thuộc thư viện ngoài. Dùng `Builder` cho JSON object (`{}`), `Builders` cho JSON array (`[]`). **LUÔN LUÔN dùng `Builders` thay vì `List<Builder>`** để tránh các vấn đề về type erasure của generic.
 
-## How It Works
+## Cách hoạt động
 
-`Builder` provides a key-value interface for creating and reading JSON objects. `Builders` provides an indexed list for JSON arrays. Both integrate directly with `AbstractApplication` result handling.
+`Builder` cung cấp giao diện key-value để tạo và đọc JSON object. `Builders` cung cấp danh sách có chỉ mục cho JSON array. Cả hai tích hợp trực tiếp với việc xử lý kết quả của `AbstractApplication`.
 
-### Why Builder/Builders?
-- **Zero External Dependencies** — lean and fast
-- **Native Integration** — works with framework result handling
-- **Type Safety** — `Builders` serializes properly to `[]`; `List<Builder>` can cause casting issues
+### Vì sao dùng Builder/Builders?
+- **Không có dependency ngoài** — gọn và nhanh
+- **Tích hợp native** — hoạt động cùng cơ chế xử lý kết quả của framework
+- **An toàn kiểu (type safety)** — `Builders` serialize đúng thành `[]`; `List<Builder>` có thể gây lỗi ép kiểu
 
-## Examples
+## Ví dụ
 
-### Serialize a Single Object
+### Serialize một object đơn
 ```java
 import org.tinystruct.data.component.Builder;
 
@@ -25,7 +25,7 @@ response.put("count", 42);
 return response.toString(); // {"status":"success","count":42}
 ```
 
-### Serialize a List using Builders
+### Serialize một danh sách bằng Builders
 ```java
 import org.tinystruct.data.component.Builder;
 import org.tinystruct.data.component.Builders;
@@ -42,14 +42,14 @@ response.put("data", dataList);
 return response.toString(); // {"data":[{"id":1,"name":"X"}]}
 ```
 
-### Parse a JSON Object
+### Parse một JSON object
 ```java
 Builder parsed = new Builder();
 parsed.parse(jsonString);
 String status = parsed.get("status").toString();
 ```
 
-### Parse a JSON Array
+### Parse một JSON array
 ```java
 Builders parsedArray = new Builders();
 parsedArray.parse(jsonArrayString);

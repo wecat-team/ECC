@@ -4,19 +4,19 @@ paths:
   - "**/*.ts"
   - "**/ohosTest/**"
 ---
-# HarmonyOS / ArkTS Testing
+# Kiểm thử HarmonyOS / ArkTS
 
-> This file extends [common/testing.md](../common/testing.md) with HarmonyOS-specific testing practices.
+> File này mở rộng [common/testing.md](../common/testing.md) với các thực hành kiểm thử riêng cho HarmonyOS.
 
 ## Test Framework
 
-HarmonyOS uses the built-in test framework with `@ohos.test` capabilities:
+HarmonyOS dùng test framework tích hợp sẵn với các khả năng của `@ohos.test`:
 
-- **Unit tests**: Located in `src/ohosTest/ets/test/`
-- **UI tests**: Use `@ohos.UiTest` for component testing
-- **Instrument tests**: Run on device/emulator
+- **Unit test**: Nằm trong `src/ohosTest/ets/test/`
+- **UI test**: Dùng `@ohos.UiTest` để kiểm thử component
+- **Instrument test**: Chạy trên thiết bị/emulator
 
-## Test Directory Structure
+## Cấu trúc thư mục test
 
 ```
 module/
@@ -30,7 +30,7 @@ module/
   |       |-- TestRunner.ets
 ```
 
-## Running Tests
+## Chạy test
 
 ```bash
 # Run all tests for a module
@@ -40,7 +40,7 @@ hvigorw testHap -p product=default
 hdc shell aa test -b com.example.app -m entry_test -s unittest /ets/TestRunner/OpenHarmonyTestRunner
 ```
 
-## Unit Test Example
+## Ví dụ Unit Test
 
 ```typescript
 import { describe, it, expect } from '@ohos/hypium';
@@ -69,7 +69,7 @@ export default function UserViewModelTest() {
 }
 ```
 
-## UI Test Example
+## Ví dụ UI Test
 
 ```typescript
 import { describe, it, expect } from '@ohos/hypium';
@@ -98,29 +98,29 @@ export default function HomePageUITest() {
 }
 ```
 
-## TDD Workflow for HarmonyOS
+## Quy trình TDD cho HarmonyOS
 
-Follow the standard TDD cycle adapted for HarmonyOS:
+Tuân theo chu trình TDD chuẩn đã được điều chỉnh cho HarmonyOS:
 
-1. **RED**: Write a failing test in `ohosTest/ets/test/`
-2. **GREEN**: Implement minimal code in `main/ets/` to pass
-3. **REFACTOR**: Clean up while keeping tests green
-4. **BUILD**: Run `hvigorw assembleHap` to verify compilation
-5. **VERIFY**: Run tests on device/emulator
+1. **RED**: Viết một test thất bại trong `ohosTest/ets/test/`
+2. **GREEN**: Triển khai code tối thiểu trong `main/ets/` để test pass
+3. **REFACTOR**: Dọn dẹp trong khi giữ test xanh
+4. **BUILD**: Chạy `hvigorw assembleHap` để xác minh biên dịch
+5. **VERIFY**: Chạy test trên thiết bị/emulator
 
-## Test Coverage Requirements
+## Yêu cầu Test Coverage
 
-- Minimum 80% coverage for all critical application code (ViewModels, services, utilities)
-- **Unit tests**: All utility functions, ViewModel logic, data models
-- **Integration tests**: API calls, database operations, cross-module interactions
-- **E2E / UI tests**: Critical user flows (login, navigation, data submission)
-- Test edge cases: empty data, network errors, permission denials
+- Tối thiểu 80% coverage cho toàn bộ code ứng dụng quan trọng (ViewModel, service, utility)
+- **Unit test**: Mọi hàm utility, logic ViewModel, data model
+- **Integration test**: Lời gọi API, thao tác database, tương tác giữa các module
+- **E2E / UI test**: Các luồng người dùng quan trọng (đăng nhập, điều hướng, gửi dữ liệu)
+- Kiểm thử các edge case: dữ liệu rỗng, lỗi mạng, bị từ chối permission
 
-## Testing Best Practices
+## Best Practice khi kiểm thử
 
-- Keep tests independent - no shared mutable state between tests
-- Mock network calls and system APIs in unit tests
-- Use meaningful test names: `should_[expected_behavior]_when_[condition]`
-- Test V2 state management reactivity: verify `@Trace` properties trigger UI updates
-- Test Navigation flows: verify `NavPathStack` push/pop/replace operations
-- Avoid testing framework internals - focus on business logic and user-visible behavior
+- Giữ các test độc lập - không chia sẻ mutable state giữa các test
+- Mock các lời gọi mạng và system API trong unit test
+- Dùng tên test có ý nghĩa: `should_[expected_behavior]_when_[condition]`
+- Kiểm thử tính reactive của V2 state management: xác minh các thuộc tính `@Trace` kích hoạt cập nhật UI
+- Kiểm thử luồng Navigation: xác minh các thao tác push/pop/replace của `NavPathStack`
+- Tránh kiểm thử phần nội bộ của framework - tập trung vào business logic và hành vi người dùng nhìn thấy

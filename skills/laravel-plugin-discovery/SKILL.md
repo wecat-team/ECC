@@ -1,25 +1,25 @@
 ---
 name: laravel-plugin-discovery
-description: Discover and evaluate Laravel packages via LaraPlugins.io MCP. Use when the user wants to find plugins, check package health, or assess Laravel/PHP compatibility.
+description: "Khám phá và đánh giá các package Laravel qua LaraPlugins.io MCP. Dùng khi người dùng muốn tìm plugin, kiểm tra độ 'khỏe' của package (package health), hoặc đánh giá khả năng tương thích Laravel/PHP."
 metadata:
   origin: ECC
 ---
 
-# Laravel Plugin Discovery
+# Khám phá Plugin Laravel
 
-Find, evaluate, and choose healthy Laravel packages using the LaraPlugins.io MCP server.
+Tìm, đánh giá và chọn các package Laravel khỏe mạnh bằng MCP server LaraPlugins.io.
 
-## When to Use
+## Khi nào dùng
 
-- User wants to find Laravel packages for a specific feature (e.g. "auth", "permissions", "admin panel")
-- User asks "what package should I use for..." or "is there a Laravel package for..."
-- User wants to check if a package is actively maintained
-- User needs to verify Laravel version compatibility
-- User wants to assess package health before adding to a project
+- Người dùng muốn tìm package Laravel cho một tính năng cụ thể (ví dụ: "auth", "permissions", "admin panel")
+- Người dùng hỏi "nên dùng package nào cho..." hoặc "có package Laravel nào cho..."
+- Người dùng muốn kiểm tra một package có đang được bảo trì tích cực hay không
+- Người dùng cần xác minh khả năng tương thích phiên bản Laravel
+- Người dùng muốn đánh giá độ khỏe của package trước khi thêm vào dự án
 
-## MCP Requirement
+## Yêu cầu MCP
 
-LaraPlugins MCP server must be configured. Add to your `~/.claude.json` mcpServers:
+PHẢI cấu hình LaraPlugins MCP server. Thêm vào mcpServers trong `~/.claude.json` của bạn:
 
 ```json
 "laraplugins": {
@@ -28,64 +28,64 @@ LaraPlugins MCP server must be configured. Add to your `~/.claude.json` mcpServe
 }
 ```
 
-No API key required — the server is free for the Laravel community.
+Không cần API key — server miễn phí cho cộng đồng Laravel.
 
-## MCP Tools
+## MCP Tool
 
-The LaraPlugins MCP provides two primary tools:
+LaraPlugins MCP cung cấp hai tool chính:
 
 ### SearchPluginTool
 
-Search packages by keyword, health score, vendor, and version compatibility.
+Tìm package theo từ khóa, health score, vendor và khả năng tương thích phiên bản.
 
-**Parameters:**
-- `text_search` (string, optional): Keyword to search (e.g. "permission", "admin", "api")
-- `health_score` (string, optional): Filter by health band — `Healthy`, `Medium`, `Unhealthy`, or `Unrated`
-- `laravel_compatibility` (string, optional): Filter by Laravel version — `"5"`, `"6"`, `"7"`, `"8"`, `"9"`, `"10"`, `"11"`, `"12"`, `"13"`
-- `php_compatibility` (string, optional): Filter by PHP version — `"7.4"`, `"8.0"`, `"8.1"`, `"8.2"`, `"8.3"`, `"8.4"`, `"8.5"`
-- `vendor_filter` (string, optional): Filter by vendor name (e.g. "spatie", "laravel")
-- `page` (number, optional): Page number for pagination
+**Tham số:**
+- `text_search` (string, tùy chọn): Từ khóa cần tìm (ví dụ: "permission", "admin", "api")
+- `health_score` (string, tùy chọn): Lọc theo nhóm health — `Healthy`, `Medium`, `Unhealthy` hoặc `Unrated`
+- `laravel_compatibility` (string, tùy chọn): Lọc theo phiên bản Laravel — `"5"`, `"6"`, `"7"`, `"8"`, `"9"`, `"10"`, `"11"`, `"12"`, `"13"`
+- `php_compatibility` (string, tùy chọn): Lọc theo phiên bản PHP — `"7.4"`, `"8.0"`, `"8.1"`, `"8.2"`, `"8.3"`, `"8.4"`, `"8.5"`
+- `vendor_filter` (string, tùy chọn): Lọc theo tên vendor (ví dụ: "spatie", "laravel")
+- `page` (number, tùy chọn): Số trang cho pagination
 
 ### GetPluginDetailsTool
 
-Fetch detailed metrics, readme content, and version history for a specific package.
+Lấy các số liệu chi tiết, nội dung readme và lịch sử phiên bản của một package cụ thể.
 
-**Parameters:**
-- `package` (string, required): Full Composer package name (e.g. "spatie/laravel-permission")
-- `include_versions` (boolean, optional): Include version history in response
-
----
-
-## How It Works
-
-### Finding Packages
-
-When the user wants to discover packages for a feature:
-
-1. Use `SearchPluginTool` with relevant keywords
-2. Apply filters for health score, Laravel version, or PHP version
-3. Review the results with package names, descriptions, and health indicators
-
-### Evaluating Packages
-
-When the user wants to assess a specific package:
-
-1. Use `GetPluginDetailsTool` with the package name
-2. Review health score, last updated date, Laravel version support
-3. Check vendor reputation and risk indicators
-
-### Checking Compatibility
-
-When the user needs Laravel or PHP version compatibility:
-
-1. Search with `laravel_compatibility` filter set to their version
-2. Or get details on a specific package to see its supported versions
+**Tham số:**
+- `package` (string, bắt buộc): Tên package Composer đầy đủ (ví dụ: "spatie/laravel-permission")
+- `include_versions` (boolean, tùy chọn): Bao gồm lịch sử phiên bản trong response
 
 ---
 
-## Examples
+## Cách hoạt động
 
-### Example: Find Authentication Packages
+### Tìm Package
+
+Khi người dùng muốn khám phá các package cho một tính năng:
+
+1. Dùng `SearchPluginTool` với các từ khóa liên quan
+2. Áp dụng bộ lọc theo health score, phiên bản Laravel hoặc phiên bản PHP
+3. Xem xét kết quả gồm tên package, mô tả và chỉ báo health
+
+### Đánh giá Package
+
+Khi người dùng muốn đánh giá một package cụ thể:
+
+1. Dùng `GetPluginDetailsTool` với tên package
+2. Xem xét health score, ngày cập nhật gần nhất, phiên bản Laravel được hỗ trợ
+3. Kiểm tra uy tín của vendor và các chỉ báo rủi ro
+
+### Kiểm tra khả năng tương thích
+
+Khi người dùng cần khả năng tương thích phiên bản Laravel hoặc PHP:
+
+1. Tìm kiếm với bộ lọc `laravel_compatibility` đặt thành phiên bản của họ
+2. Hoặc lấy chi tiết của một package cụ thể để xem các phiên bản được hỗ trợ
+
+---
+
+## Ví dụ
+
+### Ví dụ: Tìm Package Authentication
 
 ```
 SearchPluginTool({
@@ -94,13 +94,13 @@ SearchPluginTool({
 })
 ```
 
-Returns packages matching "authentication" with healthy status:
+Trả về các package khớp "authentication" với trạng thái healthy:
 - spatie/laravel-permission
 - laravel/breeze
 - laravel/passport
-- etc.
+- v.v.
 
-### Example: Find Laravel 12 Compatible Packages
+### Ví dụ: Tìm Package tương thích Laravel 12
 
 ```
 SearchPluginTool({
@@ -109,9 +109,9 @@ SearchPluginTool({
 })
 ```
 
-Returns packages compatible with Laravel 12.
+Trả về các package tương thích với Laravel 12.
 
-### Example: Get Package Details
+### Ví dụ: Lấy chi tiết Package
 
 ```
 GetPluginDetailsTool({
@@ -120,14 +120,14 @@ GetPluginDetailsTool({
 })
 ```
 
-Returns:
-- Health score and last activity
-- Laravel/PHP version support
-- Vendor reputation (risk score)
-- Version history
-- Brief description
+Trả về:
+- Health score và hoạt động gần nhất
+- Phiên bản Laravel/PHP được hỗ trợ
+- Uy tín vendor (risk score)
+- Lịch sử phiên bản
+- Mô tả ngắn
 
-### Example: Find Packages by Vendor
+### Ví dụ: Tìm Package theo Vendor
 
 ```
 SearchPluginTool({
@@ -136,36 +136,36 @@ SearchPluginTool({
 })
 ```
 
-Returns all healthy packages from vendor "spatie".
+Trả về tất cả package healthy của vendor "spatie".
 
 ---
 
-## Filtering Best Practices
+## Best Practice khi lọc
 
-### By Health Score
+### Theo Health Score
 
-| Health Band | Meaning |
+| Nhóm Health | Ý nghĩa |
 |-------------|---------|
-| `Healthy` | Active maintenance, recent updates |
-| `Medium` | Occasional updates, may need attention |
-| `Unhealthy` | Abandoned or infrequently maintained |
-| `Unrated` | Not yet assessed |
+| `Healthy` | Được bảo trì tích cực, có cập nhật gần đây |
+| `Medium` | Cập nhật thỉnh thoảng, có thể cần chú ý |
+| `Unhealthy` | Bị bỏ rơi hoặc ít được bảo trì |
+| `Unrated` | Chưa được đánh giá |
 
-**Recommendation**: Prefer `Healthy` packages for production applications.
+**Khuyến nghị**: Ưu tiên các package `Healthy` cho ứng dụng production.
 
-### By Laravel Version
+### Theo phiên bản Laravel
 
-| Version | Notes |
+| Phiên bản | Ghi chú |
 |---------|-------|
-| `13` | Latest Laravel |
-| `12` | Current stable |
-| `11` | Still widely used |
-| `10` | Legacy but common |
-| `5`-`9` | Deprecated |
+| `13` | Laravel mới nhất |
+| `12` | Bản ổn định hiện tại |
+| `11` | Vẫn được dùng rộng rãi |
+| `10` | Cũ nhưng phổ biến |
+| `5`-`9` | Đã lỗi thời (deprecated) |
 
-**Recommendation**: Match the target project's Laravel version.
+**Khuyến nghị**: Khớp với phiên bản Laravel của dự án mục tiêu.
 
-### Combining Filters
+### Kết hợp bộ lọc
 
 ```typescript
 // Find healthy, Laravel 12 compatible packages for permissions
@@ -178,53 +178,53 @@ SearchPluginTool({
 
 ---
 
-## Response Interpretation
+## Diễn giải Response
 
-### Search Results
+### Kết quả tìm kiếm
 
-Each result includes:
-- Package name (e.g. `spatie/laravel-permission`)
-- Brief description
-- Health status indicator
-- Laravel version support badges
+Mỗi kết quả bao gồm:
+- Tên package (ví dụ: `spatie/laravel-permission`)
+- Mô tả ngắn
+- Chỉ báo trạng thái health
+- Badge phiên bản Laravel được hỗ trợ
 
-### Package Details
+### Chi tiết Package
 
-The detailed response includes:
-- **Health Score**: Numeric or band indicator
-- **Last Activity**: When the package was last updated
-- **Laravel Support**: Version compatibility matrix
-- **PHP Support**: PHP version compatibility
-- **Risk Score**: Vendor trust indicators
-- **Version History**: Recent release timeline
+Response chi tiết bao gồm:
+- **Health Score**: Chỉ báo dạng số hoặc theo nhóm
+- **Last Activity**: Thời điểm package được cập nhật gần nhất
+- **Laravel Support**: Ma trận tương thích phiên bản
+- **PHP Support**: Tương thích phiên bản PHP
+- **Risk Score**: Chỉ báo độ tin cậy của vendor
+- **Version History**: Dòng thời gian các bản phát hành gần đây
 
 ---
 
-## Common Use Cases
+## Các trường hợp sử dụng phổ biến
 
-| Scenario | Recommended Approach |
+| Tình huống | Cách tiếp cận khuyến nghị |
 |----------|---------------------|
-| "What package for auth?" | Search "auth" with healthy filter |
-| "Is spatie/package still maintained?" | Get details, check health score |
-| "Need Laravel 12 packages" | Search with laravel_compatibility: "12" |
-| "Find admin panel packages" | Search "admin panel", review results |
-| "Check vendor reputation" | Search by vendor, check details |
+| "Package nào cho auth?" | Tìm "auth" với bộ lọc healthy |
+| "spatie/package còn được bảo trì không?" | Lấy chi tiết, kiểm tra health score |
+| "Cần các package cho Laravel 12" | Tìm với laravel_compatibility: "12" |
+| "Tìm package admin panel" | Tìm "admin panel", xem xét kết quả |
+| "Kiểm tra uy tín vendor" | Tìm theo vendor, kiểm tra chi tiết |
 
 ---
 
-## Best Practices
+## Best Practice
 
-1. **Always filter by health** — Use `health_score: "Healthy"` for production projects
-2. **Match Laravel version** — Always check `laravel_compatibility` matches the target project
-3. **Check vendor reputation** — Prefer packages from known vendors (spatie, laravel, etc.)
-4. **Review before recommending** — Use GetPluginDetailsTool for a comprehensive assessment
-5. **No API key needed** — The MCP is free, no authentication required
+1. **Luôn lọc theo health** — Dùng `health_score: "Healthy"` cho các dự án production
+2. **Khớp phiên bản Laravel** — Luôn kiểm tra `laravel_compatibility` khớp với dự án mục tiêu
+3. **Kiểm tra uy tín vendor** — Ưu tiên package từ các vendor uy tín đã biết (spatie, laravel, v.v.)
+4. **Xem xét trước khi đề xuất** — Dùng GetPluginDetailsTool để đánh giá toàn diện
+5. **Không cần API key** — MCP miễn phí, không yêu cầu xác thực
 
 ---
 
-## Related Skills
+## Skill liên quan
 
-- `laravel-patterns` — Laravel architecture and patterns
-- `laravel-tdd` — Test-driven development for Laravel
-- `laravel-security` — Laravel security best practices
-- `documentation-lookup` — General library documentation lookup (Context7)
+- `laravel-patterns` — Kiến trúc và các pattern Laravel
+- `laravel-tdd` — Phát triển hướng kiểm thử (TDD) cho Laravel
+- `laravel-security` — Best practice bảo mật Laravel
+- `documentation-lookup` — Tra cứu tài liệu thư viện nói chung (Context7)

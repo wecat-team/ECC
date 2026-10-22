@@ -10,17 +10,17 @@ paths:
   - "**/*.vue"
   - "**/*.svelte"
 ---
-> This file extends [common/security.md](../common/security.md) with web-specific security content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung bảo mật riêng cho web.
 
-# Web Security Rules
+# Quy tắc bảo mật Web
 
 ## Content Security Policy
 
-Always configure a production CSP.
+Luôn cấu hình CSP cho production.
 
-### Nonce-Based CSP
+### CSP dựa trên Nonce
 
-Use a per-request nonce for scripts instead of `'unsafe-inline'`.
+Dùng nonce theo từng request cho script thay vì `'unsafe-inline'`.
 
 ```text
 Content-Security-Policy:
@@ -35,23 +35,23 @@ Content-Security-Policy:
   base-uri 'self';
 ```
 
-Adjust origins to the project. Do not cargo-cult this block unchanged.
+Hãy điều chỉnh các origin theo dự án. Đừng sao chép máy móc (cargo-cult) khối này mà không chỉnh sửa.
 
-## XSS Prevention
+## Ngăn chặn XSS
 
-- Never inject unsanitized HTML
-- Avoid `innerHTML` / `dangerouslySetInnerHTML` unless sanitized first
-- Escape dynamic template values
-- Sanitize user HTML with a vetted local sanitizer when absolutely necessary
+- Không bao giờ inject HTML chưa được sanitize
+- Tránh `innerHTML` / `dangerouslySetInnerHTML` trừ khi đã sanitize trước
+- Escape các giá trị động trong template
+- Sanitize HTML của người dùng bằng một sanitizer cục bộ đã được kiểm chứng khi thực sự cần thiết
 
-## Third-Party Scripts
+## Script bên thứ ba
 
-- Load asynchronously
-- Use SRI when serving from a CDN
-- Audit quarterly
-- Prefer self-hosting for critical dependencies when practical
+- Tải bất đồng bộ
+- Dùng SRI khi phục vụ từ CDN
+- Audit hằng quý
+- Ưu tiên tự host cho các dependency quan trọng khi khả thi
 
-## HTTPS and Headers
+## HTTPS và Header
 
 ```text
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
@@ -61,9 +61,9 @@ Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: camera=(), microphone=(), geolocation=()
 ```
 
-## Forms
+## Form
 
-- CSRF protection on state-changing forms
-- Rate limiting on submission endpoints
-- Validate client and server side
-- Prefer honeypots or light anti-abuse controls over heavy-handed CAPTCHA defaults
+- Bảo vệ CSRF cho các form làm thay đổi trạng thái
+- Rate limiting trên các endpoint submit
+- Validate cả phía client lẫn server
+- Ưu tiên honeypot hoặc các biện pháp chống lạm dụng nhẹ nhàng thay vì mặc định dùng CAPTCHA nặng tay

@@ -1,23 +1,23 @@
 ---
 name: django-verification
-description: Run the full Django verification loop — environment check, mypy/ruff/black linting, migration safety, pytest with coverage targets, pip-audit and bandit security scans, settings and logging review, and diff review — producing a phased pass/fail report before release or PR. Use when preparing a Django pull request, validating migrations or coverage, or running pre-deploy readiness checks.
+description: "Chạy toàn bộ vòng lặp verification cho Django — kiểm tra môi trường, linting mypy/ruff/black, an toàn migration, pytest với mục tiêu coverage, quét bảo mật pip-audit và bandit, review settings và logging, review diff — tạo báo cáo pass/fail theo từng giai đoạn trước khi release hoặc tạo PR. Dùng khi chuẩn bị pull request Django, xác thực migration hoặc coverage, hoặc chạy kiểm tra mức sẵn sàng trước khi deploy."
 metadata:
   origin: ECC
 ---
 
-# Django Verification Loop
+# Vòng lặp Verification cho Django
 
-Run before PRs, after major changes, and pre-deploy to ensure Django application quality and security.
+Chạy trước PR, sau các thay đổi lớn và trước khi deploy để đảm bảo chất lượng và bảo mật của ứng dụng Django.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Before opening a pull request for a Django project
-- After major model changes, migration updates, or dependency upgrades
-- Pre-deployment verification for staging or production
-- Running full environment → lint → test → security → deploy readiness pipeline
-- Validating migration safety and test coverage
+- Trước khi mở pull request cho dự án Django
+- Sau khi thay đổi model lớn, cập nhật migration hoặc nâng cấp dependency
+- Verification trước khi deploy lên staging hoặc production
+- Chạy toàn bộ pipeline môi trường → lint → test → bảo mật → mức sẵn sàng deploy
+- Xác thực độ an toàn của migration và test coverage
 
-## Phase 1: Environment Check
+## Giai đoạn 1: Kiểm tra môi trường
 
 ```bash
 # Verify Python version
@@ -31,9 +31,9 @@ pip list --outdated
 python -c "import os; import environ; print('DJANGO_SECRET_KEY set' if os.environ.get('DJANGO_SECRET_KEY') else 'MISSING: DJANGO_SECRET_KEY')"
 ```
 
-If environment is misconfigured, stop and fix.
+Nếu môi trường được cấu hình sai, hãy dừng lại và sửa.
 
-## Phase 2: Code Quality & Formatting
+## Giai đoạn 2: Chất lượng code & Định dạng
 
 ```bash
 # Type checking
@@ -54,13 +54,13 @@ isort .  # Auto-fix
 python manage.py check --deploy
 ```
 
-Common issues:
-- Missing type hints on public functions
-- PEP 8 formatting violations
-- Unsorted imports
-- Debug settings left in production configuration
+Các vấn đề thường gặp:
+- Thiếu type hint trên các hàm public
+- Vi phạm định dạng PEP 8
+- Import chưa được sắp xếp
+- Cấu hình debug bị để lại trong cấu hình production
 
-## Phase 3: Migrations
+## Giai đoạn 3: Migration
 
 ```bash
 # Check for unapplied migrations
@@ -79,12 +79,12 @@ python manage.py migrate
 python manage.py makemigrations --merge  # Only if conflicts exist
 ```
 
-Report:
-- Number of pending migrations
-- Any migration conflicts
-- Model changes without migrations
+Báo cáo:
+- Số lượng migration đang chờ
+- Bất kỳ xung đột migration nào
+- Thay đổi model không có migration
 
-## Phase 4: Tests + Coverage
+## Giai đoạn 4: Test + Coverage
 
 ```bash
 # Run all tests with pytest
@@ -101,22 +101,22 @@ pytest -m integration  # Only integration tests
 open htmlcov/index.html
 ```
 
-Report:
-- Total tests: X passed, Y failed, Z skipped
-- Overall coverage: XX%
-- Per-app coverage breakdown
+Báo cáo:
+- Tổng số test: X passed, Y failed, Z skipped
+- Coverage tổng thể: XX%
+- Chi tiết coverage theo từng app
 
-Coverage targets:
+Mục tiêu coverage:
 
-| Component | Target |
+| Thành phần | Mục tiêu |
 |-----------|--------|
 | Models | 90%+ |
 | Serializers | 85%+ |
 | Views | 80%+ |
 | Services | 90%+ |
-| Overall | 80%+ |
+| Tổng thể | 80%+ |
 
-## Phase 5: Security Scan
+## Giai đoạn 5: Quét bảo mật
 
 ```bash
 # Dependency vulnerabilities
@@ -136,13 +136,13 @@ gitleaks detect --source . --verbose
 python -c "from django.core.exceptions import ImproperlyConfigured; from django.conf import settings; settings.DEBUG"
 ```
 
-Report:
-- Vulnerable dependencies found
-- Security configuration issues
-- Hardcoded secrets detected
-- DEBUG mode status (should be False in production)
+Báo cáo:
+- Các dependency có lỗ hổng được phát hiện
+- Vấn đề cấu hình bảo mật
+- Secret bị hardcode được phát hiện
+- Trạng thái chế độ DEBUG (phải là False trên production)
 
-## Phase 6: Django Management Commands
+## Giai đoạn 6: Django Management Command
 
 ```bash
 # Check for model issues
@@ -161,7 +161,7 @@ python manage.py check --database default
 python -c "from django.core.cache import cache; cache.set('test', 'value', 10); print(cache.get('test'))"
 ```
 
-## Phase 7: Performance Checks
+## Giai đoạn 7: Kiểm tra hiệu năng
 
 ```bash
 # Django Debug Toolbar output (check for N+1 queries)
@@ -180,12 +180,12 @@ with connection.cursor() as cursor:
 EOF
 ```
 
-Report:
-- Number of queries per page (should be < 50 for typical pages)
-- Missing database indexes
-- Duplicate queries detected
+Báo cáo:
+- Số truy vấn trên mỗi trang (nên < 50 với trang thông thường)
+- Thiếu index database
+- Phát hiện truy vấn trùng lặp
 
-## Phase 8: Static Assets
+## Giai đoạn 8: Static Asset
 
 ```bash
 # Check for npm dependencies (if using npm)
@@ -200,7 +200,7 @@ ls -la staticfiles/
 python manage.py findstatic css/style.css
 ```
 
-## Phase 9: Configuration Review
+## Giai đoạn 9: Review cấu hình
 
 ```python
 # Run in Python shell to verify settings
@@ -224,7 +224,7 @@ for check, result in checks.items():
 EOF
 ```
 
-## Phase 10: Logging Configuration
+## Giai đoạn 10: Cấu hình Logging
 
 ```bash
 # Test logging output
@@ -239,7 +239,7 @@ EOF
 tail -f /var/log/django/django.log
 ```
 
-## Phase 11: API Documentation (if DRF)
+## Giai đoạn 11: Tài liệu API (nếu dùng DRF)
 
 ```bash
 # Generate schema
@@ -253,7 +253,7 @@ python -c "import json; json.load(open('schema.json'))"
 # Visit http://localhost:8000/swagger/ in browser
 ```
 
-## Phase 12: Diff Review
+## Giai đoạn 12: Review Diff
 
 ```bash
 # Show diff statistics
@@ -273,15 +273,15 @@ git diff | grep "import pdb"  # Debugger
 ```
 
 Checklist:
-- No debugging statements (print, pdb, breakpoint())
-- No TODO/FIXME comments in critical code
-- No hardcoded secrets or credentials
-- Database migrations included for model changes
-- Configuration changes documented
-- Error handling present for external calls
-- Transaction management where needed
+- Không có câu lệnh debug (print, pdb, breakpoint())
+- Không có comment TODO/FIXME trong code quan trọng
+- Không có secret hay credential bị hardcode
+- Có kèm database migration cho các thay đổi model
+- Các thay đổi cấu hình được ghi tài liệu
+- Có xử lý lỗi cho các lời gọi bên ngoài
+- Có quản lý transaction ở nơi cần thiết
 
-## Output Template
+## Mẫu đầu ra
 
 ```
 DJANGO VERIFICATION REPORT
@@ -366,28 +366,28 @@ NEXT STEPS:
 3. Deploy to staging for final testing
 ```
 
-## Pre-Deployment Checklist
+## Checklist trước khi deploy
 
-- [ ] All tests passing
+- [ ] Tất cả test đều pass
 - [ ] Coverage ≥ 80%
-- [ ] No security vulnerabilities
-- [ ] No unapplied migrations
-- [ ] DEBUG = False in production settings
-- [ ] SECRET_KEY properly configured
-- [ ] ALLOWED_HOSTS set correctly
-- [ ] Database backups enabled
-- [ ] Static files collected and served
-- [ ] Logging configured and working
-- [ ] Error monitoring (Sentry, etc.) configured
-- [ ] CDN configured (if applicable)
-- [ ] Redis/cache backend configured
-- [ ] Celery workers running (if applicable)
-- [ ] HTTPS/SSL configured
-- [ ] Environment variables documented
+- [ ] Không có lỗ hổng bảo mật
+- [ ] Không có migration chưa được áp dụng
+- [ ] DEBUG = False trong settings production
+- [ ] SECRET_KEY được cấu hình đúng
+- [ ] ALLOWED_HOSTS được đặt đúng
+- [ ] Đã bật backup database
+- [ ] Static file đã được collect và phục vụ
+- [ ] Logging đã được cấu hình và hoạt động
+- [ ] Đã cấu hình error monitoring (Sentry, v.v.)
+- [ ] Đã cấu hình CDN (nếu áp dụng)
+- [ ] Đã cấu hình Redis/cache backend
+- [ ] Celery worker đang chạy (nếu áp dụng)
+- [ ] Đã cấu hình HTTPS/SSL
+- [ ] Biến môi trường đã được ghi tài liệu
 
 ## Continuous Integration
 
-### GitHub Actions Example
+### Ví dụ GitHub Actions
 
 ```yaml
 # .github/workflows/django-verification.yml
@@ -452,19 +452,19 @@ jobs:
         uses: codecov/codecov-action@v3
 ```
 
-## Quick Reference
+## Tham khảo nhanh
 
-| Check | Command |
+| Kiểm tra | Lệnh |
 |-------|---------|
-| Environment | `python --version` |
-| Type checking | `mypy .` |
+| Môi trường | `python --version` |
+| Kiểm tra type | `mypy .` |
 | Linting | `ruff check .` |
-| Formatting | `black . --check` |
+| Định dạng | `black . --check` |
 | Migrations | `python manage.py makemigrations --check` |
 | Tests | `pytest --cov=apps` |
-| Security | `pip-audit && bandit -r .` |
+| Bảo mật | `pip-audit && bandit -r .` |
 | Django check | `python manage.py check --deploy` |
 | Collectstatic | `python manage.py collectstatic --noinput` |
 | Diff stats | `git diff --stat` |
 
-Remember: Automated verification catches common issues but doesn't replace manual code review and testing in staging environment.
+Hãy nhớ: Verification tự động bắt được các vấn đề phổ biến nhưng không thay thế code review thủ công và việc test trên môi trường staging.

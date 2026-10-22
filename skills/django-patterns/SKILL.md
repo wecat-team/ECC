@@ -1,25 +1,25 @@
 ---
 name: django-patterns
-description: Django architecture patterns, REST API design with DRF, ORM best practices, caching, signals, middleware, and production-grade Django apps. Use when building or reviewing Django apps, DRF APIs, ORM queries, or caching.
+description: "Các pattern kiến trúc Django, thiết kế REST API với DRF, best practice ORM, caching, signals, middleware và ứng dụng Django chuẩn production. Dùng khi xây dựng hoặc review ứng dụng Django, DRF API, truy vấn ORM hoặc caching."
 metadata:
   origin: ECC
 ---
 
-# Django Development Patterns
+# Pattern phát triển Django
 
-Production-grade Django architecture patterns for scalable, maintainable applications.
+Các pattern kiến trúc Django chuẩn production cho ứng dụng có khả năng mở rộng và dễ bảo trì.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Building Django web applications
-- Designing Django REST Framework APIs
-- Working with Django ORM and models
-- Setting up Django project structure
-- Implementing caching, signals, middleware
+- Xây dựng ứng dụng web Django
+- Thiết kế API Django REST Framework
+- Làm việc với Django ORM và model
+- Thiết lập cấu trúc dự án Django
+- Triển khai caching, signals, middleware
 
-## Project Structure
+## Cấu trúc dự án
 
-### Recommended Layout
+### Bố cục khuyến nghị
 
 ```
 myproject/
@@ -51,7 +51,7 @@ myproject/
         └── ...
 ```
 
-### Split Settings Pattern
+### Pattern tách Settings
 
 ```python
 # config/settings/base.py
@@ -151,9 +151,9 @@ LOGGING = {
 }
 ```
 
-## Model Design Patterns
+## Pattern thiết kế Model
 
-### Model Best Practices
+### Best practice cho Model
 
 ```python
 from django.db import models
@@ -226,7 +226,7 @@ class Product(models.Model):
         super().save(*args, **kwargs)
 ```
 
-### QuerySet Best Practices
+### Best practice cho QuerySet
 
 ```python
 from django.db import models
@@ -266,7 +266,7 @@ class Product(models.Model):
 Product.objects.active().with_category().in_stock()
 ```
 
-### Manager Methods
+### Manager Method
 
 ```python
 class ProductManager(models.Manager):
@@ -296,9 +296,9 @@ class Product(models.Model):
     custom = ProductManager()
 ```
 
-## Django REST Framework Patterns
+## Pattern Django REST Framework
 
-### Serializer Patterns
+### Pattern Serializer
 
 ```python
 from rest_framework import serializers
@@ -381,7 +381,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 ```
 
-### ViewSet Patterns
+### Pattern ViewSet
 
 ```python
 from rest_framework import viewsets, status, filters
@@ -440,7 +440,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         return self.get_paginated_response(serializer.data)
 ```
 
-### Custom Actions
+### Custom Action
 
 ```python
 from rest_framework.decorators import api_view, permission_classes
@@ -472,7 +472,7 @@ def add_to_cart(request):
     return Response({'message': 'Added to cart'}, status=status.HTTP_201_CREATED)
 ```
 
-## Service Layer Pattern
+## Pattern Service Layer
 
 ```python
 # apps/orders/services.py
@@ -530,9 +530,9 @@ class OrderService:
         pass
 ```
 
-## Caching Strategies
+## Chiến lược Caching
 
-### View-Level Caching
+### Caching cấp View
 
 ```python
 from django.views.decorators.cache import cache_page
@@ -554,7 +554,7 @@ class ProductListView(generic.ListView):
 {% endcache %}
 ```
 
-### Low-Level Caching
+### Caching cấp thấp
 
 ```python
 from django.core.cache import cache
@@ -591,7 +591,7 @@ def get_popular_categories():
 
 ## Signals
 
-### Signal Patterns
+### Pattern Signal
 
 ```python
 # apps/users/signals.py
@@ -659,9 +659,9 @@ class RequestLoggingMiddleware(MiddlewareMixin):
         return response
 ```
 
-## Performance Optimization
+## Tối ưu hiệu năng
 
-### N+1 Query Prevention
+### Phòng tránh truy vấn N+1
 
 ```python
 # Bad - N+1 queries
@@ -681,7 +681,7 @@ for product in products:
         print(tag.name)
 ```
 
-### Database Indexing
+### Đánh index database
 
 ```python
 class Product(models.Model):
@@ -698,7 +698,7 @@ class Product(models.Model):
         ]
 ```
 
-### Bulk Operations
+### Thao tác Bulk
 
 ```python
 # Bulk create
@@ -717,19 +717,19 @@ Product.objects.bulk_update(products, ['is_active'])
 Product.objects.filter(stock=0).delete()
 ```
 
-## Quick Reference
+## Tham khảo nhanh
 
-| Pattern | Description |
+| Pattern | Mô tả |
 |---------|-------------|
-| Split settings | Separate dev/prod/test settings |
-| Custom QuerySet | Reusable query methods |
-| Service Layer | Business logic separation |
-| ViewSet | REST API endpoints |
-| Serializer validation | Request/response transformation |
-| select_related | Foreign key optimization |
-| prefetch_related | Many-to-many optimization |
-| Cache first | Cache expensive operations |
-| Signals | Event-driven actions |
-| Middleware | Request/response processing |
+| Split settings | Tách settings dev/prod/test |
+| Custom QuerySet | Các method truy vấn tái sử dụng |
+| Service Layer | Tách biệt business logic |
+| ViewSet | Các endpoint REST API |
+| Serializer validation | Chuyển đổi request/response |
+| select_related | Tối ưu foreign key |
+| prefetch_related | Tối ưu many-to-many |
+| Cache first | Cache các thao tác tốn kém |
+| Signals | Hành động hướng sự kiện |
+| Middleware | Xử lý request/response |
 
-Remember: Django provides many shortcuts, but for production applications, structure and organization matter more than concise code. Build for maintainability.
+Hãy nhớ: Django cung cấp nhiều lối tắt, nhưng với ứng dụng production, cấu trúc và tổ chức quan trọng hơn code ngắn gọn. Hãy xây dựng để dễ bảo trì.

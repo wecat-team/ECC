@@ -1,18 +1,18 @@
-# Testing Fundamentals
+# Nền tảng Testing
 
-This guide covers the fundamental principles and practices for writing Angular unit and component tests. Use the runner already configured in the project.
+Hướng dẫn này bao gồm các nguyên tắc và thực hành cơ bản để viết unit test và component test cho Angular. Hãy dùng runner đã được cấu hình sẵn trong dự án.
 
-## Core Philosophy: Async-First
+## Triết lý cốt lõi: Ưu tiên bất đồng bộ (Async-First)
 
-Modern Angular applications often schedule state changes asynchronously, especially when using signals or zoneless change detection. Tests should account for this.
+Các ứng dụng Angular hiện đại thường lên lịch thay đổi state một cách bất đồng bộ, đặc biệt khi dùng signal hoặc zoneless change detection. Test nên tính đến điều này.
 
-Prefer the "Act, Wait, Assert" pattern:
+Ưu tiên pattern "Act, Wait, Assert":
 
-1. **Act:** Update state or perform an action (e.g., set a component input, click a button).
-2. **Wait:** Use `await fixture.whenStable()` to allow the framework to process the scheduled update and render the changes.
-3. **Assert:** Verify the outcome.
+1. **Act:** Cập nhật state hoặc thực hiện một hành động (ví dụ: đặt input của component, click một nút).
+2. **Wait:** Dùng `await fixture.whenStable()` để framework xử lý bản cập nhật đã lên lịch và render các thay đổi.
+3. **Assert:** Xác minh kết quả.
 
-### Basic Test Structure Example
+### Ví dụ cấu trúc Test cơ bản
 
 ```ts
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -56,10 +56,10 @@ describe('MyComponent', () => {
 });
 ```
 
-## TestBed and ComponentFixture
+## TestBed và ComponentFixture
 
-- **`TestBed`**: The primary utility for creating a test-specific Angular module. Use `TestBed.configureTestingModule({...})` in your `beforeEach` to declare components, provide services, and set up imports needed for your test.
-- **`ComponentFixture`**: A handle on the created component instance and its environment.
-  - `fixture.componentInstance`: Access the component's class instance.
-  - `fixture.nativeElement`: Access the component's root DOM element.
-  - `fixture.debugElement`: An Angular-specific wrapper around the `nativeElement` that provides safer, platform-agnostic ways to query the DOM (e.g., `debugElement.query(By.css('p'))`).
+- **`TestBed`**: Tiện ích chính để tạo một Angular module riêng cho test. Dùng `TestBed.configureTestingModule({...})` trong `beforeEach` để khai báo component, cung cấp service và thiết lập các import cần cho test của bạn.
+- **`ComponentFixture`**: Một handle trỏ tới component instance đã tạo và môi trường của nó.
+  - `fixture.componentInstance`: Truy cập class instance của component.
+  - `fixture.nativeElement`: Truy cập phần tử DOM gốc của component.
+  - `fixture.debugElement`: Một wrapper riêng của Angular quanh `nativeElement`, cung cấp các cách truy vấn DOM an toàn hơn, không phụ thuộc nền tảng (ví dụ: `debugElement.query(By.css('p'))`).

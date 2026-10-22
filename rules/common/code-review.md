@@ -1,76 +1,76 @@
-# Code Review Standards
+# Tiêu chuẩn Code Review
 
-## Purpose
+## Mục đích
 
-Code review ensures quality, security, and maintainability before code is merged. This rule defines when and how to conduct code reviews.
+Code review đảm bảo chất lượng, bảo mật và khả năng bảo trì trước khi code được merge. Rule này định nghĩa khi nào và cách thực hiện code review.
 
-## When to Review
+## Khi nào cần review
 
-**MANDATORY review triggers:**
+**Các tình huống BẮT BUỘC review:**
 
-- After writing or modifying code
-- Before any commit to shared branches
-- When security-sensitive code is changed (auth, payments, user data)
-- When architectural changes are made
-- Before merging pull requests
+- Sau khi viết hoặc sửa code
+- Trước mọi commit lên các branch dùng chung
+- Khi thay đổi code nhạy cảm về bảo mật (xác thực, thanh toán, dữ liệu người dùng)
+- Khi có thay đổi kiến trúc
+- Trước khi merge pull request
 
-**Pre-Review Requirements:**
+**Yêu cầu trước khi review:**
 
-Before requesting review, ensure:
+Trước khi yêu cầu review, hãy đảm bảo:
 
-- All automated checks (CI/CD) are passing
-- Merge conflicts are resolved
-- Branch is up to date with target branch
+- Mọi kiểm tra tự động (CI/CD) đều pass
+- Merge conflict đã được giải quyết
+- Branch đã cập nhật so với branch đích
 
-## Review Checklist
+## Checklist review
 
-Before marking code complete:
+Trước khi đánh dấu code hoàn thành:
 
-- [ ] Code is readable and well-named
-- [ ] Functions are focused (<50 lines)
-- [ ] Source files are cohesive (under the 800-line soft maintainability ceiling, or include a reason for a deliberate exception)
-- [ ] No deep nesting (>4 levels)
-- [ ] Errors are handled explicitly
-- [ ] No hardcoded secrets or credentials
-- [ ] No console.log or debug statements
-- [ ] Tests exist for new functionality
-- [ ] Test coverage meets 80% minimum
+- [ ] Code dễ đọc và đặt tên tốt
+- [ ] Hàm tập trung vào một việc (<50 dòng)
+- [ ] File nguồn có tính gắn kết cao (dưới ngưỡng mềm 800 dòng về khả năng bảo trì, hoặc kèm lý do cho ngoại lệ có chủ đích)
+- [ ] Không lồng sâu (>4 cấp)
+- [ ] Lỗi được xử lý tường minh
+- [ ] Không hardcode secret hoặc credential
+- [ ] Không có console.log hoặc câu lệnh debug
+- [ ] Có test cho chức năng mới
+- [ ] Test coverage đạt tối thiểu 80%
 
-## Security Review Triggers
+## Các tình huống cần security review
 
-**STOP and use security-reviewer agent when:**
+**DỪNG LẠI và dùng agent security-reviewer khi:**
 
-- Authentication or authorization code
-- User input handling
-- Database queries
-- File system operations
-- External API calls
-- Cryptographic operations
-- Payment or financial code
+- Code xác thực (authentication) hoặc phân quyền (authorization)
+- Xử lý input của người dùng
+- Truy vấn database
+- Thao tác với hệ thống file
+- Gọi API bên ngoài
+- Thao tác mật mã (cryptographic)
+- Code thanh toán hoặc tài chính
 
-## Review Severity Levels
+## Mức độ nghiêm trọng của review
 
-| Level | Meaning | Action |
-|-------|---------|--------|
-| CRITICAL | Security vulnerability or data loss risk | **BLOCK** - Must fix before merge |
-| HIGH | Bug or significant quality issue | **WARN** - Should fix before merge |
-| MEDIUM | Maintainability concern, including an unexplained source file over the soft 800-line ceiling | **INFO** - Consider fixing |
-| LOW | Style or minor suggestion | **NOTE** - Optional |
+| Mức | Ý nghĩa | Hành động |
+|-----|---------|-----------|
+| CRITICAL | Lỗ hổng bảo mật hoặc rủi ro mất dữ liệu | **BLOCK** - PHẢI sửa trước khi merge |
+| HIGH | Bug hoặc vấn đề chất lượng đáng kể | **WARN** - Nên sửa trước khi merge |
+| MEDIUM | Vấn đề về khả năng bảo trì, bao gồm file nguồn vượt ngưỡng mềm 800 dòng mà không có giải thích | **INFO** - Cân nhắc sửa |
+| LOW | Style hoặc gợi ý nhỏ | **NOTE** - Tùy chọn |
 
-## Agent Usage
+## Sử dụng Agent
 
-Use these agents for code review:
+Dùng các agent sau cho code review:
 
-| Agent | Purpose |
+| Agent | Mục đích |
 |-------|---------|
-| **code-reviewer** | General code quality, patterns, best practices |
-| **security-reviewer** | Security vulnerabilities, OWASP Top 10 |
-| **typescript-reviewer** | TypeScript/JavaScript specific issues |
-| **python-reviewer** | Python specific issues |
-| **go-reviewer** | Go specific issues |
-| **rust-reviewer** | Rust specific issues |
+| **code-reviewer** | Chất lượng code chung, pattern, best practice |
+| **security-reviewer** | Lỗ hổng bảo mật, OWASP Top 10 |
+| **typescript-reviewer** | Các vấn đề riêng của TypeScript/JavaScript |
+| **python-reviewer** | Các vấn đề riêng của Python |
+| **go-reviewer** | Các vấn đề riêng của Go |
+| **rust-reviewer** | Các vấn đề riêng của Rust |
 
-## Review Workflow
+## Quy trình review
 
 ```
 1. Run git diff to understand changes
@@ -81,44 +81,44 @@ Use these agents for code review:
 6. Use appropriate agent for detailed review
 ```
 
-## Common Issues to Catch
+## Các vấn đề thường gặp cần bắt
 
-### Security
+### Bảo mật
 
-- Hardcoded credentials (API keys, passwords, tokens)
-- SQL injection (string concatenation in queries)
-- XSS vulnerabilities (unescaped user input)
-- Path traversal (unsanitized file paths)
-- CSRF protection missing
-- Authentication bypasses
+- Credential bị hardcode (API key, mật khẩu, token)
+- SQL injection (nối chuỗi trong truy vấn)
+- Lỗ hổng XSS (input người dùng chưa được escape)
+- Path traversal (đường dẫn file chưa được sanitize)
+- Thiếu bảo vệ CSRF
+- Authentication bypass
 
-### Code Quality
+### Chất lượng code
 
-- Large functions (>50 lines) - split into smaller
-- Large files (>800 lines) - extract modules
-- Deep nesting (>4 levels) - use early returns
-- Missing error handling - handle explicitly
-- Mutation patterns - prefer immutable operations
-- Missing tests - add test coverage
+- Hàm lớn (>50 dòng) - tách thành các hàm nhỏ hơn
+- File lớn (>800 dòng) - tách thành các module
+- Lồng sâu (>4 cấp) - dùng early return
+- Thiếu xử lý lỗi - xử lý tường minh
+- Pattern mutation - ưu tiên các thao tác bất biến (immutable)
+- Thiếu test - bổ sung test coverage
 
-### Performance
+### Hiệu năng
 
-- N+1 queries - use JOINs or batching
-- Missing pagination - add LIMIT to queries
-- Unbounded queries - add constraints
-- Missing caching - cache expensive operations
+- Truy vấn N+1 - dùng JOIN hoặc batching
+- Thiếu phân trang - thêm LIMIT cho truy vấn
+- Truy vấn không giới hạn - thêm ràng buộc
+- Thiếu caching - cache các thao tác tốn kém
 
-## Approval Criteria
+## Tiêu chí phê duyệt
 
-- **Approve**: No CRITICAL or HIGH issues
-- **Warning**: Only HIGH issues (merge with caution)
-- **Block**: CRITICAL issues found
+- **Approve**: Không có vấn đề CRITICAL hoặc HIGH
+- **Warning**: Chỉ có vấn đề HIGH (merge một cách thận trọng)
+- **Block**: Phát hiện vấn đề CRITICAL
 
-## Integration with Other Rules
+## Tích hợp với các Rule khác
 
-This rule works with:
+Rule này phối hợp với:
 
-- [testing.md](testing.md) - Test coverage requirements
-- [security.md](security.md) - Security checklist
-- [git-workflow.md](git-workflow.md) - Commit standards
-- [agents.md](agents.md) - Agent delegation
+- [testing.md](testing.md) - Yêu cầu test coverage
+- [security.md](security.md) - Checklist bảo mật
+- [git-workflow.md](git-workflow.md) - Tiêu chuẩn commit
+- [agents.md](agents.md) - Ủy quyền cho agent

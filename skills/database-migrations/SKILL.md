@@ -1,45 +1,45 @@
 ---
 name: database-migrations
-description: "Safe, reversible database migration patterns: forward-only production changes, expand-contract zero-downtime renames, concurrent indexes, batched backfills, and per-tool workflows for PostgreSQL, Prisma, Drizzle, Kysely, Django, and golang-migrate. Use when writing a schema or data migration, adding a column or index to a large table, planning a rollback, or preparing a zero-downtime deploy."
+description: "Các pattern database migration an toàn, có thể đảo ngược: thay đổi production chỉ tiến (forward-only), đổi tên zero-downtime theo expand-contract, index concurrent, backfill theo batch, và workflow theo từng công cụ cho PostgreSQL, Prisma, Drizzle, Kysely, Django và golang-migrate. Dùng khi viết schema hoặc data migration, thêm cột hoặc index vào bảng lớn, lập kế hoạch rollback, hoặc chuẩn bị deploy zero-downtime."
 metadata:
   origin: ECC
 ---
 
-# Database Migration Patterns
+# Pattern Database Migration
 
-Safe, reversible database schema changes for production systems.
+Thay đổi schema database an toàn, có thể đảo ngược cho hệ thống production.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Creating or altering database tables
-- Adding/removing columns or indexes
-- Running data migrations (backfill, transform)
-- Planning zero-downtime schema changes
-- Setting up migration tooling for a new project
+- Tạo hoặc thay đổi bảng database
+- Thêm/xóa cột hoặc index
+- Chạy data migration (backfill, transform)
+- Lập kế hoạch thay đổi schema zero-downtime
+- Thiết lập công cụ migration cho dự án mới
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
-1. **Every change is a migration** — never alter production databases manually
-2. **Migrations are forward-only in production** — rollbacks use new forward migrations
-3. **Schema and data migrations are separate** — never mix DDL and DML in one migration
-4. **Test migrations against production-sized data** — a migration that works on 100 rows may lock on 10M
-5. **Migrations are immutable once deployed** — never edit a migration that has run in production
+1. **Mọi thay đổi đều là một migration** — không bao giờ sửa database production thủ công
+2. **Migration chỉ tiến (forward-only) trên production** — rollback dùng migration tiến mới
+3. **Schema migration và data migration tách biệt** — không bao giờ trộn DDL và DML trong cùng một migration
+4. **Test migration với dữ liệu cỡ production** — migration chạy tốt trên 100 dòng có thể bị lock ở 10M dòng
+5. **Migration là bất biến (immutable) sau khi deploy** — không bao giờ sửa migration đã chạy trên production
 
-## Migration Safety Checklist
+## Checklist an toàn migration
 
-Before applying any migration:
+Trước khi áp dụng bất kỳ migration nào:
 
-- [ ] Migration has both UP and DOWN (or is explicitly marked irreversible)
-- [ ] No full table locks on large tables (use concurrent operations)
-- [ ] New columns have defaults or are nullable (never add NOT NULL without default)
-- [ ] Indexes created concurrently (not inline with CREATE TABLE for existing tables)
-- [ ] Data backfill is a separate migration from schema change
-- [ ] Tested against a copy of production data
-- [ ] Rollback plan documented
+- [ ] Migration có cả UP và DOWN (hoặc được đánh dấu rõ là không thể đảo ngược)
+- [ ] Không có full table lock trên bảng lớn (dùng các thao tác concurrent)
+- [ ] Cột mới có default hoặc nullable (không bao giờ thêm NOT NULL mà không có default)
+- [ ] Index được tạo concurrent (không inline với CREATE TABLE cho bảng đã tồn tại)
+- [ ] Data backfill là một migration riêng, tách khỏi thay đổi schema
+- [ ] Đã test với bản sao dữ liệu production
+- [ ] Đã ghi lại kế hoạch rollback
 
-## PostgreSQL Patterns
+## Pattern PostgreSQL
 
-### Adding a Column Safely
+### Thêm cột an toàn
 
 ```sql
 -- GOOD: Nullable column, no lock
@@ -53,7 +53,7 @@ ALTER TABLE users ADD COLUMN role TEXT NOT NULL;
 -- This locks the table and rewrites every row
 ```
 
-### Adding an Index Without Downtime
+### Thêm index không downtime
 
 ```sql
 -- BAD: Blocks writes on large tables
@@ -66,9 +66,9 @@ CREATE INDEX CONCURRENTLY idx_users_email ON users (email);
 -- Most migration tools need special handling for this
 ```
 
-### Renaming a Column (Zero-Downtime)
+### Đổi tên cột (Zero-Downtime)
 
-Never rename directly in production. Use the expand-contract pattern:
+Không bao giờ đổi tên trực tiếp trên production. Dùng pattern expand-contract:
 
 ```sql
 -- Step 1: Add new column (migration 001)
@@ -84,7 +84,7 @@ UPDATE users SET display_name = username WHERE display_name IS NULL;
 ALTER TABLE users DROP COLUMN username;
 ```
 
-### Removing a Column Safely
+### Xóa cột an toàn
 
 ```sql
 -- Step 1: Remove all application references to the column
@@ -96,7 +96,7 @@ ALTER TABLE orders DROP COLUMN legacy_status;
 -- without generating DROP COLUMN (then drop in next migration)
 ```
 
-### Large Data Migrations
+### Data migration lớn
 
 ```sql
 -- BAD: Updates all rows in one transaction (locks table)
@@ -143,7 +143,7 @@ npx prisma migrate reset
 npx prisma generate
 ```
 
-### Schema Example
+### Ví dụ schema
 
 ```prisma
 model User {
@@ -160,9 +160,9 @@ model User {
 }
 ```
 
-### Custom SQL Migration
+### Migration SQL tùy chỉnh
 
-For operations Prisma cannot express (concurrent indexes, data backfills):
+Cho các thao tác Prisma không thể biểu diễn (index concurrent, data backfill):
 
 ```bash
 # Create empty migration, then edit the SQL manually
@@ -190,7 +190,7 @@ npx drizzle-kit migrate
 npx drizzle-kit push
 ```
 
-### Schema Example
+### Ví dụ schema
 
 ```typescript
 import { pgTable, text, timestamp, uuid, boolean } from "drizzle-orm/pg-core";
@@ -226,7 +226,7 @@ kysely migrate down
 kysely migrate list
 ```
 
-### Migration File
+### File migration
 
 ```typescript
 // migrations/2024_01_15_001_create_user_profile.ts
@@ -257,7 +257,7 @@ export async function down(db: Kysely<any>): Promise<void> {
 }
 ```
 
-### Programmatic Migrator
+### Migrator lập trình
 
 ```typescript
 import { Migrator, FileMigrationProvider } from 'kysely'
@@ -317,7 +317,7 @@ python manage.py showmigrations
 python manage.py makemigrations --empty app_name -n description
 ```
 
-### Data Migration
+### Data migration
 
 ```python
 from django.db import migrations
@@ -345,7 +345,7 @@ class Migration(migrations.Migration):
 
 ### SeparateDatabaseAndState
 
-Remove a column from the Django model without dropping it from the database immediately:
+Xóa một cột khỏi model Django mà không drop nó khỏi database ngay lập tức:
 
 ```python
 class Migration(migrations.Migration):
@@ -377,7 +377,7 @@ migrate -path migrations -database "$DATABASE_URL" down 1
 migrate -path migrations -database "$DATABASE_URL" force VERSION
 ```
 
-### Migration Files
+### Các file migration
 
 ```sql
 -- migrations/000003_add_user_avatar.up.sql
@@ -389,9 +389,9 @@ DROP INDEX IF EXISTS idx_users_avatar;
 ALTER TABLE users DROP COLUMN IF EXISTS avatar_url;
 ```
 
-## Zero-Downtime Migration Strategy
+## Chiến lược migration Zero-Downtime
 
-For critical production changes, follow the expand-contract pattern:
+Với các thay đổi production quan trọng, hãy theo pattern expand-contract:
 
 ```
 Phase 1: EXPAND
@@ -408,7 +408,7 @@ Phase 3: CONTRACT
   - Drop old column/table in separate migration
 ```
 
-### Timeline Example
+### Ví dụ timeline
 
 ```
 Day 1: Migration adds new_status column (nullable)
@@ -418,13 +418,13 @@ Day 3: Deploy app v3 — reads from new_status only
 Day 7: Migration drops old status column
 ```
 
-## Anti-Patterns
+## Anti-pattern
 
-| Anti-Pattern | Why It Fails | Better Approach |
+| Anti-pattern | Vì sao thất bại | Cách tốt hơn |
 |-------------|-------------|-----------------|
-| Manual SQL in production | No audit trail, unrepeatable | Always use migration files |
-| Editing deployed migrations | Causes drift between environments | Create new migration instead |
-| NOT NULL without default | Locks table, rewrites all rows | Add nullable, backfill, then add constraint |
-| Inline index on large table | Blocks writes during build | CREATE INDEX CONCURRENTLY |
-| Schema + data in one migration | Hard to rollback, long transactions | Separate migrations |
-| Dropping column before removing code | Application errors on missing column | Remove code first, drop column next deploy |
+| SQL thủ công trên production | Không có audit trail, không lặp lại được | Luôn dùng file migration |
+| Sửa migration đã deploy | Gây lệch giữa các môi trường | Tạo migration mới thay thế |
+| NOT NULL không có default | Lock bảng, ghi lại mọi dòng | Thêm nullable, backfill, rồi thêm constraint |
+| Index inline trên bảng lớn | Chặn ghi trong lúc build | CREATE INDEX CONCURRENTLY |
+| Schema + data trong một migration | Khó rollback, transaction dài | Tách thành các migration riêng |
+| Drop cột trước khi gỡ code | Ứng dụng lỗi do thiếu cột | Gỡ code trước, drop cột ở lần deploy kế tiếp |

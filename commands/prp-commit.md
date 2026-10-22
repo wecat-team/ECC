@@ -1,81 +1,81 @@
 ---
-description: "Quick commit with natural language file targeting — describe what to commit in plain English"
-argument-hint: "[target description] (blank = all changes)"
+description: "Commit nhanh với việc chọn file bằng ngôn ngữ tự nhiên — mô tả cần commit gì bằng lời thường"
+argument-hint: "[mô tả mục tiêu] (để trống = tất cả thay đổi)"
 ---
 
 # Smart Commit
 
-> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
+> Phỏng theo PRPs-agentic-eng của Wirasm. Thuộc chuỗi workflow PRP.
 
-**Input**: $ARGUMENTS
+**Đầu vào**: $ARGUMENTS
 
 ---
 
-## Phase 1 — ASSESS
+## Giai đoạn 1 — ASSESS
 
 ```bash
 git status --short
 ```
 
-If output is empty → stop: "Nothing to commit."
+Nếu đầu ra rỗng → dừng: "Nothing to commit."
 
-Show the user a summary of what's changed (added, modified, deleted, untracked).
+Hiển thị cho người dùng bản tóm tắt những gì đã thay đổi (thêm mới, sửa đổi, xóa, chưa được theo dõi).
 
 ---
 
-## Phase 2 — INTERPRET & STAGE
+## Giai đoạn 2 — INTERPRET & STAGE
 
-Interpret `$ARGUMENTS` to determine what to stage:
+Diễn giải `$ARGUMENTS` để xác định cần stage những gì:
 
-| Input | Interpretation | Git Command |
+| Đầu vào | Diễn giải | Lệnh Git |
 |---|---|---|
-| *(blank / empty)* | Stage everything | `git add -A` |
-| `staged` | Use whatever is already staged | *(no git add)* |
-| `*.ts` or `*.py` etc. | Stage matching glob | `git add '*.ts'` |
-| `except tests` | Stage all, then unstage tests | `git add -A && git reset -- '**/*.test.*' '**/*.spec.*' '**/test_*' 2>/dev/null \|\| true` |
-| `only new files` | Stage untracked files only | `git ls-files --others --exclude-standard \| grep . && git ls-files --others --exclude-standard \| xargs git add` |
-| `the auth changes` | Interpret from status/diff — find auth-related files | `git add <matched files>` |
-| Specific filenames | Stage those files | `git add <files>` |
+| *(trống / rỗng)* | Stage tất cả | `git add -A` |
+| `staged` | Dùng những gì đã được stage sẵn | *(không git add)* |
+| `*.ts` hoặc `*.py` v.v. | Stage các file khớp glob | `git add '*.ts'` |
+| `except tests` | Stage tất cả, sau đó unstage test | `git add -A && git reset -- '**/*.test.*' '**/*.spec.*' '**/test_*' 2>/dev/null \|\| true` |
+| `only new files` | Chỉ stage các file chưa được theo dõi | `git ls-files --others --exclude-standard \| grep . && git ls-files --others --exclude-standard \| xargs git add` |
+| `the auth changes` | Diễn giải từ status/diff — tìm các file liên quan đến auth | `git add <matched files>` |
+| Tên file cụ thể | Stage các file đó | `git add <files>` |
 
-For natural language inputs (like "the auth changes"), cross-reference the `git status` output and `git diff` to identify relevant files. Show the user which files you're staging and why.
+Với đầu vào ngôn ngữ tự nhiên (như "the auth changes"), hãy đối chiếu đầu ra của `git status` và `git diff` để xác định các file liên quan. Hiển thị cho người dùng những file bạn đang stage và lý do.
 
 ```bash
 git add <determined files>
 ```
 
-After staging, verify:
+Sau khi stage, hãy xác minh:
 ```bash
 git diff --cached --stat
 ```
 
-If nothing staged, stop: "No files matched your description."
+Nếu chưa có gì được stage, dừng: "No files matched your description."
 
 ---
 
-## Phase 3 — COMMIT
+## Giai đoạn 3 — COMMIT
 
-Craft a single-line commit message in imperative mood:
+Soạn commit message một dòng ở thể mệnh lệnh (imperative mood):
 
 ```
 {type}: {description}
 ```
 
-Types:
-- `feat` — New feature or capability
-- `fix` — Bug fix
-- `refactor` — Code restructuring without behavior change
-- `docs` — Documentation changes
-- `test` — Adding or updating tests
-- `chore` — Build, config, dependencies
-- `perf` — Performance improvement
-- `ci` — CI/CD changes
+Các type:
+- `feat` — Tính năng hoặc khả năng mới
+- `fix` — Sửa lỗi
+- `refactor` — Tái cấu trúc code không đổi hành vi
+- `docs` — Thay đổi tài liệu
+- `test` — Thêm hoặc cập nhật test
+- `chore` — Build, config, dependency
+- `perf` — Cải thiện hiệu năng
+- `ci` — Thay đổi CI/CD
 
-Rules:
-- Imperative mood ("add feature" not "added feature")
-- Lowercase after the type prefix
-- No period at the end
-- Under 72 characters
-- Describe WHAT changed, not HOW
+Quy tắc:
+- Thể mệnh lệnh ("add feature" chứ không phải "added feature")
+- Viết thường sau tiền tố type
+- Không có dấu chấm ở cuối
+- Dưới 72 ký tự
+- Mô tả CÁI GÌ đã thay đổi, không phải thay đổi NHƯ THẾ NÀO
 
 ```bash
 git commit -m "{type}: {description}"
@@ -83,9 +83,9 @@ git commit -m "{type}: {description}"
 
 ---
 
-## Phase 4 — OUTPUT
+## Giai đoạn 4 — OUTPUT
 
-Report to user:
+Báo cáo cho người dùng:
 
 ```
 Committed: {hash_short}
@@ -100,13 +100,13 @@ Next steps:
 
 ---
 
-## Examples
+## Ví dụ
 
-| You say | What happens |
+| Bạn nói | Điều xảy ra |
 |---|---|
-| `/prp-commit` | Stages all, auto-generates message |
-| `/prp-commit staged` | Commits only what's already staged |
-| `/prp-commit *.ts` | Stages all TypeScript files, commits |
-| `/prp-commit except tests` | Stages everything except test files |
-| `/prp-commit the database migration` | Finds DB migration files from status, stages them |
-| `/prp-commit only new files` | Stages untracked files only |
+| `/prp-commit` | Stage tất cả, tự sinh message |
+| `/prp-commit staged` | Chỉ commit những gì đã được stage |
+| `/prp-commit *.ts` | Stage tất cả file TypeScript, rồi commit |
+| `/prp-commit except tests` | Stage mọi thứ trừ các file test |
+| `/prp-commit the database migration` | Tìm các file DB migration từ status, stage chúng |
+| `/prp-commit only new files` | Chỉ stage các file chưa được theo dõi |

@@ -1,30 +1,30 @@
 ---
-description: Enforce TDD workflow for Rust. Write tests first, then implement. Verify 80%+ coverage with cargo-llvm-cov.
+description: Áp dụng quy trình TDD cho Rust. Viết test trước, sau đó triển khai. Xác minh coverage 80%+ với cargo-llvm-cov.
 ---
 
-# Rust TDD Command
+# Lệnh Rust TDD
 
-This command enforces test-driven development methodology for Rust code using `#[test]`, rstest, proptest, and mockall.
+Lệnh này áp dụng phương pháp phát triển hướng kiểm thử (TDD) cho code Rust bằng `#[test]`, rstest, proptest và mockall.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Define Types/Traits**: Scaffold function signatures with `todo!()`
-2. **Write Tests**: Create comprehensive test module (RED)
-3. **Run Tests**: Verify tests fail for the right reason
-4. **Implement Code**: Write minimal code to pass (GREEN)
-5. **Refactor**: Improve while keeping tests green
-6. **Check Coverage**: Ensure 80%+ coverage with cargo-llvm-cov
+1. **Định nghĩa Type/Trait**: Dựng khung signature của function với `todo!()`
+2. **Viết test**: Tạo module test toàn diện (RED)
+3. **Chạy test**: Xác minh test thất bại đúng lý do
+4. **Triển khai code**: Viết code tối thiểu để pass (GREEN)
+5. **Refactor**: Cải thiện trong khi giữ test xanh
+6. **Kiểm tra coverage**: Đảm bảo coverage 80%+ với cargo-llvm-cov
 
-## When to Use
+## Khi nào dùng
 
-Use `/rust-test` when:
-- Implementing new Rust functions, methods, or traits
-- Adding test coverage to existing Rust code
-- Fixing bugs (write failing test first)
-- Building critical business logic
-- Learning TDD workflow in Rust
+Dùng `/rust-test` khi:
+- Triển khai function, method hoặc trait Rust mới
+- Bổ sung test coverage cho code Rust hiện có
+- Sửa bug (viết test thất bại trước)
+- Xây dựng logic nghiệp vụ quan trọng
+- Học quy trình TDD trong Rust
 
-## TDD Cycle
+## Chu trình TDD
 
 ```
 RED     -> Write failing test first
@@ -33,7 +33,7 @@ REFACTOR -> Improve code, tests stay green
 REPEAT  -> Next test case
 ```
 
-## Example Session
+## Ví dụ phiên làm việc
 
 ````text
 User: /rust-test I need a function to validate user registration
@@ -185,9 +185,9 @@ Coverage: 100%
 ## TDD Complete!
 ````
 
-## Test Patterns
+## Các pattern test
 
-### Unit Tests
+### Unit Test
 
 ```rust
 #[cfg(test)]
@@ -208,7 +208,7 @@ mod tests {
 }
 ```
 
-### Parameterized Tests with rstest
+### Test tham số hóa với rstest
 
 ```rust
 use rstest::{rstest, fixture};
@@ -222,7 +222,7 @@ fn test_string_length(#[case] input: &str, #[case] expected: usize) {
 }
 ```
 
-### Async Tests
+### Test bất đồng bộ
 
 ```rust
 #[tokio::test]
@@ -233,7 +233,7 @@ async fn fetches_data_successfully() {
 }
 ```
 
-### Property-Based Tests
+### Test dựa trên thuộc tính (Property-Based)
 
 ```rust
 use proptest::prelude::*;
@@ -248,7 +248,7 @@ proptest! {
 }
 ```
 
-## Coverage Commands
+## Các lệnh coverage
 
 ```bash
 # Summary report
@@ -270,39 +270,39 @@ cargo test -- --nocapture
 cargo test --no-fail-fast
 ```
 
-## Coverage Targets
+## Mục tiêu coverage
 
-| Code Type | Target |
+| Loại code | Mục tiêu |
 |-----------|--------|
-| Critical business logic | 100% |
-| Public API | 90%+ |
-| General code | 80%+ |
-| Generated / FFI bindings | Exclude |
+| Logic nghiệp vụ quan trọng | 100% |
+| API public | 90%+ |
+| Code chung | 80%+ |
+| Binding sinh tự động / FFI | Loại trừ |
 
-## TDD Best Practices
+## Best practice của TDD
 
-**DO:**
-- Write test FIRST, before any implementation
-- Run tests after each change
-- Use `assert_eq!` over `assert!` for better error messages
-- Use `?` in tests that return `Result` for cleaner output
-- Test behavior, not implementation
-- Include edge cases (empty, boundary, error paths)
+**NÊN:**
+- Viết test TRƯỚC, trước bất kỳ phần triển khai nào
+- Chạy test sau mỗi thay đổi
+- Dùng `assert_eq!` thay vì `assert!` để có thông báo lỗi tốt hơn
+- Dùng `?` trong các test trả về `Result` để output gọn hơn
+- Test hành vi, không phải phần triển khai
+- Bao gồm edge case (rỗng, biên, đường lỗi)
 
-**DON'T:**
-- Write implementation before tests
-- Skip the RED phase
-- Use `#[should_panic]` when `Result::is_err()` works
-- Use `sleep()` in tests — use channels or `tokio::time::pause()`
-- Mock everything — prefer integration tests when feasible
+**KHÔNG NÊN:**
+- Viết phần triển khai trước test
+- Bỏ qua pha RED
+- Dùng `#[should_panic]` khi `Result::is_err()` đủ dùng
+- Dùng `sleep()` trong test — hãy dùng channel hoặc `tokio::time::pause()`
+- Mock mọi thứ — ưu tiên integration test khi khả thi
 
-## Related Commands
+## Các lệnh liên quan
 
-- `/rust-build` - Fix build errors
-- `/rust-review` - Review code after implementation
-- `verification-loop` skill - Run full verification loop
+- `/rust-build` - Sửa lỗi build
+- `/rust-review` - Review code sau khi triển khai
+- skill `verification-loop` - Chạy vòng lặp verification đầy đủ
 
-## Related
+## Liên quan
 
 - Skill: `skills/rust-testing/`
 - Skill: `skills/rust-patterns/`

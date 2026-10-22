@@ -1,82 +1,82 @@
 ---
-description: Comprehensive React/JSX code review for hook correctness, render performance, server/client component boundaries, accessibility, and React-specific security. Invokes the react-reviewer agent (and typescript-reviewer alongside on TSX/JSX changes).
+description: Code review React/JSX toàn diện về tính đúng đắn của hook, hiệu năng render, ranh giới server/client component, accessibility và bảo mật đặc thù React. Gọi agent react-reviewer (và typescript-reviewer song song với các thay đổi TSX/JSX).
 ---
 
 # React Code Review
 
-This command invokes the **react-reviewer** agent for React-specific code review. For pull requests touching `.tsx`/`.jsx` files, both `react-reviewer` and `typescript-reviewer` should run — each owns a distinct lane.
+Lệnh này gọi agent **react-reviewer** để thực hiện code review đặc thù cho React. Với pull request chạm vào file `.tsx`/`.jsx`, cả `react-reviewer` và `typescript-reviewer` đều nên chạy — mỗi agent phụ trách một mảng riêng.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Identify React Changes**: Find modified `.tsx`/`.jsx` files (and React-containing `.ts`/`.js` files) via `git diff`
-2. **Run Lint**: Execute `eslint` with `eslint-plugin-react-hooks` and `eslint-plugin-jsx-a11y`
-3. **Typecheck**: Run `tsc --noEmit` or the project's canonical typecheck command
-4. **Review React Lanes Only**: Hook rules, RSC boundaries, accessibility, render performance, React-specific security
-5. **Generate Report**: Categorize issues by severity (CRITICAL / HIGH / MEDIUM)
+1. **Xác định thay đổi React**: Tìm các file `.tsx`/`.jsx` đã sửa (và các file `.ts`/`.js` có chứa React) qua `git diff`
+2. **Chạy lint**: Thực thi `eslint` với `eslint-plugin-react-hooks` và `eslint-plugin-jsx-a11y`
+3. **Typecheck**: Chạy `tsc --noEmit` hoặc lệnh typecheck chuẩn của project
+4. **Chỉ review các mảng React**: Quy tắc hook, ranh giới RSC, accessibility, hiệu năng render, bảo mật đặc thù React
+5. **Tạo báo cáo**: Phân loại vấn đề theo mức độ nghiêm trọng (CRITICAL / HIGH / MEDIUM)
 
-## When to Use
+## Khi nào dùng
 
-Use `/react-review` when:
+Dùng `/react-review` khi:
 
-- A PR or commit touches `.tsx`/`.jsx` files
-- After writing or modifying React components, custom hooks, or pages
-- Before merging React code
-- Auditing accessibility on UI components
-- Reviewing a new hook for rules-of-hooks and dependency correctness
-- Auditing a Next.js App Router server/client component boundary
+- Một PR hoặc commit chạm vào file `.tsx`/`.jsx`
+- Sau khi viết hoặc sửa React component, custom hook hoặc page
+- Trước khi merge code React
+- Audit accessibility trên các UI component
+- Review một hook mới về rules-of-hooks và tính đúng đắn của dependency
+- Audit ranh giới server/client component trong Next.js App Router
 
-For pure `.ts`/`.js` changes with no React imports, use `/code-review` (general) or invoke `typescript-reviewer` directly.
+Với thay đổi `.ts`/`.js` thuần không import React, dùng `/code-review` (chung) hoặc gọi trực tiếp `typescript-reviewer`.
 
-## Scope vs `/code-review` and TypeScript Review
+## Phạm vi so với `/code-review` và TypeScript Review
 
-| Tool | Scope |
+| Công cụ | Phạm vi |
 |---|---|
-| `react-reviewer` (this command) | Hooks rules, JSX, RSC, a11y, React-specific security, render perf |
-| `typescript-reviewer` | Generic TS/JS — `any` abuse, async correctness, Node security |
-| `security-reviewer` | Project-wide security audit |
-| `/code-review` | Generic uncommitted-changes or PR review |
+| `react-reviewer` (lệnh này) | Quy tắc hook, JSX, RSC, a11y, bảo mật đặc thù React, hiệu năng render |
+| `typescript-reviewer` | TS/JS chung — lạm dụng `any`, tính đúng đắn của async, bảo mật Node |
+| `security-reviewer` | Audit bảo mật toàn project |
+| `/code-review` | Review chung các thay đổi chưa commit hoặc PR |
 
-On a TSX/JSX PR, invoke both `react-reviewer` and `typescript-reviewer`. Findings from each are non-overlapping by design.
+Với PR TSX/JSX, hãy gọi cả `react-reviewer` và `typescript-reviewer`. Các phát hiện của mỗi bên được thiết kế để không chồng lấn nhau.
 
-## Review Categories
+## Các nhóm review
 
-### CRITICAL (Must Fix)
+### CRITICAL (Phải sửa)
 
-- `dangerouslySetInnerHTML` with unsanitized input
-- `href`/`src` with unvalidated user URLs (`javascript:`, `data:`)
-- Server Action without input validation
-- Secret in client bundle (`NEXT_PUBLIC_*`, `VITE_*`, `REACT_APP_*`)
-- `localStorage`/`sessionStorage` for session tokens
-- Conditional hook calls (violates Rules of Hooks)
-- Direct state mutation
-- Hook called outside a component or custom hook
+- `dangerouslySetInnerHTML` với đầu vào chưa được sanitize
+- `href`/`src` với URL người dùng chưa được kiểm tra (`javascript:`, `data:`)
+- Server Action không có kiểm tra đầu vào
+- Secret trong client bundle (`NEXT_PUBLIC_*`, `VITE_*`, `REACT_APP_*`)
+- Dùng `localStorage`/`sessionStorage` cho session token
+- Gọi hook có điều kiện (vi phạm Rules of Hooks)
+- Thay đổi state trực tiếp (direct state mutation)
+- Hook được gọi bên ngoài component hoặc custom hook
 
-### HIGH (Should Fix)
+### HIGH (Nên sửa)
 
-- Missing `useEffect`/`useMemo`/`useCallback` deps (disabled `exhaustive-deps` without justification)
-- Effect for derived state
-- Effect missing cleanup
-- Stale closures in handlers/intervals
-- Server-only imports in Client Components
-- Sensitive data leaked via props to Client Components
-- Server Actions without auth checks
-- Accessibility violations (missing labels, non-semantic interactive elements, ARIA misuse)
-- `key={index}` in dynamic lists
-- Duplicated state, useEffect chains
+- Thiếu dependency của `useEffect`/`useMemo`/`useCallback` (tắt `exhaustive-deps` mà không có lý do)
+- Dùng effect cho derived state
+- Effect thiếu cleanup
+- Stale closure trong handler/interval
+- Import chỉ dành cho server trong Client Component
+- Rò rỉ dữ liệu nhạy cảm qua props sang Client Component
+- Server Action không kiểm tra auth
+- Vi phạm accessibility (thiếu label, phần tử tương tác không semantic, dùng ARIA sai)
+- `key={index}` trong danh sách động
+- State bị trùng lặp, chuỗi useEffect
 
-### MEDIUM (Consider)
+### MEDIUM (Cân nhắc)
 
-- Over-memoization without measured win
-- Inline new object/function as prop to memoized child
-- Suspense at route root only (no progressive reveal)
-- Long lists without virtualization
-- High-frequency value via `useContext`
-- Roll-your-own validation in non-trivial forms
-- Prop drilling beyond 3 levels
-- Component over 200 lines
-- Class components in new code
+- Memoize quá mức mà không có lợi ích đo được
+- Tạo object/function inline mới làm prop cho child đã memoize
+- Suspense chỉ ở root của route (không hiển thị dần)
+- Danh sách dài không có virtualization
+- Giá trị thay đổi tần suất cao qua `useContext`
+- Tự viết validation trong form phức tạp
+- Prop drilling quá 3 cấp
+- Component dài hơn 200 dòng
+- Class component trong code mới
 
-## Automated Checks Run
+## Các kiểm tra tự động được chạy
 
 ```bash
 # Lint (required for any meaningful review)
@@ -95,9 +95,9 @@ npx eslint . --rule 'jsx-a11y/alt-text: error' \
 npm audit
 ```
 
-If `eslint-plugin-react-hooks` or `eslint-plugin-jsx-a11y` is not configured, the review will flag the gap as a HIGH config issue and continue.
+Nếu `eslint-plugin-react-hooks` hoặc `eslint-plugin-jsx-a11y` chưa được cấu hình, review sẽ đánh dấu khoảng trống đó là vấn đề cấu hình HIGH và tiếp tục.
 
-## Example Usage
+## Ví dụ sử dụng
 
 ````text
 User: /react-review
@@ -147,24 +147,24 @@ useEffect(() => {
 Recommendation: FAIL: Block merge until CRITICAL issue is fixed
 ````
 
-## Approval Criteria
+## Tiêu chí phê duyệt
 
-| Status | Condition |
+| Trạng thái | Điều kiện |
 |---|---|
-| PASS: Approve | No CRITICAL or HIGH issues |
-| WARNING: Warning | Only MEDIUM issues (merge with caution) |
-| FAIL: Block | CRITICAL or HIGH issues found |
+| PASS: Approve | Không có vấn đề CRITICAL hoặc HIGH |
+| WARNING: Warning | Chỉ có vấn đề MEDIUM (merge cần thận trọng) |
+| FAIL: Block | Phát hiện vấn đề CRITICAL hoặc HIGH |
 
-## Integration with Other Commands
+## Tích hợp với các lệnh khác
 
-- Run `/react-build` first if the build is broken
-- Run `/react-test` to ensure component tests pass
-- Run `/react-review` before merging
-- Use `/code-review` for non-React-specific concerns on the same PR
+- Chạy `/react-build` trước nếu build đang hỏng
+- Chạy `/react-test` để đảm bảo test của component pass
+- Chạy `/react-review` trước khi merge
+- Dùng `/code-review` cho các mối quan tâm không đặc thù React trên cùng PR
 
-## Related
+## Liên quan
 
 - Agent: `agents/react-reviewer.md`
-- Companion agent: `agents/typescript-reviewer.md` (run alongside for TSX/JSX PRs)
+- Agent đồng hành: `agents/typescript-reviewer.md` (chạy song song cho PR TSX/JSX)
 - Skills: `skills/react-patterns/`, `skills/react-testing/`, `skills/accessibility/`
 - Rules: `rules/react/`

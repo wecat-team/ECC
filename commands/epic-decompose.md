@@ -1,23 +1,23 @@
 ---
-description: Break an epic into task children without creating task branches.
+description: Chia một epic thành các task con mà không tạo branch cho task.
 ---
 
 # /epic-decompose
 
-Reconcile the task breakdown for one epic issue.
+Đối chiếu (reconcile) việc phân rã task cho một epic issue.
 
 ```bash
 node scripts/github-coordination.js decompose <issue-number> --repo <owner/repo>
 ```
 
-What this does:
+Việc này làm gì:
 
-1. Reads the epic issue body for task checklists and dependency references.
-2. Stores the decomposition in the coordination block.
-3. Leaves task branches out of the workflow.
-4. Appends a concise audit comment.
+1. Đọc nội dung epic issue để lấy checklist task và các tham chiếu dependency.
+2. Lưu kết quả phân rã vào khối điều phối.
+3. Không đưa task branch vào workflow.
+4. Thêm một comment kiểm toán ngắn gọn.
 
-Compatibility aliases:
+Alias tương thích:
 
 - `/plan`
 - `/prp-plan`

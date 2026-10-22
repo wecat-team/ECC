@@ -1,24 +1,24 @@
 ---
 name: jpa-patterns
-description: JPA/Hibernate patterns for entity design, relationships, query optimization, transactions, auditing, indexing, pagination, and pooling in Spring Boot. Use when designing JPA entities or relationships, or when a Hibernate query, transaction, or N+1 problem needs fixing.
+description: "Các pattern JPA/Hibernate cho thiết kế entity, quan hệ, tối ưu query, transaction, auditing, indexing, pagination và pooling trong Spring Boot. Dùng khi thiết kế JPA entity hoặc quan hệ, hoặc khi cần sửa một query Hibernate, transaction hay vấn đề N+1."
 metadata:
   origin: ECC
 ---
 
-# JPA/Hibernate Patterns
+# Các pattern JPA/Hibernate
 
-Use for data modeling, repositories, and performance tuning in Spring Boot.
+Dùng cho data modeling, repository và tinh chỉnh hiệu năng trong Spring Boot.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Designing JPA entities and table mappings
-- Defining relationships (@OneToMany, @ManyToOne, @ManyToMany)
-- Optimizing queries (N+1 prevention, fetch strategies, projections)
-- Configuring transactions, auditing, or soft deletes
-- Setting up pagination, sorting, or custom repository methods
-- Tuning connection pooling (HikariCP) or second-level caching
+- Thiết kế JPA entity và ánh xạ bảng
+- Định nghĩa các quan hệ (@OneToMany, @ManyToOne, @ManyToMany)
+- Tối ưu query (phòng tránh N+1, chiến lược fetch, projection)
+- Cấu hình transaction, auditing hoặc soft delete
+- Thiết lập pagination, sorting hoặc các method repository tùy chỉnh
+- Tinh chỉnh connection pooling (HikariCP) hoặc second-level caching
 
-## Entity Design
+## Thiết kế Entity
 
 ```java
 @Entity
@@ -44,29 +44,29 @@ public class MarketEntity {
 }
 ```
 
-Enable auditing:
+Bật auditing:
 ```java
 @Configuration
 @EnableJpaAuditing
 class JpaConfig {}
 ```
 
-## Relationships and N+1 Prevention
+## Quan hệ và phòng tránh N+1
 
 ```java
 @OneToMany(mappedBy = "market", cascade = CascadeType.ALL, orphanRemoval = true)
 private List<PositionEntity> positions = new ArrayList<>();
 ```
 
-- Default to lazy loading; use `JOIN FETCH` in queries when needed
-- Avoid `EAGER` on collections; use DTO projections for read paths
+- Mặc định dùng lazy loading; dùng `JOIN FETCH` trong query khi cần
+- Tránh `EAGER` trên collection; dùng DTO projection cho các đường đọc
 
 ```java
 @Query("select m from MarketEntity m left join fetch m.positions where m.id = :id")
 Optional<MarketEntity> findWithPositions(@Param("id") Long id);
 ```
 
-## Repository Patterns
+## Pattern Repository
 
 ```java
 public interface MarketRepository extends JpaRepository<MarketEntity, Long> {
@@ -77,7 +77,7 @@ public interface MarketRepository extends JpaRepository<MarketEntity, Long> {
 }
 ```
 
-- Use projections for lightweight queries:
+- Dùng projection cho các query nhẹ:
 ```java
 public interface MarketSummary {
   Long getId();
@@ -87,11 +87,11 @@ public interface MarketSummary {
 Page<MarketSummary> findAllBy(Pageable pageable);
 ```
 
-## Transactions
+## Transaction
 
-- Annotate service methods with `@Transactional`
-- Use `@Transactional(readOnly = true)` for read paths to optimize
-- Choose propagation carefully; avoid long-running transactions
+- Đánh dấu các method của service bằng `@Transactional`
+- Dùng `@Transactional(readOnly = true)` cho các đường đọc để tối ưu
+- Chọn propagation cẩn thận; tránh transaction chạy lâu
 
 ```java
 @Transactional
@@ -110,18 +110,18 @@ PageRequest page = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").des
 Page<MarketEntity> markets = repo.findByStatus(MarketStatus.ACTIVE, page);
 ```
 
-For cursor-like pagination, include `id > :lastId` in JPQL with ordering.
+Với pagination kiểu cursor, thêm `id > :lastId` vào JPQL kèm ordering.
 
-## Indexing and Performance
+## Indexing và hiệu năng
 
-- Add indexes for common filters (`status`, `slug`, foreign keys)
-- Use composite indexes matching query patterns (`status, created_at`)
-- Avoid `select *`; project only needed columns
-- Batch writes with `saveAll` and `hibernate.jdbc.batch_size`
+- Thêm index cho các bộ lọc phổ biến (`status`, `slug`, foreign key)
+- Dùng composite index khớp với pattern của query (`status, created_at`)
+- Tránh `select *`; chỉ project các cột cần thiết
+- Ghi theo batch với `saveAll` và `hibernate.jdbc.batch_size`
 
 ## Connection Pooling (HikariCP)
 
-Recommended properties:
+Các property khuyến nghị:
 ```
 spring.datasource.hikari.maximum-pool-size=20
 spring.datasource.hikari.minimum-idle=5
@@ -129,24 +129,24 @@ spring.datasource.hikari.connection-timeout=30000
 spring.datasource.hikari.validation-timeout=5000
 ```
 
-For PostgreSQL LOB handling, add:
+Để xử lý LOB trên PostgreSQL, thêm:
 ```
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 ```
 
 ## Caching
 
-- 1st-level cache is per EntityManager; avoid keeping entities across transactions
-- For read-heavy entities, consider second-level cache cautiously; validate eviction strategy
+- Cache cấp 1 (1st-level) gắn với từng EntityManager; tránh giữ entity qua nhiều transaction
+- Với entity đọc nhiều, cân nhắc second-level cache một cách thận trọng; xác thực chiến lược eviction
 
-## Migrations
+## Migration
 
-- Use Flyway or Liquibase; never rely on Hibernate auto DDL in production
-- Keep migrations idempotent and additive; avoid dropping columns without plan
+- Dùng Flyway hoặc Liquibase; KHÔNG BAO GIỜ dựa vào Hibernate auto DDL trong production
+- Giữ migration idempotent và mang tính bổ sung (additive); tránh xóa cột khi không có kế hoạch
 
-## Testing Data Access
+## Kiểm thử truy cập dữ liệu
 
-- Prefer `@DataJpaTest` with Testcontainers to mirror production
-- Assert SQL efficiency using logs: set `logging.level.org.hibernate.SQL=DEBUG` and `logging.level.org.hibernate.orm.jdbc.bind=TRACE` for parameter values
+- Ưu tiên `@DataJpaTest` với Testcontainers để phản ánh production
+- Đánh giá hiệu quả SQL qua log: đặt `logging.level.org.hibernate.SQL=DEBUG` và `logging.level.org.hibernate.orm.jdbc.bind=TRACE` để xem giá trị tham số
 
-**Remember**: Keep entities lean, queries intentional, and transactions short. Prevent N+1 with fetch strategies and projections, and index for your read/write paths.
+**Hãy nhớ**: Giữ entity gọn nhẹ, query có chủ đích và transaction ngắn. Phòng tránh N+1 bằng chiến lược fetch và projection, và đánh index cho các đường đọc/ghi của bạn.

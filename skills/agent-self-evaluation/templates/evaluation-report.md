@@ -1,6 +1,6 @@
-# Agent Self-Evaluation Report Template
+# Template báo cáo Agent Self-Evaluation
 
-Copy this template and fill in after completing a task. The format matches `scripts/evaluate.py` output.
+Sao chép template này và điền vào sau khi hoàn thành một tác vụ. Định dạng khớp với output của `scripts/evaluate.py`.
 
 ```
 ============================================================
@@ -49,38 +49,38 @@ TOP IMPROVEMENTS:
 VERDICT: [Deliver as-is / Fix N issues then deliver / Redo from scratch]
 ```
 
-## Quick Reference: Scoring Triggers
+## Tham khảo nhanh: Các tác nhân chấm điểm
 
-| If you see this... | Accuracy | Completeness | Clarity | Actionability | Conciseness |
+| Nếu bạn thấy điều này... | Accuracy | Completeness | Clarity | Actionability | Conciseness |
 |---|---|---|---|---|---|
 | "should work" / "probably fine" | ≤4 | — | — | — | — |
 | "I think" / "I believe" | ≤4 | — | — | — | — |
-| No test output cited | ≤4 | — | — | — | — |
-| "TODO" / "FIXME" left behind | ≤3 | ≤3 | — | ≤3 | — |
-| Missing error handling | — | ≤3 | — | — | — |
-| Only happy path covered | — | ≤3 | — | — | — |
-| Wall-of-text paragraph (>200 words) | — | — | ≤3 | — | — |
-| No headings or structure | — | — | ≤3 | — | — |
-| "You should..." without specifics | — | — | — | ≤3 | — |
-| No PR or file created | — | — | — | ≤3 | — |
-| User needs to figure out next step | — | — | — | ≤2 | — |
-| Repeated points (3+ times) | — | — | — | — | ≤3 |
+| Không trích dẫn output của test | ≤4 | — | — | — | — |
+| "TODO" / "FIXME" bị bỏ lại | ≤3 | ≤3 | — | ≤3 | — |
+| Thiếu xử lý lỗi | — | ≤3 | — | — | — |
+| Chỉ bao phủ happy path | — | ≤3 | — | — | — |
+| Đoạn văn dạng khối chữ (>200 từ) | — | — | ≤3 | — | — |
+| Không có heading hay cấu trúc | — | — | ≤3 | — | — |
+| "You should..." mà không có chi tiết cụ thể | — | — | — | ≤3 | — |
+| Không tạo PR hay file | — | — | — | ≤3 | — |
+| Người dùng phải tự tìm ra bước tiếp theo | — | — | — | ≤2 | — |
+| Ý bị lặp (3+ lần) | — | — | — | — | ≤3 |
 | "Let me explain..." / "To summarize..." x3+ | — | — | — | — | ≤3 |
-| Output >15x longer than task | — | — | — | — | ≤3 |
+| Output dài hơn tác vụ >15 lần | — | — | — | — | ≤3 |
 
-## When to Skip
+## Khi nào bỏ qua
 
-Skip the evaluation if:
-- Task was a single tool call (e.g., "read this file" — nothing to evaluate)
-- User explicitly says "don't evaluate" or "just do it"
-- Task is purely conversational (greeting, small talk)
-- You're mid-workflow and the user will judge the final output, not intermediate steps
+Bỏ qua việc đánh giá nếu:
+- Tác vụ chỉ là một lần gọi tool (ví dụ "read this file" — không có gì để đánh giá)
+- Người dùng nói rõ "don't evaluate" hoặc "just do it"
+- Tác vụ hoàn toàn mang tính hội thoại (chào hỏi, nói chuyện phiếm)
+- Bạn đang ở giữa workflow và người dùng sẽ đánh giá output cuối cùng, không phải các bước trung gian
 
-## Post-Evaluation Actions
+## Hành động sau đánh giá
 
-| Overall Score | What to do |
+| Điểm tổng | Cần làm gì |
 |---|---|
-| ≥4.5 | Deliver as-is. No changes needed. |
-| 3.5–4.4 | Flag top improvement but deliver. Fix if <30 seconds. |
-| 2.5–3.4 | State what you'd change. Ask user: "Should I redo [axis] or deliver as-is?" |
-| <2.5 | Don't deliver. Say: "This scored [score] because [evidence]. Let me redo this with [specific fix]." Then redo. |
+| ≥4.5 | Giao nguyên trạng. Không cần thay đổi. |
+| 3.5–4.4 | Đánh dấu cải thiện hàng đầu nhưng vẫn giao. Sửa nếu <30 giây. |
+| 2.5–3.4 | Nêu những gì bạn sẽ thay đổi. Hỏi người dùng: "Should I redo [axis] or deliver as-is?" |
+| <2.5 | Không giao. Nói: "This scored [score] because [evidence]. Let me redo this with [specific fix]." Sau đó làm lại. |

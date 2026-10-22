@@ -1,66 +1,66 @@
 ---
 name: agent-sort
-description: Build an evidence-backed ECC install plan for a specific repo by sorting skills, commands, rules, hooks, and extras into DAILY vs LIBRARY buckets using parallel repo-aware review passes. Use when ECC should be trimmed to what a project actually needs instead of loading the full bundle.
+description: Xây dựng kế hoạch cài đặt ECC có bằng chứng cho một repo cụ thể bằng cách phân loại skill, command, rule, hook và các phần bổ sung vào hai nhóm DAILY và LIBRARY thông qua các lượt review song song có nhận biết repo. Dùng khi cần cắt gọn ECC theo đúng những gì dự án thực sự cần thay vì nạp toàn bộ bundle.
 metadata:
   origin: ECC
 ---
 
 # Agent Sort
 
-Use this skill when a repo needs a project-specific ECC surface instead of the default full install.
+Dùng skill này khi một repo cần bề mặt ECC riêng cho dự án thay vì bản cài đặt đầy đủ mặc định.
 
-The goal is not to guess what "feels useful." The goal is to classify ECC components with evidence from the actual codebase.
+Mục tiêu không phải là đoán xem cái gì "có vẻ hữu ích". Mục tiêu là phân loại các thành phần ECC dựa trên bằng chứng từ codebase thực tế.
 
-## When to Use
+## Khi nào dùng
 
-- A project only needs a subset of ECC and full installs are too noisy
-- The repo stack is clear, but nobody wants to hand-curate skills one by one
-- A team wants a repeatable install decision backed by grep evidence instead of opinion
-- You need to separate always-loaded daily workflow surfaces from searchable library/reference surfaces
-- A repo has drifted into the wrong language, rule, or hook set and needs cleanup
+- Một dự án chỉ cần một tập con của ECC và bản cài đầy đủ gây quá nhiều nhiễu
+- Stack của repo đã rõ, nhưng không ai muốn tuyển chọn thủ công từng skill một
+- Một team muốn có quyết định cài đặt lặp lại được, dựa trên bằng chứng grep thay vì ý kiến chủ quan
+- Cần tách các bề mặt workflow hằng ngày luôn được nạp khỏi các bề mặt thư viện/tham khảo có thể tìm kiếm
+- Một repo đã trôi sang bộ ngôn ngữ, rule hoặc hook sai và cần dọn dẹp
 
-## Non-Negotiable Rules
+## Quy tắc bất di bất dịch
 
-- Use the current repository as the source of truth, not generic preferences
-- Every DAILY decision must cite concrete repo evidence
-- LIBRARY does not mean "delete"; it means "keep accessible without loading by default"
-- Do not install hooks, rules, or scripts that the current repo cannot use
-- Prefer ECC-native surfaces; do not introduce a second install system
+- Dùng repo hiện tại làm nguồn sự thật, không dùng sở thích chung chung
+- Mọi quyết định DAILY phải trích dẫn bằng chứng cụ thể từ repo
+- LIBRARY không có nghĩa là "xóa"; nó có nghĩa là "giữ để truy cập được mà không nạp theo mặc định"
+- Không cài hook, rule hay script mà repo hiện tại không dùng được
+- Ưu tiên các bề mặt gốc của ECC; không đưa vào hệ thống cài đặt thứ hai
 
-## Outputs
+## Đầu ra
 
-Produce these artifacts in order:
+Tạo các artifact sau theo thứ tự:
 
-1. DAILY inventory
-2. LIBRARY inventory
-3. install plan
-4. verification report
-5. optional `skill-library` router if the project wants one
+1. Danh mục DAILY
+2. Danh mục LIBRARY
+3. kế hoạch cài đặt
+4. báo cáo xác minh
+5. router `skill-library` tùy chọn nếu dự án muốn có
 
-## Classification Model
+## Mô hình phân loại
 
-Use two buckets only:
+Chỉ dùng hai nhóm:
 
 - `DAILY`
-  - should load every session for this repo
-  - strongly matched to the repo's language, framework, workflow, or operator surface
+  - nên được nạp ở mọi session cho repo này
+  - khớp mạnh với ngôn ngữ, framework, workflow hoặc bề mặt vận hành của repo
 - `LIBRARY`
-  - useful to retain, but not worth loading by default
-  - should remain reachable through search, router skill, or selective manual use
+  - hữu ích để giữ lại, nhưng không đáng nạp theo mặc định
+  - nên vẫn truy cập được thông qua tìm kiếm, router skill hoặc dùng thủ công có chọn lọc
 
-## Evidence Sources
+## Nguồn bằng chứng
 
-Use repo-local evidence before making any classification:
+Dùng bằng chứng cục bộ của repo trước khi đưa ra bất kỳ phân loại nào:
 
-- file extensions
-- package managers and lockfiles
-- framework configs
-- CI and hook configs
-- build/test scripts
-- imports and dependency manifests
-- repo docs that explicitly describe the stack
+- phần mở rộng file
+- package manager và lockfile
+- cấu hình framework
+- cấu hình CI và hook
+- script build/test
+- import và manifest dependency
+- tài liệu repo mô tả tường minh stack
 
-Useful commands include:
+Các lệnh hữu ích gồm:
 
 ```bash
 rg --files
@@ -72,50 +72,50 @@ cat pubspec.yaml
 cat go.mod
 ```
 
-## Parallel Review Passes
+## Các lượt review song song
 
-If parallel subagents are available, split the review into these passes:
+Nếu có subagent song song, chia việc review thành các lượt sau:
 
 1. Agents
-   - classify `agents/*`
+   - phân loại `agents/*`
 2. Skills
-   - classify `skills/*`
+   - phân loại `skills/*`
 3. Commands
-   - classify `commands/*`
+   - phân loại `commands/*`
 4. Rules
-   - classify `rules/*`
-5. Hooks and scripts
-   - classify hook surfaces, MCP health checks, helper scripts, and OS compatibility
+   - phân loại `rules/*`
+5. Hooks và script
+   - phân loại các bề mặt hook, kiểm tra tình trạng MCP, script trợ giúp và khả năng tương thích OS
 6. Extras
-   - classify contexts, examples, MCP configs, templates, and guidance docs
+   - phân loại context, ví dụ, cấu hình MCP, template và tài liệu hướng dẫn
 
-If subagents are not available, run the same passes sequentially.
+Nếu không có subagent, hãy chạy tuần tự các lượt tương tự.
 
-## Core Workflow
+## Quy trình cốt lõi
 
-### 1. Read the repo
+### 1. Đọc repo
 
-Establish the real stack before classifying anything:
+Xác lập stack thực sự trước khi phân loại bất cứ thứ gì:
 
-- languages in use
-- frameworks in use
-- primary package manager
+- các ngôn ngữ đang dùng
+- các framework đang dùng
+- package manager chính
 - test stack
 - lint/format stack
-- deployment/runtime surface
-- operator integrations already present
+- bề mặt deployment/runtime
+- các tích hợp vận hành đã có sẵn
 
-### 2. Build the evidence table
+### 2. Xây bảng bằng chứng
 
-For every candidate surface, record:
+Với mỗi bề mặt ứng viên, ghi lại:
 
-- component path
-- component type
-- proposed bucket
-- repo evidence
-- short justification
+- đường dẫn thành phần
+- loại thành phần
+- nhóm đề xuất
+- bằng chứng từ repo
+- lý giải ngắn gọn
 
-Use this format:
+Dùng định dạng này:
 
 ```text
 skills/frontend-patterns | skill | DAILY | 84 .tsx files, next.config.ts present | core frontend stack
@@ -124,79 +124,79 @@ rules/typescript/*       | rules | DAILY | package.json + tsconfig.json         
 rules/python/*           | rules | LIBRARY | zero Python source files             | keep accessible only
 ```
 
-### 3. Decide DAILY vs LIBRARY
+### 3. Quyết định DAILY hay LIBRARY
 
-Promote to `DAILY` when:
+Nâng lên `DAILY` khi:
 
-- the repo clearly uses the matching stack
-- the component is general enough to help every session
-- the repo already depends on the corresponding runtime or workflow
+- repo rõ ràng dùng stack tương ứng
+- thành phần đủ tổng quát để giúp ích mọi session
+- repo đã phụ thuộc vào runtime hoặc workflow tương ứng
 
-Demote to `LIBRARY` when:
+Hạ xuống `LIBRARY` khi:
 
-- the component is off-stack
-- the repo might need it later, but not every day
-- it adds context overhead without immediate relevance
+- thành phần nằm ngoài stack
+- repo có thể cần nó sau này, nhưng không phải hằng ngày
+- nó làm tăng chi phí context mà không liên quan ngay lập tức
 
-### 4. Build the install plan
+### 4. Xây kế hoạch cài đặt
 
-Translate the classification into action:
+Chuyển phân loại thành hành động:
 
-- DAILY skills -> install or keep in `.claude/skills/`
-- DAILY commands -> keep as explicit shims only if still useful
-- DAILY rules -> install only matching language sets
-- DAILY hooks/scripts -> keep only compatible ones
-- LIBRARY surfaces -> keep accessible through search or `skill-library`
+- skill DAILY -> cài hoặc giữ trong `.claude/skills/`
+- command DAILY -> chỉ giữ dưới dạng shim tường minh nếu vẫn còn hữu ích
+- rule DAILY -> chỉ cài các bộ ngôn ngữ khớp
+- hook/script DAILY -> chỉ giữ những cái tương thích
+- bề mặt LIBRARY -> giữ truy cập được qua tìm kiếm hoặc `skill-library`
 
-If the repo already uses selective installs, update that plan instead of creating another system.
+Nếu repo đã dùng cài đặt có chọn lọc, hãy cập nhật kế hoạch đó thay vì tạo một hệ thống khác.
 
-### 5. Create the optional library router
+### 5. Tạo library router tùy chọn
 
-If the project wants a searchable library surface, create:
+Nếu dự án muốn có bề mặt thư viện có thể tìm kiếm, hãy tạo:
 
 - `.claude/skills/skill-library/SKILL.md`
 
-That router should contain:
+Router đó nên chứa:
 
-- a short explanation of DAILY vs LIBRARY
-- grouped trigger keywords
-- where the library references live
+- giải thích ngắn gọn về DAILY so với LIBRARY
+- các từ khóa kích hoạt được nhóm lại
+- nơi các tham chiếu thư viện nằm
 
-Do not duplicate every skill body inside the router.
+Không sao chép toàn bộ nội dung của mọi skill vào router.
 
-### 6. Verify the result
+### 6. Xác minh kết quả
 
-After the plan is applied, verify:
+Sau khi kế hoạch được áp dụng, hãy xác minh:
 
-- every DAILY file exists where expected
-- stale language rules were not left active
-- incompatible hooks were not installed
-- the resulting install actually matches the repo stack
+- mọi file DAILY tồn tại ở nơi kỳ vọng
+- các rule ngôn ngữ lỗi thời không còn được để ở trạng thái hoạt động
+- các hook không tương thích không được cài
+- bản cài đặt kết quả thực sự khớp với stack của repo
 
-Return a compact report with:
+Trả về một báo cáo gọn với:
 
-- DAILY count
-- LIBRARY count
-- removed stale surfaces
-- open questions
+- số lượng DAILY
+- số lượng LIBRARY
+- các bề mặt lỗi thời đã gỡ bỏ
+- các câu hỏi còn mở
 
-## Handoffs
+## Chuyển giao (Handoff)
 
-If the next step is interactive installation or repair, hand off to:
+Nếu bước tiếp theo là cài đặt tương tác hoặc sửa chữa, hãy chuyển giao cho:
 
 - `configure-ecc`
 
-If the next step is overlap cleanup or catalog review, hand off to:
+Nếu bước tiếp theo là dọn dẹp chồng chéo hoặc review danh mục, hãy chuyển giao cho:
 
 - `skill-stocktake`
 
-If the next step is broader context trimming, hand off to:
+Nếu bước tiếp theo là cắt gọn context rộng hơn, hãy chuyển giao cho:
 
 - `strategic-compact`
 
-## Output Format
+## Định dạng đầu ra
 
-Return the result in this order:
+Trả về kết quả theo thứ tự này:
 
 ```text
 STACK

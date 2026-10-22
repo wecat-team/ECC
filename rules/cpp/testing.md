@@ -8,15 +8,15 @@ paths:
   - "**/*.h"
   - "**/CMakeLists.txt"
 ---
-# C++ Testing
+# Kiểm thử C++
 
-> This file extends [common/testing.md](../common/testing.md) with C++ specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung dành riêng cho C++.
 
 ## Framework
 
-Use **GoogleTest** (gtest/gmock) with **CMake/CTest**.
+Dùng **GoogleTest** (gtest/gmock) với **CMake/CTest**.
 
-## Running Tests
+## Chạy test
 
 ```bash
 cmake --build build && ctest --test-dir build --output-on-failure
@@ -31,14 +31,14 @@ ctest --output-on-failure
 lcov --capture --directory . --output-file coverage.info
 ```
 
-## Sanitizers
+## Sanitizer
 
-Always run tests with sanitizers in CI:
+Luôn chạy test với sanitizer trong CI:
 
 ```bash
 cmake -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined" ..
 ```
 
-## Reference
+## Tham chiếu
 
-See skill: `cpp-testing` for detailed C++ testing patterns, TDD workflow, and GoogleTest/GMock usage.
+Xem skill: `cpp-testing` để có các pattern kiểm thử C++ chi tiết, quy trình TDD và cách dùng GoogleTest/GMock.

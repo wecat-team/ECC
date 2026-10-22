@@ -1,35 +1,35 @@
 ---
 name: eval-harness
-description: Eval-driven development (EDD) framework for AI coding sessions — define capability and regression evals before coding, grade with code-based, model-based, rule, or human graders, and track pass@k and pass^k reliability. Use when defining pass/fail criteria for agent tasks, measuring agent reliability, building regression suites for prompt or agent changes, or benchmarking across model versions.
+description: "Framework eval-driven development (EDD) cho các phiên AI coding — định nghĩa capability eval và regression eval trước khi code, chấm điểm bằng grader dựa trên code, dựa trên model, theo rule hoặc con người, và theo dõi độ tin cậy pass@k và pass^k. Dùng khi định nghĩa tiêu chí pass/fail cho task của agent, đo độ tin cậy của agent, xây dựng bộ regression cho thay đổi prompt hoặc agent, hoặc benchmark giữa các phiên bản model."
 metadata:
   origin: ECC
 tools: Read, Write, Edit, Bash, Grep, Glob
 ---
 
-# Eval Harness Skill
+# Skill Eval Harness
 
-A formal evaluation framework for Claude Code sessions, implementing eval-driven development (EDD) principles.
+Một framework đánh giá chính thức cho các phiên Claude Code, triển khai các nguyên tắc eval-driven development (EDD).
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Setting up eval-driven development (EDD) for AI-assisted workflows
-- Defining pass/fail criteria for Claude Code task completion
-- Measuring agent reliability with pass@k metrics
-- Creating regression test suites for prompt or agent changes
-- Benchmarking agent performance across model versions
+- Thiết lập eval-driven development (EDD) cho các workflow có AI hỗ trợ
+- Định nghĩa tiêu chí pass/fail cho việc hoàn thành task của Claude Code
+- Đo độ tin cậy của agent bằng metric pass@k
+- Tạo bộ regression test cho thay đổi prompt hoặc agent
+- Benchmark hiệu năng agent giữa các phiên bản model
 
-## Philosophy
+## Triết lý
 
-Eval-Driven Development treats evals as the "unit tests of AI development":
-- Define expected behavior BEFORE implementation
-- Run evals continuously during development
-- Track regressions with each change
-- Use pass@k metrics for reliability measurement
+Eval-Driven Development coi eval như "unit test của phát triển AI":
+- Định nghĩa hành vi mong đợi TRƯỚC khi triển khai
+- Chạy eval liên tục trong quá trình phát triển
+- Theo dõi regression với mỗi thay đổi
+- Dùng metric pass@k để đo độ tin cậy
 
-## Eval Types
+## Các loại Eval
 
-### Capability Evals
-Test if Claude can do something it couldn't before:
+### Capability Eval
+Kiểm tra xem Claude có làm được điều mà trước đây không làm được hay không:
 ```markdown
 [CAPABILITY EVAL: feature-name]
 Task: Description of what Claude should accomplish
@@ -40,8 +40,8 @@ Success Criteria:
 Expected Output: Description of expected result
 ```
 
-### Regression Evals
-Ensure changes don't break existing functionality:
+### Regression Eval
+Đảm bảo các thay đổi không làm hỏng chức năng hiện có:
 ```markdown
 [REGRESSION EVAL: feature-name]
 Baseline: SHA or checkpoint name
@@ -52,10 +52,10 @@ Tests:
 Result: X/Y passed (previously Y/Y)
 ```
 
-## Grader Types
+## Các loại Grader
 
-### 1. Code-Based Grader
-Deterministic checks using code:
+### 1. Grader dựa trên code
+Các kiểm tra tất định bằng code:
 ```bash
 # Check if file contains expected pattern
 grep -q "export function handleAuth" src/auth.ts && echo "PASS" || echo "FAIL"
@@ -67,8 +67,8 @@ npm test -- --testPathPattern="auth" && echo "PASS" || echo "FAIL"
 npm run build && echo "PASS" || echo "FAIL"
 ```
 
-### 2. Model-Based Grader
-Use Claude to evaluate open-ended outputs:
+### 2. Grader dựa trên model
+Dùng Claude để đánh giá các đầu ra mở:
 ```markdown
 [MODEL GRADER PROMPT]
 Evaluate the following code change:
@@ -81,8 +81,8 @@ Score: 1-5 (1=poor, 5=excellent)
 Reasoning: [explanation]
 ```
 
-### 3. Human Grader
-Flag for manual review:
+### 3. Grader con người
+Đánh dấu để review thủ công:
 ```markdown
 [HUMAN REVIEW REQUIRED]
 Change: Description of what changed
@@ -90,23 +90,23 @@ Reason: Why human review is needed
 Risk Level: LOW/MEDIUM/HIGH
 ```
 
-## Metrics
+## Metric
 
 ### pass@k
-"At least one success in k attempts"
-- pass@1: First attempt success rate
-- pass@3: Success within 3 attempts
-- Typical target: pass@3 > 90%
+"Có ít nhất một lần thành công trong k lần thử"
+- pass@1: Tỷ lệ thành công ở lần thử đầu tiên
+- pass@3: Thành công trong vòng 3 lần thử
+- Mục tiêu điển hình: pass@3 > 90%
 
 ### pass^k
-"All k trials succeed"
-- Higher bar for reliability
-- pass^3: 3 consecutive successes
-- Use for critical paths
+"Tất cả k lần thử đều thành công"
+- Ngưỡng độ tin cậy cao hơn
+- pass^3: 3 lần thành công liên tiếp
+- Dùng cho các đường dẫn quan trọng (critical path)
 
-## Eval Workflow
+## Workflow Eval
 
-### 1. Define (Before Coding)
+### 1. Định nghĩa (Trước khi code)
 ```markdown
 ## EVAL DEFINITION: feature-xyz
 
@@ -125,10 +125,10 @@ Risk Level: LOW/MEDIUM/HIGH
 - pass^3 = 100% for regression evals
 ```
 
-### 2. Implement
-Write code to pass the defined evals.
+### 2. Triển khai
+Viết code để vượt qua các eval đã định nghĩa.
 
-### 3. Evaluate
+### 3. Đánh giá
 ```bash
 # Run capability evals
 [Run each capability eval, record PASS/FAIL]
@@ -139,7 +139,7 @@ npm test -- --testPathPattern="existing"
 # Generate report
 ```
 
-### 4. Report
+### 4. Báo cáo
 ```markdown
 EVAL REPORT: feature-xyz
 ========================
@@ -163,29 +163,29 @@ Metrics:
 Status: READY FOR REVIEW
 ```
 
-## Integration Patterns
+## Pattern tích hợp
 
-### Pre-Implementation
+### Trước khi triển khai
 ```
 /eval define feature-name
 ```
-Creates eval definition file at `.claude/evals/feature-name.md`
+Tạo file định nghĩa eval tại `.claude/evals/feature-name.md`
 
-### During Implementation
+### Trong khi triển khai
 ```
 /eval check feature-name
 ```
-Runs current evals and reports status
+Chạy các eval hiện tại và báo cáo trạng thái
 
-### Post-Implementation
+### Sau khi triển khai
 ```
 /eval report feature-name
 ```
-Generates full eval report
+Sinh báo cáo eval đầy đủ
 
-## Eval Storage
+## Lưu trữ Eval
 
-Store evals in project:
+Lưu eval trong project:
 ```
 .claude/
   evals/
@@ -194,17 +194,17 @@ Store evals in project:
     baseline.json       # Regression baselines
 ```
 
-## Best Practices
+## Best practice
 
-1. **Define evals BEFORE coding** - Forces clear thinking about success criteria
-2. **Run evals frequently** - Catch regressions early
-3. **Track pass@k over time** - Monitor reliability trends
-4. **Use code graders when possible** - Deterministic > probabilistic
-5. **Human review for security** - Never fully automate security checks
-6. **Keep evals fast** - Slow evals don't get run
-7. **Version evals with code** - Evals are first-class artifacts
+1. **Định nghĩa eval TRƯỚC khi code** - Buộc phải suy nghĩ rõ ràng về tiêu chí thành công
+2. **Chạy eval thường xuyên** - Bắt regression sớm
+3. **Theo dõi pass@k theo thời gian** - Giám sát xu hướng độ tin cậy
+4. **Dùng code grader khi có thể** - Tất định > xác suất
+5. **Review bởi con người cho bảo mật** - KHÔNG BAO GIỜ tự động hóa hoàn toàn các kiểm tra bảo mật
+6. **Giữ eval nhanh** - Eval chậm sẽ không được chạy
+7. **Version eval cùng với code** - Eval là artifact hạng nhất
 
-## Example: Adding Authentication
+## Ví dụ: Thêm xác thực
 
 ```markdown
 ## EVAL: add-authentication
@@ -236,70 +236,70 @@ Regression: 3/3 passed (pass^3: 100%)
 Status: SHIP IT
 ```
 
-## Local Framework Utilities
+## Tiện ích framework cục bộ
 
-The mechanical utilities ship in `scripts/lib/eval-harness/`:
+Các tiện ích cơ học nằm trong `scripts/lib/eval-harness/`:
 
 ```sh
 node scripts/eval-harness.js example
 ```
 
-- Capsule: hash-linked journal with five lineages and local integrity checks.
-- Inspection: source digests, validated variant paths, and syntactic warnings.
-- Replay: declared tools and content-addressed fixtures. Missing fixtures fail
-  closed; SE3 and above are refused in replay. Record mode invokes the registered
-  implementation, so only register trusted functions.
-- Receipt: offline verification of capsule and artifact bytes, with named checks.
+- Capsule: nhật ký liên kết bằng hash với năm lineage và các kiểm tra toàn vẹn cục bộ.
+- Inspection: source digest, đường dẫn variant đã được xác thực và cảnh báo cú pháp.
+- Replay: tool được khai báo và fixture định địa chỉ theo nội dung. Fixture bị thiếu sẽ
+  fail closed; SE3 trở lên bị từ chối khi replay. Chế độ record gọi implementation đã
+  đăng ký, vì vậy chỉ đăng ký các hàm đáng tin cậy.
+- Receipt: xác minh offline các byte của capsule và artifact, kèm các kiểm tra có tên.
 - Retrospective preparation: `node scripts/eval-harness.js capsule group <dir> [<dir> ...]`
-  groups 1 to 100 explicitly selected, verified local capsule snapshots from one
-  task family by declared harness version. Repeated snapshots count once;
-  conflicting identities or invalid capsules reject the whole report. This is
-  read-only record counting, with no new rollouts, scores or promotion. Use small,
-  quiescent capsules. Payloads, directory arguments and raw run/capsule IDs are
-  omitted, but task-family/version labels are verbatim and digest references are
-  linkable; review them before sharing. Operational validation remains pending.
+  nhóm từ 1 đến 100 snapshot capsule cục bộ đã được chọn tường minh và xác minh, thuộc cùng một
+  họ task, theo phiên bản harness đã khai báo. Snapshot lặp lại chỉ được tính một lần;
+  danh tính xung đột hoặc capsule không hợp lệ sẽ khiến toàn bộ báo cáo bị từ chối. Đây là
+  việc đếm bản ghi chỉ-đọc, không có rollout, điểm số hay promotion mới. Hãy dùng các capsule nhỏ,
+  ở trạng thái tĩnh. Payload, đối số thư mục và run/capsule ID thô đều bị
+  lược bỏ, nhưng nhãn task-family/version được giữ nguyên văn và các tham chiếu digest
+  có thể liên kết được; hãy review chúng trước khi chia sẻ. Việc xác thực vận hành vẫn đang chờ.
 
-Candidate execution is disabled on every OS because no verified OS containment
-backend is implemented. `gate run`, `runGate`, `runVariant`, direct child launch,
-and the retired effect preload refuse with `gate.isolation_required`. No trust
-flag or caller-supplied executor can bypass the refusal. The example records
-that refusal and inspects source without executing or scoring it.
+Việc thực thi candidate bị vô hiệu hóa trên mọi hệ điều hành vì chưa có backend cô lập OS
+đã được xác minh. `gate run`, `runGate`, `runVariant`, việc khởi chạy child trực tiếp,
+và effect preload đã ngừng dùng đều từ chối với `gate.isolation_required`. Không có cờ tin cậy
+hay executor do caller cung cấp nào có thể vượt qua việc từ chối này. Ví dụ ghi lại
+việc từ chối đó và kiểm tra source mà không thực thi hay chấm điểm nó.
 
-Do not present static warnings, a capsule receipt, or successful utility tests
-as candidate containment or promotion evidence. A future gate requires an
-independently reviewed OS boundary, protected checker and audit channels, and
-fatal baseline rejection. See `docs/architecture/eval-harness-frameworks.md`.
+Không được trình bày cảnh báo tĩnh, receipt của capsule hay kết quả unit test tiện ích thành công
+làm bằng chứng cô lập candidate hay promotion. Một gate trong tương lai đòi hỏi
+ranh giới OS được review độc lập, kênh checker và audit được bảo vệ, và
+việc từ chối baseline ở mức fatal. Xem `docs/architecture/eval-harness-frameworks.md`.
 
-## Product Evals (v1.8)
+## Product Eval (v1.8)
 
-Use product evals when behavior quality cannot be captured by unit tests alone.
+Dùng product eval khi chất lượng hành vi không thể được nắm bắt chỉ bằng unit test.
 
-### Grader Types
+### Các loại Grader
 
-1. Code grader (deterministic assertions)
-2. Rule grader (regex/schema constraints)
-3. Model grader (LLM-as-judge rubric)
-4. Human grader (manual adjudication for ambiguous outputs)
+1. Code grader (assertion tất định)
+2. Rule grader (ràng buộc regex/schema)
+3. Model grader (rubric LLM-as-judge)
+4. Human grader (phân xử thủ công cho các đầu ra mơ hồ)
 
-### pass@k Guidance
+### Hướng dẫn pass@k
 
-- `pass@1`: direct reliability
-- `pass@3`: practical reliability under controlled retries
-- `pass^3`: stability test (all 3 runs must pass)
+- `pass@1`: độ tin cậy trực tiếp
+- `pass@3`: độ tin cậy thực tế khi được retry có kiểm soát
+- `pass^3`: kiểm tra độ ổn định (cả 3 lần chạy đều phải pass)
 
-Recommended thresholds:
-- Capability evals: pass@3 >= 0.90
-- Regression evals: pass^3 = 1.00 for release-critical paths
+Ngưỡng khuyến nghị:
+- Capability eval: pass@3 >= 0.90
+- Regression eval: pass^3 = 1.00 cho các đường dẫn quan trọng đối với release
 
-### Eval Anti-Patterns
+### Anti-pattern của Eval
 
-- Overfitting prompts to known eval examples
-- Measuring only happy-path outputs
-- Ignoring cost and latency drift while chasing pass rates
-- Allowing flaky graders in release gates
+- Overfit prompt vào các ví dụ eval đã biết
+- Chỉ đo đầu ra của happy path
+- Bỏ qua sự trôi dạt về chi phí và độ trễ trong khi chạy theo tỷ lệ pass
+- Cho phép grader flaky trong release gate
 
-### Minimal Eval Artifact Layout
+### Bố cục artifact Eval tối thiểu
 
-- `.claude/evals/<feature>.md` definition
-- `.claude/evals/<feature>.log` run history
-- `docs/releases/<version>/eval-summary.md` release snapshot
+- `.claude/evals/<feature>.md` định nghĩa
+- `.claude/evals/<feature>.log` lịch sử chạy
+- `docs/releases/<version>/eval-summary.md` snapshot release

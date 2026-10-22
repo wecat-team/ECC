@@ -6,13 +6,13 @@ paths:
   - "**/app/**/*.ts"
   - "**/pages/**/*.ts"
 ---
-# React Security
+# Bảo mật React
 
-> This file extends [typescript/security.md](../typescript/security.md) and [common/security.md](../common/security.md) with React specific content.
+> File này mở rộng [typescript/security.md](../typescript/security.md) và [common/security.md](../common/security.md) với nội dung riêng cho React.
 
-## XSS via `dangerouslySetInnerHTML`
+## XSS qua `dangerouslySetInnerHTML`
 
-CRITICAL. The prop name is deliberately scary — treat every usage as a code review halt.
+CRITICAL. Tên prop này cố tình nghe đáng sợ — hãy coi mọi lần sử dụng là điểm dừng bắt buộc trong code review.
 
 ```tsx
 // CRITICAL: unsanitized user input
@@ -30,15 +30,15 @@ import DOMPurify from "isomorphic-dompurify";
 <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(userBio) }} />
 ```
 
-Audit checklist for every `dangerouslySetInnerHTML` call:
+Checklist audit cho mỗi lời gọi `dangerouslySetInnerHTML`:
 
-- Is the input always under our control? Document the source.
-- If user-derived: is it sanitized at the **same call site**? (Sanitization at the API boundary is acceptable only if every consumer is verified.)
-- Is the sanitizer config allowlisting tags, not denylisting?
+- Đầu vào có luôn nằm dưới sự kiểm soát của chúng ta không? Hãy ghi lại nguồn.
+- Nếu có nguồn gốc từ người dùng: nó đã được sanitize **ngay tại vị trí gọi** chưa? (Sanitize ở ranh giới API chỉ chấp nhận được nếu mọi consumer đều được xác minh.)
+- Cấu hình sanitizer có dùng allowlist các thẻ thay vì denylist không?
 
-## Unsafe URL Schemes
+## URL Scheme không an toàn
 
-`javascript:` and `data:` URLs in `href`, `src`, and `xlink:href` execute arbitrary code.
+URL `javascript:` và `data:` trong `href`, `src` và `xlink:href` thực thi code tùy ý.
 
 ```tsx
 // CRITICAL: javascript: URL injection
@@ -57,11 +57,11 @@ function safeUrl(url: string): string | undefined {
 <a href={safeUrl(user.website)}>Visit</a>
 ```
 
-React warns about `javascript:` URLs in `href` in development mode, but does not block them at runtime. `data:` URLs and other schemes also slip through. Always validate.
+React cảnh báo về URL `javascript:` trong `href` ở chế độ development, nhưng không chặn chúng lúc runtime. URL `data:` và các scheme khác cũng lọt qua. Luôn luôn validate.
 
-## `target="_blank"` Without `rel`
+## `target="_blank"` không có `rel`
 
-`<a target="_blank">` without `rel="noopener noreferrer"` lets the target page access `window.opener` and run navigation hijacks.
+`<a target="_blank">` không có `rel="noopener noreferrer"` cho phép trang đích truy cập `window.opener` và thực hiện chiếm quyền điều hướng.
 
 ```tsx
 // WRONG
@@ -71,11 +71,11 @@ React warns about `javascript:` URLs in `href` in development mode, but does not
 <a href={externalUrl} target="_blank" rel="noopener noreferrer">External</a>
 ```
 
-Modern browsers default to `noopener` when `target="_blank"`, but do not rely on browser defaults — be explicit.
+Các trình duyệt hiện đại mặc định áp dụng `noopener` khi `target="_blank"`, nhưng đừng dựa vào mặc định của trình duyệt — hãy khai báo tường minh.
 
-## Server Action Input Validation
+## Kiểm tra đầu vào của Server Action
 
-Server Actions (`"use server"`) run with the same trust level as a public API endpoint. Validate every input.
+Server Action (`"use server"`) chạy với cùng mức tin cậy như một endpoint API công khai. Hãy validate mọi đầu vào.
 
 ```tsx
 "use server";
@@ -96,38 +96,38 @@ export async function updateUser(_state: unknown, formData: FormData) {
 }
 ```
 
-- Authenticate inside the action — do not trust the client-side route gate
-- Authorize: confirm the current user has permission for the specific record they are mutating
-- Rate limit sensitive actions
+- Xác thực (authenticate) bên trong action — không tin vào cổng chặn route phía client
+- Phân quyền (authorize): xác nhận người dùng hiện tại có quyền với đúng bản ghi mà họ đang thay đổi
+- Áp dụng rate limit cho các action nhạy cảm
 
-## Secret Exposure via Env Vars
+## Lộ secret qua biến môi trường
 
-Prefixed env vars are bundled into the client. Treat them as public.
+Các biến môi trường có prefix được đóng gói vào client. Hãy coi chúng là công khai.
 
-| Framework | Public prefix | Private |
+| Framework | Prefix công khai | Riêng tư |
 |---|---|---|
-| Next.js | `NEXT_PUBLIC_*` | All others |
-| Vite | `VITE_*` | `.env` server-side only |
-| Create React App | `REACT_APP_*`, plus `NODE_ENV` and `PUBLIC_URL` | All others (anything without the `REACT_APP_` prefix is server-side only) |
-| Remix | `process.env` access in `loader`/`action` only | Same |
+| Next.js | `NEXT_PUBLIC_*` | Tất cả còn lại |
+| Vite | `VITE_*` | `.env` chỉ phía server |
+| Create React App | `REACT_APP_*`, cộng với `NODE_ENV` và `PUBLIC_URL` | Tất cả còn lại (mọi thứ không có prefix `REACT_APP_` chỉ ở phía server) |
+| Remix | Truy cập `process.env` chỉ trong `loader`/`action` | Như nhau |
 
 ```ts
 // CRITICAL: secret leaked to client bundle
 const apiKey = process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY;
 ```
 
-Audit on every PR that touches env vars: would this string in the public bundle be a problem?
+Hãy audit ở mọi PR đụng tới biến môi trường: chuỗi này nằm trong bundle công khai thì có vấn đề không?
 
-## Authentication / Authorization
+## Xác thực / Phân quyền
 
-- Never store sessions in `localStorage` — accessible to any XSS. Use httpOnly secure cookies.
-- Never trust client-set state to gate sensitive UI. Render-gating in JSX prevents display, not access — the API must enforce.
-- CSRF: cookie-based auth requires CSRF tokens or `SameSite=Strict`/`Lax` cookies
-- Use double-submit cookies or origin verification for form actions when not using framework defaults
+- Không bao giờ lưu session trong `localStorage` — mọi XSS đều truy cập được. Hãy dùng cookie httpOnly secure.
+- Không bao giờ tin state do client đặt để chặn UI nhạy cảm. Chặn render trong JSX chỉ ngăn hiển thị, không ngăn truy cập — API phải thực thi việc đó.
+- CSRF: xác thực bằng cookie cần CSRF token hoặc cookie `SameSite=Strict`/`Lax`
+- Dùng double-submit cookie hoặc xác minh origin cho form action khi không dùng mặc định của framework
 
 ## Content Security Policy (CSP)
 
-Configure server-side. The minimum acceptable CSP for a React app:
+Cấu hình phía server. CSP tối thiểu chấp nhận được cho một app React:
 
 ```
 default-src 'self';
@@ -138,11 +138,11 @@ connect-src 'self' https://api.example.com;
 frame-ancestors 'none';
 ```
 
-- Avoid `unsafe-inline` and `unsafe-eval` in `script-src`
-- For SSR with inline scripts (Next.js streaming, hydration data), use per-request nonces — both Next.js and Remix support nonce injection
-- `style-src 'unsafe-inline'` is often unavoidable for CSS-in-JS libraries — document the tradeoff
+- Tránh `unsafe-inline` và `unsafe-eval` trong `script-src`
+- Với SSR có script inline (streaming của Next.js, dữ liệu hydration), dùng nonce theo từng request — cả Next.js và Remix đều hỗ trợ chèn nonce
+- `style-src 'unsafe-inline'` thường khó tránh với các thư viện CSS-in-JS — hãy ghi lại sự đánh đổi này
 
-## Prototype Pollution via Object Spread
+## Prototype Pollution qua Object Spread
 
 ```tsx
 // WRONG: untrusted JSON spread directly into state
@@ -157,24 +157,24 @@ setState({ ...state, ...parsed });
 
 ## SSR Template Injection
 
-When using `renderToString` or `renderToPipeableStream`:
+Khi dùng `renderToString` hoặc `renderToPipeableStream`:
 
-- All values rendered inside JSX are escaped by React — safe
-- Values passed to `dangerouslySetInnerHTML` are NOT escaped — same rules as client
-- Manually constructed HTML wrappers around the React output must be escaped or sanitized — never concatenate user input into the surrounding HTML template
+- Mọi giá trị render bên trong JSX đều được React escape — an toàn
+- Giá trị truyền vào `dangerouslySetInnerHTML` KHÔNG được escape — cùng quy tắc như phía client
+- Các wrapper HTML dựng thủ công quanh output của React phải được escape hoặc sanitize — không bao giờ nối đầu vào của người dùng vào HTML template bao quanh
 
-## Third-Party Components
+## Component bên thứ ba
 
-- Audit `npm audit` before adding any UI library
-- Check that the library does not internally use `dangerouslySetInnerHTML` on its input (e.g., rich text editors)
-- Pin versions, review changelogs before major upgrades
-- Be wary of components that accept HTML strings as props
+- Chạy `npm audit` trước khi thêm bất kỳ thư viện UI nào
+- Kiểm tra thư viện không dùng `dangerouslySetInnerHTML` nội bộ trên đầu vào của nó (ví dụ rich text editor)
+- Ghim (pin) phiên bản, xem changelog trước các lần nâng cấp major
+- Cảnh giác với các component nhận chuỗi HTML qua props
 
-## Source Map Exposure in Production
+## Lộ Source Map ở môi trường production
 
-Production builds should ship without source maps, or with sourcemaps uploaded to an error tracker (Sentry) and stripped from the public bundle. Public source maps leak internal logic and file structure.
+Bản build production nên được phát hành không có source map, hoặc có sourcemap được upload lên error tracker (Sentry) và gỡ khỏi bundle công khai. Source map công khai làm lộ logic nội bộ và cấu trúc file.
 
-## Agent Support
+## Hỗ trợ từ Agent
 
-- Use `security-reviewer` agent for comprehensive security audits across the codebase
-- Use `react-reviewer` agent for React-specific patterns and the above rules in active code review
+- Dùng agent `security-reviewer` cho các cuộc audit bảo mật toàn diện trên toàn codebase
+- Dùng agent `react-reviewer` cho các pattern riêng của React và các quy tắc trên trong code review thực tế

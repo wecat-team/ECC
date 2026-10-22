@@ -3,22 +3,22 @@ paths:
   - "**/*.cs"
   - "**/*.csx"
 ---
-# C# Coding Style
+# Phong cách code C#
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with C#-specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho C#.
 
-## Standards
+## Tiêu chuẩn
 
-- Follow current .NET conventions and enable nullable reference types
-- Prefer explicit access modifiers on public and internal APIs
-- Keep files aligned with the primary type they define
+- Tuân theo các quy ước .NET hiện hành và bật nullable reference type
+- Ưu tiên access modifier tường minh cho các API public và internal
+- Giữ file khớp với type chính mà nó định nghĩa
 
-## Types and Models
+## Type và Model
 
-- Prefer `record` or `record struct` for immutable value-like models
-- Use `class` for entities or types with identity and lifecycle
-- Use `interface` for service boundaries and abstractions
-- Avoid `dynamic` in application code; prefer generics or explicit models
+- Ưu tiên `record` hoặc `record struct` cho các model bất biến kiểu giá trị
+- Dùng `class` cho entity hoặc các type có danh tính (identity) và vòng đời
+- Dùng `interface` cho ranh giới service và abstraction
+- Tránh `dynamic` trong code ứng dụng; ưu tiên generic hoặc model tường minh
 
 ```csharp
 public sealed record UserDto(Guid Id, string Email);
@@ -29,10 +29,10 @@ public interface IUserRepository
 }
 ```
 
-## Immutability
+## Bất biến (Immutability)
 
-- Prefer `init` setters, constructor parameters, and immutable collections for shared state
-- Do not mutate input models in-place when producing updated state
+- Ưu tiên setter `init`, tham số constructor và collection bất biến cho state dùng chung
+- Không mutate trực tiếp model đầu vào khi tạo state đã cập nhật
 
 ```csharp
 public sealed record UserProfile(string Name, string Email);
@@ -41,11 +41,11 @@ public static UserProfile Rename(UserProfile profile, string name) =>
     profile with { Name = name };
 ```
 
-## Async and Error Handling
+## Async và xử lý lỗi
 
-- Prefer `async`/`await` over blocking calls like `.Result` or `.Wait()`
-- Pass `CancellationToken` through public async APIs
-- Throw specific exceptions and log with structured properties
+- Ưu tiên `async`/`await` hơn các lời gọi chặn như `.Result` hoặc `.Wait()`
+- Truyền `CancellationToken` qua các API async public
+- Throw exception cụ thể và log kèm các thuộc tính có cấu trúc
 
 ```csharp
 public async Task<Order> LoadOrderAsync(
@@ -65,8 +65,8 @@ public async Task<Order> LoadOrderAsync(
 }
 ```
 
-## Formatting
+## Định dạng
 
-- Use `dotnet format` for formatting and analyzer fixes
-- Keep `using` directives organized and remove unused imports
-- Prefer expression-bodied members only when they stay readable
+- Dùng `dotnet format` để format và áp dụng các bản sửa của analyzer
+- Giữ các directive `using` có tổ chức và xóa import không dùng
+- Chỉ ưu tiên expression-bodied member khi chúng vẫn dễ đọc

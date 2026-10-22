@@ -1,44 +1,44 @@
-# Rendering Strategies
+# Chiến lược Rendering
 
-Angular supports multiple rendering strategies to optimize for SEO, performance, and interactivity.
+Angular hỗ trợ nhiều chiến lược rendering để tối ưu cho SEO, hiệu năng và tính tương tác.
 
 ## 1. Client-Side Rendering (CSR)
 
-**Default Strategy.** Content is rendered entirely in the browser.
+**Chiến lược mặc định.** Nội dung được render hoàn toàn trong trình duyệt.
 
-- **Use case**: Interactive dashboards, internal tools.
-- **Pros**: Simplest to configure, low server cost.
-- **Cons**: Poor SEO, slower initial content visibility (must wait for JS).
+- **Trường hợp dùng**: Dashboard tương tác, công cụ nội bộ.
+- **Ưu điểm**: Dễ cấu hình nhất, chi phí server thấp.
+- **Nhược điểm**: SEO kém, nội dung ban đầu hiển thị chậm hơn (phải chờ JS).
 
 ## 2. Static Site Generation (SSG / Prerendering)
 
-Content is pre-rendered into static HTML files at **build time**.
+Nội dung được pre-render thành các file HTML tĩnh tại **thời điểm build**.
 
-- **Use case**: Marketing pages, blogs, documentation.
-- **Pros**: Fastest initial load, excellent SEO, CDN-friendly.
-- **Cons**: Requires rebuild for content updates, not for user-specific data.
+- **Trường hợp dùng**: Trang marketing, blog, tài liệu.
+- **Ưu điểm**: Tải ban đầu nhanh nhất, SEO tuyệt vời, thân thiện với CDN.
+- **Nhược điểm**: Cần build lại khi cập nhật nội dung, không phù hợp với dữ liệu theo từng người dùng.
 
 ## 3. Server-Side Rendering (SSR)
 
-Content is rendered on the server for the **initial request**. Subsequent navigations happen client-side (SPA style).
+Nội dung được render trên server cho **request đầu tiên**. Các lần điều hướng tiếp theo diễn ra ở phía client (kiểu SPA).
 
-- **Use case**: E-commerce product pages, news sites, personalized dynamic content.
-- **Pros**: Excellent SEO, fast initial content visibility.
-- **Cons**: Requires a server (Node.js), higher server cost/latency.
+- **Trường hợp dùng**: Trang sản phẩm thương mại điện tử, trang tin tức, nội dung động được cá nhân hóa.
+- **Ưu điểm**: SEO tuyệt vời, nội dung ban đầu hiển thị nhanh.
+- **Nhược điểm**: Cần một server (Node.js), chi phí/độ trễ server cao hơn.
 
 ## Hydration
 
-Hydration is the process of making server-rendered HTML interactive in the browser.
+Hydration là quá trình làm cho HTML được render từ server trở nên tương tác được trong trình duyệt.
 
-- **Full Hydration**: The entire app becomes interactive at once.
-- **Incremental Hydration**: (Advanced) Parts become interactive as needed using `@defer` blocks.
-- **Event Replay**: Captures and replays user events that happened before hydration finished.
+- **Full Hydration**: Toàn bộ ứng dụng trở nên tương tác cùng một lúc.
+- **Incremental Hydration**: (Nâng cao) Từng phần trở nên tương tác khi cần bằng các block `@defer`.
+- **Event Replay**: Ghi lại và phát lại các event của người dùng xảy ra trước khi hydration hoàn tất.
 
-## Decision Matrix
+## Ma trận quyết định
 
-| Requirement                     | Strategy             |
+| Yêu cầu                         | Chiến lược           |
 | :------------------------------ | :------------------- |
-| **SEO + Static Content**        | SSG                  |
-| **SEO + Dynamic Content**       | SSR                  |
-| **No SEO + High Interactivity** | CSR                  |
-| **Mixed**                       | Hybrid (Route-based) |
+| **SEO + Nội dung tĩnh**         | SSG                  |
+| **SEO + Nội dung động**         | SSR                  |
+| **Không SEO + Tương tác cao**   | CSR                  |
+| **Hỗn hợp**                     | Hybrid (theo route)  |

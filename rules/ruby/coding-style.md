@@ -6,41 +6,41 @@ paths:
   - "**/*.gemspec"
   - "**/config.ru"
 ---
-# Ruby Coding Style
+# Coding Style Ruby
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with Ruby and Rails specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung riêng cho Ruby và Rails.
 
-## Standards
+## Tiêu chuẩn
 
-- Target **Ruby 3.3+** for new Rails work unless the project already pins an older supported runtime.
-- Enable **YJIT** in production only after measuring boot time, memory, and request/job throughput.
-- Add `# frozen_string_literal: true` to new Ruby files when the project uses that convention.
-- Prefer clear Ruby over clever metaprogramming; isolate DSL-heavy code behind narrow, tested boundaries.
+- Nhắm tới **Ruby 3.3+** cho công việc Rails mới, trừ khi dự án đã ghim một runtime cũ hơn vẫn được hỗ trợ.
+- Chỉ bật **YJIT** ở production sau khi đã đo thời gian khởi động, bộ nhớ và thông lượng request/job.
+- Thêm `# frozen_string_literal: true` vào các file Ruby mới khi dự án dùng quy ước này.
+- Ưu tiên Ruby rõ ràng hơn metaprogramming khéo léo; cô lập code nặng DSL sau các ranh giới hẹp, có test.
 
-## Formatting And Linting
+## Định dạng và Linting
 
-- Use the project's checked-in RuboCop config. For Rails 8+ apps, start from `rubocop-rails-omakase` and customize only where the codebase has a real convention.
-- Keep formatter/linter commands behind binstubs or scripts so CI and local runs match:
+- Dùng cấu hình RuboCop đã commit của dự án. Với app Rails 8+, hãy bắt đầu từ `rubocop-rails-omakase` và chỉ tùy chỉnh ở nơi codebase có quy ước thực sự.
+- Giữ các lệnh formatter/linter phía sau binstub hoặc script để CI và lần chạy cục bộ giống nhau:
 
 ```bash
 bundle exec rubocop
 bundle exec rubocop -A
 ```
 
-- Do not silence cops inline unless the exception is narrow, documented, and harder to express cleanly in code.
+- Không tắt cop inline trừ khi ngoại lệ đó hẹp, được ghi chú lại, và khó diễn đạt gọn gàng hơn trong code.
 
-## Rails Style
+## Style Rails
 
-- Follow Rails naming and directory conventions before adding custom structure.
-- Keep controllers transport-focused: authentication, authorization, parameter handling, response shape.
-- Put reusable domain behavior in models, concerns, service objects, query objects, or form objects based on actual complexity, not as default ceremony.
-- Prefer `bin/rails`, `bin/rake`, and checked-in binstubs over globally installed commands.
+- Tuân theo quy ước đặt tên và thư mục của Rails trước khi thêm cấu trúc tùy chỉnh.
+- Giữ controller tập trung vào tầng truyền tải: xác thực, phân quyền, xử lý tham số, hình dạng response.
+- Đặt hành vi domain tái sử dụng trong model, concern, service object, query object hoặc form object tùy theo độ phức tạp thực tế, không phải làm nghi thức mặc định.
+- Ưu tiên `bin/rails`, `bin/rake` và các binstub đã commit hơn các lệnh cài đặt toàn cục.
 
-## Error Handling
+## Xử lý lỗi
 
-- Rescue specific exceptions. Avoid broad `rescue StandardError` blocks unless they re-raise or preserve enough context for operators.
-- Use `ActiveSupport::Notifications` or the app's logger for operational events; do not leave `puts`, `pp`, or `debugger` in committed application code.
+- Rescue các exception cụ thể. Tránh các khối `rescue StandardError` rộng trừ khi chúng raise lại hoặc giữ đủ context cho người vận hành.
+- Dùng `ActiveSupport::Notifications` hoặc logger của app cho các sự kiện vận hành; không để lại `puts`, `pp` hay `debugger` trong code ứng dụng đã commit.
 
-## Reference
+## Tham chiếu
 
-See skill: `backend-patterns` for broader service/repository layering guidance.
+Xem skill: `backend-patterns` để biết hướng dẫn rộng hơn về phân tầng service/repository.

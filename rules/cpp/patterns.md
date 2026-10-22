@@ -8,13 +8,13 @@ paths:
   - "**/*.h"
   - "**/CMakeLists.txt"
 ---
-# C++ Patterns
+# Pattern C++
 
-> This file extends [common/patterns.md](../common/patterns.md) with C++ specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho C++.
 
 ## RAII (Resource Acquisition Is Initialization)
 
-Tie resource lifetime to object lifetime:
+Gắn vòng đời của tài nguyên với vòng đời của object:
 
 ```cpp
 class FileHandle {
@@ -30,22 +30,22 @@ private:
 
 ## Rule of Five/Zero
 
-- **Rule of Zero**: Prefer classes that need no custom destructor, copy/move constructors, or assignments
-- **Rule of Five**: If you define any of destructor/copy-ctor/copy-assign/move-ctor/move-assign, define all five
+- **Rule of Zero**: Ưu tiên các class không cần destructor, copy/move constructor hoặc phép gán tùy chỉnh
+- **Rule of Five**: Nếu bạn định nghĩa bất kỳ cái nào trong destructor/copy-ctor/copy-assign/move-ctor/move-assign, hãy định nghĩa cả năm
 
 ## Value Semantics
 
-- Pass small/trivial types by value
-- Pass large types by `const&`
-- Return by value (rely on RVO/NRVO)
-- Use move semantics for sink parameters
+- Truyền các kiểu nhỏ/đơn giản (trivial) theo giá trị
+- Truyền các kiểu lớn bằng `const&`
+- Trả về theo giá trị (dựa vào RVO/NRVO)
+- Dùng move semantics cho các sink parameter
 
-## Error Handling
+## Xử lý lỗi
 
-- Use exceptions for exceptional conditions
-- Use `std::optional` for values that may not exist
-- Use `std::expected` (C++23) or result types for expected failures
+- Dùng exception cho các tình huống ngoại lệ
+- Dùng `std::optional` cho các giá trị có thể không tồn tại
+- Dùng `std::expected` (C++23) hoặc các result type cho các lỗi có thể dự đoán
 
-## Reference
+## Tham chiếu
 
-See skill: `cpp-coding-standards` for comprehensive C++ patterns and anti-patterns.
+Xem skill: `cpp-coding-standards` để có các pattern và anti-pattern C++ toàn diện.

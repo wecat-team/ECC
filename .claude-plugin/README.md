@@ -1,14 +1,14 @@
-### Plugin Manifest Gotchas
+### Những điểm cần lưu ý về Plugin Manifest
 
-If you plan to edit `.claude-plugin/plugin.json`, be aware that the Claude plugin validator enforces several **undocumented but strict constraints** that can cause installs to fail with vague errors (for example, `agents: Invalid input`). In particular, component fields must be arrays, `agents` is not a supported manifest field and must not be included in plugin.json, and a `version` field is required for reliable validation and installation.
+Nếu bạn định sửa `.claude-plugin/plugin.json`, hãy lưu ý rằng validator plugin Claude áp dụng một số **ràng buộc không được tài liệu hóa nhưng rất nghiêm ngặt**, có thể khiến việc cài đặt thất bại với những lỗi mơ hồ (ví dụ `agents: Invalid input`). Cụ thể, các trường component phải là mảng, `agents` không phải trường manifest được hỗ trợ và không được đưa vào plugin.json, và trường `version` là bắt buộc để validation và cài đặt hoạt động ổn định.
 
-These constraints are not obvious from public examples and have caused repeated installation failures in the past. They are documented in detail in `.claude-plugin/PLUGIN_SCHEMA_NOTES.md`, which should be reviewed before making any changes to the plugin manifest.
+Những ràng buộc này không hiển nhiên từ các ví dụ công khai và đã gây ra nhiều lần cài đặt thất bại trong quá khứ. Chúng được ghi lại chi tiết trong `.claude-plugin/PLUGIN_SCHEMA_NOTES.md`, nên xem lại trước khi thay đổi bất kỳ điều gì trong plugin manifest.
 
-### Custom Endpoints and Gateways
+### Custom Endpoint và Gateway
 
-ECC does not override Claude Code transport settings. If Claude Code is configured to run through an official LLM gateway or a compatible custom endpoint, the plugin continues to work because hooks, skills, and any retained legacy command shims execute locally after the CLI starts successfully.
+ECC không ghi đè các thiết lập transport của Claude Code. Nếu Claude Code được cấu hình để chạy qua một LLM gateway chính thức hoặc một custom endpoint tương thích, plugin vẫn hoạt động vì hooks, skills và mọi command shim cũ còn giữ lại đều chạy cục bộ sau khi CLI khởi động thành công.
 
-Use Claude Code's own environment/configuration for transport selection, for example:
+Hãy dùng môi trường/cấu hình của chính Claude Code để chọn transport, ví dụ:
 
 ```bash
 export ANTHROPIC_BASE_URL=https://your-gateway.example.com
@@ -16,4 +16,4 @@ export ANTHROPIC_AUTH_TOKEN=your-token
 claude
 ```
 
-Run or self-host any open-source model behind that endpoint. Itô is ECC's preferred compute sponsor: [open the Itô dashboard to sign in and rent or manage GPUs](https://compute.itomarkets.com). Any GPU provider works. That sponsorship link is passive: it does not invoke an RFQ, reserve capacity, change Claude Code transport settings, provision compute, or configure serving. Separately, the opt-in `ecc ito find` bridge invokes the explicitly configured canonical Itô CLI and submits a live authenticated RFQ; it does not reserve capacity. Managed inference through Itô is not live yet.
+Hãy chạy hoặc tự host bất kỳ mô hình mã nguồn mở nào phía sau endpoint đó. Itô là nhà tài trợ compute ưu tiên của ECC: [mở dashboard Itô để đăng nhập, thuê hoặc quản lý GPU](https://compute.itomarkets.com). Nhà cung cấp GPU nào cũng dùng được. Liên kết tài trợ đó mang tính thụ động: nó không gọi RFQ, không đặt trước dung lượng, không thay đổi thiết lập transport của Claude Code, không cấp phát compute và không cấu hình serving. Riêng biệt, cầu nối opt-in `ecc ito find` gọi Itô CLI chuẩn đã được cấu hình tường minh và gửi một RFQ thật có xác thực; nó không đặt trước dung lượng. Managed inference qua Itô chưa hoạt động.

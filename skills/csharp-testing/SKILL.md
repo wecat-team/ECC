@@ -1,33 +1,33 @@
 ---
 name: csharp-testing
-description: C# and .NET testing patterns with xUnit, FluentAssertions, mocking, integration tests, and test organization best practices. Use when writing or reviewing xUnit tests, mocks, or integration tests in a C# / .NET project.
+description: "Các pattern kiểm thử C# và .NET với xUnit, FluentAssertions, mocking, integration test và best practice tổ chức test. Dùng khi viết hoặc review xUnit test, mock hoặc integration test trong dự án C# / .NET."
 metadata:
   origin: ECC
 ---
 
-# C# Testing Patterns
+# Pattern kiểm thử C#
 
-Comprehensive testing patterns for .NET applications using xUnit, FluentAssertions, and modern testing practices.
+Các pattern kiểm thử toàn diện cho ứng dụng .NET sử dụng xUnit, FluentAssertions và các thực hành kiểm thử hiện đại.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new tests for C# code
-- Reviewing test quality and coverage
-- Setting up test infrastructure for .NET projects
-- Debugging flaky or slow tests
+- Viết test mới cho code C#
+- Review chất lượng test và coverage
+- Thiết lập hạ tầng test cho dự án .NET
+- Debug test không ổn định (flaky) hoặc chạy chậm
 
-## Test Framework Stack
+## Bộ công cụ test
 
-| Tool | Purpose |
+| Công cụ | Mục đích |
 |---|---|
-| **xUnit** | Test framework (preferred for .NET) |
-| **FluentAssertions** | Readable assertion syntax |
-| **NSubstitute** or **Moq** | Mocking dependencies |
-| **Testcontainers** | Real infrastructure in integration tests |
-| **WebApplicationFactory** | ASP.NET Core integration tests |
-| **Bogus** | Realistic test data generation |
+| **xUnit** | Test framework (ưu tiên cho .NET) |
+| **FluentAssertions** | Cú pháp assertion dễ đọc |
+| **NSubstitute** hoặc **Moq** | Mock các dependency |
+| **Testcontainers** | Hạ tầng thật trong integration test |
+| **WebApplicationFactory** | Integration test cho ASP.NET Core |
+| **Bogus** | Sinh dữ liệu test thực tế |
 
-## Unit Test Structure
+## Cấu trúc unit test
 
 ### Arrange-Act-Assert
 
@@ -82,7 +82,7 @@ public sealed class OrderServiceTests
 }
 ```
 
-### Parameterized Tests with Theory
+### Test tham số hóa với Theory
 
 ```csharp
 [Theory]
@@ -114,7 +114,7 @@ public static TheoryData<CreateOrderRequest, string> InvalidOrderCases => new()
 };
 ```
 
-## Mocking with NSubstitute
+## Mocking với NSubstitute
 
 ```csharp
 [Fact]
@@ -148,7 +148,7 @@ public async Task PlaceOrderAsync_PersistsOrder()
 }
 ```
 
-## ASP.NET Core Integration Tests
+## Integration test cho ASP.NET Core
 
 ### WebApplicationFactory Setup
 
@@ -196,7 +196,7 @@ public sealed class OrderApiTests : IClassFixture<WebApplicationFactory<Program>
 }
 ```
 
-### Testing with Testcontainers
+### Test với Testcontainers
 
 ```csharp
 public sealed class PostgresOrderRepositoryTests : IAsyncLifetime
@@ -238,7 +238,7 @@ public sealed class PostgresOrderRepositoryTests : IAsyncLifetime
 }
 ```
 
-## Test Organization
+## Tổ chức test
 
 ```
 tests/
@@ -260,7 +260,7 @@ tests/
       DatabaseFixture.cs
 ```
 
-## Test Data Builders
+## Test Data Builder
 
 ```csharp
 public sealed class OrderBuilder
@@ -290,19 +290,19 @@ var order = new OrderBuilder()
     .Build();
 ```
 
-## Common Anti-Patterns
+## Các anti-pattern thường gặp
 
-| Anti-Pattern | Fix |
+| Anti-pattern | Cách sửa |
 |---|---|
-| Testing implementation details | Test behavior and outcomes |
-| Shared mutable test state | Fresh instance per test (xUnit does this via constructors) |
-| `Thread.Sleep` in async tests | Use `Task.Delay` with timeout, or polling helpers |
-| Asserting on `ToString()` output | Assert on typed properties |
-| One giant assertion per test | One logical assertion per test |
-| Test names describing implementation | Name by behavior: `Method_ExpectedResult_WhenCondition` |
-| Ignoring `CancellationToken` | Always pass and verify cancellation |
+| Test chi tiết triển khai | Test hành vi và kết quả |
+| Trạng thái test mutable dùng chung | Tạo instance mới cho mỗi test (xUnit tự làm qua constructor) |
+| `Thread.Sleep` trong async test | Dùng `Task.Delay` kèm timeout, hoặc các helper polling |
+| Assert trên kết quả `ToString()` | Assert trên các property có kiểu |
+| Một assertion khổng lồ cho mỗi test | Một assertion logic cho mỗi test |
+| Tên test mô tả chi tiết triển khai | Đặt tên theo hành vi: `Method_ExpectedResult_WhenCondition` |
+| Bỏ qua `CancellationToken` | Luôn truyền và kiểm tra cancellation |
 
-## Running Tests
+## Chạy test
 
 ```bash
 # Run all tests

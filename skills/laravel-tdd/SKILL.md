@@ -1,26 +1,26 @@
 ---
 name: laravel-tdd
-description: Laravel testing strategies with PHPUnit, Pest, model factories, HTTP tests, Sanctum authentication testing, mocking, and coverage. Use when writing Laravel tests with PHPUnit or Pest, or driving a Laravel feature test-first.
+description: Chiến lược kiểm thử Laravel với PHPUnit, Pest, model factory, HTTP test, kiểm thử xác thực Sanctum, mocking và coverage. Dùng khi viết test Laravel bằng PHPUnit hoặc Pest, hoặc khi phát triển một tính năng Laravel theo hướng test-first.
 metadata:
   origin: ECC
 ---
 
-# Laravel Testing with TDD
+# Kiểm thử Laravel với TDD
 
-Test-driven development for Laravel applications using PHPUnit, Pest, Laravel factories, and testing helpers.
+Phát triển hướng kiểm thử (TDD) cho ứng dụng Laravel bằng PHPUnit, Pest, Laravel factory và các helper kiểm thử.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new Laravel applications or features
-- Implementing API endpoints with Sanctum or Passport authentication
-- Testing Eloquent models, relationships, scopes, and accessors
-- Setting up testing infrastructure for Laravel projects
-- Writing feature tests for HTTP controllers and form requests
-- Mocking external services (queues, mail, notifications, HTTP)
+- Viết ứng dụng hoặc tính năng Laravel mới
+- Triển khai API endpoint với xác thực Sanctum hoặc Passport
+- Kiểm thử Eloquent model, relationship, scope và accessor
+- Thiết lập hạ tầng kiểm thử cho dự án Laravel
+- Viết feature test cho HTTP controller và form request
+- Mock các dịch vụ bên ngoài (queue, mail, notification, HTTP)
 
-## TDD Workflow for Laravel
+## Quy trình TDD cho Laravel
 
-### Red-Green-Refactor Cycle
+### Chu trình Red-Green-Refactor
 
 ```php
 // Step 1: RED — Write a failing test
@@ -34,9 +34,9 @@ public function test_a_product_can_be_created(): void
 // Step 3: REFACTOR — Improve while keeping tests green
 ```
 
-## Setup
+## Thiết lập
 
-### PHPUnit Configuration
+### Cấu hình PHPUnit
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -65,7 +65,7 @@ public function test_a_product_can_be_created(): void
 </phpunit>
 ```
 
-### Base TestCase Setup
+### Thiết lập TestCase cơ sở
 
 ```php
 namespace Tests;
@@ -98,7 +98,7 @@ abstract class TestCase extends BaseTestCase
 }
 ```
 
-## Model Factories
+## Model Factory
 
 ```php
 // database/factories/UserFactory.php
@@ -152,7 +152,7 @@ class ProductFactory extends Factory
 }
 ```
 
-### Using Factories
+### Sử dụng Factory
 
 ```php
 $user = User::factory()->create();
@@ -170,7 +170,7 @@ User::factory()->count(3)->sequence(
 )->create();
 ```
 
-## Model Testing
+## Kiểm thử Model
 
 ```php
 namespace Tests\Unit\Models;
@@ -279,7 +279,7 @@ class ProductControllerTest extends TestCase
 }
 ```
 
-## JSON API Testing
+## Kiểm thử JSON API
 
 ```php
 namespace Tests\Feature\Http\Controllers\Api;
@@ -339,7 +339,7 @@ class ProductApiTest extends TestCase
 }
 ```
 
-## Sanctum API Auth Testing
+## Kiểm thử xác thực API với Sanctum
 
 ```php
 namespace Tests\Feature\Http\Controllers\Api;
@@ -405,7 +405,7 @@ class AuthControllerTest extends TestCase
 }
 ```
 
-## Mocking and Fakes
+## Mocking và Fake
 
 ### HTTP Fake
 
@@ -505,7 +505,7 @@ Event::assertDispatched(OrderShipped::class, function ($event) use ($order) {
 });
 ```
 
-## Artisan Command Tests
+## Kiểm thử lệnh Artisan
 
 ```php
 public function test_it_sends_newsletters(): void
@@ -528,7 +528,7 @@ public function test_it_handles_no_subscribers(): void
 }
 ```
 
-## Authorization Tests
+## Kiểm thử phân quyền (Authorization)
 
 ```php
 public function test_users_can_update_own_posts(): void
@@ -562,7 +562,7 @@ public function test_gate_before_grants_super_admin_full_access(): void
 }
 ```
 
-## Pest Feature Tests
+## Pest Feature Test
 
 ```php
 <?php
@@ -617,59 +617,59 @@ vendor/bin/phpunit --coverage-html coverage --coverage-clover clover.xml
 vendor/bin/pest --coverage --min=80
 ```
 
-### Coverage Goals
+### Mục tiêu Coverage
 
-| Component | Target |
+| Thành phần | Mục tiêu |
 |-----------|--------|
 | Models | 95%+ |
 | Actions/Services | 90%+ |
 | Form Requests | 90%+ |
 | Controllers | 85%+ |
 | Policies | 95%+ |
-| Overall | 80%+ |
+| Tổng thể | 80%+ |
 
-## Testing Best Practices
+## Best Practice khi kiểm thử
 
-### DO
+### NÊN
 
-- Use factories over manual `create()` calls
-- One logical assertion per test
-- Descriptive names: `test_guests_cannot_create_products`
-- Test edge cases and authorization boundaries
-- Mock external services with `Http::fake()`, `Mail::fake()`
-- Use `RefreshDatabase` for clean state
+- Dùng factory thay vì gọi `create()` thủ công
+- Mỗi test chỉ một assertion logic
+- Đặt tên mô tả rõ ràng: `test_guests_cannot_create_products`
+- Kiểm thử edge case và ranh giới phân quyền
+- Mock dịch vụ bên ngoài bằng `Http::fake()`, `Mail::fake()`
+- Dùng `RefreshDatabase` để có trạng thái sạch
 
-### DON'T
+### KHÔNG NÊN
 
-- Don't test Laravel internals (trust the framework)
-- Don't make tests dependent on each other
-- Don't over-mock — mock only service boundaries
-- Don't test private methods — test through the public interface
-- Don't couple tests to HTML structure
+- Không kiểm thử phần nội bộ của Laravel (hãy tin framework)
+- Không để các test phụ thuộc lẫn nhau
+- Không mock quá mức — chỉ mock ở ranh giới service
+- Không kiểm thử private method — hãy kiểm thử qua public interface
+- Không gắn test với cấu trúc HTML
 
-## Quick Reference
+## Tham chiếu nhanh
 
-| Pattern | Usage |
+| Pattern | Cách dùng |
 |---------|-------|
-| `RefreshDatabase` | Reset database between tests |
-| `$this->actingAs($user)` | Authenticate as user |
-| `$this->withToken($token)` | Bearer token auth for APIs |
-| `Model::factory()->create()` | Create model with factory |
-| `Model::factory()->count(5)->create()` | Create multiple records |
-| `Http::fake([...])` | Mock HTTP calls |
-| `Mail::fake()` | Trap sent mail |
-| `Notification::fake()` | Trap sent notifications |
-| `Queue::fake()` | Trap queued jobs |
-| `Event::fake()` | Trap dispatched events |
-| `Storage::fake('public')` | Trap file operations |
-| `assertDatabaseHas` | Assert DB row exists |
-| `assertSoftDeleted` | Assert soft-delete |
-| `assertSessionHasErrors` | Assert validation errors |
-| `assertForbidden` | Assert 403 status |
+| `RefreshDatabase` | Reset database giữa các test |
+| `$this->actingAs($user)` | Xác thực với vai trò người dùng |
+| `$this->withToken($token)` | Xác thực Bearer token cho API |
+| `Model::factory()->create()` | Tạo model bằng factory |
+| `Model::factory()->count(5)->create()` | Tạo nhiều bản ghi |
+| `Http::fake([...])` | Mock các lời gọi HTTP |
+| `Mail::fake()` | Chặn mail đã gửi |
+| `Notification::fake()` | Chặn notification đã gửi |
+| `Queue::fake()` | Chặn job được đưa vào queue |
+| `Event::fake()` | Chặn event được dispatch |
+| `Storage::fake('public')` | Chặn các thao tác file |
+| `assertDatabaseHas` | Khẳng định bản ghi DB tồn tại |
+| `assertSoftDeleted` | Khẳng định đã soft-delete |
+| `assertSessionHasErrors` | Khẳng định có lỗi validation |
+| `assertForbidden` | Khẳng định trạng thái 403 |
 
-## Related Skills
+## Skill liên quan
 
-- `laravel-patterns` — Laravel architecture, Eloquent, routing, and API patterns
-- `laravel-security` — Laravel authentication, authorization, and secure coding
-- `tdd-workflow` — The repo-wide RED -> GREEN -> REFACTOR loop
-- `backend-patterns` — General backend API and database patterns
+- `laravel-patterns` — Kiến trúc Laravel, Eloquent, routing và các pattern API
+- `laravel-security` — Xác thực, phân quyền và coding an toàn trong Laravel
+- `tdd-workflow` — Vòng lặp RED -> GREEN -> REFACTOR dùng chung cho toàn repo
+- `backend-patterns` — Các pattern backend API và database chung

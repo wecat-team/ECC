@@ -1,37 +1,37 @@
 ---
 name: iterative-retrieval
-description: Pattern for progressively refining context retrieval to solve the subagent context problem. Use when a subagent lacks the context it needs and retrieval must be refined across passes.
+description: "Pattern tinh chỉnh dần việc truy xuất context (context retrieval) để giải quyết vấn đề context của subagent. Dùng khi một subagent thiếu context cần thiết và việc truy xuất phải được tinh chỉnh qua nhiều lượt."
 metadata:
   origin: ECC
 ---
 
-# Iterative Retrieval Pattern
+# Pattern Iterative Retrieval
 
-Solves the "context problem" in multi-agent workflows where subagents don't know what context they need until they start working.
+Giải quyết "vấn đề context" trong các workflow multi-agent, nơi các subagent không biết mình cần context gì cho đến khi bắt đầu làm việc.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Spawning subagents that need codebase context they cannot predict upfront
-- Building multi-agent workflows where context is progressively refined
-- Encountering "context too large" or "missing context" failures in agent tasks
-- Designing RAG-like retrieval pipelines for code exploration
-- Optimizing token usage in agent orchestration
+- Tạo các subagent cần context của codebase mà không thể dự đoán trước
+- Xây dựng workflow multi-agent nơi context được tinh chỉnh dần
+- Gặp lỗi "context quá lớn" hoặc "thiếu context" trong các task của agent
+- Thiết kế pipeline truy xuất kiểu RAG để khám phá code
+- Tối ưu việc sử dụng token trong điều phối agent
 
-## The Problem
+## Vấn đề
 
-Subagents are spawned with limited context. They don't know:
-- Which files contain relevant code
-- What patterns exist in the codebase
-- What terminology the project uses
+Các subagent được tạo ra với context hạn chế. Chúng không biết:
+- File nào chứa code liên quan
+- Codebase có những pattern nào
+- Dự án dùng thuật ngữ gì
 
-Standard approaches fail:
-- **Send everything**: Exceeds context limits
-- **Send nothing**: Agent lacks critical information
-- **Guess what's needed**: Often wrong
+Các cách tiếp cận tiêu chuẩn đều thất bại:
+- **Gửi tất cả**: Vượt quá giới hạn context
+- **Không gửi gì**: Agent thiếu thông tin quan trọng
+- **Đoán xem cần gì**: Thường sai
 
-## The Solution: Iterative Retrieval
+## Giải pháp: Iterative Retrieval
 
-A 4-phase loop that progressively refines context:
+Một vòng lặp 4 giai đoạn tinh chỉnh context dần dần:
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -49,9 +49,9 @@ A 4-phase loop that progressively refines context:
 └─────────────────────────────────────────────┘
 ```
 
-### Phase 1: DISPATCH
+### Giai đoạn 1: DISPATCH
 
-Initial broad query to gather candidate files:
+Truy vấn rộng ban đầu để thu thập các file ứng viên:
 
 ```javascript
 // Start with high-level intent
@@ -65,9 +65,9 @@ const initialQuery = {
 const candidates = await retrieveFiles(initialQuery);
 ```
 
-### Phase 2: EVALUATE
+### Giai đoạn 2: EVALUATE
 
-Assess retrieved content for relevance:
+Đánh giá mức độ liên quan của nội dung đã truy xuất:
 
 ```javascript
 function evaluateRelevance(files, task) {
@@ -80,15 +80,15 @@ function evaluateRelevance(files, task) {
 }
 ```
 
-Scoring criteria:
-- **High (0.8-1.0)**: Directly implements target functionality
-- **Medium (0.5-0.7)**: Contains related patterns or types
-- **Low (0.2-0.4)**: Tangentially related
-- **None (0-0.2)**: Not relevant, exclude
+Tiêu chí chấm điểm:
+- **Cao (0.8-1.0)**: Triển khai trực tiếp chức năng mục tiêu
+- **Trung bình (0.5-0.7)**: Chứa các pattern hoặc type liên quan
+- **Thấp (0.2-0.4)**: Liên quan gián tiếp
+- **Không (0-0.2)**: Không liên quan, loại trừ
 
-### Phase 3: REFINE
+### Giai đoạn 3: REFINE
 
-Update search criteria based on evaluation:
+Cập nhật tiêu chí tìm kiếm dựa trên kết quả đánh giá:
 
 ```javascript
 function refineQuery(evaluation, previousQuery) {
@@ -113,9 +113,9 @@ function refineQuery(evaluation, previousQuery) {
 }
 ```
 
-### Phase 4: LOOP
+### Giai đoạn 4: LOOP
 
-Repeat with refined criteria (max 3 cycles):
+Lặp lại với tiêu chí đã tinh chỉnh (tối đa 3 chu kỳ):
 
 ```javascript
 async function iterativeRetrieve(task, maxCycles = 3) {
@@ -141,9 +141,9 @@ async function iterativeRetrieve(task, maxCycles = 3) {
 }
 ```
 
-## Practical Examples
+## Ví dụ thực tế
 
-### Example 1: Bug Fix Context
+### Ví dụ 1: Context cho việc sửa bug
 
 ```
 Task: "Fix the authentication token expiry bug"
@@ -161,7 +161,7 @@ Cycle 2:
 Result: auth.ts, tokens.ts, session-manager.ts, jwt-utils.ts
 ```
 
-### Example 2: Feature Implementation
+### Ví dụ 2: Triển khai tính năng
 
 ```
 Task: "Add rate limiting to API endpoints"
@@ -184,9 +184,9 @@ Cycle 3:
 Result: throttle.ts, middleware/index.ts, router-setup.ts
 ```
 
-## Integration with Agents
+## Tích hợp với Agent
 
-Use in agent prompts:
+Dùng trong prompt của agent:
 
 ```markdown
 When retrieving context for this task:
@@ -197,16 +197,16 @@ When retrieving context for this task:
 5. Return files with relevance >= 0.7
 ```
 
-## Best Practices
+## Best Practice
 
-1. **Start broad, narrow progressively** - Don't over-specify initial queries
-2. **Learn codebase terminology** - First cycle often reveals naming conventions
-3. **Track what's missing** - Explicit gap identification drives refinement
-4. **Stop at "good enough"** - 3 high-relevance files beats 10 mediocre ones
-5. **Exclude confidently** - Low-relevance files won't become relevant
+1. **Bắt đầu rộng, thu hẹp dần** - Đừng chỉ định quá cụ thể ở các truy vấn ban đầu
+2. **Học thuật ngữ của codebase** - Chu kỳ đầu tiên thường tiết lộ các quy ước đặt tên
+3. **Theo dõi những gì còn thiếu** - Việc xác định khoảng trống tường minh thúc đẩy quá trình tinh chỉnh
+4. **Dừng ở mức "đủ tốt"** - 3 file có độ liên quan cao tốt hơn 10 file tầm thường
+5. **Loại trừ một cách tự tin** - Các file có độ liên quan thấp sẽ không trở nên liên quan
 
-## Related
+## Liên quan
 
-- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Subagent orchestration section
-- `continuous-learning` skill - For patterns that improve over time
-- Agent definitions bundled with ECC (manual install path: `agents/`)
+- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Phần điều phối subagent
+- skill `continuous-learning` - Dành cho các pattern cải thiện theo thời gian
+- Các định nghĩa agent đi kèm ECC (đường dẫn cài thủ công: `agents/`)

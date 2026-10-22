@@ -1,10 +1,10 @@
-# Angular Signals Overview
+# Tổng quan về Angular Signal
 
-Signals are the foundation of reactivity in modern Angular applications. A **signal** is a wrapper around a value that notifies interested consumers when that value changes.
+Signal là nền tảng của reactivity trong các ứng dụng Angular hiện đại. **Signal** là một wrapper bao quanh một giá trị, thông báo cho các consumer quan tâm khi giá trị đó thay đổi.
 
-## Writable Signals (`signal`)
+## Writable Signal (`signal`)
 
-Use `signal()` to create state that can be directly updated.
+Dùng `signal()` để tạo state có thể cập nhật trực tiếp.
 
 ```ts
 import {signal} from '@angular/core';
@@ -22,9 +22,9 @@ count.set(3);
 count.update((value) => value + 1);
 ```
 
-### Exposing as Readonly
+### Expose dưới dạng Readonly
 
-When exposing state from a service, it is a best practice to expose a readonly version to prevent external mutation.
+Khi expose state từ một service, thực hành tốt là chỉ expose phiên bản readonly để ngăn việc thay đổi từ bên ngoài.
 
 ```ts
 private readonly _count = signal(0);
@@ -32,13 +32,13 @@ private readonly _count = signal(0);
 readonly count = this._count.asReadonly();
 ```
 
-## Computed Signals (`computed`)
+## Computed Signal (`computed`)
 
-Use `computed()` to create read-only signals that derive their value from other signals.
+Dùng `computed()` để tạo các signal chỉ đọc (read-only) có giá trị dẫn xuất từ các signal khác.
 
-- **Lazily Evaluated**: The derivation function doesn't run until the computed signal is read.
-- **Memoized**: The result is cached. It only recalculates when one of the signals it depends on changes.
-- **Dynamic Dependencies**: Only the signals _actually read_ during the derivation are tracked.
+- **Đánh giá lười (Lazily Evaluated)**: Hàm dẫn xuất không chạy cho đến khi computed signal được đọc.
+- **Memoized**: Kết quả được cache. Nó chỉ tính lại khi một trong các signal mà nó phụ thuộc thay đổi.
+- **Dependency động**: Chỉ các signal _thực sự được đọc_ trong quá trình dẫn xuất mới được theo dõi.
 
 ```ts
 import {signal, computed} from '@angular/core';
@@ -49,20 +49,20 @@ const doubleCount = computed(() => count() * 2);
 // doubleCount automatically updates when count changes.
 ```
 
-## Reactive Contexts
+## Reactive Context
 
-A **reactive context** is a runtime state where Angular monitors signal reads to establish a dependency.
+**Reactive context** là một trạng thái runtime trong đó Angular theo dõi các lần đọc signal để thiết lập dependency.
 
-Angular automatically enters a reactive context when evaluating:
+Angular tự động vào một reactive context khi đánh giá:
 
-- `computed` signals
-- `effect` callbacks
-- `linkedSignal` computations
-- Component templates
+- Các `computed` signal
+- Các callback của `effect`
+- Các phép tính của `linkedSignal`
+- Template của component
 
-### Untracked Reads (`untracked`)
+### Đọc không theo dõi (`untracked`)
 
-If you need to read a signal inside a reactive context _without_ creating a dependency (so that the context doesn't re-run when the signal changes), use `untracked()`.
+Nếu bạn cần đọc một signal bên trong reactive context _mà không_ tạo dependency (để context không chạy lại khi signal thay đổi), hãy dùng `untracked()`.
 
 ```ts
 import {effect, untracked} from '@angular/core';
@@ -74,9 +74,9 @@ effect(() => {
 });
 ```
 
-### Async Operations in Reactive Contexts
+### Thao tác bất đồng bộ trong Reactive Context
 
-The reactive context is only active for **synchronous** code. Signal reads after an `await` will not be tracked. **Always read signals before asynchronous boundaries.**
+Reactive context chỉ hoạt động với code **đồng bộ**. Các lần đọc signal sau một `await` sẽ không được theo dõi. **Luôn đọc signal trước các ranh giới bất đồng bộ.**
 
 ```ts
 // Incorrect: theme() is not tracked because it is read after await

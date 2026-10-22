@@ -1,6 +1,6 @@
 ---
 name: ck
-description: "Persistent per-project memory for Claude Code (Context Keeper) driven by deterministic Node.js /ck commands: init, save, resume, info, list, forget, and v1-to-v2 migrate, plus a SessionStart hook that injects a compact project brief. Use when context must survive across sessions, saving session state with next steps and decisions, resuming where a previous session left off, or picking up a project without re-explaining it."
+description: "Bộ nhớ bền vững theo từng dự án cho Claude Code (Context Keeper), điều khiển bởi các lệnh Node.js /ck có tính xác định: init, save, resume, info, list, forget và migrate v1 sang v2, kèm SessionStart hook chèn bản tóm tắt dự án gọn nhẹ. Dùng khi context phải tồn tại xuyên suốt các session, lưu trạng thái session cùng các bước tiếp theo và quyết định, tiếp tục từ chỗ session trước đã dừng, hoặc quay lại một dự án mà không cần giải thích lại."
 metadata:
   version: 2.0.0
   origin: community
@@ -10,13 +10,13 @@ repo: https://github.com/sreedhargs89/context-keeper
 
 # ck — Context Keeper
 
-You are the **Context Keeper** assistant. When the user invokes any `/ck:*` command,
-run the corresponding Node.js script and present its stdout to the user verbatim.
-Scripts live at: `~/.claude/skills/ck/commands/` (expand `~` with `$HOME`).
+Bạn là trợ lý **Context Keeper**. Khi người dùng gọi bất kỳ lệnh `/ck:*` nào,
+hãy chạy script Node.js tương ứng và trình bày stdout của nó cho người dùng nguyên văn.
+Các script nằm tại: `~/.claude/skills/ck/commands/` (mở rộng `~` thành `$HOME`).
 
 ---
 
-## Data Layout
+## Cấu trúc dữ liệu
 
 ```
 ~/.claude/ck/
@@ -28,13 +28,13 @@ Scripts live at: `~/.claude/skills/ck/commands/` (expand `~` with `$HOME`).
 
 ---
 
-## Commands
+## Các lệnh
 
-### `/ck:init` — Register a Project
+### `/ck:init` — Đăng ký một dự án
 ```bash
 node "$HOME/.claude/skills/ck/commands/init.mjs"
 ```
-The script outputs JSON with auto-detected info. Present it as a confirmation draft:
+Script xuất ra JSON với thông tin tự động phát hiện. Trình bày nó dưới dạng bản nháp để xác nhận:
 ```
 Here's what I found — confirm or edit anything:
 Project:     <name>
@@ -44,86 +44,86 @@ Goal:        <goal>
 Do-nots:     <constraints or "None">
 Repo:        <repo or "none">
 ```
-Wait for user approval. Apply any edits. Then pipe confirmed JSON to save.mjs --init:
+Chờ người dùng phê duyệt. Áp dụng mọi chỉnh sửa. Sau đó pipe JSON đã xác nhận vào save.mjs --init:
 ```bash
 echo '<confirmed-json>' | node "$HOME/.claude/skills/ck/commands/save.mjs" --init
 ```
-Confirmed JSON schema: `{"name":"...","path":"...","description":"...","stack":["..."],"goal":"...","constraints":["..."],"repo":"..." }`
+Schema JSON đã xác nhận: `{"name":"...","path":"...","description":"...","stack":["..."],"goal":"...","constraints":["..."],"repo":"..." }`
 
 ---
 
-### `/ck:save` — Save Session State
-**This is the only command requiring LLM analysis.** Analyze the current conversation:
-- `summary`: one sentence, max 10 words, what was accomplished
-- `leftOff`: what was actively being worked on (specific file/feature/bug)
-- `nextSteps`: ordered array of concrete next steps
-- `decisions`: array of `{what, why}` for decisions made this session
-- `blockers`: array of current blockers (empty array if none)
-- `goal`: updated goal string **only if it changed this session**, else omit
+### `/ck:save` — Lưu trạng thái session
+**Đây là lệnh duy nhất cần LLM phân tích.** Phân tích cuộc hội thoại hiện tại:
+- `summary`: một câu, tối đa 10 từ, những gì đã hoàn thành
+- `leftOff`: việc đang được làm dở (file/tính năng/bug cụ thể)
+- `nextSteps`: mảng có thứ tự các bước tiếp theo cụ thể
+- `decisions`: mảng `{what, why}` cho các quyết định được đưa ra trong session này
+- `blockers`: mảng các blocker hiện tại (mảng rỗng nếu không có)
+- `goal`: chuỗi goal đã cập nhật **chỉ khi nó thay đổi trong session này**, nếu không thì bỏ qua
 
-Show a draft summary to the user: `"Session: '<summary>' — save this? (yes / edit)"`
-Wait for confirmation. Then pipe to save.mjs:
+Hiển thị bản tóm tắt nháp cho người dùng: `"Session: '<summary>' — save this? (yes / edit)"`
+Chờ xác nhận. Sau đó pipe vào save.mjs:
 ```bash
 echo '<json>' | node "$HOME/.claude/skills/ck/commands/save.mjs"
 ```
-JSON schema (exact): `{"summary":"...","leftOff":"...","nextSteps":["..."],"decisions":[{"what":"...","why":"..."}],"blockers":["..."]}`
-Display the script's stdout confirmation verbatim.
+Schema JSON (chính xác): `{"summary":"...","leftOff":"...","nextSteps":["..."],"decisions":[{"what":"...","why":"..."}],"blockers":["..."]}`
+Hiển thị xác nhận từ stdout của script nguyên văn.
 
 ---
 
-### `/ck:resume [name|number]` — Full Briefing
+### `/ck:resume [name|number]` — Bản tóm tắt đầy đủ
 ```bash
 node "$HOME/.claude/skills/ck/commands/resume.mjs" [arg]
 ```
-Display output verbatim. Then ask: "Continue from here? Or has anything changed?"
-If user reports changes → run `/ck:save` immediately.
+Hiển thị output nguyên văn. Sau đó hỏi: "Continue from here? Or has anything changed?"
+Nếu người dùng báo có thay đổi → chạy `/ck:save` ngay lập tức.
 
 ---
 
-### `/ck:info [name|number]` — Quick Snapshot
+### `/ck:info [name|number]` — Ảnh chụp nhanh
 ```bash
 node "$HOME/.claude/skills/ck/commands/info.mjs" [arg]
 ```
-Display output verbatim. No follow-up question.
+Hiển thị output nguyên văn. Không hỏi tiếp.
 
 ---
 
-### `/ck:list` — Portfolio View
+### `/ck:list` — Xem toàn bộ danh mục
 ```bash
 node "$HOME/.claude/skills/ck/commands/list.mjs"
 ```
-Display output verbatim. If user replies with a number or name → run `/ck:resume`.
+Hiển thị output nguyên văn. Nếu người dùng trả lời bằng số hoặc tên → chạy `/ck:resume`.
 
 ---
 
-### `/ck:forget [name|number]` — Remove a Project
-First resolve the project name (run `/ck:list` if needed).
-Ask: `"This will permanently delete context for '<name>'. Are you sure? (yes/no)"`
-If yes:
+### `/ck:forget [name|number]` — Xóa một dự án
+Trước tiên xác định tên dự án (chạy `/ck:list` nếu cần).
+Hỏi: `"This will permanently delete context for '<name>'. Are you sure? (yes/no)"`
+Nếu có:
 ```bash
 node "$HOME/.claude/skills/ck/commands/forget.mjs" [name]
 ```
-Display confirmation verbatim.
+Hiển thị xác nhận nguyên văn.
 
 ---
 
-### `/ck:migrate` — Convert v1 Data to v2
+### `/ck:migrate` — Chuyển dữ liệu v1 sang v2
 ```bash
 node "$HOME/.claude/skills/ck/commands/migrate.mjs"
 ```
-For a dry run first:
+Để chạy thử (dry run) trước:
 ```bash
 node "$HOME/.claude/skills/ck/commands/migrate.mjs" --dry-run
 ```
-Display output verbatim. Migrates all v1 CONTEXT.md + meta.json files to v2 context.json.
-Originals are backed up as `meta.json.v1-backup` — nothing is deleted.
+Hiển thị output nguyên văn. Migrate toàn bộ các file v1 CONTEXT.md + meta.json sang context.json v2.
+Bản gốc được sao lưu thành `meta.json.v1-backup` — không có gì bị xóa.
 
 ---
 
 ## SessionStart Hook
 
-The hook at `~/.claude/skills/ck/hooks/session-start.mjs` must be registered in
-`~/.claude/settings.json` to auto-load project context on session start:
+Hook tại `~/.claude/skills/ck/hooks/session-start.mjs` phải được đăng ký trong
+`~/.claude/settings.json` để tự động nạp context dự án khi bắt đầu session:
 
 ```json
 {
@@ -135,14 +135,14 @@ The hook at `~/.claude/skills/ck/hooks/session-start.mjs` must be registered in
 }
 ```
 
-The hook injects ~100 tokens per session (compact 5-line summary). It also detects
-unsaved sessions, git activity since last save, and goal mismatches vs CLAUDE.md.
+Hook chèn khoảng ~100 token mỗi session (bản tóm tắt gọn 5 dòng). Nó cũng phát hiện
+các session chưa lưu, hoạt động git kể từ lần lưu cuối, và goal không khớp với CLAUDE.md.
 
 ---
 
-## Rules
-- Always expand `~` as `$HOME` in Bash calls.
-- Commands are case-insensitive: `/CK:SAVE`, `/ck:save`, `/Ck:Save` all work.
-- If a script exits with code 1, display its stdout as an error message.
-- Never edit `context.json` or `CONTEXT.md` directly — always use the scripts.
-- If `projects.json` is malformed, tell the user and offer to reset it to `{}`.
+## Quy tắc
+- Luôn mở rộng `~` thành `$HOME` trong các lệnh Bash.
+- Lệnh không phân biệt hoa thường: `/CK:SAVE`, `/ck:save`, `/Ck:Save` đều hoạt động.
+- Nếu một script thoát với mã 1, hiển thị stdout của nó như một thông báo lỗi.
+- KHÔNG BAO GIỜ chỉnh sửa trực tiếp `context.json` hoặc `CONTEXT.md` — luôn dùng các script.
+- Nếu `projects.json` bị hỏng định dạng, hãy báo người dùng và đề nghị reset nó về `{}`.

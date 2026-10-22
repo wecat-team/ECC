@@ -1,61 +1,61 @@
 ---
 name: growth-log
-description: Write growth log entries that extract reusable patterns from completed work — root cause, transferable rule, and a recognizable signal — instead of diary-style event narration, with a 4-8 sentence template and merge-duplicates discipline. Use when capturing what was learned after a complex task, debugging session, failure, or rollback, when reviewing progress over a period, or when a delivery gate asks what was learned.
+description: "Viết mục growth log (nhật ký học hỏi) rút ra các pattern tái sử dụng được từ công việc đã hoàn thành — nguyên nhân gốc, quy tắc có thể áp dụng lại và tín hiệu nhận biết — thay vì kể lại sự kiện kiểu nhật ký, với template 4-8 câu và kỷ luật gộp mục trùng lặp. Dùng khi ghi lại những gì đã học sau một task phức tạp, phiên debug, thất bại hoặc rollback, khi xem lại tiến bộ trong một khoảng thời gian, hoặc khi delivery gate hỏi đã học được gì."
 metadata:
   version: 1.1.0
   origin: ECC
 ---
 
-# Growth Log Skill
+# Kỹ năng Growth Log
 
-> **The problem:** Most people write "fixed a bug in X" as a learning log. That's a diary entry, not a learning artifact. A real growth log extracts the *pattern* so you recognize it next time.
+> **Vấn đề:** Hầu hết mọi người viết "đã sửa bug ở X" làm nhật ký học tập. Đó là một mục nhật ký, không phải một sản phẩm học tập. Một growth log thực sự rút ra *pattern* để lần sau bạn nhận ra nó.
 >
-> **This skill teaches:** How to write learning entries that compound across sessions. Works with any note-taking system — Markdown files, Notion, Obsidian, plain text. Templates are generic; adapt to your setup.
+> **Skill này dạy:** Cách viết các mục học tập tích lũy qua nhiều phiên làm việc. Dùng được với mọi hệ thống ghi chú — file Markdown, Notion, Obsidian, văn bản thuần. Template mang tính tổng quát; hãy điều chỉnh cho phù hợp với cách bạn làm việc.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- After completing a complex task (multi-file, new feature, architecture change)
-- After a failure, mistake, or "that was harder than expected" moment
-- When you want to review what you've learned over a period
+- Sau khi hoàn thành một task phức tạp (nhiều file, tính năng mới, thay đổi kiến trúc)
+- Sau một thất bại, sai sót, hoặc khoảnh khắc "việc này khó hơn dự kiến"
+- Khi bạn muốn xem lại những gì đã học trong một khoảng thời gian
 
-**When NOT to activate:** Trivial changes (typo fixes, single-line tweaks, config value changes with no debugging). The threshold: *did this task involve debugging, redoing, rollback, or a non-obvious decision?* If yes → write an entry. If no → skip.
+**Khi nào KHÔNG kích hoạt:** Các thay đổi tầm thường (sửa lỗi chính tả, chỉnh một dòng, đổi giá trị config mà không cần debug). Ngưỡng quyết định: *task này có liên quan đến debug, làm lại, rollback hoặc một quyết định không hiển nhiên không?* Nếu có → viết một mục. Nếu không → bỏ qua.
 
-## The Three Rules
+## Ba quy tắc
 
-### Rule 1: Failures > Achievements
+### Quy tắc 1: Thất bại > Thành tựu
 
-A failure is nutritionally denser than a success. One bug that took 2 hours to find teaches more than 3 features that worked first try.
+Một thất bại giàu "dinh dưỡng" hơn một thành công. Một bug mất 2 giờ để tìm ra dạy được nhiều hơn 3 tính năng chạy được ngay lần đầu.
 
-**Bad:** "Successfully implemented the login flow."
-**Good (web dev):** "Login flow: session token wasn't persisting because the cookie `SameSite` defaulted to `Lax` in Chrome 128+. Pattern: always explicitly set `SameSite=None; Secure` when cross-origin. Signal to recognize: auth breaks after browser upgrade or when crossing origin boundaries."
-**Good (data pipeline):** "CSV import failed silently on empty rows because `pandas.read_csv(dropna=False)` keeps zero-width rows that `len()` counts as valid. Pattern: always `df.dropna(how='all', inplace=True)` before row-count validation."
+**Tệ:** "Đã triển khai thành công luồng đăng nhập."
+**Tốt (web dev):** "Luồng đăng nhập: session token không được lưu vì cookie `SameSite` mặc định là `Lax` trong Chrome 128+. Pattern: luôn đặt tường minh `SameSite=None; Secure` khi cross-origin. Tín hiệu nhận biết: auth hỏng sau khi nâng cấp trình duyệt hoặc khi vượt qua ranh giới origin."
+**Tốt (data pipeline):** "Import CSV thất bại âm thầm trên các dòng rỗng vì `pandas.read_csv(dropna=False)` giữ lại các dòng có độ rộng bằng 0 mà `len()` vẫn đếm là hợp lệ. Pattern: luôn `df.dropna(how='all', inplace=True)` trước khi kiểm tra số dòng."
 
-### Rule 2: The Bole Principle (伯乐原则)
+### Quy tắc 2: Nguyên tắc Bá Nhạc (伯乐原则)
 
-Before writing a new entry, ask: *"Is this fundamentally the same as something I already recorded?"*
+Trước khi viết một mục mới, hãy tự hỏi: *"Về bản chất, điều này có giống với thứ tôi đã ghi lại không?"*
 
-Same root cause, different symptom → **merge**, don't duplicate. New root cause → new entry.
+Cùng nguyên nhân gốc, khác triệu chứng → **gộp**, đừng nhân đôi. Nguyên nhân gốc mới → mục mới.
 
-**How to check:** Search existing entries for keywords from your root cause before writing. If you find a match, add your new symptom as an additional example under the existing entry rather than creating a duplicate.
+**Cách kiểm tra:** Tìm trong các mục hiện có theo từ khóa của nguyên nhân gốc trước khi viết. Nếu tìm thấy mục khớp, hãy thêm triệu chứng mới của bạn như một ví dụ bổ sung bên dưới mục hiện có thay vì tạo bản trùng lặp.
 
-**Example:** "Forgot to update the output index after creating a file" and "Forgot to update skill ratings after a task" — same root cause (no automatic capture trigger). Merge into one entry about "post-task capture gaps."
+**Ví dụ:** "Quên cập nhật output index sau khi tạo file" và "Quên cập nhật skill rating sau một task" — cùng nguyên nhân gốc (không có trigger tự động để ghi nhận). Gộp thành một mục về "các lỗ hổng ghi nhận sau task".
 
-### Rule 3: Must Be Transferable
+### Quy tắc 3: Phải có thể áp dụng lại (Transferable)
 
-Every entry must answer: *"Next time I face a similar situation, what do I do differently?"*
+Mỗi mục phải trả lời được: *"Lần sau gặp tình huống tương tự, tôi sẽ làm gì khác đi?"*
 
-If you can't write that sentence, you haven't extracted the pattern yet.
+Nếu bạn không viết được câu đó, nghĩa là bạn chưa rút ra được pattern.
 
-**How to extract a pattern from a concrete event:**
-1. State what happened in one sentence
-2. Ask "why?" iteratively until you reach root cause (usually 3-5 whys)
-3. Generalize: "What class of problem is this?" (not "Chrome 128 bug" but "browser default change breaking existing behavior")
-4. Formulate as: "Next time I see [signal], I will [action]."
-5. Name the signal: what specific observable tells you this pattern is active?
+**Cách rút pattern từ một sự kiện cụ thể:**
+1. Nêu điều đã xảy ra trong một câu
+2. Hỏi "tại sao?" lặp lại cho đến khi chạm tới nguyên nhân gốc (thường 3-5 lần "tại sao")
+3. Khái quát hóa: "Đây là lớp vấn đề nào?" (không phải "bug của Chrome 128" mà là "thay đổi mặc định của trình duyệt làm hỏng hành vi hiện có")
+4. Diễn đạt thành: "Lần sau khi thấy [tín hiệu], tôi sẽ [hành động]."
+5. Đặt tên cho tín hiệu: quan sát cụ thể nào cho bạn biết pattern này đang hoạt động?
 
-## Entry Template
+## Template mục nhật ký
 
-**Scope:** One entry per distinct root cause. Typical length: 4-8 sentences. If it takes >2 minutes to write, you're narrating events. If <30 seconds, you haven't gone deep enough.
+**Phạm vi:** Một mục cho mỗi nguyên nhân gốc riêng biệt. Độ dài điển hình: 4-8 câu. Nếu mất hơn 2 phút để viết, bạn đang kể lại sự kiện. Nếu dưới 30 giây, bạn chưa đào đủ sâu.
 
 ```markdown
 ## [Title: the pattern, not the event]
@@ -75,49 +75,49 @@ If you can't write that sentence, you haven't extracted the pattern yet.
 - [entry-name](../path/to/related-entry.md)
 ```
 
-## Entry Types
+## Các loại mục
 
-All four types use the template above. The type determines which sections carry the most weight:
+Cả bốn loại đều dùng template ở trên. Loại mục quyết định phần nào mang trọng lượng lớn nhất:
 
-| Type | When to Use | Emphasis | Example Title |
+| Loại | Khi nào dùng | Trọng tâm | Tiêu đề ví dụ |
 |------|------------|----------|---------------|
-| **Failure** | Something broke, needed debugging, or required rework | Root Cause | "Config inheritance ≠ behavior inheritance across sessions" |
-| **Methodology** | A repeatable process emerged from the work | Context / Pattern | "PPT → open-book exam study guide: three-layer structure" |
-| **Pattern Discovery** | A reusable insight about tools, systems, or thinking | Pattern section | "PR description template: describe the gap, not the feature" |
-| **Capability Change** | A measurable skill improvement | Context (before vs after) | "Git: from clone/push to independent PR with 12 commits" |
+| **Failure** | Có thứ bị hỏng, cần debug hoặc phải làm lại | Root Cause | "Config inheritance ≠ behavior inheritance across sessions" |
+| **Methodology** | Một quy trình lặp lại được hình thành từ công việc | Context / Pattern | "PPT → open-book exam study guide: three-layer structure" |
+| **Pattern Discovery** | Một hiểu biết tái sử dụng được về công cụ, hệ thống hoặc cách tư duy | Phần Pattern | "PR description template: describe the gap, not the feature" |
+| **Capability Change** | Một cải thiện kỹ năng đo lường được | Context (trước so với sau) | "Git: from clone/push to independent PR with 12 commits" |
 
-## Quality Checklist
+## Checklist chất lượng
 
-Before finalizing a growth log entry:
+Trước khi hoàn tất một mục growth log:
 
-- [ ] Does the title name the *pattern*, not the event?
-- [ ] Is there a "Next time I will..." sentence?
-- [ ] Is the "Signal to recognize" specific enough to trigger the pattern next time?
-- [ ] Did I search existing entries for duplicates before writing? (Bole Principle)
-- [ ] Is the root cause distinguished from the symptom?
-- [ ] Are related memories cross-linked?
-- [ ] Is the entry 4-8 sentences? Shorter = too shallow; longer = narrating events.
+- [ ] Tiêu đề có nêu *pattern*, không phải sự kiện?
+- [ ] Có câu "Next time I will..." (Lần sau tôi sẽ...)?
+- [ ] "Signal to recognize" (tín hiệu nhận biết) có đủ cụ thể để kích hoạt pattern vào lần sau?
+- [ ] Đã tìm trong các mục hiện có để tránh trùng lặp trước khi viết? (Nguyên tắc Bá Nhạc)
+- [ ] Nguyên nhân gốc có được phân biệt với triệu chứng?
+- [ ] Các ghi nhớ liên quan đã được liên kết chéo?
+- [ ] Mục có 4-8 câu? Ngắn hơn = quá nông; dài hơn = đang kể lại sự kiện.
 
-## Anti-Patterns
+## Anti-Pattern
 
-- Avoid: "Fixed bug in payment module" (event, not pattern)
-- Avoid: Copying the git commit message verbatim (commits describe what changed; logs extract why it matters)
-- Avoid: Writing an entry for every commit (only when a pattern emerges)
-- Avoid: Skipping the transferable sentence (without it, it's just a diary — this is non-negotiable)
-- Avoid: Duplicating the same pattern under different titles (violates Bole Principle — search before writing)
+- Tránh: "Fixed bug in payment module" (là sự kiện, không phải pattern)
+- Tránh: Sao chép nguyên văn commit message của git (commit mô tả cái gì đã thay đổi; log rút ra vì sao nó quan trọng)
+- Tránh: Viết một mục cho mỗi commit (chỉ viết khi có pattern xuất hiện)
+- Tránh: Bỏ qua câu có thể áp dụng lại (thiếu nó thì chỉ là nhật ký — điều này không thể thương lượng)
+- Tránh: Nhân đôi cùng một pattern dưới nhiều tiêu đề khác nhau (vi phạm Nguyên tắc Bá Nhạc — hãy tìm trước khi viết)
 
-## Storage
+## Lưu trữ
 
-Store entries wherever you keep notes. Common patterns:
-- Markdown files in a `growth-log/` directory (one file per day: `YYYY-MM-DD.md`)
-- A dedicated section in Notion, Obsidian, or your note-taking app
-- Plain text files with a consistent naming convention
+Lưu các mục ở bất cứ nơi nào bạn giữ ghi chú. Các cách phổ biến:
+- File Markdown trong thư mục `growth-log/` (mỗi ngày một file: `YYYY-MM-DD.md`)
+- Một mục riêng trong Notion, Obsidian hoặc ứng dụng ghi chú của bạn
+- File văn bản thuần với quy ước đặt tên nhất quán
 
-Pick one convention and stick to it. Searchability matters more than format.
+Chọn một quy ước và bám theo nó. Khả năng tìm kiếm quan trọng hơn định dạng.
 
-## If You Use Delivery Gate
+## Nếu bạn dùng Delivery Gate
 
-The `delivery-gate` Stop hook checks that learning files were modified today via filesystem timestamps. This skill teaches *what to write* — so the file that delivery-gate checks actually contains useful patterns, not empty timestamps.
+Stop hook `delivery-gate` kiểm tra xem các file học tập có được sửa trong ngày hôm nay hay không thông qua timestamp của filesystem. Skill này dạy *viết gì* — để file mà delivery-gate kiểm tra thực sự chứa các pattern hữu ích, chứ không phải chỉ có timestamp rỗng.
 
 ```
 Task completes → delivery-gate checks: was the learning file touched today?
@@ -125,4 +125,4 @@ Task completes → delivery-gate checks: was the learning file touched today?
   → Fresh (file touched): pass — this skill ensures the content is useful
 ```
 
-Having enforcement without methodology → empty entries. Having methodology without enforcement → forgotten captures. Each is independently useful; together they close the loop.
+Có cưỡng chế mà không có phương pháp → mục rỗng. Có phương pháp mà không có cưỡng chế → quên ghi nhận. Mỗi thứ đều hữu ích độc lập; kết hợp lại thì khép kín vòng lặp.

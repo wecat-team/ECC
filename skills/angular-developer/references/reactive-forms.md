@@ -1,19 +1,19 @@
-# Reactive Forms
+# Reactive Form
 
-Reactive forms provide a model-driven approach to handling form inputs. They are built around observable streams and provide synchronous access to the data model, making them more scalable and testable than template-driven forms.
+Reactive form cung cấp cách tiếp cận hướng model (model-driven) để xử lý input của form. Chúng được xây dựng quanh các observable stream và cho phép truy cập đồng bộ vào data model, giúp chúng dễ mở rộng và dễ kiểm thử hơn template-driven form.
 
-## Core Classes
+## Các class cốt lõi
 
-Reactive forms are built using these fundamental classes from `@angular/forms`:
+Reactive form được xây dựng bằng các class cơ bản sau từ `@angular/forms`:
 
-- `FormControl`: Manages the value and validity of an individual input.
-- `FormGroup`: Manages a group of controls (an object-like structure).
-- `FormArray`: Manages a numerically indexed array of controls.
-- `FormBuilder`: A service that provides factory methods for creating control instances.
+- `FormControl`: Quản lý giá trị và tính hợp lệ của một input riêng lẻ.
+- `FormGroup`: Quản lý một nhóm control (cấu trúc giống object).
+- `FormArray`: Quản lý một mảng các control được đánh chỉ mục số.
+- `FormBuilder`: Một service cung cấp các factory method để tạo control instance.
 
-## Setup
+## Thiết lập
 
-Import `ReactiveFormsModule` into your component.
+Import `ReactiveFormsModule` vào component của bạn.
 
 ```ts
 import {Component, inject} from '@angular/core';
@@ -46,13 +46,13 @@ export class ProfileEditor {
 
 ## Template Binding
 
-Use directives to bind the model to the view:
+Dùng các directive để bind model vào view:
 
-- `[formGroup]`: Binds a `FormGroup` to a `<form>` or `<div>`.
-- `formControlName`: Binds a named control within a group to an input.
-- `formGroupName`: Binds a nested `FormGroup`.
-- `formArrayName`: Binds a nested `FormArray`.
-- `[formControl]`: Binds a standalone `FormControl`.
+- `[formGroup]`: Bind một `FormGroup` vào `<form>` hoặc `<div>`.
+- `formControlName`: Bind một control có tên trong một group vào một input.
+- `formGroupName`: Bind một `FormGroup` lồng nhau.
+- `formArrayName`: Bind một `FormArray` lồng nhau.
+- `[formControl]`: Bind một `FormControl` độc lập.
 
 ```html
 <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
@@ -72,9 +72,9 @@ Use directives to bind the model to the view:
 </form>
 ```
 
-## Accessing Controls
+## Truy cập Control
 
-Use getters for easy access to controls, especially for `FormArray`.
+Dùng getter để truy cập control dễ dàng, đặc biệt với `FormArray`.
 
 ```ts
 get aliases() {
@@ -86,10 +86,10 @@ addAlias() {
 }
 ```
 
-## Updating Values
+## Cập nhật giá trị
 
-- `patchValue()`: Updates only the specified properties. Fails silently on structural mismatches.
-- `setValue()`: Replaces the entire model. Strictly enforces the form structure.
+- `patchValue()`: Chỉ cập nhật các property được chỉ định. Thất bại âm thầm khi cấu trúc không khớp.
+- `setValue()`: Thay thế toàn bộ model. Bắt buộc nghiêm ngặt theo cấu trúc form.
 
 ```ts
 updateProfile() {
@@ -100,9 +100,9 @@ updateProfile() {
 }
 ```
 
-## Unified Change Events
+## Unified Change Event
 
-Modern Angular (v18+) provides a single `events` observable on all controls to track value, status, pristine, touched, reset, and submit events.
+Angular hiện đại (v18+) cung cấp một observable `events` duy nhất trên mọi control để theo dõi các event value, status, pristine, touched, reset và submit.
 
 ```ts
 import {ValueChangeEvent, StatusChangeEvent} from '@angular/forms';
@@ -114,9 +114,9 @@ this.profileForm.events.subscribe((event) => {
 });
 ```
 
-## Manual State Management
+## Quản lý state thủ công
 
-- `markAsTouched()` / `markAllAsTouched()`: Useful for showing validation errors on submit.
-- `markAsDirty()` / `markAsPristine()`: Tracks if the value has been modified.
-- `updateValueAndValidity()`: Manually triggers recalculation of value and status.
-- Options `{ emitEvent: false }` or `{ onlySelf: true }` can be passed to most methods to control propagation.
+- `markAsTouched()` / `markAllAsTouched()`: Hữu ích để hiển thị lỗi validation khi submit.
+- `markAsDirty()` / `markAsPristine()`: Theo dõi xem giá trị đã bị chỉnh sửa hay chưa.
+- `updateValueAndValidity()`: Kích hoạt thủ công việc tính lại giá trị và trạng thái.
+- Có thể truyền các tùy chọn `{ emitEvent: false }` hoặc `{ onlySelf: true }` cho hầu hết các phương thức để kiểm soát việc lan truyền.

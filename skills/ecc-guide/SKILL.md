@@ -1,31 +1,31 @@
 ---
 name: ecc-guide
-description: Answer questions about ECC by reading the live repo surface — agents, skills, commands, hooks, rules, install profiles, and docs — instead of memory. Use when the user asks what ECC includes, how to install or reset it, which skill or command fits a task, or how project onboarding works.
+description: "Trả lời các câu hỏi về ECC bằng cách đọc trực tiếp bề mặt repo — agents, skills, commands, hooks, rules, install profile và docs — thay vì dựa vào trí nhớ. Dùng khi người dùng hỏi ECC gồm những gì, cách cài đặt hoặc reset, skill hay command nào phù hợp với một task, hoặc cách onboarding dự án hoạt động."
 metadata:
   origin: community
 ---
 
-# ECC Guide
+# Hướng dẫn ECC
 
-Use this skill when a user needs help understanding, navigating, installing, or choosing parts of ECC.
+Dùng skill này khi người dùng cần được giúp hiểu, điều hướng, cài đặt hoặc chọn các phần của ECC.
 
-## When To Use
+## Khi nào dùng
 
-Use this skill when the user:
+Dùng skill này khi người dùng:
 
-- asks what ECC includes
-- wants help finding a skill, command, agent, hook, rule, or install profile
-- is new to the repository and needs a guided path
-- asks "how do I do X with ECC?"
-- asks which ECC components fit a project
-- needs a lightweight explanation of how commands, skills, agents, hooks, and rules relate
-- is confused by install paths, duplicate installs, reset/uninstall, or selective install options
+- hỏi ECC gồm những gì
+- muốn được giúp tìm một skill, command, agent, hook, rule hoặc install profile
+- mới làm quen với repository và cần một lộ trình có hướng dẫn
+- hỏi "how do I do X with ECC?"
+- hỏi thành phần ECC nào phù hợp với một dự án
+- cần lời giải thích gọn về mối quan hệ giữa commands, skills, agents, hooks và rules
+- bối rối về đường dẫn cài đặt, cài trùng lặp, reset/uninstall, hoặc các tùy chọn selective install
 
-## Core Principle
+## Nguyên tắc cốt lõi
 
-Answer from current files, not memory. ECC changes quickly, so hard-coded catalog counts, feature lists, and install instructions go stale.
+Trả lời từ các file hiện tại, không từ trí nhớ. ECC thay đổi nhanh, nên các số lượng catalog, danh sách tính năng và hướng dẫn cài đặt được ghi cứng sẽ nhanh chóng lỗi thời.
 
-When the ECC repository is available, inspect the relevant files before giving a concrete answer:
+Khi repository ECC có sẵn, hãy kiểm tra các file liên quan trước khi đưa ra câu trả lời cụ thể:
 
 ```bash
 node scripts/ci/catalog.js --json
@@ -36,74 +36,74 @@ node scripts/install-plan.js --list-profiles
 node scripts/install-plan.js --list-components --json
 ```
 
-Use the smallest set of reads needed for the user's question.
+Chỉ đọc tập file nhỏ nhất cần thiết cho câu hỏi của người dùng.
 
-## Repository Map
+## Bản đồ repository
 
-- `README.md`: install paths, uninstall/reset guidance, public positioning, FAQs
-- `AGENTS.md`: contributor guidance and project structure
-- `agent.yaml`: exported gitagent surface and command list
-- `commands/`: maintained slash-command compatibility shims
-- `skills/*/SKILL.md`: reusable workflows and domain playbooks
-- `agents/*.md`: delegated subagent role prompts
-- `rules/`: language and harness rules
-- `hooks/README.md`, `hooks/hooks.json`, `scripts/hooks/`: hook behavior and safety gates
-- `manifests/install-*.json`: selective install modules, components, profiles, and target support
-- `docs/`: harness guides, architecture notes, translated docs, release docs
+- `README.md`: đường dẫn cài đặt, hướng dẫn uninstall/reset, định vị công khai, FAQ
+- `AGENTS.md`: hướng dẫn cho contributor và cấu trúc dự án
+- `agent.yaml`: bề mặt gitagent được export và danh sách command
+- `commands/`: các shim tương thích slash-command được duy trì
+- `skills/*/SKILL.md`: các workflow tái sử dụng và playbook theo lĩnh vực
+- `agents/*.md`: các prompt vai trò subagent được ủy quyền
+- `rules/`: rule theo ngôn ngữ và harness
+- `hooks/README.md`, `hooks/hooks.json`, `scripts/hooks/`: hành vi hook và các gate an toàn
+- `manifests/install-*.json`: các module selective install, component, profile và hỗ trợ target
+- `docs/`: hướng dẫn harness, ghi chú kiến trúc, tài liệu đã dịch, tài liệu release
 
-## Response Style
+## Phong cách trả lời
 
-Lead with the answer, then give the next action. Most users do not need a full catalog dump.
+Mở đầu bằng câu trả lời, rồi đưa ra hành động tiếp theo. Hầu hết người dùng không cần một bản dump toàn bộ catalog.
 
-Good first response shape:
+Dạng phản hồi đầu tiên tốt:
 
-1. what to use
-2. why it fits
-3. exact file or command to inspect
-4. one next command or question
+1. dùng cái gì
+2. vì sao phù hợp
+3. file hoặc lệnh cụ thể để kiểm tra
+4. một lệnh hoặc câu hỏi tiếp theo
 
-Avoid:
+Tránh:
 
-- listing every skill or command by default
-- repeating large README sections
-- recommending retired command shims when a skill-first path exists
-- claiming a component exists without checking the filesystem
-- replacing install guidance with manual copy commands when the managed installer supports the target
+- liệt kê mọi skill hoặc command theo mặc định
+- lặp lại các phần README dài
+- đề xuất các command shim đã ngừng dùng khi đã có đường đi ưu tiên skill
+- khẳng định một component tồn tại mà không kiểm tra filesystem
+- thay hướng dẫn cài đặt bằng các lệnh copy thủ công khi trình cài đặt được quản lý đã hỗ trợ target đó
 
-## Common Tasks
+## Các tác vụ thường gặp
 
-### New User Onboarding
+### Onboarding người dùng mới
 
-Give a short menu:
+Đưa ra một menu ngắn:
 
-- install or reset ECC
-- pick skills for a project
-- understand commands vs skills
-- inspect hooks and safety behavior
-- run a harness audit
-- find a specific workflow
+- cài đặt hoặc reset ECC
+- chọn skill cho một dự án
+- hiểu commands so với skills
+- kiểm tra hook và hành vi an toàn
+- chạy harness audit
+- tìm một workflow cụ thể
 
-Point to `README.md` for install/reset and `/project-init` for project-specific onboarding.
+Chỉ tới `README.md` cho cài đặt/reset và `/project-init` cho onboarding riêng của dự án.
 
-### Feature Discovery
+### Khám phá tính năng
 
-For "what should I use for X?":
+Với câu hỏi "what should I use for X?":
 
-1. Search `skills/`, `commands/`, and `agents/`.
-2. Prefer skills as the primary workflow surface.
-3. Use commands only when they are a maintained compatibility shim or a user explicitly wants slash-command behavior.
-4. Mention agents when delegation is useful.
+1. Tìm trong `skills/`, `commands/` và `agents/`.
+2. Ưu tiên skill làm bề mặt workflow chính.
+3. Chỉ dùng command khi nó là shim tương thích được duy trì hoặc người dùng rõ ràng muốn hành vi slash-command.
+4. Nhắc tới agent khi việc ủy quyền (delegation) có ích.
 
-Useful searches:
+Các lệnh tìm kiếm hữu ích:
 
 ```bash
 rg -n "<query>" skills commands agents docs
 find skills -maxdepth 2 -name SKILL.md | sort
 ```
 
-### Install Guidance
+### Hướng dẫn cài đặt
 
-Use managed install paths:
+Dùng các đường cài đặt được quản lý:
 
 ```bash
 node scripts/install-plan.js --list-profiles
@@ -111,36 +111,36 @@ node scripts/install-plan.js --profile minimal --target claude --json
 node scripts/install-apply.js --profile minimal --target claude --dry-run
 ```
 
-For specific skill installs:
+Với việc cài các skill cụ thể:
 
 ```bash
 node scripts/install-plan.js --skills <skill-id> --target claude --json
 node scripts/install-apply.js --skills <skill-id> --target claude --dry-run
 ```
 
-Warn users not to stack plugin installs and full manual/profile installs unless they intentionally want duplicate surfaces.
+Cảnh báo người dùng không chồng cài plugin với cài đặt thủ công/profile đầy đủ, trừ khi họ cố ý muốn các bề mặt trùng lặp.
 
-### Project Onboarding
+### Onboarding dự án
 
-Use `/project-init` when the user wants ECC configured for a target repo. The expected sequence is:
+Dùng `/project-init` khi người dùng muốn cấu hình ECC cho một repo đích. Trình tự mong đợi là:
 
-1. detect the stack from project files
-2. resolve a dry-run install plan
-3. inspect existing `CLAUDE.md` and settings files
-4. ask before applying changes
-5. keep generated guidance minimal and repo-specific
+1. phát hiện stack từ các file dự án
+2. giải quyết một install plan dạng dry-run
+3. kiểm tra `CLAUDE.md` và các file settings hiện có
+4. hỏi trước khi áp dụng thay đổi
+5. giữ hướng dẫn được sinh ra ở mức tối thiểu và riêng cho repo
 
-### Troubleshooting
+### Xử lý sự cố
 
-Ask for the target harness and install path first, then inspect:
+Hỏi harness đích và đường dẫn cài đặt trước, rồi kiểm tra:
 
-- plugin install metadata
-- `.claude/`, `.cursor/`, `.codex/`, `.gemini/`, `.opencode/`, `.codebuddy/`, `.joycode/`, or `.qwen/`
+- metadata cài đặt plugin
+- `.claude/`, `.cursor/`, `.codex/`, `.gemini/`, `.opencode/`, `.codebuddy/`, `.joycode/` hoặc `.qwen/`
 - `hooks/hooks.json`
-- install-state files
-- relevant command/skill files
+- các file install-state
+- các file command/skill liên quan
 
-For repo health, suggest:
+Để kiểm tra sức khỏe repo, hãy đề xuất:
 
 ```bash
 npm run harness:audit -- --format text
@@ -148,9 +148,9 @@ npm run observability:ready
 npm test
 ```
 
-## Output Templates
+## Mẫu đầu ra
 
-### Short Recommendation
+### Đề xuất ngắn
 
 ```text
 Use <skill-or-command>. It fits because <reason>.
@@ -160,7 +160,7 @@ Verify with: <command>
 Next: <one concrete action>
 ```
 
-### Search Results
+### Kết quả tìm kiếm
 
 ```text
 Best matches:
@@ -170,7 +170,7 @@ Best matches:
 Recommendation: <which one to use first and why>
 ```
 
-### Install Plan Summary
+### Tóm tắt Install Plan
 
 ```text
 Detected: <stack evidence>
@@ -181,10 +181,10 @@ Would change: <paths>
 Needs approval before apply: <yes/no>
 ```
 
-## Related Surfaces
+## Các bề mặt liên quan
 
-- `/project-init`: stack-aware onboarding plan for a target repo
-- `/harness-audit`: deterministic readiness scorecard
-- `/skill-health`: skill quality review
-- `/skill-create`: generate a new skill from local git history
-- `/security-scan`: inspect Claude/OpenCode configuration security
+- `/project-init`: kế hoạch onboarding nhận biết stack cho một repo đích
+- `/harness-audit`: bảng điểm mức sẵn sàng mang tính tất định
+- `/skill-health`: review chất lượng skill
+- `/skill-create`: sinh skill mới từ lịch sử git local
+- `/security-scan`: kiểm tra bảo mật cấu hình Claude/OpenCode

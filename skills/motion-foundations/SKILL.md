@@ -1,6 +1,6 @@
 ---
 name: motion-foundations
-description: Motion tokens, spring presets, performance rules, device adaptation, accessibility enforcement, and SSR safety for React / Next.js using motion/react. Foundation layer — all other motion skills depend on this. Use when setting up motion tokens, spring presets, reduced-motion handling, or SSR-safe animation in React or Next.js.
+description: Motion token, spring preset, quy tắc hiệu năng, thích ứng thiết bị, bắt buộc accessibility và an toàn SSR cho React / Next.js dùng motion/react. Tầng nền tảng — mọi skill motion khác đều phụ thuộc vào nó. Dùng khi thiết lập motion token, spring preset, xử lý reduced-motion, hoặc animation an toàn với SSR trong React hoặc Next.js.
 tags: [motion, animation, performance, accessibility]
 category: frontend
 author: jeff
@@ -10,86 +10,86 @@ metadata:
 
 # Motion Foundations
 
-The base layer of the motion system. Defines every value, constraint, and
-rule that downstream skills (`motion-patterns`, `motion-advanced`) inherit.
-Load this skill before any animation work begins.
+Tầng cơ sở của hệ thống motion. Định nghĩa mọi giá trị, ràng buộc và
+quy tắc mà các skill hạ nguồn (`motion-patterns`, `motion-advanced`) kế thừa.
+Hãy nạp skill này trước khi bắt đầu bất kỳ công việc animation nào.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Starting any animated component from scratch
-- Setting up tokens, spring presets, or easing values
-- Implementing `prefers-reduced-motion` support
-- Debugging hydration mismatches from animation initial states
-- Evaluating whether an animation should exist at all
+- Bắt đầu bất kỳ component có animation nào từ đầu
+- Thiết lập token, spring preset hoặc giá trị easing
+- Triển khai hỗ trợ `prefers-reduced-motion`
+- Debug hydration mismatch do trạng thái khởi tạo của animation
+- Đánh giá xem một animation có nên tồn tại hay không
 
-## Outputs
+## Đầu ra
 
-This skill produces:
+Skill này tạo ra:
 
-- A shared `motionTokens` object (duration, easing, distance, scale)
-- A shared `springs` preset map (5 named configs)
-- A `shouldAnimate()` gate used by all components
-- Accessibility-compliant animation defaults via `useReducedMotion`
-- SSR-safe initial states with zero hydration warnings
+- Một đối tượng `motionTokens` dùng chung (duration, easing, distance, scale)
+- Một bản đồ preset `springs` dùng chung (5 config có tên)
+- Một cổng `shouldAnimate()` được mọi component sử dụng
+- Mặc định animation tuân thủ accessibility qua `useReducedMotion`
+- Trạng thái khởi tạo an toàn với SSR, không có cảnh báo hydration
 
-## Principles
+## Nguyên tắc
 
-Motion must do at least one of the following or it must be removed:
+Motion phải thực hiện ít nhất một trong các việc sau, nếu không thì phải bỏ đi:
 
-- Guide attention
-- Communicate state
-- Preserve spatial continuity
+- Dẫn dắt sự chú ý
+- Truyền đạt trạng thái
+- Giữ tính liên tục về không gian
 
-Responsiveness always outranks smoothness. A 60 fps animation that causes
-input delay is worse than no animation.
+Khả năng phản hồi luôn quan trọng hơn độ mượt. Một animation 60 fps gây
+trễ đầu vào còn tệ hơn là không có animation.
 
-## Rules
+## Quy tắc
 
-These are non-negotiable. They apply to every component in the system.
+Đây là các quy tắc không thể thương lượng. Chúng áp dụng cho mọi component trong hệ thống.
 
-1. **Use `motion/react` only.** Never import from `framer-motion`. Never mix the two in the same tree.
-2. **`initial` must match server output.** If the server renders `opacity: 1`, the `initial` prop must also be `opacity: 1`. No exceptions.
-3. **Reduced motion overrides everything.** When `useReducedMotion()` returns `true` or `prefersReduced` is `true`, all transforms are disabled. Opacity-only fades at ≤ 0.2s are the only permitted fallback.
-4. **Never animate layout properties.** `width`, `height`, `top`, `left`, `margin`, `padding` are banned from `animate`. Use `transform` and `opacity` only.
-5. **All token values come from `motionTokens`.** Hardcoded durations and easings in component files are forbidden.
-6. **All spring configs come from the `springs` map.** Inline `stiffness`/`damping` values are forbidden.
-7. **`"use client"` is required** on every file that imports from `motion/react`.
-8. **Never read `window` or `navigator` at module level.** Always guard with `typeof window !== "undefined"`.
+1. **Chỉ dùng `motion/react`.** Không bao giờ import từ `framer-motion`. Không bao giờ trộn cả hai trong cùng một cây.
+2. **`initial` phải khớp với output của server.** Nếu server render `opacity: 1`, thì prop `initial` cũng phải là `opacity: 1`. Không có ngoại lệ.
+3. **Reduced motion ghi đè mọi thứ.** Khi `useReducedMotion()` trả về `true` hoặc `prefersReduced` là `true`, mọi transform đều bị vô hiệu hóa. Fade chỉ dùng opacity với thời lượng ≤ 0.2s là phương án thay thế duy nhất được phép.
+4. **Không bao giờ animate các thuộc tính layout.** `width`, `height`, `top`, `left`, `margin`, `padding` bị cấm trong `animate`. Chỉ dùng `transform` và `opacity`.
+5. **Mọi giá trị token đến từ `motionTokens`.** Cấm hardcode duration và easing trong file component.
+6. **Mọi spring config đến từ map `springs`.** Cấm giá trị `stiffness`/`damping` inline.
+7. **Bắt buộc có `"use client"`** ở mọi file import từ `motion/react`.
+8. **Không bao giờ đọc `window` hoặc `navigator` ở cấp module.** Luôn bảo vệ bằng `typeof window !== "undefined"`.
 
-## Decision Guidance
+## Hướng dẫn quyết định
 
-### Choosing a duration
+### Chọn duration
 
-| Token | Use when |
+| Token | Dùng khi |
 | --------- | -------------------------------------------- |
-| `instant` | Tooltip show/hide, focus ring, badge update |
-| `fast` | Button feedback, icon swap, chip toggle |
-| `normal` | Modal open, card expand, page element enter |
-| `slow` | Hero entrance, full-page transition |
-| `crawl` | Deliberate storytelling; use sparingly |
+| `instant` | Hiện/ẩn tooltip, focus ring, cập nhật badge |
+| `fast` | Phản hồi button, đổi icon, bật/tắt chip |
+| `normal` | Mở modal, mở rộng card, phần tử trang xuất hiện |
+| `slow` | Hero entrance, chuyển trang toàn phần |
+| `crawl` | Kể chuyện có chủ ý; dùng tiết kiệm |
 
-### Choosing a spring
+### Chọn spring
 
-| Preset | Use when |
+| Preset | Dùng khi |
 | --------- | ------------------------------------------ |
-| `snappy` | Default UI — buttons, chips, nav items |
-| `gentle` | Cards, modals, panels landing softly |
-| `bouncy` | Playful moments — empty states, onboarding |
-| `instant` | Tooltips, popovers, dropdowns |
-| `release` | Drag release — natural physics feel |
+| `snappy` | UI mặc định — button, chip, mục điều hướng |
+| `gentle` | Card, modal, panel hạ cánh nhẹ nhàng |
+| `bouncy` | Khoảnh khắc vui tươi — empty state, onboarding |
+| `instant` | Tooltip, popover, dropdown |
+| `release` | Thả drag — cảm giác vật lý tự nhiên |
 
-### When to disable animation entirely
+### Khi nào tắt hoàn toàn animation
 
-Disable (make `shouldAnimate()` return `false`) when:
+Tắt (cho `shouldAnimate()` trả về `false`) khi:
 
-- `prefersReduced` is `true`
-- `isLowEnd` is `true` and the animation is non-essential
-- The element is off-screen and will never enter the viewport
-- The animation is purely decorative with no UX purpose
+- `prefersReduced` là `true`
+- `isLowEnd` là `true` và animation không thiết yếu
+- Phần tử nằm ngoài màn hình và sẽ không bao giờ vào viewport
+- Animation thuần trang trí, không có mục đích UX
 
-## Core Concepts
+## Khái niệm cốt lõi
 
-### Token system
+### Hệ thống token
 
 ```ts
 // lib/motion-tokens.ts
@@ -130,7 +130,7 @@ export const springs = {
 }
 ```
 
-### Runtime flags
+### Runtime flag
 
 ```ts
 // lib/motion-config.ts
@@ -165,14 +165,14 @@ export const motionConfig = {
 
 ### Accessibility
 
-**Priority order (highest to lowest):**
+**Thứ tự ưu tiên (cao đến thấp):**
 
-1. `prefers-reduced-motion: reduce` — disables all transforms, limits opacity transitions to ≤ 0.2s
-2. Low-end device detection — reduces duration, removes non-essential animations
-3. Design preference — everything else
+1. `prefers-reduced-motion: reduce` — vô hiệu hóa mọi transform, giới hạn transition opacity ≤ 0.2s
+2. Phát hiện thiết bị cấu hình thấp — giảm duration, bỏ các animation không thiết yếu
+3. Ưu tiên thiết kế — mọi thứ còn lại
 
-Motion must degrade gracefully. It must never disappear abruptly in a way
-that causes layout shift or confuses orientation.
+Motion phải suy giảm một cách êm ái. Nó không bao giờ được biến mất đột ngột theo cách
+gây layout shift hoặc làm rối định hướng.
 
 ```tsx
 // hooks/use-reduced-motion.tsx
@@ -202,9 +202,9 @@ export function useSafeMotion(fullY: number = 16) {
 <div class="motion-safe:animate-fade motion-reduce:opacity-100"></div>
 ```
 
-### SSR / hydration safety
+### An toàn SSR / hydration
 
-**Rule: `initial` must always match what the server renders.**
+**Quy tắc: `initial` phải luôn khớp với những gì server render.**
 
 ```tsx
 // WRONG — server renders opacity:1 but initial says 0 → hydration mismatch
@@ -221,9 +221,9 @@ useEffect(() => setMounted(true), [])
 />
 ```
 
-## Code Examples
+## Ví dụ code
 
-### End-to-end: tokens + springs + accessibility + SSR guard
+### End-to-end: token + spring + accessibility + SSR guard
 
 ```tsx
 // components/fade-in-card.tsx
@@ -271,30 +271,30 @@ export function FadeInCard({ children, delay = 0 }: FadeInCardProps) {
 }
 ```
 
-## Constraints / Non-Goals
+## Ràng buộc / Ngoài phạm vi
 
-This skill does **not** cover:
+Skill này **không** bao gồm:
 
-- UI component patterns (button, modal, stagger) → see `motion-patterns`
-- Drag, gestures, SVG, text animations, custom hooks → see `motion-advanced`
-- CSS-only animations or Tailwind `animate-*` classes without `motion/react`
-- Third-party animation libraries (GSAP, anime.js, etc.)
-- Motion design decisions (when to animate, what to emphasize) — that is a design concern, not a code constraint
+- Các pattern component UI (button, modal, stagger) → xem `motion-patterns`
+- Drag, gesture, SVG, animation chữ, custom hook → xem `motion-advanced`
+- Animation chỉ dùng CSS hoặc class `animate-*` của Tailwind mà không có `motion/react`
+- Thư viện animation bên thứ ba (GSAP, anime.js, v.v.)
+- Quyết định thiết kế motion (khi nào animate, nhấn mạnh gì) — đó là mối quan tâm về thiết kế, không phải ràng buộc code
 
-## Anti-Patterns
+## Anti-Pattern
 
-| Anti-pattern | Rule violated | Fix |
+| Anti-pattern | Quy tắc bị vi phạm | Cách sửa |
 | --------------------------------------- | ------- | ------------------------------- |
-| `import { motion } from "framer-motion"` | Rule 1 | Use `motion/react` |
-| `initial={{ opacity: 0 }}` on SSR component | Rule 2 | Add mount guard |
-| Skipping `useReducedMotion` check | Rule 3 | Use `useSafeMotion` hook |
-| `animate={{ width: "100%" }}` | Rule 4 | Use `scaleX` transform instead |
-| `transition={{ duration: 0.4 }}` inline | Rule 5 | Use `motionTokens.duration.normal` |
-| `{ stiffness: 300, damping: 30 }` inline | Rule 6 | Use `springs.snappy` |
-| Missing `"use client"` directive | Rule 7 | Add to top of file |
-| `navigator.hardwareConcurrency` at module level | Rule 8 | Wrap in `typeof navigator !== "undefined"` |
+| `import { motion } from "framer-motion"` | Quy tắc 1 | Dùng `motion/react` |
+| `initial={{ opacity: 0 }}` trên component SSR | Quy tắc 2 | Thêm mount guard |
+| Bỏ qua kiểm tra `useReducedMotion` | Quy tắc 3 | Dùng hook `useSafeMotion` |
+| `animate={{ width: "100%" }}` | Quy tắc 4 | Dùng transform `scaleX` thay thế |
+| `transition={{ duration: 0.4 }}` inline | Quy tắc 5 | Dùng `motionTokens.duration.normal` |
+| `{ stiffness: 300, damping: 30 }` inline | Quy tắc 6 | Dùng `springs.snappy` |
+| Thiếu directive `"use client"` | Quy tắc 7 | Thêm vào đầu file |
+| `navigator.hardwareConcurrency` ở cấp module | Quy tắc 8 | Bọc trong `typeof navigator !== "undefined"` |
 
-## Related Skills
+## Skill liên quan
 
-- **`motion-patterns`** — consumes tokens and springs defined here to build button, modal, stagger, page transition, and scroll patterns. Does not redefine any values.
-- **`motion-advanced`** — consumes tokens and springs defined here for drag, SVG, text, and gesture patterns. Adds `useAnimate` sequences and custom hooks on top of this foundation.
+- **`motion-patterns`** — dùng các token và spring định nghĩa ở đây để xây dựng các pattern button, modal, stagger, page transition và scroll. Không định nghĩa lại bất kỳ giá trị nào.
+- **`motion-advanced`** — dùng các token và spring định nghĩa ở đây cho các pattern drag, SVG, chữ và gesture. Bổ sung các chuỗi `useAnimate` và custom hook lên trên nền tảng này.

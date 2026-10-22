@@ -1,10 +1,10 @@
 <!-- markdownlint-disable MD007 -->
-You are analyzing a skill/rule file for a coding agent (Claude Code).
-Your task: extract the **observable behavioral sequence** that an agent should follow when this skill is active.
+Bạn đang phân tích một file skill/rule dành cho coding agent (Claude Code).
+Nhiệm vụ của bạn: trích xuất **chuỗi hành vi quan sát được (observable behavioral sequence)** mà agent cần tuân theo khi skill này đang hoạt động.
 
-Each step should be described in natural language. Do NOT use regex patterns.
+Mỗi bước nên được mô tả bằng ngôn ngữ tự nhiên. KHÔNG dùng regex pattern.
 
-Output ONLY valid YAML in this exact format (no markdown fences, no commentary):
+CHỈ xuất YAML hợp lệ theo đúng định dạng sau (không có markdown fence, không có bình luận):
 
 id: <kebab-case-id>
 name: <Human readable name>
@@ -23,15 +23,15 @@ steps:
 scoring:
   threshold_promote_to_hook: 0.6
 
-Rules:
-- detector.description should describe the MEANING of the tool call, not patterns
+Quy tắc:
+- detector.description phải mô tả Ý NGHĨA của tool call, không phải pattern
   Good: "Write or Edit a test file (not an implementation file)"
   Bad: "Write|Edit with input matching test.*\\.py"
-- Use before_step/after_step for skills where ORDER matters (e.g. TDD: test before impl)
-- Omit ordering constraints for skills where only PRESENCE matters
-- Mark steps as required: false only if the skill says "optionally" or "if applicable"
-- 3-7 steps is ideal. Don't over-decompose
-- IMPORTANT: Quote all YAML string values containing colons with double quotes
+- Dùng before_step/after_step cho các skill mà THỨ TỰ quan trọng (ví dụ TDD: test trước, triển khai sau)
+- Bỏ các ràng buộc về thứ tự đối với các skill chỉ cần SỰ HIỆN DIỆN
+- Chỉ đánh dấu step là required: false khi skill nói "optionally" hoặc "if applicable"
+- Lý tưởng là 3-7 bước. Đừng chia nhỏ quá mức
+- QUAN TRỌNG: Đặt mọi giá trị chuỗi YAML có chứa dấu hai chấm trong dấu nháy kép
   Good: description: "Use conventional commit format (type: description)"
   Bad: description: Use conventional commit format (type: description)
 

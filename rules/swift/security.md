@@ -3,15 +3,15 @@ paths:
   - "**/*.swift"
   - "**/Package.swift"
 ---
-# Swift Security
+# Bảo mật Swift
 
-> This file extends [common/security.md](../common/security.md) with Swift specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung riêng cho Swift.
 
-## Secret Management
+## Quản lý secret
 
-- Use **Keychain Services** for sensitive data (tokens, passwords, keys) — never `UserDefaults`
-- Use environment variables or `.xcconfig` files for build-time secrets
-- Never hardcode secrets in source — decompilation tools extract them trivially
+- Dùng **Keychain Services** cho dữ liệu nhạy cảm (token, mật khẩu, key) — không bao giờ dùng `UserDefaults`
+- Dùng biến môi trường hoặc file `.xcconfig` cho secret lúc build
+- Không bao giờ hardcode secret trong source — công cụ decompile trích xuất chúng rất dễ dàng
 
 ```swift
 let apiKey = ProcessInfo.processInfo.environment["API_KEY"]
@@ -20,14 +20,14 @@ guard let apiKey, !apiKey.isEmpty else {
 }
 ```
 
-## Transport Security
+## Bảo mật đường truyền
 
-- App Transport Security (ATS) is enforced by default — do not disable it
-- Use certificate pinning for critical endpoints
-- Validate all server certificates
+- App Transport Security (ATS) được thực thi theo mặc định — không tắt nó
+- Dùng certificate pinning cho các endpoint quan trọng
+- Validate mọi chứng chỉ (certificate) của server
 
-## Input Validation
+## Kiểm tra đầu vào (Input Validation)
 
-- Sanitize all user input before display to prevent injection
-- Use `URL(string:)` with validation rather than force-unwrapping
-- Validate data from external sources (APIs, deep links, pasteboard) before processing
+- Sanitize mọi đầu vào của người dùng trước khi hiển thị để ngăn injection
+- Dùng `URL(string:)` kèm validate thay vì force-unwrap
+- Validate dữ liệu từ nguồn bên ngoài (API, deep link, pasteboard) trước khi xử lý

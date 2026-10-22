@@ -1,68 +1,68 @@
 ---
-description: Safely identify and remove dead code with verification after each change.
+description: Xác định và xóa dead code một cách an toàn, có kiểm chứng sau mỗi thay đổi.
 ---
 
 # Refactor Clean
 
-Safely identify and remove dead code with test verification at every step.
+Xác định và xóa dead code một cách an toàn, với việc kiểm chứng bằng test ở mỗi bước.
 
-## Step 1: Detect Dead Code
+## Bước 1: Phát hiện Dead Code
 
-Run analysis tools based on project type:
+Chạy các công cụ phân tích tùy theo loại project:
 
-| Tool | What It Finds | Command |
+| Công cụ | Tìm thấy gì | Lệnh |
 |------|--------------|---------|
-| knip | Unused exports, files, dependencies | `npx knip` |
-| depcheck | Unused npm dependencies | `npx depcheck` |
-| ts-prune | Unused TypeScript exports | `npx ts-prune` |
-| vulture | Unused Python code | `vulture src/` |
-| deadcode | Unused Go code | `deadcode ./...` |
-| cargo-udeps | Unused Rust dependencies | `cargo +nightly udeps` |
+| knip | Export, file, dependency không dùng | `npx knip` |
+| depcheck | Dependency npm không dùng | `npx depcheck` |
+| ts-prune | Export TypeScript không dùng | `npx ts-prune` |
+| vulture | Code Python không dùng | `vulture src/` |
+| deadcode | Code Go không dùng | `deadcode ./...` |
+| cargo-udeps | Dependency Rust không dùng | `cargo +nightly udeps` |
 
-If no tool is available, use Grep to find exports with zero imports:
+Nếu không có công cụ nào, hãy dùng Grep để tìm các export không có import nào:
 ```
 # Find exports, then check if they're imported anywhere
 ```
 
-## Step 2: Categorize Findings
+## Bước 2: Phân loại các phát hiện
 
-Sort findings into safety tiers:
+Sắp xếp các phát hiện theo các tầng an toàn:
 
-| Tier | Examples | Action |
+| Tầng | Ví dụ | Hành động |
 |------|----------|--------|
-| **SAFE** | Unused utilities, test helpers, internal functions | Delete with confidence |
-| **CAUTION** | Components, API routes, middleware | Verify no dynamic imports or external consumers |
-| **DANGER** | Config files, entry points, type definitions | Investigate before touching |
+| **SAFE** | Utility không dùng, test helper, function nội bộ | Xóa một cách tự tin |
+| **CAUTION** | Component, API route, middleware | Xác minh không có dynamic import hoặc consumer bên ngoài |
+| **DANGER** | File config, entry point, định nghĩa type | Điều tra trước khi đụng vào |
 
-## Step 3: Safe Deletion Loop
+## Bước 3: Vòng lặp xóa an toàn
 
-For each SAFE item:
+Với mỗi mục SAFE:
 
-1. **Run full test suite** — Establish baseline (all green)
-2. **Delete the dead code** — Use Edit tool for surgical removal
-3. **Re-run test suite** — Verify nothing broke
-4. **If tests fail** — Immediately revert with `git checkout -- <file>` and skip this item
-5. **If tests pass** — Move to next item
+1. **Chạy toàn bộ test suite** — Thiết lập baseline (tất cả xanh)
+2. **Xóa dead code** — Dùng tool Edit để xóa chính xác
+3. **Chạy lại test suite** — Xác minh không có gì hỏng
+4. **Nếu test thất bại** — Revert ngay bằng `git checkout -- <file>` và bỏ qua mục này
+5. **Nếu test pass** — Chuyển sang mục tiếp theo
 
-## Step 4: Handle CAUTION Items
+## Bước 4: Xử lý các mục CAUTION
 
-Before deleting CAUTION items:
-- Search for dynamic imports: `import()`, `require()`, `__import__`
-- Search for string references: route names, component names in configs
-- Check if exported from a public package API
-- Verify no external consumers (check dependents if published)
+Trước khi xóa các mục CAUTION:
+- Tìm dynamic import: `import()`, `require()`, `__import__`
+- Tìm các tham chiếu dạng chuỗi: tên route, tên component trong config
+- Kiểm tra xem có được export từ API của package public không
+- Xác minh không có consumer bên ngoài (kiểm tra dependents nếu đã publish)
 
-## Step 5: Consolidate Duplicates
+## Bước 5: Hợp nhất phần trùng lặp
 
-After removing dead code, look for:
-- Near-duplicate functions (>80% similar) — merge into one
-- Redundant type definitions — consolidate
-- Wrapper functions that add no value — inline them
-- Re-exports that serve no purpose — remove indirection
+Sau khi xóa dead code, hãy tìm:
+- Các function gần như trùng (>80% giống nhau) — gộp thành một
+- Định nghĩa type dư thừa — hợp nhất
+- Wrapper function không đem lại giá trị — inline chúng
+- Re-export không có mục đích — loại bỏ lớp gián tiếp
 
-## Step 6: Summary
+## Bước 6: Tóm tắt
 
-Report results:
+Báo cáo kết quả:
 
 ```
 Dead Code Cleanup
@@ -76,9 +76,9 @@ Saved:     ~450 lines removed
 All tests passing PASS:
 ```
 
-## Rules
+## Quy tắc
 
-- **Never delete without running tests first**
-- **One deletion at a time** — Atomic changes make rollback easy
-- **Skip if uncertain** — Better to keep dead code than break production
-- **Don't refactor while cleaning** — Separate concerns (clean first, refactor later)
+- **KHÔNG BAO GIỜ xóa mà chưa chạy test trước**
+- **Mỗi lần xóa một mục** — Thay đổi nguyên tử giúp rollback dễ dàng
+- **Bỏ qua nếu không chắc chắn** — Giữ dead code còn hơn làm hỏng production
+- **Không refactor trong khi dọn dẹp** — Tách biệt các mối quan tâm (dọn trước, refactor sau)

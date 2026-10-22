@@ -5,13 +5,13 @@ paths:
   - "**/*.service.ts"
   - "**/*.interceptor.ts"
 ---
-# Angular Security
+# Bảo mật Angular
 
-> This file extends [common/security.md](../common/security.md) with Angular specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho Angular.
 
-## XSS Prevention
+## Phòng chống XSS
 
-Angular auto-sanitizes bound values. Never bypass the sanitizer on user-controlled input.
+Angular tự động sanitize các giá trị được bind. KHÔNG BAO GIỜ bỏ qua sanitizer đối với input do người dùng kiểm soát.
 
 ```typescript
 // WRONG: Bypasses sanitization — XSS risk
@@ -21,14 +21,14 @@ this.safeHtml = this.sanitizer.bypassSecurityTrustHtml(userInput);
 this.safeHtml = this.sanitizer.sanitize(SecurityContext.HTML, userInput);
 ```
 
-- Never use `bypassSecurityTrust*` methods without a documented, reviewed reason
-- Avoid `[innerHTML]` with untrusted content — use `innerText` or a sanitizing pipe
-- Never bind `[href]` to user input — Angular does not block `javascript:` URLs in all contexts
-- Never construct template strings from user data
+- KHÔNG BAO GIỜ dùng các method `bypassSecurityTrust*` khi không có lý do được ghi lại và đã qua review
+- Tránh `[innerHTML]` với nội dung không đáng tin — dùng `innerText` hoặc một sanitizing pipe
+- KHÔNG BAO GIỜ bind `[href]` vào input của người dùng — Angular không chặn URL `javascript:` trong mọi ngữ cảnh
+- KHÔNG BAO GIỜ dựng template string từ dữ liệu người dùng
 
-## HTTP Security
+## Bảo mật HTTP
 
-Use `HttpClient` exclusively — never raw `fetch()` or `XHR` unless no alternative exists.
+Chỉ dùng `HttpClient` — không dùng `fetch()` hay `XHR` thuần trừ khi không còn lựa chọn nào khác.
 
 ```typescript
 // WRONG: Bypasses interceptors (auth headers, error handling, logging)
@@ -38,11 +38,11 @@ const res = await fetch('/api/users');
 users$ = this.http.get<User[]>('/api/users');
 ```
 
-- Attach auth tokens via interceptors — never hardcode in individual service calls
-- Type and validate API responses — treat external data as `unknown` at the boundary
-- Never log HTTP responses that may contain tokens, PII, or credentials
+- Gắn token xác thực qua interceptor — KHÔNG BAO GIỜ hardcode trong từng lời gọi service
+- Định kiểu và validate response của API — coi dữ liệu bên ngoài là `unknown` tại ranh giới
+- KHÔNG BAO GIỜ log các HTTP response có thể chứa token, PII hoặc credential
 
-## Secret Management
+## Quản lý Secret
 
 ```typescript
 // WRONG: Hardcoded secret in source
@@ -53,12 +53,12 @@ import { environment } from '../environments/environment';
 const apiKey = environment.apiKey;
 ```
 
-- Treat `environment.ts` as a config shape — never store real secrets in source-controlled environment files
-- Inject production secrets via CI/CD (environment variables, secret managers)
+- Coi `environment.ts` như một khuôn cấu hình — KHÔNG BAO GIỜ lưu secret thật trong các file environment được đưa vào source control
+- Inject secret production qua CI/CD (biến môi trường, secret manager)
 
-## Route Guards
+## Route Guard
 
-Every authenticated or role-restricted route must have a guard. Never rely on hiding UI elements alone.
+Mọi route cần xác thực hoặc giới hạn theo vai trò PHẢI có guard. KHÔNG BAO GIỜ chỉ dựa vào việc ẩn phần tử UI.
 
 ```typescript
 {
@@ -68,20 +68,20 @@ Every authenticated or role-restricted route must have a guard. Never rely on hi
 }
 ```
 
-Use `canMatch` for sensitive routes — it prevents the route module from loading at all for unauthorized users.
+Dùng `canMatch` cho các route nhạy cảm — nó ngăn module của route được tải hoàn toàn đối với người dùng không có quyền.
 
-## SSR Security
+## Bảo mật SSR
 
-When using Angular SSR:
+Khi dùng Angular SSR:
 
-- Never expose server-side environment variables to the client via `TransferState` unless they are intentionally public
-- Sanitize all inputs before server-side rendering — DOM-based XSS can occur server-side too
-- Avoid `window`, `document`, `localStorage` on the server — gate with `isPlatformBrowser` or inject via `DOCUMENT` token
+- KHÔNG BAO GIỜ để lộ biến môi trường phía server ra client qua `TransferState` trừ khi chúng được chủ ý công khai
+- Sanitize mọi input trước khi render phía server — DOM-based XSS cũng có thể xảy ra ở phía server
+- Tránh `window`, `document`, `localStorage` trên server — chặn bằng `isPlatformBrowser` hoặc inject qua token `DOCUMENT`
 
 ## Content Security Policy
 
-Configure CSP headers server-side. Avoid `unsafe-inline` in `script-src`. When using SSR with inline scripts, use nonces via Angular's CSP support.
+Cấu hình CSP header ở phía server. Tránh `unsafe-inline` trong `script-src`. Khi dùng SSR với inline script, dùng nonce thông qua hỗ trợ CSP của Angular.
 
-## Agent Support
+## Hỗ trợ từ Agent
 
-- Use **security-reviewer** skill for comprehensive security audits
+- Dùng skill **security-reviewer** cho các cuộc kiểm toán bảo mật toàn diện

@@ -1,45 +1,45 @@
 ---
 name: continuous-learning
-description: "[DEPRECATED - use continuous-learning-v2] Legacy v1 stop-hook skill extractor. v2 is a strict superset with instinct-based, project-scoped, hook-reliable learning. Do not invoke v1: when continuous learning, session learning, or pattern extraction is requested, route to continuous-learning-v2 instead."
+description: "[DEPRECATED - dùng continuous-learning-v2] Bộ trích xuất skill v1 kiểu legacy dùng stop-hook. v2 là tập cha hoàn toàn (strict superset) với việc học dựa trên instinct, theo phạm vi dự án, đáng tin cậy nhờ hook. KHÔNG gọi v1: khi có yêu cầu continuous learning, session learning hoặc pattern extraction, hãy định tuyến sang continuous-learning-v2 thay thế."
 metadata:
   origin: ECC
 ---
 
-# Continuous Learning Skill - DEPRECATED
+# Skill Continuous Learning - DEPRECATED
 
-> **DEPRECATED 2026-04-28.** Use `continuous-learning-v2` instead. v2 is a strict superset: stop-hook observation becomes PreToolUse/PostToolUse observation, full skills become atomic instincts with confidence scoring, and global-only storage becomes project-scoped plus global promotion.
+> **DEPRECATED 2026-04-28.** Hãy dùng `continuous-learning-v2` thay thế. v2 là tập cha hoàn toàn: quan sát bằng stop-hook trở thành quan sát bằng PreToolUse/PostToolUse, skill đầy đủ trở thành các instinct nguyên tử kèm chấm điểm confidence, và lưu trữ chỉ toàn cục trở thành theo phạm vi dự án cộng với nâng cấp lên global.
 >
-> This file is kept for archival reference and backward compatibility with existing installs.
+> File này được giữ lại để tham khảo lưu trữ và để tương thích ngược với các bản cài hiện có.
 
 ---
 
-## Original v1 Documentation (archival)
+## Tài liệu v1 gốc (lưu trữ)
 
-Automatically evaluates Claude Code sessions on end to extract reusable patterns that can be saved as learned skills.
+Tự động đánh giá các session Claude Code khi kết thúc để trích xuất các pattern tái sử dụng được và có thể lưu thành learned skill.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Setting up automatic pattern extraction from Claude Code sessions
-- Configuring the Stop hook for session evaluation
-- Reviewing or curating learned skills in `~/.claude/skills/learned/`
-- Adjusting extraction thresholds or pattern categories
-- Comparing v1 (this) vs v2 (instinct-based) approaches
+- Thiết lập trích xuất pattern tự động từ các session Claude Code
+- Cấu hình Stop hook để đánh giá session
+- Review hoặc tuyển chọn các learned skill trong `~/.claude/skills/learned/`
+- Điều chỉnh ngưỡng trích xuất hoặc các danh mục pattern
+- So sánh cách tiếp cận v1 (này) với v2 (dựa trên instinct)
 
-## Status
+## Trạng thái
 
-This v1 skill is still supported, but `continuous-learning-v2` is the preferred path for new installs. Keep v1 when you explicitly want the simpler Stop-hook extraction flow or need compatibility with older learned-skill workflows.
+Skill v1 này vẫn được hỗ trợ, nhưng `continuous-learning-v2` là đường đi ưu tiên cho các bản cài mới. Hãy giữ v1 khi bạn muốn rõ ràng dùng luồng trích xuất Stop-hook đơn giản hơn hoặc cần tương thích với các workflow learned-skill cũ.
 
-## How It Works
+## Cách hoạt động
 
-This skill runs as a **Stop hook** at the end of each session:
+Skill này chạy dưới dạng **Stop hook** ở cuối mỗi session:
 
-1. **Session Evaluation**: Checks if session has enough messages (default: 10+)
-2. **Pattern Detection**: Identifies extractable patterns from the session
-3. **Skill Extraction**: Saves useful patterns to `~/.claude/skills/learned/`
+1. **Đánh giá session**: Kiểm tra xem session có đủ số tin nhắn không (mặc định: 10+)
+2. **Phát hiện pattern**: Xác định các pattern có thể trích xuất từ session
+3. **Trích xuất skill**: Lưu các pattern hữu ích vào `~/.claude/skills/learned/`
 
-## Configuration
+## Cấu hình
 
-Edit `config.json` to customize:
+Chỉnh sửa `config.json` để tùy chỉnh:
 
 ```json
 {
@@ -62,19 +62,19 @@ Edit `config.json` to customize:
 }
 ```
 
-## Pattern Types
+## Các loại Pattern
 
-| Pattern | Description |
+| Pattern | Mô tả |
 |---------|-------------|
-| `error_resolution` | How specific errors were resolved |
-| `user_corrections` | Patterns from user corrections |
-| `workarounds` | Solutions to framework/library quirks |
-| `debugging_techniques` | Effective debugging approaches |
-| `project_specific` | Project-specific conventions |
+| `error_resolution` | Cách các lỗi cụ thể đã được giải quyết |
+| `user_corrections` | Pattern từ các lần người dùng sửa lại |
+| `workarounds` | Giải pháp cho các điểm kỳ quặc của framework/thư viện |
+| `debugging_techniques` | Các cách debug hiệu quả |
+| `project_specific` | Convention riêng của dự án |
 
-## Hook Setup
+## Thiết lập Hook
 
-Add to your `~/.claude/settings.json`:
+Thêm vào `~/.claude/settings.json` của bạn:
 
 ```json
 {
@@ -90,43 +90,43 @@ Add to your `~/.claude/settings.json`:
 }
 ```
 
-## Why Stop Hook?
+## Tại sao dùng Stop Hook?
 
-- **Lightweight**: Runs once at session end
-- **Non-blocking**: Doesn't add latency to every message
-- **Complete context**: Has access to full session transcript
+- **Nhẹ**: Chạy một lần ở cuối session
+- **Không chặn**: Không thêm độ trễ cho mỗi tin nhắn
+- **Context đầy đủ**: Có quyền truy cập toàn bộ transcript của session
 
-## Related
+## Liên quan
 
-- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Section on continuous learning
-- `/learn` command - Manual pattern extraction mid-session
+- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Phần về continuous learning
+- Lệnh `/learn` - Trích xuất pattern thủ công giữa chừng session
 
 ---
 
-## Comparison Notes (Research: Jan 2025)
+## Ghi chú so sánh (Nghiên cứu: Jan 2025)
 
-### vs Homunculus
+### So với Homunculus
 
-Homunculus v2 takes a more sophisticated approach:
+Homunculus v2 có cách tiếp cận tinh vi hơn:
 
-| Feature | Our Approach | Homunculus v2 |
+| Tính năng | Cách tiếp cận của chúng ta | Homunculus v2 |
 |---------|--------------|---------------|
-| Observation | Stop hook (end of session) | PreToolUse/PostToolUse hooks (100% reliable) |
-| Analysis | Main context | Background agent (Haiku) |
-| Granularity | Full skills | Atomic "instincts" |
-| Confidence | None | 0.3-0.9 weighted |
-| Evolution | Direct to skill | Instincts → cluster → skill/command/agent |
-| Sharing | None | Export/import instincts |
+| Quan sát | Stop hook (cuối session) | PreToolUse/PostToolUse hook (đáng tin cậy 100%) |
+| Phân tích | Context chính | Agent chạy nền (Haiku) |
+| Độ chi tiết | Skill đầy đủ | "Instinct" nguyên tử |
+| Confidence | Không có | 0.3-0.9 có trọng số |
+| Tiến hóa | Trực tiếp thành skill | Instinct → cluster → skill/command/agent |
+| Chia sẻ | Không có | Export/import instinct |
 
-**Key insight from homunculus:**
+**Nhận định then chốt từ homunculus:**
 > "v1 relied on skills to observe. Skills are probabilistic—they fire ~50-80% of the time. v2 uses hooks for observation (100% reliable) and instincts as the atomic unit of learned behavior."
 
-### Potential v2 Enhancements
+### Các cải tiến v2 tiềm năng
 
-1. **Instinct-based learning** - Smaller, atomic behaviors with confidence scoring
-2. **Background observer** - Haiku agent analyzing in parallel
-3. **Confidence decay** - Instincts lose confidence if contradicted
-4. **Domain tagging** - code-style, testing, git, debugging, etc.
-5. **Evolution path** - Cluster related instincts into skills/commands
+1. **Học dựa trên instinct** - Các hành vi nhỏ hơn, nguyên tử, kèm chấm điểm confidence
+2. **Observer chạy nền** - Agent Haiku phân tích song song
+3. **Confidence suy giảm** - Instinct mất confidence nếu bị mâu thuẫn
+4. **Gắn tag domain** - code-style, testing, git, debugging, v.v.
+5. **Lộ trình tiến hóa** - Gom nhóm các instinct liên quan thành skill/command
 
-See: `docs/continuous-learning-v2-spec.md` for full spec.
+Xem: `docs/continuous-learning-v2-spec.md` để biết đặc tả đầy đủ.

@@ -1,39 +1,39 @@
 ---
 name: projects
-description: List known projects and their instinct statistics
+description: Liệt kê các project đã biết và thống kê instinct của từng project
 command: true
 ---
 
-# Projects Command
+# Lệnh Projects
 
-List project registry entries and per-project instinct/observation counts for continuous-learning-v2.
+Liệt kê các mục trong registry project cùng số lượng instinct/observation của từng project cho continuous-learning-v2.
 
-## Implementation
+## Triển khai
 
-Run the instinct CLI using the plugin root path:
+Chạy instinct CLI bằng đường dẫn plugin root:
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" projects
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
+Hoặc nếu `CLAUDE_PLUGIN_ROOT` chưa được đặt (cài đặt thủ công):
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py projects
 ```
 
-## Usage
+## Cách dùng
 
 ```bash
 /projects
 ```
 
-## What to Do
+## Cần làm gì
 
-1. Read `~/.claude/homunculus/projects.json`
-2. For each project, display:
-   - Project name, id, root, remote
-   - Personal and inherited instinct counts
-   - Observation event count
-   - Last seen timestamp
-3. Also display global instinct totals
+1. Đọc `~/.claude/homunculus/projects.json`
+2. Với mỗi project, hiển thị:
+   - Tên project, id, root, remote
+   - Số lượng instinct cá nhân (personal) và kế thừa (inherited)
+   - Số lượng sự kiện observation
+   - Mốc thời gian lần cuối thấy (last seen)
+3. Hiển thị thêm tổng số instinct global

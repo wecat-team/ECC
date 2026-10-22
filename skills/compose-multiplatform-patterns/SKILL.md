@@ -1,27 +1,27 @@
 ---
 name: compose-multiplatform-patterns
-description: Compose Multiplatform and Jetpack Compose patterns for KMP projects — state management, navigation, theming, performance, and platform-specific UI. Use when building Compose or Jetpack Compose UI, state, navigation, or theming in a KMP project.
+description: Các pattern Compose Multiplatform và Jetpack Compose cho dự án KMP — quản lý state, navigation, theming, hiệu năng và UI đặc thù theo nền tảng. Dùng khi xây dựng UI, state, navigation hoặc theming với Compose hoặc Jetpack Compose trong một dự án KMP.
 metadata:
   origin: ECC
 ---
 
-# Compose Multiplatform Patterns
+# Các pattern Compose Multiplatform
 
-Patterns for building shared UI across Android, iOS, Desktop, and Web using Compose Multiplatform and Jetpack Compose. Covers state management, navigation, theming, and performance.
+Các pattern để xây dựng UI dùng chung trên Android, iOS, Desktop và Web bằng Compose Multiplatform và Jetpack Compose. Bao gồm quản lý state, navigation, theming và hiệu năng.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Building Compose UI (Jetpack Compose or Compose Multiplatform)
-- Managing UI state with ViewModels and Compose state
-- Implementing navigation in KMP or Android projects
-- Designing reusable composables and design systems
-- Optimizing recomposition and rendering performance
+- Xây dựng Compose UI (Jetpack Compose hoặc Compose Multiplatform)
+- Quản lý UI state bằng ViewModel và Compose state
+- Triển khai navigation trong dự án KMP hoặc Android
+- Thiết kế composable tái sử dụng được và design system
+- Tối ưu recomposition và hiệu năng rendering
 
-## State Management
+## Quản lý State
 
-### ViewModel + Single State Object
+### ViewModel + một State Object duy nhất
 
-Use a single data class for screen state. Expose it as `StateFlow` and collect in Compose:
+Dùng một data class duy nhất cho state của màn hình. Expose nó dưới dạng `StateFlow` và collect trong Compose:
 
 ```kotlin
 data class ItemListState(
@@ -54,7 +54,7 @@ class ItemListViewModel(
 }
 ```
 
-### Collecting State in Compose
+### Collect State trong Compose
 
 ```kotlin
 @Composable
@@ -76,9 +76,9 @@ private fun ItemListContent(
 }
 ```
 
-### Event Sink Pattern
+### Pattern Event Sink
 
-For complex screens, use a sealed interface for events instead of multiple callback lambdas:
+Với các màn hình phức tạp, dùng một sealed interface cho event thay vì nhiều lambda callback:
 
 ```kotlin
 sealed interface ItemListEvent {
@@ -105,9 +105,9 @@ ItemListContent(
 
 ## Navigation
 
-### Type-Safe Navigation (Compose Navigation 2.8+)
+### Navigation an toàn kiểu (Compose Navigation 2.8+)
 
-Define routes as `@Serializable` objects:
+Định nghĩa route dưới dạng object `@Serializable`:
 
 ```kotlin
 @Serializable data object HomeRoute
@@ -129,9 +129,9 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
 }
 ```
 
-### Dialog and Bottom Sheet Navigation
+### Navigation cho Dialog và Bottom Sheet
 
-Use `dialog()` and overlay patterns instead of imperative show/hide:
+Dùng `dialog()` và các pattern overlay thay vì show/hide theo kiểu imperative:
 
 ```kotlin
 NavHost(navController, startDestination = HomeRoute) {
@@ -147,11 +147,11 @@ NavHost(navController, startDestination = HomeRoute) {
 }
 ```
 
-## Composable Design
+## Thiết kế Composable
 
-### Slot-Based APIs
+### API dựa trên Slot
 
-Design composables with slot parameters for flexibility:
+Thiết kế composable với các tham số slot để linh hoạt:
 
 ```kotlin
 @Composable
@@ -171,9 +171,9 @@ fun AppCard(
 }
 ```
 
-### Modifier Ordering
+### Thứ tự Modifier
 
-Modifier order matters — apply in this sequence:
+Thứ tự modifier quan trọng — áp dụng theo trình tự sau:
 
 ```kotlin
 Text(
@@ -186,9 +186,9 @@ Text(
 )
 ```
 
-## KMP Platform-Specific UI
+## UI đặc thù nền tảng trong KMP
 
-### expect/actual for Platform Composables
+### expect/actual cho Platform Composable
 
 ```kotlin
 // commonMain
@@ -209,11 +209,11 @@ actual fun PlatformStatusBar(darkIcons: Boolean) {
 }
 ```
 
-## Performance
+## Hiệu năng
 
-### Stable Types for Skippable Recomposition
+### Stable Type cho Recomposition có thể bỏ qua (Skippable)
 
-Mark classes as `@Stable` or `@Immutable` when all properties are stable:
+Đánh dấu class là `@Stable` hoặc `@Immutable` khi mọi property đều stable:
 
 ```kotlin
 @Immutable
@@ -225,7 +225,7 @@ data class ItemUiModel(
 )
 ```
 
-### Use `key()` and Lazy Lists Correctly
+### Dùng `key()` và Lazy List đúng cách
 
 ```kotlin
 LazyColumn {
@@ -238,7 +238,7 @@ LazyColumn {
 }
 ```
 
-### Defer Reads with `derivedStateOf`
+### Trì hoãn việc đọc với `derivedStateOf`
 
 ```kotlin
 val listState = rememberLazyListState()
@@ -247,7 +247,7 @@ val showScrollToTop by remember {
 }
 ```
 
-### Avoid Allocations in Recomposition
+### Tránh cấp phát (Allocation) trong Recomposition
 
 ```kotlin
 // BAD — new lambda and list every recomposition
@@ -264,7 +264,7 @@ activeItems.forEach { item ->
 
 ## Theming
 
-### Material 3 Dynamic Theming
+### Dynamic Theming của Material 3
 
 ```kotlin
 @Composable
@@ -286,15 +286,15 @@ fun AppTheme(
 }
 ```
 
-## Anti-Patterns to Avoid
+## Anti-Pattern cần tránh
 
-- Using `mutableStateOf` in ViewModels when `MutableStateFlow` with `collectAsStateWithLifecycle` is safer for lifecycle
-- Passing `NavController` deep into composables — pass lambda callbacks instead
-- Heavy computation inside `@Composable` functions — move to ViewModel or `remember {}`
-- Using `LaunchedEffect(Unit)` as a substitute for ViewModel init — it re-runs on configuration change in some setups
-- Creating new object instances in composable parameters — causes unnecessary recomposition
+- Dùng `mutableStateOf` trong ViewModel khi `MutableStateFlow` với `collectAsStateWithLifecycle` an toàn hơn về lifecycle
+- Truyền `NavController` sâu vào các composable — hãy truyền lambda callback thay thế
+- Tính toán nặng bên trong hàm `@Composable` — chuyển sang ViewModel hoặc `remember {}`
+- Dùng `LaunchedEffect(Unit)` thay cho init của ViewModel — nó chạy lại khi thay đổi configuration trong một số thiết lập
+- Tạo instance object mới trong tham số composable — gây recomposition không cần thiết
 
-## References
+## Tham khảo
 
-See skill: `android-clean-architecture` for module structure and layering.
-See skill: `kotlin-coroutines-flows` for coroutine and Flow patterns.
+Xem skill: `android-clean-architecture` cho cấu trúc module và phân lớp.
+Xem skill: `kotlin-coroutines-flows` cho các pattern coroutine và Flow.

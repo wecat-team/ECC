@@ -1,27 +1,27 @@
 ---
 name: frontend-patterns
-description: Frontend development patterns for React, Next.js, state management, performance optimization, and UI best practices. Use when building or reviewing React or Next.js components, state, or render performance.
+description: Pattern phát triển frontend cho React, Next.js, state management, tối ưu hiệu năng và best practice cho UI. Dùng khi xây dựng hoặc review component React hoặc Next.js, state hoặc hiệu năng render.
 metadata:
   origin: ECC
 ---
 
-# Frontend Development Patterns
+# Pattern phát triển Frontend
 
-Modern frontend patterns for React, Next.js, and performant user interfaces.
+Các pattern frontend hiện đại cho React, Next.js và giao diện người dùng hiệu năng cao.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Building React components (composition, props, rendering)
-- Managing state (useState, useReducer, Zustand, Context)
-- Implementing data fetching (SWR, React Query, server components)
-- Optimizing performance (memoization, virtualization, code splitting)
-- Working with forms (validation, controlled inputs, Zod schemas)
-- Handling client-side routing and navigation
-- Building accessible, responsive UI patterns
+- Xây dựng component React (composition, props, rendering)
+- Quản lý state (useState, useReducer, Zustand, Context)
+- Triển khai data fetching (SWR, React Query, server component)
+- Tối ưu hiệu năng (memoization, virtualization, code splitting)
+- Làm việc với form (validation, controlled input, schema Zod)
+- Xử lý routing và điều hướng phía client
+- Xây dựng các pattern UI accessible, responsive
 
-## Component Patterns
+## Pattern cho Component
 
-### Composition Over Inheritance
+### Composition thay vì Inheritance
 
 ```typescript
 // PASS: GOOD: Component composition
@@ -42,14 +42,14 @@ export function CardBody({ children }: { children: React.ReactNode }) {
   return <div className="card-body">{children}</div>
 }
 
-// Usage
+// Cách dùng
 <Card>
   <CardHeader>Title</CardHeader>
   <CardBody>Content</CardBody>
 </Card>
 ```
 
-### Compound Components
+### Compound Component
 
 ```typescript
 interface TabsContextValue {
@@ -90,7 +90,7 @@ export function Tab({ id, children }: { id: string, children: React.ReactNode })
   )
 }
 
-// Usage
+// Cách dùng
 <Tabs defaultTab="overview">
   <TabList>
     <Tab id="overview">Overview</Tab>
@@ -99,7 +99,7 @@ export function Tab({ id, children }: { id: string, children: React.ReactNode })
 </Tabs>
 ```
 
-### Render Props Pattern
+### Pattern Render Props
 
 ```typescript
 interface DataLoaderProps<T> {
@@ -123,7 +123,7 @@ export function DataLoader<T>({ url, children }: DataLoaderProps<T>) {
   return <>{children(data, loading, error)}</>
 }
 
-// Usage
+// Cách dùng
 <DataLoader<Market[]> url="/api/markets">
   {(markets, loading, error) => {
     if (loading) return <Spinner />
@@ -133,9 +133,9 @@ export function DataLoader<T>({ url, children }: DataLoaderProps<T>) {
 </DataLoader>
 ```
 
-## Custom Hooks Patterns
+## Pattern cho Custom Hook
 
-### State Management Hook
+### Hook quản lý State
 
 ```typescript
 export function useToggle(initialValue = false): [boolean, () => void] {
@@ -148,11 +148,11 @@ export function useToggle(initialValue = false): [boolean, () => void] {
   return [value, toggle]
 }
 
-// Usage
+// Cách dùng
 const [isOpen, toggleOpen] = useToggle()
 ```
 
-### Async Data Fetching Hook
+### Hook lấy dữ liệu bất đồng bộ
 
 ```typescript
 interface UseQueryOptions<T> {
@@ -170,10 +170,10 @@ export function useQuery<T>(
   const [error, setError] = useState<Error | null>(null)
   const [loading, setLoading] = useState(false)
 
-  // Keep the latest fetcher/options in refs so refetch stays referentially
-  // stable even when callers pass inline functions and object literals.
-  // Without this, every render creates a new refetch, and the effect below
-  // re-runs after each state update - an infinite fetch loop.
+  // Giữ fetcher/options mới nhất trong ref để refetch ổn định về tham chiếu
+  // ngay cả khi caller truyền vào hàm inline và object literal.
+  // Nếu không, mỗi lần render sẽ tạo ra một refetch mới, và effect bên dưới
+  // chạy lại sau mỗi lần cập nhật state - tạo vòng lặp fetch vô hạn.
   const fetcherRef = useRef(fetcher)
   const optionsRef = useRef(options)
   useEffect(() => {
@@ -209,7 +209,7 @@ export function useQuery<T>(
   return { data, error, loading, refetch }
 }
 
-// Usage
+// Cách dùng
 const { data: markets, loading, error, refetch } = useQuery(
   'markets',
   () => fetch('/api/markets').then(r => r.json()),
@@ -220,7 +220,7 @@ const { data: markets, loading, error, refetch } = useQuery(
 )
 ```
 
-### Debounce Hook
+### Hook Debounce
 
 ```typescript
 export function useDebounce<T>(value: T, delay: number): T {
@@ -237,7 +237,7 @@ export function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue
 }
 
-// Usage
+// Cách dùng
 const [searchQuery, setSearchQuery] = useState('')
 const debouncedQuery = useDebounce(searchQuery, 500)
 
@@ -248,9 +248,9 @@ useEffect(() => {
 }, [debouncedQuery])
 ```
 
-## State Management Patterns
+## Pattern quản lý State
 
-### Context + Reducer Pattern
+### Pattern Context + Reducer
 
 ```typescript
 interface State {
@@ -303,23 +303,23 @@ export function useMarkets() {
 }
 ```
 
-## Performance Optimization
+## Tối ưu hiệu năng
 
 ### Memoization
 
 ```typescript
-// PASS: useMemo for expensive computations
-// Copy before sorting - Array.prototype.sort mutates in place
+// PASS: useMemo cho các phép tính tốn kém
+// Sao chép trước khi sort - Array.prototype.sort mutate tại chỗ
 const sortedMarkets = useMemo(() => {
   return [...markets].sort((a, b) => b.volume - a.volume)
 }, [markets])
 
-// PASS: useCallback for functions passed to children
+// PASS: useCallback cho các hàm truyền xuống component con
 const handleSearch = useCallback((query: string) => {
   setSearchQuery(query)
 }, [])
 
-// PASS: React.memo for pure components
+// PASS: React.memo cho component thuần
 export const MarketCard = React.memo<MarketCardProps>(({ market }) => {
   return (
     <div className="market-card">
@@ -335,7 +335,7 @@ export const MarketCard = React.memo<MarketCardProps>(({ market }) => {
 ```typescript
 import { lazy, Suspense } from 'react'
 
-// PASS: Lazy load heavy components
+// PASS: Lazy load các component nặng
 const HeavyChart = lazy(() => import('./HeavyChart'))
 const ThreeJsBackground = lazy(() => import('./ThreeJsBackground'))
 
@@ -354,7 +354,7 @@ export function Dashboard() {
 }
 ```
 
-### Virtualization for Long Lists
+### Virtualization cho danh sách dài
 
 ```typescript
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -398,9 +398,9 @@ export function VirtualMarketList({ markets }: { markets: Market[] }) {
 }
 ```
 
-## Form Handling Patterns
+## Pattern xử lý Form
 
-### Controlled Form with Validation
+### Form có kiểm soát (Controlled) kèm Validation
 
 ```typescript
 interface FormData {
@@ -452,9 +452,9 @@ export function CreateMarketForm() {
 
     try {
       await createMarket(formData)
-      // Success handling
+      // Xử lý khi thành công
     } catch (error) {
-      // Error handling
+      // Xử lý lỗi
     }
   }
 
@@ -475,7 +475,7 @@ export function CreateMarketForm() {
 }
 ```
 
-## Error Boundary Pattern
+## Pattern Error Boundary
 
 ```typescript
 interface ErrorBoundaryState {
@@ -517,20 +517,20 @@ export class ErrorBoundary extends React.Component<
   }
 }
 
-// Usage
+// Cách dùng
 <ErrorBoundary>
   <App />
 </ErrorBoundary>
 ```
 
-## Animation Patterns
+## Pattern Animation
 
-### Framer Motion Animations
+### Animation với Framer Motion
 
 ```typescript
 import { motion, AnimatePresence } from 'framer-motion'
 
-// PASS: List animations
+// PASS: Animation cho danh sách
 export function AnimatedMarketList({ markets }: { markets: Market[] }) {
   return (
     <AnimatePresence>
@@ -549,7 +549,7 @@ export function AnimatedMarketList({ markets }: { markets: Market[] }) {
   )
 }
 
-// PASS: Modal animations
+// PASS: Animation cho modal
 export function Modal({ isOpen, onClose, children }: ModalProps) {
   return (
     <AnimatePresence>
@@ -577,9 +577,9 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 }
 ```
 
-## Accessibility Patterns
+## Pattern Accessibility
 
-### Keyboard Navigation
+### Điều hướng bằng bàn phím
 
 ```typescript
 export function Dropdown({ options, onSelect }: DropdownProps) {
@@ -620,7 +620,7 @@ export function Dropdown({ options, onSelect }: DropdownProps) {
 }
 ```
 
-### Focus Management
+### Quản lý Focus
 
 ```typescript
 export function Modal({ isOpen, onClose, children }: ModalProps) {
@@ -629,13 +629,13 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 
   useEffect(() => {
     if (isOpen) {
-      // Save currently focused element
+      // Lưu phần tử đang được focus
       previousFocusRef.current = document.activeElement as HTMLElement
 
-      // Focus modal
+      // Focus vào modal
       modalRef.current?.focus()
     } else {
-      // Restore focus when closing
+      // Khôi phục focus khi đóng
       previousFocusRef.current?.focus()
     }
   }, [isOpen])
@@ -654,4 +654,4 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 }
 ```
 
-**Remember**: Modern frontend patterns enable maintainable, performant user interfaces. Choose patterns that fit your project complexity.
+**Hãy nhớ**: Các pattern frontend hiện đại giúp tạo ra giao diện dễ bảo trì và hiệu năng cao. Hãy chọn các pattern phù hợp với độ phức tạp của project.

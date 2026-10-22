@@ -1,46 +1,46 @@
 ---
 name: mysql-patterns
-description: MySQL and MariaDB schema, query, indexing, transaction, replication, and connection-pool patterns for production backends. Use when designing MySQL or MariaDB schemas and indexes, or when a query, transaction, or replica lags.
+description: Các pattern về schema, truy vấn, indexing, transaction, replication và connection pool của MySQL và MariaDB cho backend production. Dùng khi thiết kế schema và index cho MySQL hoặc MariaDB, hoặc khi một truy vấn, transaction hay replica bị lag.
 metadata:
   origin: ECC
 ---
 
 # MySQL Patterns
 
-Use this skill when working on MySQL or MariaDB schema design, migrations,
-slow-query investigation, queue-style transactions, connection pools, or
-production database configuration. Prefer exact version checks before applying a
-feature-specific pattern because MySQL and MariaDB have diverged in several SQL
-details.
+Dùng skill này khi làm việc với thiết kế schema, migration, điều tra slow query,
+transaction kiểu queue, connection pool hoặc cấu hình database production của
+MySQL hoặc MariaDB. Nên kiểm tra phiên bản chính xác trước khi áp dụng một
+pattern riêng cho từng tính năng vì MySQL và MariaDB đã khác nhau ở nhiều chi tiết
+SQL.
 
-## Activation
+## Kích hoạt
 
-- Designing MySQL or MariaDB tables, indexes, and constraints
-- Reviewing migrations before they run on large production tables
-- Debugging slow queries, lock waits, deadlocks, or connection exhaustion
-- Adding keyset pagination, upserts, full-text search, JSON columns, or queues
-- Configuring application connection pools, read replicas, TLS, or slow logs
+- Thiết kế bảng, index và constraint cho MySQL hoặc MariaDB
+- Review migration trước khi chạy trên các bảng production lớn
+- Debug slow query, lock wait, deadlock hoặc cạn kiệt connection
+- Thêm keyset pagination, upsert, full-text search, cột JSON hoặc queue
+- Cấu hình connection pool của ứng dụng, read replica, TLS hoặc slow log
 
-## Version Check
+## Kiểm tra phiên bản
 
-Start by identifying the engine and version:
+Bắt đầu bằng việc xác định engine và phiên bản:
 
 ```sql
 SELECT VERSION();
 SHOW VARIABLES LIKE 'version_comment';
 ```
 
-Keep MySQL and MariaDB guidance separate when syntax differs:
+Giữ hướng dẫn cho MySQL và MariaDB tách biệt khi cú pháp khác nhau:
 
-- MySQL documents row aliases as the replacement for `VALUES(col)` in
-  `ON DUPLICATE KEY UPDATE`; `VALUES(col)` is deprecated there.
-- MariaDB documents `VALUES(col)` as the supported way to reference inserted
-  values in `ON DUPLICATE KEY UPDATE`; use it for cross-engine compatibility.
-- `SKIP LOCKED` is appropriate for queue-like work only. It skips locked rows
-  and can return an inconsistent view, so do not use it for general accounting
-  or integrity-sensitive reads.
+- MySQL ghi tài liệu row alias là sự thay thế cho `VALUES(col)` trong
+  `ON DUPLICATE KEY UPDATE`; `VALUES(col)` bị deprecated ở đó.
+- MariaDB ghi tài liệu `VALUES(col)` là cách được hỗ trợ để tham chiếu các giá trị
+  được chèn trong `ON DUPLICATE KEY UPDATE`; dùng nó để tương thích giữa các engine.
+- `SKIP LOCKED` chỉ phù hợp cho công việc kiểu queue. Nó bỏ qua các dòng bị khóa
+  và có thể trả về một góc nhìn không nhất quán, nên đừng dùng nó cho các lần đọc
+  kế toán chung hoặc nhạy cảm với tính toàn vẹn.
 
-## Schema Defaults
+## Mặc định của Schema
 
 ```sql
 CREATE TABLE orders (
@@ -57,22 +57,22 @@ CREATE TABLE orders (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
 
-Default choices:
+Các lựa chọn mặc định:
 
-| Use Case | Prefer | Avoid |
+| Trường hợp dùng | Nên dùng | Tránh |
 | --- | --- | --- |
-| Surrogate primary keys | `BIGINT UNSIGNED AUTO_INCREMENT` | `INT` for tables that can grow beyond 2B rows |
-| UUID lookup keys | `BINARY(16)` with conversion helpers | `VARCHAR(36)` primary keys on hot tables |
-| Money and exact quantities | `DECIMAL(p, s)` | `FLOAT` or `DOUBLE` |
-| User-facing text | `utf8mb4` tables and indexes | MySQL `utf8` / `utf8mb3` defaults |
-| Application timestamps | `DATETIME` with UTC managed by the app | Assuming `DATETIME` stores time zone metadata |
-| Soft deletes | `deleted_at DATETIME NULL` plus scoped indexes | Filtering soft-deleted rows without an index |
-| Extensible status values | lookup table or constrained `VARCHAR` | `ENUM` when values change often |
+| Surrogate primary key | `BIGINT UNSIGNED AUTO_INCREMENT` | `INT` cho các bảng có thể vượt quá 2 tỷ dòng |
+| UUID lookup key | `BINARY(16)` kèm helper chuyển đổi | Primary key `VARCHAR(36)` trên các bảng nóng |
+| Tiền và số lượng chính xác | `DECIMAL(p, s)` | `FLOAT` hoặc `DOUBLE` |
+| Văn bản hiển thị cho người dùng | Bảng và index `utf8mb4` | Mặc định `utf8` / `utf8mb3` của MySQL |
+| Timestamp của ứng dụng | `DATETIME` với UTC do app quản lý | Giả định `DATETIME` lưu metadata múi giờ |
+| Soft delete | `deleted_at DATETIME NULL` cùng các index có phạm vi | Lọc các dòng soft-delete mà không có index |
+| Giá trị status có thể mở rộng | bảng lookup hoặc `VARCHAR` có ràng buộc | `ENUM` khi giá trị thay đổi thường xuyên |
 
 ## Indexing
 
-Composite index order usually follows equality predicates first, then range or
-sort columns:
+Thứ tự composite index thường theo các điều kiện bằng (equality) trước, rồi đến các cột range hoặc
+sort:
 
 ```sql
 CREATE INDEX idx_orders_account_status_created
@@ -87,7 +87,7 @@ ORDER BY created_at DESC
 LIMIT 50;
 ```
 
-Use `EXPLAIN` before adding or changing an index:
+Dùng `EXPLAIN` trước khi thêm hoặc thay đổi một index:
 
 ```sql
 EXPLAIN
@@ -98,23 +98,23 @@ ORDER BY created_at DESC
 LIMIT 50;
 ```
 
-Signals to investigate:
+Các tín hiệu cần điều tra:
 
-| Field | Risk Signal |
+| Trường | Tín hiệu rủi ro |
 | --- | --- |
-| `type` | `ALL` on a large table |
-| `key` | `NULL` when a selective predicate exists |
-| `rows` | Very high row estimate for an interactive path |
-| `Extra` | `Using temporary`, `Using filesort`, or broad `Using where` |
+| `type` | `ALL` trên một bảng lớn |
+| `key` | `NULL` khi tồn tại điều kiện có tính chọn lọc |
+| `rows` | Ước tính số dòng rất cao cho một đường tương tác |
+| `Extra` | `Using temporary`, `Using filesort`, hoặc `Using where` rộng |
 
-Avoid adding indexes blindly. Each index increases write cost, migration time,
-backup size, and buffer-pool pressure.
+Tránh thêm index một cách mù quáng. Mỗi index làm tăng chi phí ghi, thời gian migration,
+kích thước backup và áp lực lên buffer-pool.
 
-## Query Patterns
+## Pattern truy vấn
 
 ### Upsert
 
-Cross-engine-compatible form:
+Dạng tương thích giữa các engine:
 
 ```sql
 INSERT INTO user_settings (user_id, setting_key, setting_value)
@@ -124,7 +124,7 @@ ON DUPLICATE KEY UPDATE
     updated_at = CURRENT_TIMESTAMP;
 ```
 
-MySQL row-alias form:
+Dạng row-alias của MySQL:
 
 ```sql
 INSERT INTO user_settings (user_id, setting_key, setting_value)
@@ -134,8 +134,8 @@ ON DUPLICATE KEY UPDATE
     updated_at = CURRENT_TIMESTAMP;
 ```
 
-Use the row-alias form only after confirming the target is MySQL. Use
-`VALUES(col)` for MariaDB or mixed MySQL/MariaDB fleets.
+Chỉ dùng dạng row-alias sau khi xác nhận target là MySQL. Dùng
+`VALUES(col)` cho MariaDB hoặc các fleet hỗn hợp MySQL/MariaDB.
 
 ### Keyset Pagination
 
@@ -147,19 +147,19 @@ ORDER BY created_at DESC, id DESC
 LIMIT 50;
 ```
 
-Back it with an index that matches the cursor:
+Hậu thuẫn nó bằng một index khớp với cursor:
 
 ```sql
 CREATE INDEX idx_products_created_id ON products (created_at, id);
 ```
 
-Do not use deep `OFFSET` pagination on large tables; it makes the server scan
-and discard rows before returning the page.
+Không dùng `OFFSET` pagination sâu trên các bảng lớn; nó khiến server quét
+và loại bỏ các dòng trước khi trả về trang.
 
-### JSON Fields
+### Trường JSON
 
-Use JSON columns for extension data, not for fields that need heavy relational
-filtering or constraints.
+Dùng cột JSON cho dữ liệu mở rộng, không dùng cho các trường cần lọc quan hệ
+nặng hoặc ràng buộc.
 
 ```sql
 CREATE TABLE events (
@@ -171,8 +171,8 @@ CREATE TABLE events (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-For frequently queried JSON paths, expose a generated column and index that
-column. Keep foreign keys, ownership, tenancy, and lifecycle fields relational.
+Với các đường dẫn JSON được truy vấn thường xuyên, hãy tạo một generated column và đánh index
+cột đó. Giữ khóa ngoại, quyền sở hữu, tenancy và các trường vòng đời ở dạng quan hệ.
 
 ### Full-Text Search
 
@@ -186,12 +186,12 @@ ORDER BY score DESC
 LIMIT 20;
 ```
 
-Use external search when you need typo tolerance, complex ranking, cross-table
-facets, or language-specific analysis beyond built-in full-text behavior.
+Dùng công cụ tìm kiếm bên ngoài khi bạn cần dung sai lỗi chính tả, xếp hạng phức tạp, facet
+liên bảng, hoặc phân tích theo ngôn ngữ vượt quá hành vi full-text tích hợp sẵn.
 
-## Transactions
+## Transaction
 
-Keep transactions short and lock rows in a consistent order:
+Giữ transaction ngắn và khóa các dòng theo thứ tự nhất quán:
 
 ```sql
 START TRANSACTION;
@@ -208,17 +208,17 @@ UPDATE accounts SET balance = balance + ? WHERE id = ?;
 COMMIT;
 ```
 
-Deadlock and lock-wait checklist:
+Checklist về deadlock và lock-wait:
 
-- Lock rows in a deterministic order across code paths.
-- Do external API calls before opening the transaction, not inside it.
-- Add indexes for predicates used in `UPDATE`, `DELETE`, and locking reads.
-- On deadlock, roll back and retry the whole transaction with a bounded retry
-  budget.
-- Capture `SHOW ENGINE INNODB STATUS\G` soon after a deadlock; it is overwritten
-  by later events.
+- Khóa các dòng theo thứ tự xác định trên mọi đường code.
+- Thực hiện các lời gọi API bên ngoài trước khi mở transaction, không phải bên trong nó.
+- Thêm index cho các điều kiện dùng trong `UPDATE`, `DELETE` và các lần đọc có khóa.
+- Khi deadlock, rollback và retry toàn bộ transaction với ngân sách retry
+  có giới hạn.
+- Chụp `SHOW ENGINE INNODB STATUS\G` ngay sau một deadlock; nó bị ghi đè
+  bởi các sự kiện sau đó.
 
-Queue-style worker claim:
+Worker claim kiểu queue:
 
 ```sql
 START TRANSACTION;
@@ -237,12 +237,12 @@ WHERE id = ?;
 COMMIT;
 ```
 
-Use `SKIP LOCKED` only for queue-like workloads where skipping a locked row is
-acceptable. It is not a replacement for normal transactional consistency.
+Chỉ dùng `SKIP LOCKED` cho các workload kiểu queue nơi việc bỏ qua một dòng bị khóa là
+chấp nhận được. Nó không thay thế cho tính nhất quán transaction thông thường.
 
-## Connection Pools
+## Connection Pool
 
-SQLAlchemy example:
+Ví dụ SQLAlchemy:
 
 ```python
 from sqlalchemy import create_engine
@@ -258,7 +258,7 @@ engine = create_engine(
 )
 ```
 
-Node.js `mysql2` example:
+Ví dụ Node.js `mysql2`:
 
 ```javascript
 import mysql from 'mysql2/promise';
@@ -281,13 +281,13 @@ const [rows] = await pool.execute(
 );
 ```
 
-Keep application pool recycling below the server `wait_timeout`. If the server
-uses `wait_timeout = 300`, a `pool_recycle` around 240 seconds is coherent;
-`pool_pre_ping` still helps recover from network and failover events.
+Giữ chu kỳ recycle của pool ứng dụng thấp hơn `wait_timeout` của server. Nếu server
+dùng `wait_timeout = 300`, `pool_recycle` khoảng 240 giây là hợp lý;
+`pool_pre_ping` vẫn giúp phục hồi sau các sự kiện mạng và failover.
 
-## Diagnostics
+## Chẩn đoán
 
-Useful first-pass commands:
+Các lệnh hữu ích cho lượt kiểm tra đầu tiên:
 
 ```sql
 SHOW FULL PROCESSLIST;
@@ -296,7 +296,7 @@ SHOW VARIABLES LIKE 'slow_query_log';
 SHOW VARIABLES LIKE 'long_query_time';
 ```
 
-Enable the slow log in a controlled environment:
+Bật slow log trong môi trường có kiểm soát:
 
 ```sql
 SET GLOBAL slow_query_log = 'ON';
@@ -304,14 +304,14 @@ SET GLOBAL long_query_time = 1;
 SET GLOBAL log_queries_not_using_indexes = 'ON';
 ```
 
-Use `EXPLAIN ANALYZE` only when it is safe to execute the query. It runs the
-statement and can be expensive on production-sized data.
+Chỉ dùng `EXPLAIN ANALYZE` khi việc thực thi truy vấn là an toàn. Nó chạy
+statement và có thể tốn kém trên dữ liệu cỡ production.
 
 ## Replication
 
-Read replicas can lag. Do not route read-your-own-write paths, checkout flows,
-permission checks, or idempotency-key reads to a replica immediately after a
-write.
+Read replica có thể bị lag. Không định tuyến các đường read-your-own-write, luồng checkout,
+kiểm tra quyền hoặc đọc idempotency-key sang replica ngay sau một
+lần ghi.
 
 ```sql
 -- MySQL legacy terminology, still common in existing fleets
@@ -321,11 +321,11 @@ SHOW SLAVE STATUS\G;
 SHOW REPLICA STATUS\G;
 ```
 
-Check the engine/version before standardizing on one command. Monitor replica
-SQL thread health, IO thread health, and lag, not just whether the TCP
-connection is alive.
+Kiểm tra engine/phiên bản trước khi chuẩn hóa theo một lệnh. Giám sát sức khỏe
+SQL thread, sức khỏe IO thread và độ lag của replica, không chỉ xem kết nối TCP
+còn sống hay không.
 
-## Security
+## Bảo mật
 
 ```sql
 CREATE USER 'app'@'%' IDENTIFIED BY 'use-a-secret-manager';
@@ -341,18 +341,18 @@ DROP USER IF EXISTS ''@'localhost';
 DROP USER IF EXISTS ''@'%';
 ```
 
-Security review points:
+Các điểm review bảo mật:
 
-- Do not grant `ALL PRIVILEGES` or `*.*` to application users.
-- Require TLS for application users when traffic crosses hosts or networks.
-- Store credentials in the platform secret manager, not in examples, scripts, or
-  repository files.
-- Separate migration/admin users from runtime application users.
-- Audit public network exposure and bind addresses before tuning performance.
+- Không cấp `ALL PRIVILEGES` hoặc `*.*` cho user ứng dụng.
+- Yêu cầu TLS cho user ứng dụng khi lưu lượng đi qua các host hoặc mạng.
+- Lưu credential trong secret manager của nền tảng, không để trong ví dụ, script hoặc
+  file của repository.
+- Tách user migration/admin khỏi user ứng dụng chạy runtime.
+- Kiểm toán việc phơi bày ra mạng công cộng và các bind address trước khi tinh chỉnh hiệu năng.
 
-## Configuration
+## Cấu hình
 
-Example starting point for a dedicated database host:
+Ví dụ điểm khởi đầu cho một host database chuyên dụng:
 
 ```ini
 [mysqld]
@@ -376,38 +376,38 @@ binlog_format = ROW
 binlog_expire_logs_seconds = 604800
 ```
 
-Treat configuration values as a prompt for review, not a universal preset. Size
-memory, connections, log retention, and durability settings from workload,
-hardware, backup policy, and recovery objectives.
+Coi các giá trị cấu hình là gợi ý để review, không phải preset phổ quát. Hãy định cỡ
+bộ nhớ, số connection, thời gian lưu log và các thiết lập độ bền từ workload,
+phần cứng, chính sách backup và mục tiêu phục hồi.
 
-## Anti-Patterns
+## Anti-Pattern
 
-| Anti-Pattern | Risk | Better Pattern |
+| Anti-Pattern | Rủi ro | Pattern tốt hơn |
 | --- | --- | --- |
-| `SELECT *` in hot paths | Over-fetching and brittle clients | Select explicit columns |
-| Deep `OFFSET` pagination | Linear scans and slow pages | Keyset pagination |
-| No index on foreign-key joins | Slow joins and lock-heavy deletes | Index FK columns intentionally |
-| Long transactions | Lock waits and large undo history | Commit small units of work |
-| Direct DML against `mysql.user` | Grant-table corruption risk | Use `CREATE USER`, `ALTER USER`, `DROP USER` |
-| Application user with admin grants | High blast radius | Least-privilege runtime user |
-| Pool recycle above `wait_timeout` | Stale pooled connections | Recycle below timeout and pre-ping |
-| Replica reads after writes | Stale user-facing state | Pin read-after-write flows to primary |
+| `SELECT *` trên các đường nóng | Fetch thừa và client dễ vỡ | Chọn các cột tường minh |
+| `OFFSET` pagination sâu | Quét tuyến tính và trang chậm | Keyset pagination |
+| Không có index cho join khóa ngoại | Join chậm và delete nặng về lock | Đánh index cột FK một cách có chủ đích |
+| Transaction dài | Lock wait và lịch sử undo lớn | Commit các đơn vị công việc nhỏ |
+| DML trực tiếp trên `mysql.user` | Nguy cơ hỏng bảng grant | Dùng `CREATE USER`, `ALTER USER`, `DROP USER` |
+| User ứng dụng có quyền admin | Phạm vi ảnh hưởng lớn | User runtime với quyền tối thiểu |
+| Pool recycle cao hơn `wait_timeout` | Connection trong pool đã cũ | Recycle thấp hơn timeout và pre-ping |
+| Đọc từ replica sau khi ghi | Trạng thái hiển thị cho người dùng bị cũ | Ghim các luồng read-after-write vào primary |
 
-## Output Expectations
+## Kỳ vọng về đầu ra
 
-When this skill is used for review, return:
+Khi skill này được dùng để review, hãy trả về:
 
-1. Engine/version assumptions.
-2. Highest-risk correctness, lock, security, and migration issues.
-3. Exact SQL or code changes for the safe path.
-4. Validation plan: `EXPLAIN`, migration dry run, lock/deadlock check, and
-   rollback criteria.
-5. Any MySQL/MariaDB syntax differences that affect the recommendation.
+1. Các giả định về engine/phiên bản.
+2. Các vấn đề rủi ro cao nhất về tính đúng đắn, lock, bảo mật và migration.
+3. SQL hoặc thay đổi code chính xác cho đường đi an toàn.
+4. Kế hoạch validation: `EXPLAIN`, chạy thử migration (dry run), kiểm tra lock/deadlock, và
+   tiêu chí rollback.
+5. Mọi khác biệt cú pháp MySQL/MariaDB ảnh hưởng đến khuyến nghị.
 
-## Related
+## Liên quan
 
-- Skill: `postgres-patterns` - PostgreSQL-specific schema and query patterns
-- Skill: `database-migrations` - migration planning and rollout safety
-- Skill: `backend-patterns` - API and service-layer patterns
-- Skill: `security-review` - secret handling, auth, and least privilege
-- Agent: `database-reviewer` - broader database review workflow
+- Skill: `postgres-patterns` - pattern schema và truy vấn riêng cho PostgreSQL
+- Skill: `database-migrations` - lập kế hoạch migration và an toàn khi rollout
+- Skill: `backend-patterns` - pattern API và tầng service
+- Skill: `security-review` - xử lý secret, auth và đặc quyền tối thiểu
+- Agent: `database-reviewer` - workflow review database rộng hơn

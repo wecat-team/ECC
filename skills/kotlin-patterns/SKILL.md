@@ -1,29 +1,29 @@
 ---
 name: kotlin-patterns
-description: Idiomatic Kotlin patterns, best practices, and conventions for building robust, efficient, and maintainable Kotlin applications with coroutines, null safety, and DSL builders. Use when writing or reviewing Kotlin code and idiomatic structure or null safety is in question.
+description: "Các pattern Kotlin idiomatic, best practice và convention để xây dựng ứng dụng Kotlin vững chắc, hiệu quả và dễ bảo trì với coroutines, null safety và DSL builder. Dùng khi viết hoặc review code Kotlin và còn băn khoăn về cấu trúc idiomatic hoặc null safety."
 metadata:
   origin: ECC
 ---
 
-# Kotlin Development Patterns
+# Các pattern phát triển Kotlin
 
-Idiomatic Kotlin patterns and best practices for building robust, efficient, and maintainable applications.
+Các pattern Kotlin idiomatic và best practice để xây dựng ứng dụng vững chắc, hiệu quả và dễ bảo trì.
 
-## When to Use
+## Khi nào dùng
 
-- Writing new Kotlin code
-- Reviewing Kotlin code
-- Refactoring existing Kotlin code
-- Designing Kotlin modules or libraries
-- Configuring Gradle Kotlin DSL builds
+- Viết code Kotlin mới
+- Review code Kotlin
+- Refactor code Kotlin hiện có
+- Thiết kế module hoặc thư viện Kotlin
+- Cấu hình build Gradle Kotlin DSL
 
-## How It Works
+## Cách hoạt động
 
-This skill enforces idiomatic Kotlin conventions across seven key areas: null safety using the type system and safe-call operators, immutability via `val` and `copy()` on data classes, sealed classes and interfaces for exhaustive type hierarchies, structured concurrency with coroutines and `Flow`, extension functions for adding behaviour without inheritance, type-safe DSL builders using `@DslMarker` and lambda receivers, and Gradle Kotlin DSL for build configuration.
+Skill này thực thi các convention Kotlin idiomatic trên bảy lĩnh vực chính: null safety dùng hệ thống kiểu và các toán tử safe-call, tính bất biến (immutable) qua `val` và `copy()` trên data class, sealed class và interface cho các hệ thống phân cấp kiểu có thể liệt kê đầy đủ (exhaustive), structured concurrency với coroutines và `Flow`, extension function để thêm hành vi mà không cần kế thừa, DSL builder an toàn kiểu dùng `@DslMarker` và lambda receiver, và Gradle Kotlin DSL cho cấu hình build.
 
-## Examples
+## Ví dụ
 
-**Null safety with Elvis operator:**
+**Null safety với toán tử Elvis:**
 ```kotlin
 fun getUserEmail(userId: String): String {
     val user = userRepository.findById(userId)
@@ -31,7 +31,7 @@ fun getUserEmail(userId: String): String {
 }
 ```
 
-**Sealed class for exhaustive results:**
+**Sealed class cho kết quả exhaustive:**
 ```kotlin
 sealed class Result<out T> {
     data class Success<T>(val data: T) : Result<T>()
@@ -40,7 +40,7 @@ sealed class Result<out T> {
 }
 ```
 
-**Structured concurrency with async/await:**
+**Structured concurrency với async/await:**
 ```kotlin
 suspend fun fetchUserWithPosts(userId: String): UserProfile =
     coroutineScope {
@@ -50,11 +50,11 @@ suspend fun fetchUserWithPosts(userId: String): UserProfile =
     }
 ```
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
 ### 1. Null Safety
 
-Kotlin's type system distinguishes nullable and non-nullable types. Leverage it fully.
+Hệ thống kiểu của Kotlin phân biệt kiểu nullable và non-nullable. Hãy tận dụng triệt để.
 
 ```kotlin
 // Good: Use non-nullable types by default
@@ -76,9 +76,9 @@ fun getUserEmail(userId: String): String {
 }
 ```
 
-### 2. Immutability by Default
+### 2. Bất biến (Immutable) theo mặc định
 
-Prefer `val` over `var`, immutable collections over mutable ones.
+Ưu tiên `val` hơn `var`, collection bất biến hơn collection có thể thay đổi.
 
 ```kotlin
 // Good: Immutable data
@@ -101,9 +101,9 @@ var currentUser: User? = null // Avoid mutable global state
 val mutableUsers = mutableListOf<User>() // Avoid unless truly needed
 ```
 
-### 3. Expression Bodies and Single-Expression Functions
+### 3. Expression Body và hàm một biểu thức
 
-Use expression bodies for concise, readable functions.
+Dùng expression body để có các hàm ngắn gọn, dễ đọc.
 
 ```kotlin
 // Good: Expression body
@@ -129,9 +129,9 @@ fun isAdult(age: Int): Boolean {
 }
 ```
 
-### 4. Data Classes for Value Objects
+### 4. Data Class cho Value Object
 
-Use data classes for types that primarily hold data.
+Dùng data class cho các kiểu chủ yếu chứa dữ liệu.
 
 ```kotlin
 // Good: Data class with copy, equals, hashCode, toString
@@ -159,9 +159,9 @@ value class Email(val value: String) {
 fun getUser(id: UserId): User = userRepository.findById(id)
 ```
 
-## Sealed Classes and Interfaces
+## Sealed Class và Interface
 
-### Modeling Restricted Hierarchies
+### Mô hình hóa các hệ thống phân cấp bị giới hạn
 
 ```kotlin
 // Good: Sealed class for exhaustive when
@@ -184,7 +184,7 @@ fun <T> Result<T>.getOrThrow(): T = when (this) {
 }
 ```
 
-### Sealed Interfaces for API Responses
+### Sealed Interface cho API Response
 
 ```kotlin
 sealed interface ApiError {
@@ -210,9 +210,9 @@ fun ApiError.toStatusCode(): Int = when (this) {
 }
 ```
 
-## Scope Functions
+## Scope Function
 
-### When to Use Each
+### Khi nào dùng từng hàm
 
 ```kotlin
 // let: Transform nullable or scoped result
@@ -241,7 +241,7 @@ val csv = with(StringBuilder()) {
 }
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
 ```kotlin
 // Bad: Nesting scope functions
@@ -258,9 +258,9 @@ val city = user?.address?.city
 city?.let { println(it) }
 ```
 
-## Extension Functions
+## Extension Function
 
-### Adding Functionality Without Inheritance
+### Thêm chức năng mà không cần kế thừa
 
 ```kotlin
 // Good: Domain-specific extensions
@@ -331,7 +331,7 @@ suspend fun fetchDashboard(userId: String): Dashboard =
     }
 ```
 
-### Flow for Reactive Streams
+### Flow cho Reactive Stream
 
 ```kotlin
 // Good: Cold flow with proper error handling
@@ -356,7 +356,7 @@ fun searchUsers(query: Flow<String>): Flow<List<User>> =
         .catch { emit(emptyList()) }
 ```
 
-### Cancellation and Cleanup
+### Cancellation và dọn dẹp
 
 ```kotlin
 // Good: Respect cancellation
@@ -423,9 +423,9 @@ class LoggingUserRepository(
 }
 ```
 
-## DSL Builders
+## DSL Builder
 
-### Type-Safe Builders
+### Builder an toàn kiểu (Type-Safe)
 
 ```kotlin
 // Good: DSL with @DslMarker
@@ -501,7 +501,7 @@ val config = serverConfig {
 }
 ```
 
-## Sequences for Lazy Evaluation
+## Sequence cho Lazy Evaluation
 
 ```kotlin
 // Good: Use sequences for large collections with multiple operations
@@ -529,7 +529,7 @@ val first20 = fibonacci.take(20).toList()
 
 ## Gradle Kotlin DSL
 
-### build.gradle.kts Configuration
+### Cấu hình build.gradle.kts
 
 ```kotlin
 // Check for latest versions: https://kotlinlang.org/docs/releases.html
@@ -586,9 +586,9 @@ detekt {
 }
 ```
 
-## Error Handling Patterns
+## Pattern xử lý lỗi
 
-### Result Type for Domain Operations
+### Kiểu Result cho thao tác Domain
 
 ```kotlin
 // Good: Use Kotlin's Result or a custom sealed class
@@ -623,9 +623,9 @@ fun withdraw(account: Account, amount: Money): Account {
 }
 ```
 
-## Collection Operations
+## Thao tác với Collection
 
-### Idiomatic Collection Processing
+### Xử lý Collection theo kiểu idiomatic
 
 ```kotlin
 // Good: Chained operations
@@ -647,27 +647,27 @@ val usersById: Map<UserId, User> = users.associateBy { it.id }
 val (active, inactive) = users.partition { it.isActive }
 ```
 
-## Quick Reference: Kotlin Idioms
+## Tham khảo nhanh: Các idiom Kotlin
 
-| Idiom | Description |
+| Idiom | Mô tả |
 |-------|-------------|
-| `val` over `var` | Prefer immutable variables |
-| `data class` | For value objects with equals/hashCode/copy |
-| `sealed class/interface` | For restricted type hierarchies |
-| `value class` | For type-safe wrappers with zero overhead |
-| Expression `when` | Exhaustive pattern matching |
-| Safe call `?.` | Null-safe member access |
-| Elvis `?:` | Default value for nullables |
-| `let`/`apply`/`also`/`run`/`with` | Scope functions for clean code |
-| Extension functions | Add behavior without inheritance |
-| `copy()` | Immutable updates on data classes |
-| `require`/`check` | Precondition assertions |
-| Coroutine `async`/`await` | Structured concurrent execution |
-| `Flow` | Cold reactive streams |
+| `val` hơn `var` | Ưu tiên biến bất biến |
+| `data class` | Cho value object với equals/hashCode/copy |
+| `sealed class/interface` | Cho các hệ thống phân cấp kiểu bị giới hạn |
+| `value class` | Cho wrapper an toàn kiểu với zero overhead |
+| `when` dạng biểu thức | Pattern matching exhaustive |
+| Safe call `?.` | Truy cập member an toàn với null |
+| Elvis `?:` | Giá trị mặc định cho nullable |
+| `let`/`apply`/`also`/`run`/`with` | Scope function cho code sạch |
+| Extension function | Thêm hành vi mà không cần kế thừa |
+| `copy()` | Cập nhật bất biến trên data class |
+| `require`/`check` | Assertion điều kiện tiên quyết |
+| Coroutine `async`/`await` | Thực thi đồng thời có cấu trúc |
+| `Flow` | Cold reactive stream |
 | `sequence` | Lazy evaluation |
-| Delegation `by` | Reuse implementation without inheritance |
+| Delegation `by` | Tái sử dụng phần triển khai mà không cần kế thừa |
 
-## Anti-Patterns to Avoid
+## Anti-Pattern cần tránh
 
 ```kotlin
 // Bad: Force-unwrapping nullable types
@@ -709,4 +709,4 @@ user?.let { u ->
 user?.address?.city?.let { process(it) }
 ```
 
-**Remember**: Kotlin code should be concise but readable. Leverage the type system for safety, prefer immutability, and use coroutines for concurrency. When in doubt, let the compiler help you.
+**Hãy nhớ**: Code Kotlin nên ngắn gọn nhưng dễ đọc. Tận dụng hệ thống kiểu để đảm bảo an toàn, ưu tiên tính bất biến (immutable), và dùng coroutines cho concurrency. Khi còn nghi ngờ, hãy để compiler giúp bạn.

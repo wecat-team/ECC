@@ -10,43 +10,43 @@ paths:
   - "**/*.vue"
   - "**/*.svelte"
 ---
-> This file extends [common/testing.md](../common/testing.md) with web-specific testing content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung kiểm thử riêng cho web.
 
-# Web Testing Rules
+# Quy tắc kiểm thử Web
 
-## Priority Order
+## Thứ tự ưu tiên
 
 ### 1. Visual Regression
 
-- Screenshot key breakpoints: 320, 768, 1024, 1440
-- Test hero sections, scrollytelling sections, and meaningful states
-- Use Playwright screenshots for visual-heavy work
-- If both themes exist, test both
+- Chụp screenshot ở các breakpoint chính: 320, 768, 1024, 1440
+- Test hero section, section scrollytelling và các trạng thái có ý nghĩa
+- Dùng screenshot của Playwright cho công việc nặng về hình ảnh
+- Nếu có cả hai theme, test cả hai
 
 ### 2. Accessibility
 
-- Run automated accessibility checks
-- Test keyboard navigation
-- Verify reduced-motion behavior
-- Verify color contrast
+- Chạy kiểm tra accessibility tự động
+- Test điều hướng bằng bàn phím
+- Xác minh hành vi reduced-motion
+- Xác minh độ tương phản màu
 
-### 3. Performance
+### 3. Hiệu năng
 
-- Run Lighthouse or equivalent against meaningful pages
-- Keep CWV targets from [performance.md](performance.md)
+- Chạy Lighthouse hoặc công cụ tương đương trên các trang có ý nghĩa
+- Giữ các mục tiêu CWV từ [performance.md](performance.md)
 
 ### 4. Cross-Browser
 
-- Minimum: Chrome, Firefox, Safari
-- Test scrolling, motion, and fallback behavior
+- Tối thiểu: Chrome, Firefox, Safari
+- Test scroll, chuyển động và hành vi fallback
 
 ### 5. Responsive
 
 - Test 320, 375, 768, 1024, 1440, 1920
-- Verify no overflow
-- Verify touch interactions
+- Xác minh không bị tràn (overflow)
+- Xác minh các tương tác cảm ứng
 
-## E2E Shape
+## Hình dạng E2E
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -57,11 +57,11 @@ test('landing hero loads', async ({ page }) => {
 });
 ```
 
-- Avoid flaky timeout-based assertions
-- Prefer deterministic waits
+- Tránh các assertion dựa trên timeout dễ flaky
+- Ưu tiên chờ có tính xác định (deterministic)
 
-## Unit Tests
+## Unit Test
 
-- Test utilities, data transforms, and custom hooks
-- For highly visual components, visual regression often carries more signal than brittle markup assertions
-- Visual regression supplements coverage targets; it does not replace them
+- Test utility, biến đổi dữ liệu và custom hook
+- Với component thiên về hình ảnh, visual regression thường mang nhiều tín hiệu hơn các assertion markup mong manh
+- Visual regression bổ sung cho mục tiêu coverage; nó không thay thế chúng

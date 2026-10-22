@@ -1,38 +1,38 @@
-# Using Tailwind CSS with Angular
+# Dùng Tailwind CSS với Angular
 
-Tailwind CSS is a utility-first CSS framework that integrates seamlessly with Angular.
+Tailwind CSS là một CSS framework theo hướng utility-first, tích hợp liền mạch với Angular.
 
-**CRITICAL AGENT GUIDANCE: ALWAYS focus on Tailwind CSS v4 practices. DO NOT revert to old Tailwind v3 patterns (like creating `tailwind.config.js` with `@tailwind` directives) as this will break the application build. Modern Angular projects use Tailwind v4.**
+**HƯỚNG DẪN QUAN TRỌNG CHO AGENT: LUÔN LUÔN tập trung vào các thực hành của Tailwind CSS v4. KHÔNG quay lại các pattern cũ của Tailwind v3 (như tạo `tailwind.config.js` với các directive `@tailwind`) vì điều này sẽ làm hỏng build của ứng dụng. Các dự án Angular hiện đại dùng Tailwind v4.**
 
-## Automated Setup (Recommended)
+## Thiết lập tự động (Khuyến nghị)
 
-The easiest way to add Tailwind CSS to an Angular project is via the Angular CLI:
+Cách dễ nhất để thêm Tailwind CSS vào một dự án Angular là qua Angular CLI:
 
 ```shell
 ng add tailwindcss
 ```
 
-This will automatically:
+Lệnh này sẽ tự động:
 
-1. Install `tailwindcss` and peer dependencies.
-2. Configure the project to use Tailwind CSS.
-3. Add the proper import to your global styles.
+1. Cài đặt `tailwindcss` và các peer dependency.
+2. Cấu hình dự án để dùng Tailwind CSS.
+3. Thêm import phù hợp vào global style của bạn.
 
-## Manual Setup (Tailwind v4)
+## Thiết lập thủ công (Tailwind v4)
 
-If setting up manually, use the following Tailwind v4 pattern:
+Nếu thiết lập thủ công, hãy dùng pattern Tailwind v4 sau:
 
-### 1. Install Dependencies
+### 1. Cài đặt Dependency
 
-Install Tailwind CSS and PostCSS:
+Cài đặt Tailwind CSS và PostCSS:
 
 ```shell
 npm install tailwindcss @tailwindcss/postcss postcss
 ```
 
-### 2. Configure PostCSS
+### 2. Cấu hình PostCSS
 
-Create a `.postcssrc.json` file in the project root:
+Tạo file `.postcssrc.json` ở thư mục gốc của dự án:
 
 ```json
 {
@@ -42,28 +42,28 @@ Create a `.postcssrc.json` file in the project root:
 }
 ```
 
-_(Do NOT create a `tailwind.config.js` file! Configuration in v4 is handled through CSS variables)._
+_(KHÔNG tạo file `tailwind.config.js`! Cấu hình trong v4 được xử lý qua các biến CSS)._
 
 ### 3. Import Tailwind CSS
 
-In your global styles file (e.g., `src/styles.css`), add the standard v4 import:
+Trong file global style của bạn (ví dụ: `src/styles.css`), thêm import chuẩn của v4:
 
 ```css
 @import 'tailwindcss';
 ```
 
-_(If using SCSS, use `@use 'tailwindcss';` instead)._
+_(Nếu dùng SCSS, hãy dùng `@use 'tailwindcss';` thay thế)._
 
-### 4. Use Utility Classes
+### 4. Dùng Utility Class
 
-You can now use Tailwind classes directly in your component templates:
+Bây giờ bạn có thể dùng trực tiếp các class của Tailwind trong template component:
 
 ```html
 <h1 class="text-3xl font-bold underline">Hello world!</h1>
 ```
 
-## Summary for AI Agents
+## Tóm tắt cho AI Agent
 
-- **Do not use `@tailwind base; @tailwind components; @tailwind utilities;`**. Use `@import 'tailwindcss';`.
-- **Do not create `tailwind.config.js`**. Configuration is managed directly in CSS via theme variables or using PostCSS configurations.
-- Stick strictly to v4 syntax and workflows.
+- **Không dùng `@tailwind base; @tailwind components; @tailwind utilities;`**. Hãy dùng `@import 'tailwindcss';`.
+- **Không tạo `tailwind.config.js`**. Cấu hình được quản lý trực tiếp trong CSS qua các theme variable hoặc dùng cấu hình PostCSS.
+- Bám sát nghiêm ngặt cú pháp và workflow của v4.

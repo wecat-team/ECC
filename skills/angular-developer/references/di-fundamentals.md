@@ -1,23 +1,23 @@
-# Dependency Injection (DI) Fundamentals
+# Nền tảng Dependency Injection (DI)
 
-Dependency Injection (DI) is a design pattern used to organize and share code across an application by allowing you to "inject" features into different parts. This improves code maintainability, scalability, and testability.
+Dependency Injection (DI) là một design pattern dùng để tổ chức và chia sẻ code trong ứng dụng bằng cách cho phép bạn "inject" các tính năng vào những phần khác nhau. Điều này cải thiện khả năng bảo trì, khả năng mở rộng và khả năng kiểm thử của code.
 
-## How DI Works in Angular
+## DI hoạt động như thế nào trong Angular
 
-There are two primary ways code interacts with Angular's DI system:
+Có hai cách chính để code tương tác với hệ thống DI của Angular:
 
-1. **Providing**: Making values (objects, functions, primitives) available to the DI system.
-2. **Injecting**: Asking the DI system for those values.
+1. **Providing**: Làm cho các giá trị (object, hàm, kiểu nguyên thủy) khả dụng với hệ thống DI.
+2. **Injecting**: Yêu cầu các giá trị đó từ hệ thống DI.
 
-Angular components, directives, and services automatically participate in DI.
+Component, directive và service của Angular tự động tham gia vào DI.
 
-## Services
+## Service
 
-A **service** is the most common way to share data and functionality across an application. It is a TypeScript class decorated with `@Injectable()`.
+**Service** là cách phổ biến nhất để chia sẻ dữ liệu và chức năng trong ứng dụng. Nó là một class TypeScript được gắn decorator `@Injectable()`.
 
-### Creating a Service
+### Tạo một Service
 
-Use the `providedIn: 'root'` option in the `@Injectable` decorator to make the service a singleton available throughout the entire application. This is the recommended approach for most services.
+Dùng tùy chọn `providedIn: 'root'` trong decorator `@Injectable` để biến service thành singleton khả dụng trong toàn bộ ứng dụng. Đây là cách được khuyến nghị cho hầu hết service.
 
 ```ts
 import {Injectable} from '@angular/core';
@@ -32,21 +32,21 @@ export class AnalyticsLogger {
 }
 ```
 
-Common uses for services include:
+Các cách dùng phổ biến của service gồm:
 
-- Data clients (API calls)
-- State management
-- Authentication and authorization
-- Logging and error handling
-- Utility functions
+- Data client (gọi API)
+- Quản lý state
+- Xác thực (authentication) và phân quyền (authorization)
+- Logging và xử lý lỗi
+- Các hàm tiện ích
 
-## Injecting Dependencies
+## Inject Dependency
 
-Use Angular's `inject()` function to request dependencies.
+Dùng hàm `inject()` của Angular để yêu cầu dependency.
 
-### The `inject()` Function
+### Hàm `inject()`
 
-You can use the `inject()` function to get an instance of a service (or any other provided token).
+Bạn có thể dùng hàm `inject()` để lấy một instance của service (hoặc bất kỳ token nào khác đã được cung cấp).
 
 ```ts
 import {Component, inject} from '@angular/core';
@@ -70,16 +70,16 @@ export class Navbar {
 }
 ```
 
-### Where can `inject()` be used? (Injection Context)
+### `inject()` có thể dùng ở đâu? (Injection Context)
 
-You can call `inject()` in an **injection context**. The most common injection contexts are during the construction of a component, directive, or service.
+Bạn có thể gọi `inject()` trong một **injection context**. Các injection context phổ biến nhất là trong quá trình khởi tạo một component, directive hoặc service.
 
-Valid places to call `inject()`:
+Những nơi hợp lệ để gọi `inject()`:
 
-1. **Class field initializers** (Recommended)
-2. **Constructor body**
-3. **Route guards and resolvers** (which are executed in an injection context)
-4. **Factory functions** used in providers
+1. **Class field initializer** (Khuyến nghị)
+2. **Thân constructor**
+3. **Route guard và resolver** (được thực thi trong một injection context)
+4. **Factory function** dùng trong provider
 
 ```typescript
 import {Component, Directive, Injectable, inject, ElementRef} from '@angular/core';

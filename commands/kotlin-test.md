@@ -1,30 +1,30 @@
 ---
-description: Enforce TDD workflow for Kotlin. Write Kotest tests first, then implement. Verify 80%+ coverage with Kover.
+description: Áp dụng quy trình TDD cho Kotlin. Viết test Kotest trước, rồi mới triển khai. Xác minh coverage 80%+ bằng Kover.
 ---
 
-# Kotlin TDD Command
+# Lệnh Kotlin TDD
 
-This command enforces test-driven development methodology for Kotlin code using Kotest, MockK, and Kover.
+Command này áp dụng phương pháp phát triển hướng kiểm thử (TDD) cho code Kotlin, sử dụng Kotest, MockK và Kover.
 
-## What This Command Does
+## Command này làm gì
 
-1. **Define Types/Interfaces**: Scaffold function signatures first
-2. **Write Kotest Tests**: Create comprehensive test specs (RED)
-3. **Run Tests**: Verify tests fail for the right reason
-4. **Implement Code**: Write minimal code to pass (GREEN)
-5. **Refactor**: Improve while keeping tests green
-6. **Check Coverage**: Ensure 80%+ coverage with Kover
+1. **Định nghĩa Type/Interface**: Dựng sườn chữ ký hàm trước
+2. **Viết test Kotest**: Tạo các test spec toàn diện (RED)
+3. **Chạy test**: Xác minh test thất bại đúng lý do
+4. **Triển khai code**: Viết code tối thiểu để pass (GREEN)
+5. **Refactor**: Cải thiện trong khi giữ test xanh
+6. **Kiểm tra coverage**: Đảm bảo coverage từ 80% trở lên với Kover
 
-## When to Use
+## Khi nào dùng
 
-Use `/kotlin-test` when:
-- Implementing new Kotlin functions or classes
-- Adding test coverage to existing Kotlin code
-- Fixing bugs (write failing test first)
-- Building critical business logic
-- Learning TDD workflow in Kotlin
+Dùng `/kotlin-test` khi:
+- Triển khai các hàm hoặc class Kotlin mới
+- Bổ sung test coverage cho code Kotlin hiện có
+- Sửa bug (viết test thất bại trước)
+- Xây dựng business logic quan trọng
+- Học quy trình TDD trong Kotlin
 
-## TDD Cycle
+## Chu trình TDD
 
 ```
 RED     -> Write failing Kotest test
@@ -33,7 +33,7 @@ REFACTOR -> Improve code, tests stay green
 REPEAT  -> Next test case
 ```
 
-## Example Session
+## Phiên làm việc ví dụ
 
 ````text
 User: /kotlin-test I need a function to validate user registration requests
@@ -203,9 +203,9 @@ Coverage: 100.0% of statements
 ## TDD Complete!
 ````
 
-## Test Patterns
+## Các pattern test
 
-### StringSpec (Simplest)
+### StringSpec (đơn giản nhất)
 
 ```kotlin
 class CalculatorTest : StringSpec({
@@ -227,7 +227,7 @@ class OrderServiceTest : BehaviorSpec({
 })
 ```
 
-### Data-Driven Tests
+### Data-Driven Test
 
 ```kotlin
 class ParserTest : FunSpec({
@@ -239,7 +239,7 @@ class ParserTest : FunSpec({
 })
 ```
 
-### Coroutine Testing
+### Test Coroutine
 
 ```kotlin
 class AsyncServiceTest : FunSpec({
@@ -252,7 +252,7 @@ class AsyncServiceTest : FunSpec({
 })
 ```
 
-## Coverage Commands
+## Các lệnh coverage
 
 ```bash
 # Run tests with coverage
@@ -274,39 +274,39 @@ open build/reports/kover/html/index.html
 ./gradlew test --info
 ```
 
-## Coverage Targets
+## Mục tiêu coverage
 
-| Code Type | Target |
+| Loại code | Mục tiêu |
 |-----------|--------|
-| Critical business logic | 100% |
-| Public APIs | 90%+ |
-| General code | 80%+ |
-| Generated code | Exclude |
+| Business logic quan trọng | 100% |
+| API công khai | 90%+ |
+| Code thông thường | 80%+ |
+| Code được sinh tự động | Loại trừ |
 
-## TDD Best Practices
+## Best practice của TDD
 
-**DO:**
-- Write test FIRST, before any implementation
-- Run tests after each change
-- Use Kotest matchers for expressive assertions
-- Use MockK's `coEvery`/`coVerify` for suspend functions
-- Test behavior, not implementation details
-- Include edge cases (empty, null, max values)
+**NÊN:**
+- Viết test TRƯỚC, trước bất kỳ phần triển khai nào
+- Chạy test sau mỗi thay đổi
+- Dùng matcher của Kotest để có assertion giàu biểu đạt
+- Dùng `coEvery`/`coVerify` của MockK cho các suspend function
+- Test hành vi, không test chi tiết triển khai
+- Bao gồm các edge case (rỗng, null, giá trị tối đa)
 
-**DON'T:**
-- Write implementation before tests
-- Skip the RED phase
-- Test private functions directly
-- Use `Thread.sleep()` in coroutine tests
-- Ignore flaky tests
+**KHÔNG NÊN:**
+- Viết phần triển khai trước test
+- Bỏ qua pha RED
+- Test trực tiếp các hàm private
+- Dùng `Thread.sleep()` trong test coroutine
+- Bỏ qua các flaky test
 
-## Related Commands
+## Các command liên quan
 
-- `/kotlin-build` - Fix build errors
-- `/kotlin-review` - Review code after implementation
-- `verification-loop` skill - Run full verification loop
+- `/kotlin-build` - Sửa lỗi build
+- `/kotlin-review` - Review code sau khi triển khai
+- skill `verification-loop` - Chạy vòng lặp xác minh đầy đủ
 
-## Related
+## Liên quan
 
 - Skill: `skills/kotlin-testing/`
 - Skill: `skills/tdd-workflow/`

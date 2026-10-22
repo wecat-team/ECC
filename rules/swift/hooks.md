@@ -3,18 +3,18 @@ paths:
   - "**/*.swift"
   - "**/Package.swift"
 ---
-# Swift Hooks
+# Hook Swift
 
-> This file extends [common/hooks.md](../common/hooks.md) with Swift specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung riêng cho Swift.
 
-## PostToolUse Hooks
+## Hook PostToolUse
 
-Configure in `~/.claude/settings.json`:
+Cấu hình trong `~/.claude/settings.json`:
 
-- **SwiftFormat**: Auto-format `.swift` files after edit
-- **SwiftLint**: Run lint checks after editing `.swift` files
-- **swift build**: Type-check modified packages after edit
+- **SwiftFormat**: Tự động định dạng các file `.swift` sau khi sửa
+- **SwiftLint**: Chạy kiểm tra lint sau khi sửa các file `.swift`
+- **swift build**: Kiểm tra type cho các package đã sửa sau khi chỉnh sửa
 
-## Warning
+## Cảnh báo
 
-Flag `print()` statements — use `os.Logger` or structured logging instead for production code.
+Đánh dấu các câu lệnh `print()` — hãy dùng `os.Logger` hoặc structured logging thay thế cho code production.

@@ -1,20 +1,20 @@
 ---
-description: Load the most recent session file from ~/.claude/session-data/ and resume work with full context from where the last session ended.
+description: Tải file session gần nhất từ ~/.claude/session-data/ và tiếp tục công việc với đầy đủ context từ chỗ session trước kết thúc.
 ---
 
-# Resume Session Command
+# Lệnh Resume Session
 
-Load the last saved session state and orient fully before doing any work.
-This command is the counterpart to `/save-session`.
+Tải trạng thái session đã lưu gần nhất và nắm rõ tình hình trước khi làm bất kỳ việc gì.
+Lệnh này là đối ứng của `/save-session`.
 
-## When to Use
+## Khi nào dùng
 
-- Starting a new session to continue work from a previous day
-- After starting a fresh session due to context limits
-- When handing off a session file from another source (just provide the file path)
-- Any time you have a session file and want Claude to fully absorb it before proceeding
+- Bắt đầu session mới để tiếp tục công việc từ ngày trước
+- Sau khi bắt đầu session mới do giới hạn context
+- Khi bàn giao file session từ nguồn khác (chỉ cần cung cấp đường dẫn file)
+- Bất cứ lúc nào bạn có file session và muốn Claude tiếp thu đầy đủ trước khi tiếp tục
 
-## Usage
+## Cách dùng
 
 ```
 /resume-session                                                      # loads most recent file in ~/.claude/session-data/
@@ -23,57 +23,57 @@ This command is the counterpart to `/save-session`.
 /resume-session ~/.claude/sessions/2024-01-15-session.tmp               # loads a specific legacy-format file
 ```
 
-## Process
+## Quy trình
 
-### Step 1: Find the session file
+### Bước 1: Tìm file session
 
-If no argument provided:
+Nếu không có đối số:
 
-1. Check `~/.claude/session-data/`
-2. Read the matching `*-session.tmp` candidates and apply the candidate ranking below
-3. Load the highest-ranked candidate
-4. If the folder does not exist or has no eligible matching files, tell the user:
+1. Kiểm tra `~/.claude/session-data/`
+2. Đọc các ứng viên `*-session.tmp` khớp và áp dụng bảng xếp hạng ứng viên bên dưới
+3. Tải ứng viên xếp hạng cao nhất
+4. Nếu thư mục không tồn tại hoặc không có file khớp hợp lệ, hãy báo người dùng:
    ```
    No session files found in ~/.claude/session-data/
    Run /save-session at the end of a session to create one.
    ```
-   Then stop.
+   Sau đó dừng lại.
 
-If an argument is provided:
+Nếu có đối số:
 
-- If it looks like a date (`YYYY-MM-DD`), search `~/.claude/session-data/` first, then the legacy
-  `~/.claude/sessions/`, for files matching `YYYY-MM-DD-session.tmp` (legacy format) or
-  `YYYY-MM-DD-<shortid>-session.tmp` (current format), apply the candidate ranking below across
-  all matches, and load the highest-ranked candidate for that date
-- If it looks like a file path, read exactly that file directly. Do not apply candidate ranking or
-  substitute a different file, even if the requested file is empty or another file is newer
-- If not found, report clearly and stop
+- Nếu nó trông như một ngày (`YYYY-MM-DD`), tìm trong `~/.claude/session-data/` trước, rồi đến thư mục legacy
+  `~/.claude/sessions/`, các file khớp `YYYY-MM-DD-session.tmp` (định dạng legacy) hoặc
+  `YYYY-MM-DD-<shortid>-session.tmp` (định dạng hiện tại), áp dụng bảng xếp hạng ứng viên bên dưới trên
+  tất cả các file khớp, và tải ứng viên xếp hạng cao nhất của ngày đó
+- Nếu nó trông như một đường dẫn file, đọc đúng file đó trực tiếp. Không áp dụng xếp hạng ứng viên hay
+  thay bằng file khác, kể cả khi file được yêu cầu rỗng hoặc có file khác mới hơn
+- Nếu không tìm thấy, báo cáo rõ ràng và dừng lại
 
-#### Candidate ranking for implicit and date-based lookup
+#### Xếp hạng ứng viên cho tra cứu ngầm định và theo ngày
 
-Rank only automatically discovered candidates. Never use this ranking for an explicit file path.
+Chỉ xếp hạng các ứng viên được tự động phát hiện. KHÔNG BAO GIỜ dùng bảng xếp hạng này cho đường dẫn file được chỉ định tường minh.
 
-1. Reject files that are unreadable, empty, whitespace-only, or contain only headings, metadata,
-   separators, and placeholder values such as `[Session context goes here]`, `- [ ]`, a lone `-`,
-   or `[relevant files]`.
-2. Reject generated summaries with only one task and no populated files-modified, tools-used,
-   completed, in-progress, notes, or context-to-load content. This structural rule filters
-   one-message summarizer echoes without depending on any particular prompt text.
-3. Keep candidates with substantive populated content: completed work, in-progress work, concrete
-   next-session notes, concrete context paths, multiple tasks, modified files, or tools used.
-4. Among eligible substantive candidates, prefer the newest modification time.
-5. If modification times are equal, prefer more populated sections, then more non-placeholder
-   content, then larger byte size, then the lexicographically smaller resolved path. Count populated
-   sections and content only after removing headings, metadata, separators, and placeholder text.
-   These final tie-breaks make selection deterministic.
+1. Loại các file không đọc được, rỗng, chỉ có khoảng trắng, hoặc chỉ chứa heading, metadata,
+   dấu phân cách và giá trị placeholder như `[Session context goes here]`, `- [ ]`, một dấu `-` đơn lẻ,
+   hoặc `[relevant files]`.
+2. Loại các bản tóm tắt được sinh tự động chỉ có một task và không có nội dung files-modified, tools-used,
+   completed, in-progress, notes hoặc context-to-load nào được điền. Quy tắc cấu trúc này lọc
+   các bản echo của summarizer một-tin-nhắn mà không phụ thuộc vào bất kỳ văn bản prompt cụ thể nào.
+3. Giữ lại các ứng viên có nội dung thực chất được điền: công việc đã hoàn thành, công việc đang làm, ghi chú
+   cụ thể cho session sau, đường dẫn context cụ thể, nhiều task, file đã sửa hoặc tool đã dùng.
+4. Trong các ứng viên hợp lệ có nội dung thực chất, ưu tiên thời gian sửa đổi mới nhất.
+5. Nếu thời gian sửa đổi bằng nhau, ưu tiên file có nhiều section được điền hơn, rồi nhiều nội dung không phải placeholder
+   hơn, rồi dung lượng byte lớn hơn, rồi đường dẫn đã resolve nhỏ hơn theo thứ tự từ điển. Chỉ đếm các section và nội dung đã
+   được điền sau khi loại bỏ heading, metadata, dấu phân cách và văn bản placeholder.
+   Các tiêu chí phân xử cuối cùng này làm cho việc chọn là xác định (deterministic).
 
-### Step 2: Read the entire session file
+### Bước 2: Đọc toàn bộ file session
 
-Read the complete file. Do not summarize yet.
+Đọc toàn bộ file. Chưa tóm tắt vội.
 
-### Step 3: Confirm understanding
+### Bước 3: Xác nhận sự hiểu
 
-Respond with a structured briefing in this exact format:
+Phản hồi bằng một bản briefing có cấu trúc theo đúng định dạng này:
 
 ```
 SESSION LOADED: [actual resolved path to the file]
@@ -103,41 +103,41 @@ NEXT STEP:
 Ready to continue. What would you like to do?
 ```
 
-### Step 4: Wait for the user
+### Bước 4: Chờ người dùng
 
-Do NOT start working automatically. Do NOT touch any files. Wait for the user to say what to do next.
+KHÔNG tự động bắt đầu làm việc. KHÔNG đụng vào bất kỳ file nào. Chờ người dùng nói làm gì tiếp theo.
 
-If the next step is clearly defined in the session file and the user says "continue" or "yes" or similar — proceed with that exact next step.
+Nếu bước tiếp theo được định nghĩa rõ trong file session và người dùng nói "continue" hoặc "yes" hoặc tương tự — tiến hành đúng bước tiếp theo đó.
 
-If no next step is defined — ask the user where to start, and optionally suggest an approach from the "What Has NOT Been Tried Yet" section.
-
----
-
-## Edge Cases
-
-**Multiple sessions for the same date** (`2024-01-15-session.tmp`, `2024-01-15-abc123de-session.tmp`):
-Apply the candidate ranking across every matching legacy and current-format file. A substantive
-session must win over a newer placeholder or one-message summarizer echo; modification time decides
-between eligible candidates.
-
-**Session file references files that no longer exist:**
-Note this during the briefing — "WARNING: `path/to/file.ts` referenced in session but not found on disk."
-
-**Session file is from more than 7 days ago:**
-Note the gap — "WARNING: This session is from N days ago (threshold: 7 days). Things may have changed." — then proceed normally.
-
-**User provides a file path directly (e.g., forwarded from a teammate):**
-Read it and follow the same briefing process — the format is the same regardless of source.
-
-**Session file is empty or malformed:**
-For implicit or date-based discovery, reject it and continue ranking the remaining candidates. If no
-eligible candidate remains, report: "Session files were found but appear empty or unreadable. You may
-need to create a new one with /save-session." For an explicit path, report that the requested file is
-empty or unreadable without loading a substitute.
+Nếu chưa có bước tiếp theo — hãy hỏi người dùng bắt đầu từ đâu, và có thể đề xuất một hướng tiếp cận từ section "What Has NOT Been Tried Yet".
 
 ---
 
-## Example Output
+## Edge Case
+
+**Nhiều session trong cùng một ngày** (`2024-01-15-session.tmp`, `2024-01-15-abc123de-session.tmp`):
+Áp dụng xếp hạng ứng viên trên mọi file khớp ở cả định dạng legacy và hiện tại. Một session có nội dung
+thực chất PHẢI thắng một placeholder mới hơn hoặc một bản echo summarizer một-tin-nhắn; thời gian sửa đổi quyết định
+giữa các ứng viên hợp lệ.
+
+**File session tham chiếu đến các file không còn tồn tại:**
+Ghi chú điều này trong briefing — "WARNING: `path/to/file.ts` referenced in session but not found on disk."
+
+**File session cũ hơn 7 ngày:**
+Ghi chú khoảng cách — "WARNING: This session is from N days ago (threshold: 7 days). Things may have changed." — rồi tiếp tục bình thường.
+
+**Người dùng cung cấp trực tiếp đường dẫn file (ví dụ: được đồng nghiệp chuyển tiếp):**
+Đọc nó và theo cùng quy trình briefing — định dạng giống nhau bất kể nguồn.
+
+**File session rỗng hoặc sai định dạng:**
+Với việc phát hiện ngầm định hoặc theo ngày, loại nó và tiếp tục xếp hạng các ứng viên còn lại. Nếu không còn
+ứng viên hợp lệ, báo cáo: "Session files were found but appear empty or unreadable. You may
+need to create a new one with /save-session." Với đường dẫn tường minh, báo cáo rằng file được yêu cầu
+rỗng hoặc không đọc được mà không tải file thay thế.
+
+---
+
+## Ví dụ Output
 
 ```
 SESSION LOADED: /Users/you/.claude/session-data/2024-01-15-abc123de-session.tmp
@@ -173,9 +173,9 @@ Ready to continue. What would you like to do?
 
 ---
 
-## Notes
+## Ghi chú
 
-- Never modify the session file when loading it — it's a read-only historical record
-- The briefing format is fixed — do not skip sections even if they are empty
-- "What Not To Retry" must always be shown, even if it just says "None" — it's too important to miss
-- After resuming, the user may want to run `/save-session` again at the end of the new session to create a new dated file
+- KHÔNG BAO GIỜ sửa file session khi tải nó — đó là bản ghi lịch sử chỉ đọc
+- Định dạng briefing là cố định — không bỏ qua section nào dù nó rỗng
+- "What Not To Retry" luôn phải được hiển thị, kể cả khi chỉ ghi "None" — nó quá quan trọng để bỏ lỡ
+- Sau khi resume, người dùng có thể muốn chạy `/save-session` lần nữa ở cuối session mới để tạo một file mới có ngày
