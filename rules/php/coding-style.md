@@ -3,38 +3,38 @@ paths:
   - "**/*.php"
   - "**/composer.json"
 ---
-# PHP Coding Style
+# Phong cách code PHP
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with PHP specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho PHP.
 
-## Standards
+## Tiêu chuẩn
 
-- Follow **PSR-12** formatting and naming conventions.
-- Prefer `declare(strict_types=1);` in application code.
-- Use scalar type hints, return types, and typed properties everywhere new code permits.
+- Tuân theo quy ước định dạng và đặt tên **PSR-12**.
+- Ưu tiên `declare(strict_types=1);` trong code ứng dụng.
+- Dùng scalar type hint, return type và typed property ở mọi nơi mà code mới cho phép.
 
-## Immutability
+## Bất biến (Immutability)
 
-- Prefer immutable DTOs and value objects for data crossing service boundaries.
-- Use `readonly` properties or immutable constructors for request/response payloads where possible.
-- Keep arrays for simple maps; promote business-critical structures into explicit classes.
+- Ưu tiên DTO và value object bất biến cho dữ liệu đi qua ranh giới service.
+- Dùng property `readonly` hoặc constructor bất biến cho payload request/response khi có thể.
+- Giữ array cho các map đơn giản; nâng các cấu trúc quan trọng về nghiệp vụ lên thành class tường minh.
 
-## Formatting
+## Định dạng
 
-- Use **PHP-CS-Fixer** or **Laravel Pint** for formatting.
-- Use **PHPStan** or **Psalm** for static analysis.
-- Keep Composer scripts checked in so the same commands run locally and in CI.
+- Dùng **PHP-CS-Fixer** hoặc **Laravel Pint** để format.
+- Dùng **PHPStan** hoặc **Psalm** để phân tích tĩnh.
+- Giữ các script Composer được commit sẵn để cùng một lệnh chạy được cả ở local lẫn trong CI.
 
-## Imports
+## Import
 
-- Add `use` statements for all referenced classes, interfaces, and traits.
-- Avoid relying on the global namespace unless the project explicitly prefers fully qualified names.
+- Thêm câu lệnh `use` cho mọi class, interface và trait được tham chiếu.
+- Tránh dựa vào global namespace trừ khi dự án chủ ý ưu tiên tên đầy đủ (fully qualified name).
 
-## Error Handling
+## Xử lý lỗi
 
-- Throw exceptions for exceptional states; avoid returning `false`/`null` as hidden error channels in new code.
-- Convert framework/request input into validated DTOs before it reaches domain logic.
+- Throw exception cho các trạng thái ngoại lệ; tránh trả về `false`/`null` như một kênh lỗi ngầm trong code mới.
+- Chuyển input từ framework/request thành DTO đã validate trước khi nó tới domain logic.
 
-## Reference
+## Tham chiếu
 
-See skill: `backend-patterns` for broader service/repository layering guidance.
+Xem skill: `backend-patterns` để có hướng dẫn rộng hơn về phân tầng service/repository.

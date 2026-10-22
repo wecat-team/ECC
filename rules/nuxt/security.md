@@ -5,44 +5,44 @@ paths:
   - "**/server/**/*.ts"
 ---
 
-# Nuxt Security
+# Bảo mật Nuxt
 
-> This file extends [common/security.md](../common/security.md) with Nuxt specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho Nuxt.
 
-## runtimeConfig public vs private
+## runtimeConfig public và private
 
-- Root `runtimeConfig` keys are server-only. `runtimeConfig.public` serializes into EVERY page payload (client-visible).
-- Secrets go at root only. Never put secrets in `app.config.ts` or `runtimeConfig.public`, both ship to the client bundle.
-- Official warning: "Be careful not to expose runtime config keys to the client-side by either rendering them or passing them to `useState`."
+- Các key `runtimeConfig` ở root chỉ dùng phía server. `runtimeConfig.public` được serialize vào payload của MỌI trang (hiển thị với client).
+- Secret chỉ đặt ở root. KHÔNG BAO GIỜ đặt secret trong `app.config.ts` hoặc `runtimeConfig.public`, cả hai đều được đưa vào client bundle.
+- Cảnh báo chính thức: "Be careful not to expose runtime config keys to the client-side by either rendering them or passing them to `useState`."
 
-## Server-route input validation
+## Kiểm tra đầu vào của server route
 
-- Use h3 validating readers. Do NOT trust raw `readBody` / `getQuery` / `getRouterParam`.
-  - `readValidatedBody(event, schema)` validates the body.
-  - `getValidatedQuery(event, schema)` validates the query.
-  - `getValidatedRouterParams(event, schema)` validates route params.
-- All accept a validation function or a Zod schema and throw on failure.
+- Dùng các validating reader của h3. KHÔNG tin cậy `readBody` / `getQuery` / `getRouterParam` thuần.
+  - `readValidatedBody(event, schema)` validate body.
+  - `getValidatedQuery(event, schema)` validate query.
+  - `getValidatedRouterParams(event, schema)` validate route param.
+- Tất cả đều nhận một hàm validate hoặc Zod schema và throw khi thất bại.
 
-## SSR payload leakage
+## Rò rỉ payload SSR
 
-- Anything in `useState`, `useFetch` / `useAsyncData` results, or `runtimeConfig.public` is serialized into the client payload. Never write a secret into those.
-- Use `useServerSeoMeta` for server-only meta with no client cost.
+- Mọi thứ trong `useState`, kết quả của `useFetch` / `useAsyncData`, hoặc `runtimeConfig.public` đều được serialize vào payload gửi xuống client. KHÔNG BAO GIỜ ghi secret vào các nơi đó.
+- Dùng `useServerSeoMeta` cho meta chỉ có ở server mà không tốn chi phí phía client.
 
-## Cookie and auth passthrough on SSR
+## Chuyển tiếp cookie và auth trên SSR
 
-- Nuxt does NOT auto-attach the incoming user's cookies to outbound server-side `$fetch`.
-- Forward explicitly with `useRequestFetch()` (cleanest, pre-bound to request headers) or `useRequestHeaders(['cookie'])`.
-- Relay a backend `Set-Cookie` to the browser via `$fetch.raw` + `appendResponseHeader(event, 'set-cookie', ...)`.
-- socket.io is client-only (`.client.ts` plugin), never SSR.
+- Nuxt KHÔNG tự động gắn cookie của người dùng đang gửi request vào `$fetch` phía server gửi ra ngoài.
+- Chuyển tiếp tường minh bằng `useRequestFetch()` (gọn nhất, đã bind sẵn với header của request) hoặc `useRequestHeaders(['cookie'])`.
+- Chuyển tiếp `Set-Cookie` của backend tới trình duyệt qua `$fetch.raw` + `appendResponseHeader(event, 'set-cookie', ...)`.
+- socket.io chỉ chạy phía client (plugin `.client.ts`), KHÔNG BAO GIỜ chạy trong SSR.
 
-## SSRF on server $fetch
+## SSRF trên $fetch phía server
 
-- Server routes run with full network egress. Never pass user-controlled input directly into a server-side `$fetch` URL or host.
-- Validate the param first (h3 utilities above), allowlist the target, pin to `runtimeConfig.public.apiBase`, reject user-supplied absolute URLs.
-- Auto-trigger `/security-review` only for routes that make external network requests (server `$fetch`), handle auth tokens or credentials, or perform sensitive mutations or authorization checks. Examples: SSRF-prone proxy endpoints, token exchange or password reset, admin actions. Skip benign read-only routes that only accept validated query params.
+- Server route chạy với toàn quyền truy cập mạng ra ngoài. KHÔNG BAO GIỜ truyền trực tiếp input do người dùng kiểm soát vào URL hoặc host của `$fetch` phía server.
+- Validate tham số trước (các tiện ích h3 ở trên), allowlist đích đến, ghim vào `runtimeConfig.public.apiBase`, từ chối URL tuyệt đối do người dùng cung cấp.
+- Chỉ tự động kích hoạt `/security-review` cho các route thực hiện request mạng ra bên ngoài (`$fetch` phía server), xử lý auth token hoặc credential, hoặc thực hiện mutation nhạy cảm hay kiểm tra phân quyền. Ví dụ: endpoint proxy dễ bị SSRF, trao đổi token hoặc đặt lại mật khẩu, thao tác admin. Bỏ qua các route chỉ đọc vô hại chỉ nhận query param đã được validate.
 
-## Reference
+## Tham chiếu
 
-- ECC skills: `security-review`, `nuxt4-patterns`.
+- Skill ECC: `security-review`, `nuxt4-patterns`.
 - [Nuxt runtime config](https://nuxt.com/docs/guide/going-further/runtime-config)
 - [h3 request utils](https://v1.h3.dev/utils/request)

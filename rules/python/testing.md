@@ -3,13 +3,13 @@ paths:
   - "**/*.py"
   - "**/*.pyi"
 ---
-# Python Testing
+# Kiểm thử Python
 
-> This file extends [common/testing.md](../common/testing.md) with Python specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung dành riêng cho Python.
 
 ## Framework
 
-Use **pytest** as the testing framework.
+Dùng **pytest** làm testing framework.
 
 ## Coverage
 
@@ -17,9 +17,9 @@ Use **pytest** as the testing framework.
 pytest --cov=src --cov-report=term-missing
 ```
 
-## Test Organization
+## Tổ chức Test
 
-Use `pytest.mark` for test categorization:
+Dùng `pytest.mark` để phân loại test:
 
 ```python
 import pytest
@@ -33,6 +33,6 @@ def test_database_connection():
     ...
 ```
 
-## Reference
+## Tham chiếu
 
-See skill: `python-testing` for detailed pytest patterns and fixtures.
+Xem skill: `python-testing` để có các pattern pytest và fixture chi tiết.

@@ -4,9 +4,9 @@ paths:
   - "**/go.mod"
   - "**/go.sum"
 ---
-# Go Patterns
+# Pattern Go
 
-> This file extends [common/patterns.md](../common/patterns.md) with Go specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho Go.
 
 ## Functional Options
 
@@ -26,13 +26,13 @@ func NewServer(opts ...Option) *Server {
 }
 ```
 
-## Small Interfaces
+## Interface nhỏ
 
-Define interfaces where they are used, not where they are implemented.
+Định nghĩa interface ở nơi chúng được dùng, không phải nơi chúng được triển khai.
 
 ## Dependency Injection
 
-Use constructor functions to inject dependencies:
+Dùng constructor function để inject dependency:
 
 ```go
 func NewUserService(repo UserRepository, logger Logger) *UserService {
@@ -40,6 +40,6 @@ func NewUserService(repo UserRepository, logger Logger) *UserService {
 }
 ```
 
-## Reference
+## Tham chiếu
 
-See skill: `golang-patterns` for comprehensive Go patterns including concurrency, error handling, and package organization.
+Xem skill: `golang-patterns` để có các pattern Go toàn diện, bao gồm concurrency, xử lý lỗi và tổ chức package.

@@ -3,9 +3,9 @@ paths:
   - "**/*.py"
   - "**/*.pyi"
 ---
-# Python Patterns
+# Pattern Python
 
-> This file extends [common/patterns.md](../common/patterns.md) with Python specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho Python.
 
 ## Protocol (Duck Typing)
 
@@ -17,7 +17,7 @@ class Repository(Protocol):
     def save(self, entity: dict) -> dict: ...
 ```
 
-## Dataclasses as DTOs
+## Dataclass làm DTO
 
 ```python
 from dataclasses import dataclass
@@ -29,11 +29,11 @@ class CreateUserRequest:
     age: int | None = None
 ```
 
-## Context Managers & Generators
+## Context Manager & Generator
 
-- Use context managers (`with` statement) for resource management
-- Use generators for lazy evaluation and memory-efficient iteration
+- Dùng context manager (câu lệnh `with`) để quản lý tài nguyên
+- Dùng generator cho lazy evaluation và duyệt tiết kiệm bộ nhớ
 
-## Reference
+## Tham chiếu
 
-See skill: `python-patterns` for comprehensive patterns including decorators, concurrency, and package organization.
+Xem skill: `python-patterns` để có các pattern toàn diện bao gồm decorator, concurrency và tổ chức package.

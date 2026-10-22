@@ -1,26 +1,26 @@
 ---
-description: Sync documentation from source-of-truth files such as scripts, schemas, routes, and exports.
+description: Đồng bộ tài liệu từ các file nguồn sự thật (source-of-truth) như script, schema, route và export.
 ---
 
 # Update Documentation
 
-Sync documentation with the codebase, generating from source-of-truth files.
+Đồng bộ tài liệu với codebase, tạo ra từ các file nguồn sự thật.
 
-## Step 1: Identify Sources of Truth
+## Bước 1: Xác định các nguồn sự thật
 
-| Source | Generates |
+| Nguồn | Tạo ra |
 |--------|-----------|
-| `package.json` scripts | Available commands reference |
-| `.env.example` | Environment variable documentation |
-| `openapi.yaml` / route files | API endpoint reference |
-| Source code exports | Public API documentation |
-| `Dockerfile` / `docker-compose.yml` | Infrastructure setup docs |
+| Script trong `package.json` | Tài liệu tham chiếu các lệnh có sẵn |
+| `.env.example` | Tài liệu biến môi trường |
+| `openapi.yaml` / các file route | Tài liệu tham chiếu API endpoint |
+| Export của source code | Tài liệu API public |
+| `Dockerfile` / `docker-compose.yml` | Tài liệu thiết lập hạ tầng |
 
-## Step 2: Generate Script Reference
+## Bước 2: Tạo tài liệu tham chiếu Script
 
-1. Read `package.json` (or `Makefile`, `Cargo.toml`, `pyproject.toml`)
-2. Extract all scripts/commands with their descriptions
-3. Generate a reference table:
+1. Đọc `package.json` (hoặc `Makefile`, `Cargo.toml`, `pyproject.toml`)
+2. Trích xuất tất cả script/lệnh cùng mô tả của chúng
+3. Tạo bảng tham chiếu:
 
 ```markdown
 | Command | Description |
@@ -30,12 +30,12 @@ Sync documentation with the codebase, generating from source-of-truth files.
 | `npm test` | Run test suite with coverage |
 ```
 
-## Step 3: Generate Environment Documentation
+## Bước 3: Tạo tài liệu Biến môi trường
 
-1. Read `.env.example` (or `.env.template`, `.env.sample`)
-2. Extract all variables with their purposes
-3. Categorize as required vs optional
-4. Document expected format and valid values
+1. Đọc `.env.example` (hoặc `.env.template`, `.env.sample`)
+2. Trích xuất tất cả biến cùng mục đích của chúng
+3. Phân loại bắt buộc (required) và tùy chọn (optional)
+4. Ghi lại định dạng mong đợi và các giá trị hợp lệ
 
 ```markdown
 | Variable | Required | Description | Example |
@@ -44,31 +44,31 @@ Sync documentation with the codebase, generating from source-of-truth files.
 | `LOG_LEVEL` | No | Logging verbosity (default: info) | `debug`, `info`, `warn`, `error` |
 ```
 
-## Step 4: Update Contributing Guide
+## Bước 4: Cập nhật Contributing Guide
 
-Generate or update `docs/CONTRIBUTING.md` with:
-- Development environment setup (prerequisites, install steps)
-- Available scripts and their purposes
-- Testing procedures (how to run, how to write new tests)
-- Code style enforcement (linter, formatter, pre-commit hooks)
-- PR submission checklist
+Tạo hoặc cập nhật `docs/CONTRIBUTING.md` với:
+- Thiết lập môi trường phát triển (điều kiện tiên quyết, các bước cài đặt)
+- Các script có sẵn và mục đích của chúng
+- Quy trình kiểm thử (cách chạy, cách viết test mới)
+- Thực thi code style (linter, formatter, pre-commit hook)
+- Checklist khi gửi PR
 
-## Step 5: Update Runbook
+## Bước 5: Cập nhật Runbook
 
-Generate or update `docs/RUNBOOK.md` with:
-- Deployment procedures (step-by-step)
-- Health check endpoints and monitoring
-- Common issues and their fixes
-- Rollback procedures
-- Alerting and escalation paths
+Tạo hoặc cập nhật `docs/RUNBOOK.md` với:
+- Quy trình deploy (từng bước)
+- Endpoint health check và giám sát
+- Các sự cố thường gặp và cách khắc phục
+- Quy trình rollback
+- Cảnh báo và đường leo thang (escalation)
 
-## Step 6: Staleness Check
+## Bước 6: Kiểm tra độ lỗi thời
 
-1. Find documentation files not modified in 90+ days
-2. Cross-reference with recent source code changes
-3. Flag potentially outdated docs for manual review
+1. Tìm các file tài liệu không được sửa trong 90+ ngày
+2. Đối chiếu chéo với các thay đổi source code gần đây
+3. Đánh dấu các tài liệu có khả năng lỗi thời để review thủ công
 
-## Step 7: Show Summary
+## Bước 7: Hiển thị tóm tắt
 
 ```
 Documentation Update
@@ -80,9 +80,9 @@ Skipped:  docs/API.md (no changes detected)
 ──────────────────────────────
 ```
 
-## Rules
+## Quy tắc
 
-- **Single source of truth**: Always generate from code, never manually edit generated sections
-- **Preserve manual sections**: Only update generated sections; leave hand-written prose intact
-- **Mark generated content**: Use `<!-- AUTO-GENERATED -->` markers around generated sections
-- **Don't create docs unprompted**: Only create new doc files if the command explicitly requests it
+- **Nguồn sự thật duy nhất**: LUÔN LUÔN tạo từ code, KHÔNG BAO GIỜ chỉnh sửa thủ công các phần được tạo tự động
+- **Giữ nguyên các phần thủ công**: Chỉ cập nhật các phần được tạo; để nguyên văn xuôi viết tay
+- **Đánh dấu nội dung được tạo**: Dùng marker `<!-- AUTO-GENERATED -->` bao quanh các phần được tạo
+- **Không tự ý tạo tài liệu**: Chỉ tạo file tài liệu mới nếu lệnh yêu cầu tường minh

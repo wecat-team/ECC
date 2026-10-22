@@ -3,13 +3,13 @@ paths:
   - "**/*.kt"
   - "**/*.kts"
 ---
-# Kotlin Patterns
+# Pattern Kotlin
 
-> This file extends [common/patterns.md](../common/patterns.md) with Kotlin and Android/KMP-specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho Kotlin và Android/KMP.
 
 ## Dependency Injection
 
-Prefer constructor injection. Use Koin (KMP) or Hilt (Android-only):
+Ưu tiên constructor injection. Dùng Koin (KMP) hoặc Hilt (chỉ Android):
 
 ```kotlin
 // Koin — declare modules
@@ -28,7 +28,7 @@ class ItemListViewModel @Inject constructor(
 
 ## ViewModel Pattern
 
-Single state object, event sink, one-way data flow:
+Một state object duy nhất, event sink, luồng dữ liệu một chiều:
 
 ```kotlin
 data class ScreenState(
@@ -51,9 +51,9 @@ class ScreenViewModel(private val useCase: GetItemsUseCase) : ViewModel() {
 
 ## Repository Pattern
 
-- `suspend` functions return `Result<T>` or custom error type
-- `Flow` for reactive streams
-- Coordinate local + remote data sources
+- Hàm `suspend` trả về `Result<T>` hoặc kiểu lỗi tùy chỉnh
+- `Flow` cho các reactive stream
+- Phối hợp nguồn dữ liệu local + remote
 
 ```kotlin
 interface ItemRepository {
@@ -65,7 +65,7 @@ interface ItemRepository {
 
 ## UseCase Pattern
 
-Single responsibility, `operator fun invoke`:
+Một trách nhiệm duy nhất, `operator fun invoke`:
 
 ```kotlin
 class GetItemUseCase(private val repository: ItemRepository) {
@@ -83,7 +83,7 @@ class GetItemsUseCase(private val repository: ItemRepository) {
 
 ## expect/actual (KMP)
 
-Use for platform-specific implementations:
+Dùng cho các triển khai riêng theo nền tảng:
 
 ```kotlin
 // commonMain
@@ -108,13 +108,13 @@ actual class SecureStorage {
 }
 ```
 
-## Coroutine Patterns
+## Pattern Coroutine
 
-- Use `viewModelScope` in ViewModels, `coroutineScope` for structured child work
-- Use `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialValue)` for StateFlow from cold Flows
-- Use `supervisorScope` when child failures should be independent
+- Dùng `viewModelScope` trong ViewModel, `coroutineScope` cho công việc con có cấu trúc
+- Dùng `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialValue)` để tạo StateFlow từ các Flow lạnh (cold Flow)
+- Dùng `supervisorScope` khi lỗi của các tác vụ con cần độc lập với nhau
 
-## Builder Pattern with DSL
+## Builder Pattern với DSL
 
 ```kotlin
 class HttpClientConfig {
@@ -140,7 +140,7 @@ val client = httpClient {
 }
 ```
 
-## References
+## Tham chiếu
 
-See skill: `kotlin-coroutines-flows` for detailed coroutine patterns.
-See skill: `android-clean-architecture` for module and layer patterns.
+Xem skill: `kotlin-coroutines-flows` để có các pattern coroutine chi tiết.
+Xem skill: `android-clean-architecture` để có các pattern module và layer.

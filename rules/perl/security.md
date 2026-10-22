@@ -6,19 +6,19 @@ paths:
   - "**/*.psgi"
   - "**/*.cgi"
 ---
-# Perl Security
+# Bảo mật Perl
 
-> This file extends [common/security.md](../common/security.md) with Perl-specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho Perl.
 
 ## Taint Mode
 
-- Use `-T` flag on all CGI/web-facing scripts
-- Sanitize `%ENV` (`$ENV{PATH}`, `$ENV{CDPATH}`, etc.) before any external command
+- Dùng flag `-T` cho mọi script CGI/hướng web
+- Sanitize `%ENV` (`$ENV{PATH}`, `$ENV{CDPATH}`, v.v.) trước mọi lệnh bên ngoài
 
-## Input Validation
+## Kiểm tra đầu vào (Input Validation)
 
-- Use allowlist regex for untainting — never `/(.*)/s`
-- Validate all user input with explicit patterns:
+- Dùng regex allowlist để untaint — KHÔNG BAO GIỜ dùng `/(.*)/s`
+- Validate mọi input của người dùng bằng các pattern tường minh:
 
 ```perl
 if ($input =~ /\A([a-zA-Z0-9_-]+)\z/) {
@@ -28,8 +28,8 @@ if ($input =~ /\A([a-zA-Z0-9_-]+)\z/) {
 
 ## File I/O
 
-- **Three-arg open only** — never two-arg open
-- Prevent path traversal with `Cwd::realpath`:
+- **Chỉ dùng open ba đối số** — KHÔNG BAO GIỜ dùng open hai đối số
+- Ngăn path traversal bằng `Cwd::realpath`:
 
 ```perl
 use Cwd 'realpath';
@@ -37,33 +37,33 @@ my $safe_path = realpath($user_path);
 die "Path traversal" unless $safe_path =~ m{\A/allowed/directory/};
 ```
 
-## Process Execution
+## Thực thi tiến trình
 
-- Use **list-form `system()`** — never single-string form
-- Use **IPC::Run3** for capturing output
-- Never use backticks with variable interpolation
+- Dùng **`system()` dạng danh sách** — KHÔNG BAO GIỜ dùng dạng một chuỗi
+- Dùng **IPC::Run3** để bắt output
+- KHÔNG BAO GIỜ dùng backtick với nội suy biến
 
 ```perl
 system('grep', '-r', $pattern, $directory);  # safe
 ```
 
-## SQL Injection Prevention
+## Phòng chống SQL Injection
 
-Always use DBI placeholders — never interpolate into SQL:
+Luôn dùng placeholder của DBI — KHÔNG BAO GIỜ nội suy vào SQL:
 
 ```perl
 my $sth = $dbh->prepare('SELECT * FROM users WHERE email = ?');
 $sth->execute($email);
 ```
 
-## Security Scanning
+## Quét bảo mật
 
-Run **perlcritic** with the security theme at severity 4+:
+Chạy **perlcritic** với theme security ở severity 4+:
 
 ```bash
 perlcritic --severity 4 --theme security lib/
 ```
 
-## Reference
+## Tham chiếu
 
-See skill: `perl-security` for comprehensive Perl security patterns, taint mode, and safe I/O.
+Xem skill: `perl-security` để có các pattern bảo mật Perl toàn diện, taint mode và I/O an toàn.

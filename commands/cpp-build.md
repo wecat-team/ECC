@@ -1,29 +1,29 @@
 ---
-description: Fix C++ build errors, CMake issues, and linker problems incrementally. Invokes the cpp-build-resolver agent for minimal, surgical fixes.
+description: Sửa dần dần các lỗi build C++, vấn đề CMake và vấn đề linker. Gọi agent cpp-build-resolver để sửa tối thiểu, chính xác.
 ---
 
-# C++ Build and Fix
+# Build và Fix C++
 
-This command invokes the **cpp-build-resolver** agent to incrementally fix C++ build errors with minimal changes.
+Lệnh này gọi agent **cpp-build-resolver** để sửa dần dần các lỗi build C++ bằng những thay đổi tối thiểu.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Run Diagnostics**: Execute `cmake --build`, `clang-tidy`, `cppcheck`
-2. **Parse Errors**: Group by file and sort by severity
-3. **Fix Incrementally**: One error at a time
-4. **Verify Each Fix**: Re-run build after each change
-5. **Report Summary**: Show what was fixed and what remains
+1. **Chạy chẩn đoán**: Thực thi `cmake --build`, `clang-tidy`, `cppcheck`
+2. **Phân tích lỗi**: Nhóm theo file và sắp xếp theo mức độ nghiêm trọng
+3. **Sửa dần dần**: Mỗi lần một lỗi
+4. **Xác minh từng bản sửa**: Chạy lại build sau mỗi thay đổi
+5. **Báo cáo tóm tắt**: Hiển thị những gì đã sửa và những gì còn lại
 
-## When to Use
+## Khi nào dùng
 
-Use `/cpp-build` when:
-- `cmake --build build` fails with errors
-- Linker errors (undefined references, multiple definitions)
-- Template instantiation failures
-- Include/dependency issues
-- After pulling changes that break the build
+Dùng `/cpp-build` khi:
+- `cmake --build build` thất bại với lỗi
+- Lỗi linker (undefined reference, multiple definition)
+- Lỗi template instantiation
+- Vấn đề include/dependency
+- Sau khi pull các thay đổi làm hỏng build
 
-## Diagnostic Commands Run
+## Các lệnh chẩn đoán được chạy
 
 ```bash
 # CMake configure
@@ -37,7 +37,7 @@ clang-tidy src/*.cpp -- -std=c++17
 cppcheck --enable=all src/
 ```
 
-## Example Session
+## Ví dụ một phiên làm việc
 
 ```text
 User: /cpp-build
@@ -132,42 +132,42 @@ All tests passed.
 Build Status: PASS: SUCCESS
 ```
 
-## Common Errors Fixed
+## Các lỗi phổ biến đã được sửa
 
-| Error | Typical Fix |
+| Lỗi | Cách sửa điển hình |
 |-------|-------------|
-| `undeclared identifier` | Add `#include` or fix typo |
-| `no matching function` | Fix argument types or add overload |
-| `undefined reference` | Link library or add implementation |
-| `multiple definition` | Use `inline` or move to .cpp |
-| `incomplete type` | Replace forward decl with `#include` |
-| `no member named X` | Fix member name or include |
-| `cannot convert X to Y` | Add appropriate cast |
-| `CMake Error` | Fix CMakeLists.txt configuration |
+| `undeclared identifier` | Thêm `#include` hoặc sửa lỗi gõ sai |
+| `no matching function` | Sửa type của đối số hoặc thêm overload |
+| `undefined reference` | Link thư viện hoặc thêm phần implementation |
+| `multiple definition` | Dùng `inline` hoặc chuyển sang .cpp |
+| `incomplete type` | Thay forward declaration bằng `#include` |
+| `no member named X` | Sửa tên member hoặc include |
+| `cannot convert X to Y` | Thêm ép kiểu phù hợp |
+| `CMake Error` | Sửa cấu hình CMakeLists.txt |
 
-## Fix Strategy
+## Chiến lược sửa lỗi
 
-1. **Compilation errors first** - Code must compile
-2. **Linker errors second** - Resolve undefined references
-3. **Warnings third** - Fix with `-Wall -Wextra`
-4. **One fix at a time** - Verify each change
-5. **Minimal changes** - Don't refactor, just fix
+1. **Lỗi biên dịch trước** - Code phải compile được
+2. **Lỗi linker thứ hai** - Giải quyết các undefined reference
+3. **Cảnh báo thứ ba** - Sửa với `-Wall -Wextra`
+4. **Mỗi lần một bản sửa** - Xác minh từng thay đổi
+5. **Thay đổi tối thiểu** - Không refactor, chỉ sửa lỗi
 
-## Stop Conditions
+## Điều kiện dừng
 
-The agent will stop and report if:
-- Same error persists after 3 attempts
-- Fix introduces more errors
-- Requires architectural changes
-- Missing external dependencies
+Agent sẽ dừng và báo cáo nếu:
+- Cùng một lỗi vẫn còn sau 3 lần thử
+- Cách sửa gây ra nhiều lỗi hơn
+- Đòi hỏi thay đổi kiến trúc
+- Thiếu dependency bên ngoài
 
-## Related Commands
+## Lệnh liên quan
 
-- `/cpp-test` - Run tests after build succeeds
-- `/cpp-review` - Review code quality
-- `verification-loop` skill - Full verification loop
+- `/cpp-test` - Chạy test sau khi build thành công
+- `/cpp-review` - Review chất lượng code
+- skill `verification-loop` - Vòng xác minh đầy đủ
 
-## Related
+## Liên quan
 
 - Agent: `agents/cpp-build-resolver.md`
 - Skill: `skills/cpp-coding-standards/`

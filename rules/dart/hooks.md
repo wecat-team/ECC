@@ -4,19 +4,19 @@ paths:
   - "**/pubspec.yaml"
   - "**/analysis_options.yaml"
 ---
-# Dart/Flutter Hooks
+# Hook cho Dart/Flutter
 
-> This file extends [common/hooks.md](../common/hooks.md) with Dart and Flutter-specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung dành riêng cho Dart và Flutter.
 
-## PostToolUse Hooks
+## Hook PostToolUse
 
-Configure in `~/.claude/settings.json`:
+Cấu hình trong `~/.claude/settings.json`:
 
-- **dart format**: Auto-format `.dart` files after edit
-- **dart analyze**: Run static analysis after editing Dart files and surface warnings
-- **flutter test**: Optionally run affected tests after significant changes
+- **dart format**: Tự động format các file `.dart` sau khi sửa
+- **dart analyze**: Chạy phân tích tĩnh sau khi sửa file Dart và hiển thị cảnh báo
+- **flutter test**: Tùy chọn chạy các test bị ảnh hưởng sau các thay đổi đáng kể
 
-## Recommended Hook Configuration
+## Cấu hình Hook được khuyến nghị
 
 ```json
 {
@@ -33,9 +33,9 @@ Configure in `~/.claude/settings.json`:
 }
 ```
 
-## Pre-commit Checks
+## Kiểm tra Pre-commit
 
-Run before committing Dart/Flutter changes:
+Chạy trước khi commit thay đổi Dart/Flutter:
 
 ```bash
 dart format --set-exit-if-changed .
@@ -43,7 +43,7 @@ dart analyze --fatal-infos
 flutter test
 ```
 
-## Useful One-liners
+## Các lệnh một dòng hữu ích
 
 ```bash
 # Format all Dart files

@@ -1,41 +1,41 @@
 ---
-description: Create, verify, or list workflow checkpoints after running verification checks.
+description: Tạo, xác minh hoặc liệt kê các checkpoint của workflow sau khi chạy các kiểm tra xác minh.
 ---
 
-# Checkpoint Command
+# Lệnh Checkpoint
 
-Create or verify a checkpoint in your workflow.
+Tạo hoặc xác minh một checkpoint trong workflow của bạn.
 
-## Usage
+## Cách dùng
 
 `/checkpoint [create|verify|list] [name]`
 
-## Create Checkpoint
+## Tạo checkpoint
 
-When creating a checkpoint:
+Khi tạo một checkpoint:
 
-1. Run `/verify quick` to ensure current state is clean
-2. Create a git stash or commit with checkpoint name
-3. Log checkpoint to `.claude/checkpoints.log`:
+1. Chạy `/verify quick` để đảm bảo trạng thái hiện tại sạch
+2. Tạo một git stash hoặc commit với tên checkpoint
+3. Ghi checkpoint vào `.claude/checkpoints.log`:
 
 ```bash
 echo "$(date +%Y-%m-%d-%H:%M) | $CHECKPOINT_NAME | $(git rev-parse --short HEAD)" >> .claude/checkpoints.log
 ```
 
-4. Report checkpoint created
+4. Báo cáo checkpoint đã được tạo
 
-## Verify Checkpoint
+## Xác minh checkpoint
 
-When verifying against a checkpoint:
+Khi xác minh so với một checkpoint:
 
-1. Read checkpoint from log
-2. Compare current state to checkpoint:
-   - Files added since checkpoint
-   - Files modified since checkpoint
-   - Test pass rate now vs then
-   - Coverage now vs then
+1. Đọc checkpoint từ log
+2. So sánh trạng thái hiện tại với checkpoint:
+   - Các file được thêm kể từ checkpoint
+   - Các file được sửa kể từ checkpoint
+   - Tỷ lệ test pass hiện tại so với lúc đó
+   - Coverage hiện tại so với lúc đó
 
-3. Report:
+3. Báo cáo:
 ```
 CHECKPOINT COMPARISON: $NAME
 ============================
@@ -45,17 +45,17 @@ Coverage: +X% / -Y%
 Build: [PASS/FAIL]
 ```
 
-## List Checkpoints
+## Liệt kê checkpoint
 
-Show all checkpoints with:
-- Name
+Hiển thị tất cả checkpoint kèm:
+- Tên
 - Timestamp
 - Git SHA
-- Status (current, behind, ahead)
+- Trạng thái (current, behind, ahead)
 
 ## Workflow
 
-Typical checkpoint flow:
+Luồng checkpoint điển hình:
 
 ```
 [Start] --> /checkpoint create "feature-start"
@@ -69,10 +69,10 @@ Typical checkpoint flow:
 [PR] --> /checkpoint verify "feature-start"
 ```
 
-## Arguments
+## Đối số
 
 $ARGUMENTS:
-- `create <name>` - Create named checkpoint
-- `verify <name>` - Verify against named checkpoint
-- `list` - Show all checkpoints
-- `clear` - Remove old checkpoints (keeps last 5)
+- `create <name>` - Tạo checkpoint có tên
+- `verify <name>` - Xác minh so với checkpoint có tên
+- `list` - Hiển thị tất cả checkpoint
+- `clear` - Xóa các checkpoint cũ (giữ lại 5 cái gần nhất)

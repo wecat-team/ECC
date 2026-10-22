@@ -4,22 +4,22 @@ paths:
   - "**/go.mod"
   - "**/go.sum"
 ---
-# Go Coding Style
+# Phong cách code Go
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with Go specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho Go.
 
-## Formatting
+## Định dạng
 
-- **gofmt** and **goimports** are mandatory — no style debates
+- **gofmt** và **goimports** là bắt buộc — không tranh cãi về style
 
-## Design Principles
+## Nguyên tắc thiết kế
 
-- Accept interfaces, return structs
-- Keep interfaces small (1-3 methods)
+- Nhận interface, trả về struct
+- Giữ interface nhỏ (1-3 method)
 
-## Error Handling
+## Xử lý lỗi
 
-Always wrap errors with context:
+Luôn bọc lỗi kèm ngữ cảnh:
 
 ```go
 if err != nil {
@@ -27,6 +27,6 @@ if err != nil {
 }
 ```
 
-## Reference
+## Tham chiếu
 
-See skill: `golang-patterns` for comprehensive Go idioms and patterns.
+Xem skill: `golang-patterns` để có các idiom và pattern Go toàn diện.

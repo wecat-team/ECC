@@ -5,13 +5,13 @@ paths:
   - "**/phpunit.xml.dist"
   - "**/composer.json"
 ---
-# PHP Testing
+# Kiểm thử PHP
 
-> This file extends [common/testing.md](../common/testing.md) with PHP specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung dành riêng cho PHP.
 
 ## Framework
 
-Use **PHPUnit** as the default test framework. If **Pest** is configured in the project, prefer Pest for new tests and avoid mixing frameworks.
+Dùng **PHPUnit** làm test framework mặc định. Nếu dự án đã cấu hình **Pest**, hãy ưu tiên Pest cho test mới và tránh trộn lẫn các framework.
 
 ## Coverage
 
@@ -21,19 +21,19 @@ vendor/bin/phpunit --coverage-text
 vendor/bin/pest --coverage
 ```
 
-Prefer **pcov** or **Xdebug** in CI, and keep coverage thresholds in CI rather than as tribal knowledge.
+Ưu tiên **pcov** hoặc **Xdebug** trong CI, và đặt ngưỡng coverage trong CI thay vì để nó thành kiến thức truyền miệng.
 
-## Test Organization
+## Tổ chức Test
 
-- Separate fast unit tests from framework/database integration tests.
-- Use factory/builders for fixtures instead of large hand-written arrays.
-- Keep HTTP/controller tests focused on transport and validation; move business rules into service-level tests.
+- Tách unit test nhanh khỏi integration test framework/database.
+- Dùng factory/builder cho fixture thay vì các array viết tay lớn.
+- Giữ test HTTP/controller tập trung vào tầng truyền tải và validation; chuyển business rule sang test ở cấp service.
 
 ## Inertia
 
-If the project uses Inertia.js, prefer `assertInertia` with `AssertableInertia` to verify component names and props instead of raw JSON assertions.
+Nếu dự án dùng Inertia.js, ưu tiên `assertInertia` với `AssertableInertia` để xác minh tên component và props thay vì assertion JSON thô.
 
-## Reference
+## Tham chiếu
 
-See skill: `tdd-workflow` for the repo-wide RED -> GREEN -> REFACTOR loop.
-See skill: `laravel-tdd` for Laravel-specific testing patterns (PHPUnit and Pest).
+Xem skill: `tdd-workflow` để có vòng lặp RED -> GREEN -> REFACTOR áp dụng cho toàn repo.
+Xem skill: `laravel-tdd` để có các pattern kiểm thử riêng cho Laravel (PHPUnit và Pest).

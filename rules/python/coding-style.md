@@ -3,18 +3,18 @@ paths:
   - "**/*.py"
   - "**/*.pyi"
 ---
-# Python Coding Style
+# Phong cách code Python
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with Python specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho Python.
 
-## Standards
+## Tiêu chuẩn
 
-- Follow **PEP 8** conventions
-- Use **type annotations** on all function signatures
+- Tuân theo quy ước **PEP 8**
+- Dùng **type annotation** trên mọi function signature
 
-## Immutability
+## Bất biến (Immutability)
 
-Prefer immutable data structures:
+Ưu tiên cấu trúc dữ liệu bất biến:
 
 ```python
 from dataclasses import dataclass
@@ -31,12 +31,12 @@ class Point(NamedTuple):
     y: float
 ```
 
-## Formatting
+## Định dạng
 
-- **black** for code formatting
-- **isort** for import sorting
-- **ruff** for linting
+- **black** để format code
+- **isort** để sắp xếp import
+- **ruff** để lint
 
-## Reference
+## Tham chiếu
 
-See skill: `python-patterns` for comprehensive Python idioms and patterns.
+Xem skill: `python-patterns` để có các idiom và pattern Python toàn diện.

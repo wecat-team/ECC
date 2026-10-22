@@ -1,26 +1,26 @@
 ---
 name: plankton-code-quality
-description: "Write-time code quality enforcement using Plankton — auto-formatting, linting, and Claude-powered fixes on every file edit via hooks. Use when setting up write-time formatting, linting, or auto-fix hooks on file edits."
+description: "Thực thi chất lượng code tại thời điểm ghi bằng Plankton — tự động format, lint và sửa lỗi nhờ Claude trên mỗi lần sửa file qua hook. Dùng khi thiết lập hook format, lint hoặc auto-fix tại thời điểm ghi cho các lần sửa file."
 metadata:
   origin: community
 ---
 
-# Plankton Code Quality Skill
+# Skill Plankton Code Quality
 
-Integration reference for Plankton (credit: @alxfazio), a write-time code quality enforcement system for Claude Code. Plankton runs formatters and linters on every file edit via PostToolUse hooks, then spawns Claude subprocesses to fix violations the agent didn't catch.
+Tài liệu tham chiếu tích hợp cho Plankton (credit: @alxfazio), một hệ thống thực thi chất lượng code tại thời điểm ghi dành cho Claude Code. Plankton chạy formatter và linter trên mỗi lần sửa file qua hook PostToolUse, sau đó spawn các Claude subprocess để sửa những vi phạm mà agent chưa bắt được.
 
-## When to Use
+## Khi nào dùng
 
-- You want automatic formatting and linting on every file edit (not just at commit time)
-- You need defense against agents modifying linter configs to pass instead of fixing code
-- You want tiered model routing for fixes (Haiku for simple style, Sonnet for logic, Opus for types)
-- You work with multiple languages (Python, TypeScript, Shell, YAML, JSON, TOML, Markdown, Dockerfile)
+- Bạn muốn tự động format và lint trên mỗi lần sửa file (không chỉ lúc commit)
+- Bạn cần phòng vệ trước việc agent sửa config của linter để qua mặt thay vì sửa code
+- Bạn muốn định tuyến model theo tầng cho việc sửa lỗi (Haiku cho style đơn giản, Sonnet cho logic, Opus cho type)
+- Bạn làm việc với nhiều ngôn ngữ (Python, TypeScript, Shell, YAML, JSON, TOML, Markdown, Dockerfile)
 
-## How It Works
+## Cách hoạt động
 
-### Three-Phase Architecture
+### Kiến trúc ba phase
 
-Every time Claude Code edits or writes a file, Plankton's `multi_linter.sh` PostToolUse hook runs:
+Mỗi khi Claude Code sửa hoặc ghi một file, hook PostToolUse `multi_linter.sh` của Plankton sẽ chạy:
 
 ```
 Phase 1: Auto-Format (Silent)
@@ -43,37 +43,37 @@ Phase 3: Delegate + Verify
 └─ Exit 0 if clean, Exit 2 if violations remain (reported to main agent)
 ```
 
-### What the Main Agent Sees
+### Những gì agent chính nhìn thấy
 
-| Scenario | Agent sees | Hook exit |
+| Tình huống | Agent thấy | Exit của hook |
 |----------|-----------|-----------|
-| No violations | Nothing | 0 |
-| All fixed by subprocess | Nothing | 0 |
-| Violations remain after subprocess | `[hook] N violation(s) remain` | 2 |
-| Advisory (duplicates, old tooling) | `[hook:advisory] ...` | 0 |
+| Không có vi phạm | Không gì cả | 0 |
+| Subprocess đã sửa hết | Không gì cả | 0 |
+| Vẫn còn vi phạm sau subprocess | `[hook] N violation(s) remain` | 2 |
+| Advisory (trùng lặp, tooling cũ) | `[hook:advisory] ...` | 0 |
 
-The main agent only sees issues the subprocess couldn't fix. Most quality problems are resolved transparently.
+Agent chính chỉ thấy những vấn đề mà subprocess không sửa được. Hầu hết các vấn đề chất lượng được giải quyết một cách trong suốt.
 
-### Config Protection (Defense Against Rule-Gaming)
+### Bảo vệ Config (phòng vệ trước việc lách luật)
 
-LLMs will modify `.ruff.toml` or `biome.json` to disable rules rather than fix code. Plankton blocks this with three layers:
+LLM sẽ sửa `.ruff.toml` hoặc `biome.json` để tắt rule thay vì sửa code. Plankton chặn điều này bằng ba lớp:
 
-1. **PreToolUse hook** — `protect_linter_configs.sh` blocks edits to all linter configs before they happen
-2. **Stop hook** — `stop_config_guardian.sh` detects config changes via `git diff` at session end
-3. **Protected files list** — `.ruff.toml`, `biome.json`, `.shellcheckrc`, `.yamllint`, `.hadolint.yaml`, and more
+1. **Hook PreToolUse** — `protect_linter_configs.sh` chặn các chỉnh sửa lên mọi config của linter trước khi chúng xảy ra
+2. **Hook Stop** — `stop_config_guardian.sh` phát hiện thay đổi config qua `git diff` ở cuối session
+3. **Danh sách file được bảo vệ** — `.ruff.toml`, `biome.json`, `.shellcheckrc`, `.yamllint`, `.hadolint.yaml` và nhiều file khác
 
-### Package Manager Enforcement
+### Thực thi Package Manager
 
-A PreToolUse hook on Bash blocks legacy package managers:
-- `pip`, `pip3`, `poetry`, `pipenv` → Blocked (use `uv`)
-- `npm`, `yarn`, `pnpm` → Blocked (use `bun`)
-- Allowed exceptions: `npm audit`, `npm view`, `npm publish`
+Một hook PreToolUse trên Bash chặn các package manager legacy:
+- `pip`, `pip3`, `poetry`, `pipenv` → Bị chặn (dùng `uv`)
+- `npm`, `yarn`, `pnpm` → Bị chặn (dùng `bun`)
+- Ngoại lệ được phép: `npm audit`, `npm view`, `npm publish`
 
-## Setup
+## Thiết lập
 
-### Quick Start
+### Bắt đầu nhanh
 
-> **Note:** Plankton requires manual installation from its repository. Review the code before installing.
+> **Lưu ý:** Plankton yêu cầu cài đặt thủ công từ repository của nó. Hãy review code trước khi cài.
 
 ```bash
 # Install core dependencies
@@ -86,23 +86,23 @@ uv sync --all-extras
 claude
 ```
 
-No install command, no plugin config. The hooks in `.claude/settings.json` are picked up automatically when you run Claude Code in the Plankton directory.
+Không có lệnh cài đặt, không có cấu hình plugin. Các hook trong `.claude/settings.json` được tự động nhận diện khi bạn chạy Claude Code trong thư mục Plankton.
 
-### Per-Project Integration
+### Tích hợp theo từng dự án
 
-To use Plankton hooks in your own project:
+Để dùng hook Plankton trong dự án của bạn:
 
-1. Copy `.claude/hooks/` directory to your project
-2. Copy `.claude/settings.json` hook configuration
-3. Copy linter config files (`.ruff.toml`, `biome.json`, etc.)
-4. Install the linters for your languages
+1. Sao chép thư mục `.claude/hooks/` vào dự án của bạn
+2. Sao chép cấu hình hook trong `.claude/settings.json`
+3. Sao chép các file config của linter (`.ruff.toml`, `biome.json`, v.v.)
+4. Cài các linter cho ngôn ngữ của bạn
 
-### Language-Specific Dependencies
+### Dependency theo từng ngôn ngữ
 
-| Language | Required | Optional |
+| Ngôn ngữ | Bắt buộc | Tùy chọn |
 |----------|----------|----------|
-| Python | `ruff`, `uv` | `ty` (types), `vulture` (dead code), `bandit` (security) |
-| TypeScript/JS | `biome`; `oxlint` (>= 1.37.0) when using `complexity` | `semgrep`, `knip` (dead exports) |
+| Python | `ruff`, `uv` | `ty` (type), `vulture` (dead code), `bandit` (bảo mật) |
+| TypeScript/JS | `biome`; `oxlint` (>= 1.37.0) khi dùng `complexity` | `semgrep`, `knip` (export chết) |
 | Shell | `shellcheck`, `shfmt` | — |
 | YAML | `yamllint` | — |
 | Markdown | `markdownlint-cli2` | — |
@@ -110,36 +110,36 @@ To use Plankton hooks in your own project:
 | TOML | `taplo` | — |
 | JSON | `jaq` | — |
 
-## Pairing with ECC
+## Kết hợp với ECC
 
-### Complementary, Not Overlapping
+### Bổ sung cho nhau, không chồng lấn
 
-| Concern | ECC | Plankton |
+| Mối quan tâm | ECC | Plankton |
 |---------|-----|----------|
-| Code quality enforcement | PostToolUse hooks (Prettier, tsc) | PostToolUse hooks (20+ linters + subprocess fixes) |
-| Security scanning | AgentShield, security-reviewer agent | Bandit (Python), Semgrep (TypeScript) |
-| Config protection | — | PreToolUse blocks + Stop hook detection |
-| Package manager | Detection + setup | Enforcement (blocks legacy PMs) |
-| CI integration | — | Pre-commit hooks for git |
-| Model routing | Manual (`/model opus`) | Automatic (violation complexity → tier) |
+| Thực thi chất lượng code | Hook PostToolUse (Prettier, tsc) | Hook PostToolUse (20+ linter + sửa lỗi bằng subprocess) |
+| Quét bảo mật | AgentShield, agent security-reviewer | Bandit (Python), Semgrep (TypeScript) |
+| Bảo vệ config | — | PreToolUse chặn + Stop hook phát hiện |
+| Package manager | Phát hiện + thiết lập | Thực thi (chặn PM legacy) |
+| Tích hợp CI | — | Pre-commit hook cho git |
+| Định tuyến model | Thủ công (`/model opus`) | Tự động (độ phức tạp của vi phạm → tầng) |
 
-### Recommended Combination
+### Kết hợp khuyến nghị
 
-1. Install ECC as your plugin (agents, skills, commands, rules)
-2. Add Plankton hooks for write-time quality enforcement
-3. Use AgentShield for security audits
-4. Use ECC's verification-loop as a final gate before PRs
+1. Cài ECC làm plugin của bạn (agent, skill, command, rule)
+2. Thêm hook Plankton để thực thi chất lượng tại thời điểm ghi
+3. Dùng AgentShield cho các lần kiểm toán bảo mật
+4. Dùng verification-loop của ECC làm cổng cuối trước các PR
 
-### Avoiding Hook Conflicts
+### Tránh xung đột Hook
 
-If running both ECC and Plankton hooks:
-- ECC's Prettier hook and Plankton's biome formatter may conflict on JS/TS files
-- Resolution: disable ECC's Prettier PostToolUse hook when using Plankton (Plankton's biome is more comprehensive)
-- Both can coexist on different file types (ECC handles what Plankton doesn't cover)
+Nếu chạy cả hook ECC và Plankton:
+- Hook Prettier của ECC và formatter biome của Plankton có thể xung đột trên file JS/TS
+- Cách giải quyết: tắt hook PostToolUse Prettier của ECC khi dùng Plankton (biome của Plankton toàn diện hơn)
+- Cả hai có thể cùng tồn tại trên các loại file khác nhau (ECC xử lý phần Plankton không bao phủ)
 
-## Configuration Reference
+## Tham chiếu cấu hình
 
-Plankton's `.claude/hooks/config.json` controls all behavior:
+`.claude/hooks/config.json` của Plankton điều khiển mọi hành vi:
 
 ```json
 {
@@ -173,31 +173,31 @@ Plankton's `.claude/hooks/config.json` controls all behavior:
 }
 ```
 
-**Key settings:**
-- Disable languages you don't use to speed up hooks
-- `volume_threshold` — violations > this count auto-escalate to a higher model tier
-- `subprocess_delegation: false` — skip Phase 3 entirely (just report violations)
+**Các thiết lập chính:**
+- Tắt các ngôn ngữ bạn không dùng để hook chạy nhanh hơn
+- `volume_threshold` — số vi phạm vượt quá giá trị này sẽ tự động chuyển lên tầng model cao hơn
+- `subprocess_delegation: false` — bỏ qua hoàn toàn Phase 3 (chỉ báo cáo vi phạm)
 
-## Environment Overrides
+## Ghi đè bằng biến môi trường
 
-| Variable | Purpose |
+| Biến | Mục đích |
 |----------|---------|
-| `HOOK_SKIP_SUBPROCESS=1` | Skip Phase 3, report violations directly |
-| `HOOK_SUBPROCESS_TIMEOUT=N` | Override tier timeout |
-| `HOOK_DEBUG_MODEL=1` | Log model selection decisions |
-| `HOOK_SKIP_PM=1` | Bypass package manager enforcement |
+| `HOOK_SKIP_SUBPROCESS=1` | Bỏ qua Phase 3, báo cáo vi phạm trực tiếp |
+| `HOOK_SUBPROCESS_TIMEOUT=N` | Ghi đè timeout của tầng |
+| `HOOK_DEBUG_MODEL=1` | Log các quyết định chọn model |
+| `HOOK_SKIP_PM=1` | Bỏ qua việc thực thi package manager |
 
-## References
+## Tham khảo
 
 - Plankton (credit: @alxfazio)
-- Plankton REFERENCE.md — Full architecture documentation (credit: @alxfazio)
-- Plankton SETUP.md — Detailed installation guide (credit: @alxfazio)
+- Plankton REFERENCE.md — Tài liệu kiến trúc đầy đủ (credit: @alxfazio)
+- Plankton SETUP.md — Hướng dẫn cài đặt chi tiết (credit: @alxfazio)
 
-## ECC v1.8 Additions
+## Bổ sung của ECC v1.8
 
-### Copyable Hook Profile
+### Hook Profile có thể sao chép
 
-Set strict quality behavior:
+Đặt hành vi chất lượng nghiêm ngặt:
 
 ```bash
 export ECC_HOOK_PROFILE=strict
@@ -205,61 +205,60 @@ export ECC_QUALITY_GATE_FIX=true
 export ECC_QUALITY_GATE_STRICT=true
 ```
 
-### Language Gate Table
+### Bảng cổng theo ngôn ngữ
 
-- TypeScript/JavaScript: Biome preferred, Prettier fallback
+- TypeScript/JavaScript: ưu tiên Biome, dự phòng Prettier
 - Python: Ruff format/check
 - Go: gofmt
 
-### Config Tamper Guard
+### Bảo vệ chống can thiệp Config (Config Tamper Guard)
 
-During quality enforcement, flag changes to config files in same iteration:
+Trong quá trình thực thi chất lượng, hãy đánh dấu các thay đổi lên file config trong cùng một lượt lặp:
 
 - `biome.json`, `.eslintrc*`, `prettier.config*`, `tsconfig.json`, `pyproject.toml`
 
-If config is changed to suppress violations, require explicit review before merge.
+Nếu config bị đổi để chặn vi phạm, yêu cầu review tường minh trước khi merge.
 
-### CI Integration Pattern
+### Pattern tích hợp CI
 
-Use the same commands in CI as local hooks:
+Dùng các lệnh giống như hook local trong CI:
 
-1. run formatter checks
-2. run lint/type checks
-3. fail fast on strict mode
-4. publish remediation summary
+1. chạy kiểm tra formatter
+2. chạy kiểm tra lint/type
+3. fail nhanh ở chế độ strict
+4. công bố bản tóm tắt khắc phục
 
-### Health Metrics
+### Chỉ số sức khỏe
 
-Track:
-- edits flagged by gates
-- average remediation time
-- repeat violations by category
-- merge blocks due to gate failures
+Theo dõi:
+- số lần sửa bị cổng đánh dấu
+- thời gian khắc phục trung bình
+- vi phạm lặp lại theo danh mục
+- số lần chặn merge do cổng thất bại
 
 ---
 
-## Gabe's addition: oxlint complexity + ratchet ceiling (JS/TS)
+## Phần bổ sung của Gabe: oxlint complexity + ratchet ceiling (JS/TS)
 
-Closes the JS/TS gap in the model-routing table above. Python complexity (ruff C901,
-PLR) already routes to Sonnet. JS/TS had no equivalent rule turned on by default.
+Lấp khoảng trống JS/TS trong bảng định tuyến model ở trên. Độ phức tạp của Python (ruff C901,
+PLR) đã được định tuyến sang Sonnet. JS/TS chưa có rule tương đương được bật theo mặc định.
 
-### Turn on oxlint's `complexity` rule when using it
+### Bật rule `complexity` của oxlint khi dùng nó
 
-oxlint's `complexity` rule (source: eslint's `complexity` rule, ported) lives in the
-"restriction" category, which oxlint does not enable by default. It must be turned on
-by hand. Verified against [Oxlint's complexity rule](https://oxc.rs/docs/guide/usage/linter/rules/eslint/complexity)
-(2026-08-27): default option is `max: 20`. The rule is available in oxlint >= 1.37.0.
+Rule `complexity` của oxlint (nguồn: rule `complexity` của eslint, được port sang) nằm trong
+danh mục "restriction", mà oxlint không bật theo mặc định. Phải bật thủ công. Đã verify với [rule complexity của Oxlint](https://oxc.rs/docs/guide/usage/linter/rules/eslint/complexity)
+(2026-08-27): tùy chọn mặc định là `max: 20`. Rule có sẵn trong oxlint >= 1.37.0.
 
-The skill's Language-Specific Dependencies table keeps `oxlint` optional for TypeScript/JS
-generally. When adopting the `complexity` rule, use oxlint >= 1.37.0 and treat it as a
-required dependency. Add the rule to the supported oxlint configuration the project already
-uses (`.oxlintrc.json`, `.oxlintrc.jsonc`, `oxlint.config.ts`, or `oxlint.config.mts`). If
-none exists, create one; do not create a second configuration file in the same directory.
+Bảng Dependency theo từng ngôn ngữ của skill này giữ `oxlint` là tùy chọn cho TypeScript/JS
+nói chung. Khi áp dụng rule `complexity`, hãy dùng oxlint >= 1.37.0 và coi nó là
+dependency bắt buộc. Thêm rule vào cấu hình oxlint được hỗ trợ mà dự án đã
+dùng (`.oxlintrc.json`, `.oxlintrc.jsonc`, `oxlint.config.ts` hoặc `oxlint.config.mts`). Nếu
+chưa có, hãy tạo một cái; không tạo file cấu hình thứ hai trong cùng thư mục.
 
-Measure the codebase's current worst complexity score before choosing the initial enforced
-ceiling. The template below is intentionally incomplete: replace `<MEASURED_CEILING>` with
-that score, optionally plus a small amount of headroom, before committing the `"error"` gate.
-Oxlint's default of 20 is a long-term target, not a safe universal starting ceiling.
+Đo điểm phức tạp tệ nhất hiện tại của codebase trước khi chọn mức trần được thực thi ban đầu.
+Template bên dưới cố ý chưa hoàn chỉnh: hãy thay `<MEASURED_CEILING>` bằng
+điểm đó, có thể cộng thêm một chút dư địa, trước khi commit cổng `"error"`.
+Mặc định 20 của Oxlint là mục tiêu dài hạn, không phải mức trần khởi đầu an toàn cho mọi nơi.
 
 ```json
 {
@@ -269,60 +268,60 @@ Oxlint's default of 20 is a long-term target, not a safe universal starting ceil
 }
 ```
 
-Replace the placeholder before running oxlint; it is not a valid numeric threshold until the
-repository has been measured. See the ratchet section below for how the ceiling gets set on
-a real codebase.
+Hãy thay placeholder trước khi chạy oxlint; nó không phải là ngưỡng số hợp lệ cho đến khi
+repo được đo. Xem phần ratchet bên dưới để biết mức trần được đặt như thế nào trên
+một codebase thực.
 
-### Model-routing row
+### Dòng định tuyến model
 
-Add oxlint `complexity` violations to the same row as the existing Python entry in the
-Phase 3 subprocess table:
+Thêm các vi phạm `complexity` của oxlint vào cùng dòng với mục Python hiện có trong
+bảng subprocess của Phase 3:
 
 ```
 ├─ Sonnet: complexity, refactoring (C901, PLR codes, oxlint complexity), 300s timeout
 ```
 
-Same tier as Python's C901/PLR. A complexity violation is a refactoring job either way,
-language does not change the model tier.
+Cùng tầng với C901/PLR của Python. Một vi phạm độ phức tạp dù ở ngôn ngữ nào cũng là một công việc refactor,
+ngôn ngữ không làm thay đổi tầng model.
 
-### The ratchet-ceiling technique
+### Kỹ thuật ratchet-ceiling
 
-Source: [Hunk PR #861](https://github.com/modem-dev/hunk/pull/861) (merged 2026-08-26, verified against
-the PR's own diff and description via the GitHub API, not paraphrased from memory). Hunk
-turned on oxlint's `complexity` rule with `"error", { "max": 80 }` in `.oxlintrc.json`.
-Their own worst score at the time was 78 (`App`), next was 76
-(`validateFileViewLayout`). From the PR body: "This is intentionally an initial
+Nguồn: [Hunk PR #861](https://github.com/modem-dev/hunk/pull/861) (merge ngày 2026-08-26, được verify với
+diff và mô tả của chính PR qua GitHub API, không diễn giải lại từ trí nhớ). Hunk
+đã bật rule `complexity` của oxlint với `"error", { "max": 80 }` trong `.oxlintrc.json`.
+Điểm tệ nhất của họ vào thời điểm đó là 78 (`App`), tiếp theo là 76
+(`validateFileViewLayout`). Từ phần thân PR: "This is intentionally an initial
 regression ceiling rather than the long-term target... so 80 adds enforcement without
 grandfathering or suppressions. The ceiling can be ratcheted downward as existing
-hotspots are simplified." And: "A global ceiling does not prevent a function below 80
+hotspots are simplified." Và: "A global ceiling does not prevent a function below 80
 from growing toward it."
 
-The technique, as actually run in that PR:
+Kỹ thuật, như thực sự được chạy trong PR đó:
 
-1. Measure the current worst complexity score in the codebase (oxlint reports it when
-   the rule fires).
-2. Set the ENFORCED ceiling to a value at least as high as that worst score, not to
-   oxlint's own default of 20. Add a small amount of headroom if needed so the initial
-   enable does not fail CI on a score you have not fixed yet (hunk used 80 against a
-   worst of 78).
-3. Commit that as `"error"`, wired into the existing lint CI step. This is a real gate
-   from the first commit, not a suggestion.
-4. Never grandfather. The ceiling is global. A function sitting at 40 today is not
-   exempt, it still cannot cross the ceiling later. That is the whole point: catch
-   growth, not just today's worst offenders.
-5. Never blanket-suppress. No per-file or per-function disable comments to make a
-   violation go away. Fix it or leave it under the ceiling.
-6. Each time a flagged hotspot is refactored below the ceiling, re-measure the global
-   maximum across the whole codebase. Lower the ceiling by hand only to a value that
-   remains at least as high as every remaining function's score (plus any deliberate
-   headroom). This is a manual step done as its own commit, not automated. It is how the
-   ceiling moves toward the linter's real default of 20 over time instead of sitting at
-   the codebase's worst score forever.
+1. Đo điểm phức tạp tệ nhất hiện tại trong codebase (oxlint báo cáo nó khi
+   rule kích hoạt).
+2. Đặt mức trần ĐƯỢC THỰC THI ở giá trị ít nhất bằng điểm tệ nhất đó, không phải
+   mặc định 20 của oxlint. Thêm một chút dư địa nếu cần để lần bật ban đầu
+   không làm CI fail trên một điểm mà bạn chưa sửa (hunk dùng 80 so với điểm
+   tệ nhất là 78).
+3. Commit nó dưới dạng `"error"`, nối vào bước lint CI hiện có. Đây là một cổng thực sự
+   từ commit đầu tiên, không phải một gợi ý.
+4. Không bao giờ grandfather. Mức trần là toàn cục. Một function đang ở mức 40 hôm nay không được
+   miễn trừ, sau này nó vẫn không được vượt mức trần. Đó là toàn bộ ý nghĩa: bắt
+   sự tăng trưởng, không chỉ những thủ phạm tệ nhất hôm nay.
+5. Không bao giờ suppress hàng loạt. Không dùng comment disable theo file hoặc theo function để làm một
+   vi phạm biến mất. Hãy sửa nó hoặc để nó dưới mức trần.
+6. Mỗi lần một hotspot bị đánh dấu được refactor xuống dưới mức trần, hãy đo lại giá trị
+   tối đa toàn cục trên toàn bộ codebase. Chỉ hạ mức trần bằng tay xuống một giá trị
+   vẫn ít nhất bằng điểm của mọi function còn lại (cộng thêm dư địa có chủ đích).
+   Đây là một bước thủ công thực hiện trong commit riêng, không tự động. Đó là cách
+   mức trần dịch chuyển về phía giá trị mặc định thực sự là 20 của linter theo thời gian thay vì nằm yên
+   ở điểm tệ nhất của codebase mãi mãi.
 
-One caveat, stated plainly: the PR itself went straight from "rule off" to `"error"`
-enforcement in one commit. It did not stage through a report-only or warn-only phase
-first. Starting with the rule set to `"warn"` for one CI run before flipping it to
-`"error"` is a reasonable staging step if a team has never measured its own worst score
-and does not want a surprise CI failure, but that staging step is Gabe's own prudent
-practice, not something verified in hunk's PR. Say so if you use it, do not attribute it
-to the source.
+Một lưu ý, nói thẳng: bản thân PR đã đi thẳng từ "rule tắt" sang thực thi `"error"`
+trong một commit. Nó không đi qua giai đoạn chỉ báo cáo hoặc chỉ cảnh báo trước.
+Bắt đầu với rule ở `"warn"` cho một lượt CI trước khi chuyển sang
+`"error"` là một bước phân đoạn hợp lý nếu một team chưa từng đo điểm tệ nhất của mình
+và không muốn bị CI fail bất ngờ, nhưng bước phân đoạn đó là thực hành thận trọng của riêng Gabe,
+không phải thứ được verify trong PR của hunk. Hãy nói rõ điều đó nếu bạn dùng nó, đừng gán nó
+cho nguồn.

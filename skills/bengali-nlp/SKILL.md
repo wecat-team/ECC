@@ -1,29 +1,29 @@
 ---
 name: bengali-nlp
-description: Bengali (Bangla) text processing patterns including Unicode normalization, script detection, tokenization, conjunct handling, and Bangla-specific NLP best practices for AI applications.
+description: Các pattern xử lý văn bản tiếng Bengali (Bangla) gồm chuẩn hóa Unicode (normalization), nhận diện chữ viết (script detection), tokenization, xử lý conjunct và các best practice NLP riêng cho Bangla trong ứng dụng AI.
 metadata:
   origin: ECC
 ---
 
-# Bengali (Bangla) NLP Patterns
+# Các Pattern NLP cho tiếng Bengali (Bangla)
 
-Best practices for processing, storing, and displaying Bengali text in software applications and AI systems.
+Best practice để xử lý, lưu trữ và hiển thị văn bản tiếng Bengali trong ứng dụng phần mềm và hệ thống AI.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Working with Bengali/Bangla text data
-- Building apps targeting Bengali-speaking users
-- Processing NCTB (National Curriculum and Textbook Board) educational content
-- Implementing Bengali search, autocomplete, or text input
-- Training or fine-tuning LLMs on Bengali data
-- Building Bengali chatbots or conversational AI
-- Handling mixed Bengali-English (Banglish) text
+- Làm việc với dữ liệu văn bản Bengali/Bangla
+- Xây dựng ứng dụng nhắm tới người dùng nói tiếng Bengali
+- Xử lý nội dung giáo dục của NCTB (National Curriculum and Textbook Board)
+- Triển khai tìm kiếm, autocomplete hoặc nhập văn bản tiếng Bengali
+- Huấn luyện hoặc fine-tune LLM trên dữ liệu Bengali
+- Xây dựng chatbot hoặc conversational AI tiếng Bengali
+- Xử lý văn bản pha trộn Bengali-Anh (Banglish)
 
-## Bengali Unicode and Script Handling
+## Unicode và xử lý chữ viết Bengali
 
-### Unicode Range
+### Dải Unicode
 
-Bengali script occupies U+0980–U+09FF. Key character classes:
+Chữ viết Bengali chiếm dải U+0980–U+09FF. Các nhóm ký tự chính:
 
 ```
 U+0981–U+0983  Chandrabindu, Anusvara, Visarga
@@ -46,9 +46,9 @@ U+09F4–U+09F9  Historic currency numerators ৴ ৵ ৶ ৷ ৸ and denominato
 U+09FA         Isshar ৺
 ```
 
-### Normalization
+### Chuẩn hóa (Normalization)
 
-Always normalize Bengali text to NFC before comparison, storage, or search:
+LUÔN LUÔN chuẩn hóa văn bản Bengali về NFC trước khi so sánh, lưu trữ hoặc tìm kiếm:
 
 ```python
 import unicodedata
@@ -71,9 +71,9 @@ function normalizeBangla(text) {
 }
 ```
 
-### Conjunct Consonants (যুক্তবর্ণ)
+### Phụ âm ghép (Conjunct) (যুক্তবর্ণ)
 
-Bengali conjuncts are formed with Hasanta (্) between consonants:
+Conjunct của Bengali được tạo bằng Hasanta (্) giữa các phụ âm:
 
 ```
 ক + ্ + ষ = ক্ষ (ksha)
@@ -81,7 +81,7 @@ Bengali conjuncts are formed with Hasanta (্) between consonants:
 ন + ্ + ত + ্ + র = ন্ত্র (ntra)
 ```
 
-**Never split strings in the middle of a conjunct.** Use grapheme cluster boundaries:
+**KHÔNG BAO GIỜ cắt chuỗi ở giữa một conjunct.** Hãy dùng ranh giới grapheme cluster:
 
 ```python
 import regex  # pip install regex
@@ -103,9 +103,9 @@ function graphemeLength(text) {
 }
 ```
 
-### Bengali Digits
+### Chữ số Bengali
 
-Handle both Bengali (০-৯) and ASCII (0-9) digits:
+Xử lý cả chữ số Bengali (০-৯) lẫn ASCII (0-9):
 
 ```python
 BANGLA_DIGITS = "০১২৩৪৫৬৭৮৯"
@@ -122,9 +122,9 @@ def ascii_to_bangla_digits(text: str) -> str:
 
 ## Tokenization
 
-### Word Boundary Detection
+### Nhận diện ranh giới từ
 
-Bengali uses spaces between words, but compound words and postpositions can complicate tokenization:
+Tiếng Bengali dùng khoảng trắng giữa các từ, nhưng từ ghép và hậu trí từ (postposition) có thể làm tokenization phức tạp hơn:
 
 ```python
 import re
@@ -141,7 +141,7 @@ def tokenize_bangla(text: str) -> list[str]:
 # - spaCy with Bengali pipeline
 ```
 
-### Using bnlp Toolkit
+### Dùng bnlp Toolkit
 
 ```python
 from bnlp import NLTKTokenizer
@@ -151,18 +151,18 @@ tokens = tokenizer.word_tokenize("আমি বাংলায় গান গ�
 # ['আমি', 'বাংলায়', 'গান', 'গাই', '।']
 ```
 
-### Handling Postpositions and Case Markers
+### Xử lý hậu trí từ và dấu hiệu cách (Case Marker)
 
-Bengali postpositions attach to nouns. Tokenizers should be aware of common suffixes:
+Hậu trí từ của Bengali gắn vào danh từ. Tokenizer nên nhận biết các hậu tố phổ biến:
 
 ```
 -এর (possessive), -তে (locative), -কে (accusative)
 -র (possessive after vowel), -য় (locative variant)
 ```
 
-## Text Processing Patterns
+## Các Pattern xử lý văn bản
 
-### Script Detection
+### Nhận diện chữ viết (Script Detection)
 
 ```python
 import re
@@ -179,9 +179,9 @@ def bangla_ratio(text: str) -> float:
     return bangla_chars / len(text)
 ```
 
-### Stop Words
+### Stop Word
 
-Common Bengali stop words to filter in search/NLP pipelines:
+Các stop word phổ biến của Bengali để lọc trong pipeline tìm kiếm/NLP:
 
 ```python
 BANGLA_STOP_WORDS = {
@@ -195,13 +195,13 @@ BANGLA_STOP_WORDS = {
 }
 ```
 
-Keep negators such as `না`, `নয়`, and `নেই` out of a generic stop-word list.
-They change intent and sentiment, so remove them only for a task that explicitly
-models negation elsewhere.
+Hãy giữ các từ phủ định như `না`, `নয়` và `নেই` ra khỏi danh sách stop word chung.
+Chúng làm thay đổi ý định và sắc thái cảm xúc, nên chỉ loại bỏ chúng khi tác vụ
+đã mô hình hóa phủ định một cách tường minh ở nơi khác.
 
-### Sorting and Collation
+### Sắp xếp và Collation
 
-Bengali has a defined sort order (স্বরবর্ণ before ব্যঞ্জনবর্ণ). Use locale-aware sorting:
+Tiếng Bengali có thứ tự sắp xếp xác định (স্বরবর্ণ đứng trước ব্যঞ্জনবর্ণ). Hãy dùng sắp xếp theo locale:
 
 ```python
 # Preferred: use PyICU for reliable Bengali collation (pip install PyICU)
@@ -220,7 +220,7 @@ const collator = new Intl.Collator('bn-BD');
 const sortedWords = [...words].sort(collator.compare);
 ```
 
-### Search with Normalization
+### Tìm kiếm với Normalization
 
 ```python
 import unicodedata
@@ -240,14 +240,14 @@ def bangla_search(query: str, corpus: list[str]) -> list[str]:
     return results
 ```
 
-## Bengali in AI/LLM Applications
+## Bengali trong ứng dụng AI/LLM
 
-### Prompt Engineering for Bengali
+### Prompt Engineering cho tiếng Bengali
 
-**Important:** Bengali text, Banglish input, and web-scraped content should be
-treated as untrusted user data. Always separate system instructions from
-user-provided content with clear delimiters, and validate before executing
-tool calls or destructive actions.
+**QUAN TRỌNG:** Văn bản Bengali, input Banglish và nội dung scrape từ web phải được
+xem là dữ liệu người dùng không đáng tin cậy. LUÔN LUÔN tách system instruction khỏi
+nội dung do người dùng cung cấp bằng các delimiter rõ ràng, và validate trước khi
+thực thi tool call hoặc các hành động phá hủy.
 
 ```python
 # Use Bengali system prompts for Bengali-targeted apps
@@ -289,9 +289,9 @@ def build_prompt(system: str, user_input: str) -> str:
     )
 ```
 
-### Handling Banglish (Mixed Bengali-English)
+### Xử lý Banglish (Pha trộn Bengali-Anh)
 
-Banglish is Bengali written in Latin script. Common in informal digital communication:
+Banglish là tiếng Bengali viết bằng chữ Latin. Phổ biến trong giao tiếp số không chính thức:
 
 ```python
 import re
@@ -310,7 +310,7 @@ def detect_banglish(text: str) -> bool:
     return matches >= 2
 ```
 
-### Dataset Preparation
+### Chuẩn bị Dataset
 
 ```python
 import re
@@ -331,7 +331,7 @@ def prepare_bangla_dataset(texts: list[str]) -> list[str]:
     return cleaned
 ```
 
-## Database and Storage
+## Database và lưu trữ
 
 ```sql
 -- MySQL: use utf8mb4 for Bengali text columns
@@ -374,9 +374,9 @@ CREATE TABLE bengali_content (
 );
 ```
 
-## Common Anti-Patterns
+## Các Anti-Pattern thường gặp
 
-### Don't: Split on Code Points for Display Length
+### KHÔNG: Cắt theo code point để tính độ dài hiển thị
 
 ```python
 # BAD — breaks conjuncts
@@ -390,7 +390,7 @@ def truncate_good(text, max_graphemes):
     return "".join(graphemes[:max_graphemes])
 ```
 
-### Don't: Skip Normalization Before Comparison
+### KHÔNG: Bỏ qua Normalization trước khi so sánh
 
 ```python
 # BAD — same visual text may not match
@@ -400,12 +400,12 @@ if user_input == stored_text: ...
 if unicodedata.normalize("NFC", user_input) == unicodedata.normalize("NFC", stored_text): ...
 ```
 
-### Don't: Assume `isdigit()` Means ASCII
+### KHÔNG: Cho rằng `isdigit()` nghĩa là ASCII
 
-`str.isdigit()` is Unicode-aware, so it already accepts Bengali digits —
-`"১২৩".isdigit()` is `True`. The trap is the opposite of what people expect: it
-also accepts Arabic-Indic `٣`, superscript `²`, and every other Unicode digit,
-and `int()` rejects most of what it accepts.
+`str.isdigit()` nhận biết Unicode, nên nó đã chấp nhận chữ số Bengali —
+`"১২৩".isdigit()` là `True`. Cái bẫy lại ngược với những gì mọi người kỳ vọng: nó
+cũng chấp nhận chữ số Arabic-Indic `٣`, chỉ số trên `²` và mọi chữ số Unicode khác,
+và `int()` từ chối phần lớn những gì nó chấp nhận.
 
 ```python
 # SURPRISING — accepts far more than ASCII, and int() then fails
@@ -424,7 +424,7 @@ if text.isdecimal():  # narrower than isdigit(): int() accepts everything it all
     value = int(text)
 ```
 
-### Don't: Use ASCII Transliteration When Unicode Is Available
+### KHÔNG: Dùng phiên âm ASCII khi đã có Unicode
 
 ```python
 # BAD — lossy and ambiguous
@@ -434,7 +434,7 @@ title = "bangla bhasha"
 title = "বাংলা ভাষা"
 ```
 
-### Don't: Ignore Zero-Width Characters in Web-Scraped Text
+### KHÔNG: Bỏ qua ký tự Zero-Width trong văn bản scrape từ web
 
 ```python
 # BAD — invisible characters cause matching failures
@@ -444,19 +444,19 @@ text = scraped_html.get_text()
 text = re.sub(r'[\u200b\ufeff]', '', scraped_html.get_text())
 ```
 
-## Best Practices
+## Best Practice
 
-- Normalize to NFC at every boundary — input, storage, and query — so equal strings compare equal.
-- Count grapheme clusters, not code points, whenever a length is shown to a user or used to truncate.
-- Treat `str.isdigit()` as "some Unicode digit", and use an explicit allowlist when only ASCII and Bengali digits are valid.
-- Preserve ZWNJ (U+200C) and ZWJ (U+200D); they change conjunct rendering. Strip only ZWSP (U+200B) and BOM (U+FEFF).
-- Sort with an ICU Bengali collator rather than code-point order, and verify the collation's provider and locale before relying on it.
-- Keep user-supplied Bengali text in its own message role; delimiters inside a prompt string are not a trust boundary.
-- Reject empty or whitespace-only search queries before matching, or they match every document.
-- Store text as `utf8mb4` on MySQL and on a UTF-8 database on PostgreSQL — never `utf8`/`latin1`.
+- Chuẩn hóa về NFC tại mọi ranh giới — input, lưu trữ và query — để các chuỗi bằng nhau so sánh ra bằng nhau.
+- Đếm grapheme cluster, không đếm code point, mỗi khi một độ dài được hiển thị cho người dùng hoặc dùng để cắt chuỗi.
+- Xem `str.isdigit()` là "một chữ số Unicode nào đó", và dùng allowlist tường minh khi chỉ chữ số ASCII và Bengali là hợp lệ.
+- Giữ nguyên ZWNJ (U+200C) và ZWJ (U+200D); chúng thay đổi cách hiển thị conjunct. Chỉ loại bỏ ZWSP (U+200B) và BOM (U+FEFF).
+- Sắp xếp bằng ICU Bengali collator thay vì thứ tự code point, và kiểm tra provider cùng locale của collation trước khi dựa vào nó.
+- Giữ văn bản Bengali do người dùng cung cấp trong message role riêng của nó; delimiter bên trong một chuỗi prompt không phải ranh giới tin cậy.
+- Từ chối query tìm kiếm rỗng hoặc chỉ gồm khoảng trắng trước khi so khớp, nếu không chúng sẽ khớp mọi tài liệu.
+- Lưu văn bản dưới dạng `utf8mb4` trên MySQL và trên database UTF-8 trên PostgreSQL — KHÔNG BAO GIỜ dùng `utf8`/`latin1`.
 
-## Related Skills
+## Skill liên quan
 
-- `prompt-optimizer` — structuring system and user turns safely
-- `regex-vs-llm-structured-text` — choosing between pattern matching and a model for text extraction
-- `database-migrations` — applying the collation and encoding changes above to a live schema
+- `prompt-optimizer` — tổ chức lượt system và user một cách an toàn
+- `regex-vs-llm-structured-text` — chọn giữa pattern matching và model để trích xuất văn bản
+- `database-migrations` — áp dụng các thay đổi collation và encoding ở trên vào schema đang chạy

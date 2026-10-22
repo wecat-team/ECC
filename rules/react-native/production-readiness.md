@@ -3,49 +3,49 @@ paths:
   - "**/*.ts"
   - "**/*.tsx"
 ---
-# React Native / Expo Production Readiness
+# Sẵn sàng cho Production với React Native / Expo
 
-> Extends the ECC philosophy to ship-grade concerns that style/pattern rules cannot encode by themselves.
-> A clean codebase is necessary but not sufficient for production — these items are mandatory before release.
+> Mở rộng triết lý của ECC sang các mối quan tâm ở mức ship-grade mà các rule về style/pattern không thể tự mã hóa.
+> Một codebase sạch là cần thiết nhưng chưa đủ cho production — các mục này là bắt buộc trước khi release.
 
-## Architecture
+## Kiến trúc
 
-- Ship on the **New Architecture** (Fabric + TurboModules). It is the default in recent Expo SDKs and is mandatory (cannot be disabled) from SDK 55+. Audit native deps for compatibility.
-- Pin the Expo SDK version; upgrade deliberately with `npx expo install --check` and test on both platforms.
+- Phát hành trên **New Architecture** (Fabric + TurboModules). Nó là mặc định trong các Expo SDK gần đây và là bắt buộc (không thể tắt) từ SDK 55+. Rà soát các dependency native về tính tương thích.
+- Ghim phiên bản Expo SDK; nâng cấp có chủ đích bằng `npx expo install --check` và test trên cả hai nền tảng.
 
 ## Build & Release (EAS)
 
-- Use **EAS Build** for production binaries and **EAS Submit** for store delivery. Do not rely on local ad-hoc builds for release.
-- Keep separate build profiles (`development`, `preview`, `production`) in `eas.json`.
-- Manage signing credentials via EAS; never commit keystores or provisioning profiles.
+- Dùng **EAS Build** cho binary production và **EAS Submit** để đưa lên store. Không dựa vào các bản build cục bộ tùy tiện để release.
+- Giữ các build profile riêng (`development`, `preview`, `production`) trong `eas.json`.
+- Quản lý credential ký (signing) qua EAS; KHÔNG BAO GIỜ commit keystore hoặc provisioning profile.
 
-## Over-the-Air Updates
+## Cập nhật Over-the-Air
 
-- Use **EAS Update** (`expo-updates`) for JS-only fixes, with a defined runtime version policy.
-- Never push native changes via OTA — those require a new store build.
-- Roll out gradually and keep the ability to roll back.
+- Dùng **EAS Update** (`expo-updates`) cho các bản sửa chỉ liên quan đến JS, với chính sách runtime version được xác định rõ.
+- KHÔNG BAO GIỜ đẩy thay đổi native qua OTA — chúng yêu cầu một bản build store mới.
+- Triển khai dần dần và giữ khả năng rollback.
 
 ## Observability
 
-- Integrate crash + error reporting (e.g. **Sentry** via `@sentry/react-native`) in production builds.
-- Add structured logging and, where useful, analytics — but strip verbose logs from release.
-- Capture and surface failed network/mutation states; do not fail silently.
+- Tích hợp báo cáo crash + lỗi (ví dụ **Sentry** qua `@sentry/react-native`) trong bản build production.
+- Thêm structured logging và, khi hữu ích, analytics — nhưng loại bỏ log chi tiết khỏi bản release.
+- Bắt và hiển thị các trạng thái network/mutation thất bại; không được thất bại trong im lặng.
 
-## Configuration & Versioning
+## Cấu hình & Versioning
 
-- Bump `version` and `ios.buildNumber` / `android.versionCode` per release.
-- Public config via `EXPO_PUBLIC_*`; real secrets via EAS secrets only.
-- Validate required config at startup and fail fast with a clear message.
+- Tăng `version` và `ios.buildNumber` / `android.versionCode` cho mỗi lần release.
+- Cấu hình công khai qua `EXPO_PUBLIC_*`; secret thật chỉ qua EAS secrets.
+- Validate cấu hình bắt buộc khi khởi động và fail fast với thông báo rõ ràng.
 
-## Pre-Release Gate
+## Cổng kiểm tra trước Release
 
-Before shipping, all must pass:
+Trước khi phát hành, tất cả phải pass:
 
-- [ ] `tsc --noEmit` clean
-- [ ] `npx expo lint` clean
-- [ ] Tests green, coverage >= 80% (see testing.md)
-- [ ] `npx expo-doctor` healthy
-- [ ] Critical-flow E2E (Maestro/Detox) pass on a real build
-- [ ] No secrets in bundle (see security.md)
-- [ ] Crash reporting active and verified
-- [ ] Tested on physical iOS and Android devices, not just simulators
+- [ ] `tsc --noEmit` sạch
+- [ ] `npx expo lint` sạch
+- [ ] Test xanh, coverage >= 80% (xem testing.md)
+- [ ] `npx expo-doctor` khỏe mạnh
+- [ ] E2E các flow quan trọng (Maestro/Detox) pass trên một bản build thật
+- [ ] Không có secret trong bundle (xem security.md)
+- [ ] Crash reporting đang hoạt động và đã được xác minh
+- [ ] Đã test trên thiết bị iOS và Android thật, không chỉ simulator

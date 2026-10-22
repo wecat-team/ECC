@@ -2,16 +2,16 @@
 paths:
   - "**/*.java"
 ---
-# Java Security
+# Bảo mật Java
 
-> This file extends [common/security.md](../common/security.md) with Java-specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho Java.
 
-## Secrets Management
+## Quản lý Secret
 
-- Never hardcode API keys, tokens, or credentials in source code
-- Use environment variables: `System.getenv("API_KEY")`
-- Use a secret manager (Vault, AWS Secrets Manager) for production secrets
-- Keep local config files with secrets in `.gitignore`
+- KHÔNG BAO GIỜ hardcode API key, token hoặc credential trong source code
+- Dùng biến môi trường: `System.getenv("API_KEY")`
+- Dùng secret manager (Vault, AWS Secrets Manager) cho secret production
+- Đưa các file cấu hình cục bộ chứa secret vào `.gitignore`
 
 ```java
 // BAD
@@ -22,11 +22,11 @@ String apiKey = System.getenv("PAYMENT_API_KEY");
 Objects.requireNonNull(apiKey, "PAYMENT_API_KEY must be set");
 ```
 
-## SQL Injection Prevention
+## Phòng chống SQL Injection
 
-- Always use parameterized queries — never concatenate user input into SQL
-- Use `PreparedStatement` or your framework's parameterized query API
-- Validate and sanitize any input used in native queries
+- Luôn dùng truy vấn tham số hóa — KHÔNG BAO GIỜ nối input của người dùng vào SQL
+- Dùng `PreparedStatement` hoặc API truy vấn tham số hóa của framework
+- Validate và sanitize mọi input dùng trong native query
 
 ```java
 // BAD — SQL injection via string concatenation
@@ -42,12 +42,12 @@ ps.setString(1, name);
 jdbcTemplate.query("SELECT * FROM orders WHERE name = ?", mapper, name);
 ```
 
-## Input Validation
+## Kiểm tra đầu vào (Input Validation)
 
-- Validate all user input at system boundaries before processing
-- Use Bean Validation (`@NotNull`, `@NotBlank`, `@Size`) on DTOs when using a validation framework
-- Sanitize file paths and user-provided strings before use
-- Reject input that fails validation with clear error messages
+- Validate mọi input của người dùng tại ranh giới hệ thống trước khi xử lý
+- Dùng Bean Validation (`@NotNull`, `@NotBlank`, `@Size`) trên DTO khi dùng validation framework
+- Sanitize đường dẫn file và chuỗi do người dùng cung cấp trước khi dùng
+- Từ chối input không qua validation kèm thông báo lỗi rõ ràng
 
 ```java
 // Validate manually in plain Java
@@ -62,24 +62,24 @@ public Order createOrder(String customerName, BigDecimal amount) {
 }
 ```
 
-## Authentication and Authorization
+## Authentication và Authorization
 
-- Never implement custom auth crypto — use established libraries
-- Store passwords with bcrypt or Argon2, never MD5/SHA1
-- Enforce authorization checks at service boundaries
-- Clear sensitive data from logs — never log passwords, tokens, or PII
+- KHÔNG BAO GIỜ tự triển khai mật mã cho auth — dùng các thư viện đã được kiểm chứng
+- Lưu mật khẩu bằng bcrypt hoặc Argon2, KHÔNG BAO GIỜ dùng MD5/SHA1
+- Áp dụng kiểm tra authorization tại ranh giới service
+- Loại bỏ dữ liệu nhạy cảm khỏi log — KHÔNG BAO GIỜ log mật khẩu, token hoặc PII
 
-## Dependency Security
+## Bảo mật Dependency
 
-- Run `mvn dependency:tree` or `./gradlew dependencies` to audit transitive dependencies
-- Use OWASP Dependency-Check or Snyk to scan for known CVEs
-- Keep dependencies updated — set up Dependabot or Renovate
+- Chạy `mvn dependency:tree` hoặc `./gradlew dependencies` để kiểm toán các transitive dependency
+- Dùng OWASP Dependency-Check hoặc Snyk để quét các CVE đã biết
+- Luôn cập nhật dependency — thiết lập Dependabot hoặc Renovate
 
-## Error Messages
+## Thông báo lỗi
 
-- Never expose stack traces, internal paths, or SQL errors in API responses
-- Map exceptions to safe, generic client messages at handler boundaries
-- Log detailed errors server-side; return generic messages to clients
+- KHÔNG BAO GIỜ để lộ stack trace, đường dẫn nội bộ hoặc lỗi SQL trong API response
+- Ánh xạ exception thành thông báo chung, an toàn cho client tại ranh giới handler
+- Log lỗi chi tiết ở phía server; trả về thông báo chung cho client
 
 ```java
 // Log the detail, return a generic message
@@ -94,8 +94,8 @@ try {
 }
 ```
 
-## References
+## Tham chiếu
 
-See skill: `springboot-security` for Spring Security authentication and authorization patterns.
-See skill: `quarkus-security` for Quarkus security with JWT/OIDC, RBAC, and CDI.
-See skill: `security-review` for general security checklists.
+Xem skill: `springboot-security` để có các pattern authentication và authorization của Spring Security.
+Xem skill: `quarkus-security` để có bảo mật Quarkus với JWT/OIDC, RBAC và CDI.
+Xem skill: `security-review` để có các checklist bảo mật chung.

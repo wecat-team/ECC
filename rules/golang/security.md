@@ -4,11 +4,11 @@ paths:
   - "**/go.mod"
   - "**/go.sum"
 ---
-# Go Security
+# Bảo mật Go
 
-> This file extends [common/security.md](../common/security.md) with Go specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho Go.
 
-## Secret Management
+## Quản lý Secret
 
 ```go
 apiKey := os.Getenv("OPENAI_API_KEY")
@@ -17,16 +17,16 @@ if apiKey == "" {
 }
 ```
 
-## Security Scanning
+## Quét bảo mật
 
-- Use **gosec** for static security analysis:
+- Dùng **gosec** để phân tích bảo mật tĩnh:
   ```bash
   gosec ./...
   ```
 
-## Context & Timeouts
+## Context & Timeout
 
-Always use `context.Context` for timeout control:
+Luôn dùng `context.Context` để kiểm soát timeout:
 
 ```go
 ctx, cancel := context.WithTimeout(ctx, 5*time.Second)

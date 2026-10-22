@@ -5,15 +5,15 @@ paths:
   - "**/*.fsproj"
   - "**/appsettings*.json"
 ---
-# F# Security
+# Bảo mật F#
 
-> This file extends [common/security.md](../common/security.md) with F#-specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho F#.
 
-## Secret Management
+## Quản lý Secret
 
-- Never hardcode API keys, tokens, or connection strings in source code
-- Use environment variables, user secrets for local development, and a secret manager in production
-- Keep `appsettings.*.json` free of real credentials
+- KHÔNG BAO GIỜ hardcode API key, token hoặc connection string trong source code
+- Dùng biến môi trường, user secrets cho phát triển cục bộ, và secret manager trong production
+- Giữ `appsettings.*.json` không chứa credential thật
 
 ```fsharp
 // BAD
@@ -26,11 +26,11 @@ let apiKey =
     |> Option.defaultWith (fun () -> failwith "OpenAI:ApiKey is not configured.")
 ```
 
-## SQL Injection Prevention
+## Phòng chống SQL Injection
 
-- Always use parameterized queries with ADO.NET, Dapper, or EF Core
-- Never concatenate user input into SQL strings
-- Validate sort fields and filter operators before using dynamic query composition
+- Luôn dùng truy vấn tham số hóa với ADO.NET, Dapper hoặc EF Core
+- KHÔNG BAO GIỜ nối input của người dùng vào chuỗi SQL
+- Validate các trường sắp xếp và toán tử lọc trước khi dùng cách dựng truy vấn động
 
 ```fsharp
 let findByCustomer (connection: IDbConnection) customerId =
@@ -40,11 +40,11 @@ let findByCustomer (connection: IDbConnection) customerId =
     }
 ```
 
-## Input Validation
+## Kiểm tra đầu vào (Input Validation)
 
-- Validate inputs at the application boundary using types
-- Use single-case discriminated unions for validated values
-- Reject invalid input before it enters domain logic
+- Validate input tại ranh giới ứng dụng bằng cách dùng type
+- Dùng single-case discriminated union cho các giá trị đã được validate
+- Từ chối input không hợp lệ trước khi nó đi vào domain logic
 
 ```fsharp
 type ValidatedEmail = private ValidatedEmail of string
@@ -59,18 +59,18 @@ module ValidatedEmail =
     let value (ValidatedEmail v) = v
 ```
 
-## Authentication and Authorization
+## Authentication và Authorization
 
-- Prefer framework auth handlers instead of custom token parsing
-- Enforce authorization policies at endpoint or handler boundaries
-- Never log raw tokens, passwords, or PII
+- Ưu tiên auth handler của framework thay vì tự parse token
+- Áp dụng authorization policy tại ranh giới endpoint hoặc handler
+- KHÔNG BAO GIỜ log token thô, mật khẩu hoặc PII
 
-## Error Handling
+## Xử lý lỗi
 
-- Return safe client-facing messages
-- Log detailed exceptions with structured context server-side
-- Do not expose stack traces, SQL text, or filesystem paths in API responses
+- Trả về thông báo an toàn cho phía client
+- Log exception chi tiết kèm ngữ cảnh có cấu trúc ở phía server
+- Không để lộ stack trace, nội dung SQL hoặc đường dẫn filesystem trong API response
 
-## References
+## Tham chiếu
 
-See skill: `security-review` for broader application security review checklists.
+Xem skill: `security-review` để có các checklist security review ứng dụng rộng hơn.

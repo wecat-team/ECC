@@ -6,19 +6,19 @@ paths:
   - "**/phpstan.neon.dist"
   - "**/psalm.xml"
 ---
-# PHP Hooks
+# Hook cho PHP
 
-> This file extends [common/hooks.md](../common/hooks.md) with PHP specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung dành riêng cho PHP.
 
-## PostToolUse Hooks
+## Hook PostToolUse
 
-Configure in `~/.claude/settings.json`:
+Cấu hình trong `~/.claude/settings.json`:
 
-- **Pint / PHP-CS-Fixer**: Auto-format edited `.php` files.
-- **PHPStan / Psalm**: Run static analysis after PHP edits in typed codebases.
-- **PHPUnit / Pest**: Run targeted tests for touched files or modules when edits affect behavior.
+- **Pint / PHP-CS-Fixer**: Tự động format các file `.php` đã sửa.
+- **PHPStan / Psalm**: Chạy phân tích tĩnh sau khi sửa PHP trong các codebase có định kiểu.
+- **PHPUnit / Pest**: Chạy các test nhắm mục tiêu cho file hoặc module đã chạm tới khi chỉnh sửa ảnh hưởng đến hành vi.
 
-## Warnings
+## Cảnh báo
 
-- Warn on `var_dump`, `dd`, `dump`, or `die()` left in edited files.
-- Warn when edited PHP files add raw SQL or disable CSRF/session protections.
+- Cảnh báo khi còn sót `var_dump`, `dd`, `dump` hoặc `die()` trong các file đã sửa.
+- Cảnh báo khi file PHP đã sửa thêm raw SQL hoặc vô hiệu hóa bảo vệ CSRF/session.

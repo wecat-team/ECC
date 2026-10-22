@@ -131,7 +131,7 @@ first_char = graphemes[0]  # Returns 'ক্ষ' as a complete unit
 if re.match(r'^[a-zA-Z]+$', name):  # Rejects "রহিম"
 
 # GOOD: Include Bengali Unicode range
-if re.match(r'^[a-zA-Zঀ-৿]+$', name):
+if re.match(r'^[a-zA-Z\u0980-\u09FF]+$', name):
 ```
 
 ### MEDIUM — Vấn đề chất lượng

@@ -6,13 +6,13 @@ paths:
   - "**/*.psgi"
   - "**/*.cgi"
 ---
-# Perl Testing
+# Kiểm thử Perl
 
-> This file extends [common/testing.md](../common/testing.md) with Perl-specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung dành riêng cho Perl.
 
 ## Framework
 
-Use **Test2::V0** for new projects (not Test::More):
+Dùng **Test2::V0** cho dự án mới (không dùng Test::More):
 
 ```perl
 use Test2::V0;
@@ -29,11 +29,11 @@ prove -l t/              # adds lib/ to @INC
 prove -lr -j8 t/         # recursive, 8 parallel jobs
 ```
 
-Always use `-l` to ensure `lib/` is on `@INC`.
+Luôn dùng `-l` để đảm bảo `lib/` nằm trong `@INC`.
 
 ## Coverage
 
-Use **Devel::Cover** — target 80%+:
+Dùng **Devel::Cover** — mục tiêu 80%+:
 
 ```bash
 cover -test
@@ -41,14 +41,14 @@ cover -test
 
 ## Mocking
 
-- **Test::MockModule** — mock methods on existing modules
-- **Test::MockObject** — create test doubles from scratch
+- **Test::MockModule** — mock method trên các module có sẵn
+- **Test::MockObject** — tạo test double từ đầu
 
-## Pitfalls
+## Cạm bẫy
 
-- Always end test files with `done_testing`
-- Never forget the `-l` flag with `prove`
+- Luôn kết thúc file test bằng `done_testing`
+- KHÔNG BAO GIỜ quên flag `-l` với `prove`
 
-## Reference
+## Tham chiếu
 
-See skill: `perl-testing` for detailed Perl TDD patterns with Test2::V0, prove, and Devel::Cover.
+Xem skill: `perl-testing` để có các pattern TDD Perl chi tiết với Test2::V0, prove và Devel::Cover.

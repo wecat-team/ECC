@@ -4,23 +4,23 @@ paths:
   - "**/*.fsx"
   - "**/*.fsproj"
 ---
-# F# Testing
+# Kiểm thử F#
 
-> This file extends [common/testing.md](../common/testing.md) with F#-specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung dành riêng cho F#.
 
 ## Test Framework
 
-- Prefer **xUnit** with **FsUnit.xUnit** for F#-friendly assertions
-- Use **Unquote** for quotation-based assertions with clear failure messages
-- Use **FsCheck.xUnit** for property-based testing
-- Use **NSubstitute** or function stubs for mocking dependencies
-- Use **Testcontainers** when integration tests need real infrastructure
+- Ưu tiên **xUnit** với **FsUnit.xUnit** để có assertion thân thiện với F#
+- Dùng **Unquote** cho assertion dựa trên quotation với thông báo lỗi rõ ràng
+- Dùng **FsCheck.xUnit** cho property-based testing
+- Dùng **NSubstitute** hoặc function stub để mock dependency
+- Dùng **Testcontainers** khi integration test cần hạ tầng thật
 
-## Test Organization
+## Tổ chức Test
 
-- Mirror `src/` structure under `tests/`
-- Separate unit, integration, and end-to-end coverage clearly
-- Name tests by behavior, not implementation details
+- Phản chiếu cấu trúc `src/` dưới `tests/`
+- Tách biệt rõ phần unit, integration và end-to-end
+- Đặt tên test theo hành vi, không theo chi tiết triển khai
 
 ```fsharp
 open Xunit
@@ -39,7 +39,7 @@ let ``PlaceOrder returns error when items are empty`` () =
     test <@ Result.isError result @>
 ```
 
-## Property-Based Testing with FsCheck
+## Property-Based Testing với FsCheck
 
 ```fsharp
 open FsCheck.Xunit
@@ -50,13 +50,13 @@ let ``order total is never negative`` (items: OrderItem list) =
     total >= 0m
 ```
 
-## ASP.NET Core Integration Tests
+## Integration Test ASP.NET Core
 
-- Use `WebApplicationFactory<TEntryPoint>` for API integration coverage
-- Test auth, validation, and serialization through HTTP, not by bypassing middleware
+- Dùng `WebApplicationFactory<TEntryPoint>` để kiểm thử integration cho API
+- Test auth, validation và serialization qua HTTP, không bằng cách bỏ qua middleware
 
 ## Coverage
 
-- Target 80%+ line coverage
-- Focus coverage on domain logic, validation, auth, and failure paths
-- Run `dotnet test` in CI with coverage collection enabled where available
+- Mục tiêu line coverage 80%+
+- Tập trung coverage vào domain logic, validation, auth và các đường lỗi
+- Chạy `dotnet test` trong CI với việc thu thập coverage được bật khi có thể

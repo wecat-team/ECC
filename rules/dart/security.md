@@ -5,16 +5,16 @@ paths:
   - "**/AndroidManifest.xml"
   - "**/Info.plist"
 ---
-# Dart/Flutter Security
+# Bảo mật Dart/Flutter
 
-> This file extends [common/security.md](../common/security.md) with Dart, Flutter, and mobile-specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho Dart, Flutter và mobile.
 
-## Secrets Management
+## Quản lý Secret
 
-- Never hardcode API keys, tokens, or credentials in Dart source
-- Use `--dart-define` or `--dart-define-from-file` for compile-time config (values are not truly secret — use a backend proxy for server-side secrets)
-- Use `flutter_dotenv` or equivalent, with `.env` files listed in `.gitignore`
-- Store runtime secrets in platform-secure storage: `flutter_secure_storage` (Keychain on iOS, EncryptedSharedPreferences on Android)
+- KHÔNG BAO GIỜ hardcode API key, token hoặc credential trong source Dart
+- Dùng `--dart-define` hoặc `--dart-define-from-file` cho cấu hình compile-time (các giá trị này không thực sự bí mật — hãy dùng backend proxy cho secret phía server)
+- Dùng `flutter_dotenv` hoặc tương đương, với các file `.env` được liệt kê trong `.gitignore`
+- Lưu secret lúc runtime trong kho lưu trữ an toàn của nền tảng: `flutter_secure_storage` (Keychain trên iOS, EncryptedSharedPreferences trên Android)
 
 ```dart
 // BAD
@@ -27,13 +27,13 @@ const apiKey = String.fromEnvironment('API_KEY');
 final token = await secureStorage.read(key: 'auth_token');
 ```
 
-## Network Security
+## Bảo mật mạng
 
-- Enforce HTTPS — no `http://` calls in production
-- Configure Android `network_security_config.xml` to block cleartext traffic
-- Set `NSAppTransportSecurity` in `Info.plist` to disallow arbitrary loads
-- Set request timeouts on all HTTP clients — never leave defaults
-- Consider certificate pinning for high-security endpoints
+- Ép buộc HTTPS — không có lời gọi `http://` trong production
+- Cấu hình `network_security_config.xml` của Android để chặn cleartext traffic
+- Đặt `NSAppTransportSecurity` trong `Info.plist` để không cho phép arbitrary loads
+- Đặt timeout cho request trên mọi HTTP client — không bao giờ để mặc định
+- Cân nhắc certificate pinning cho các endpoint yêu cầu bảo mật cao
 
 ```dart
 // Dio with timeout and HTTPS enforcement
@@ -44,12 +44,12 @@ final dio = Dio(BaseOptions(
 ));
 ```
 
-## Input Validation
+## Kiểm tra đầu vào (Input Validation)
 
-- Validate and sanitize all user input before sending to API or storage
-- Never pass unsanitized input to SQL queries — use parameterized queries (sqflite, drift)
-- Sanitize deep link URLs before navigation — validate scheme, host, and path parameters
-- Use `Uri.tryParse` and validate before navigating
+- Validate và sanitize mọi input của người dùng trước khi gửi tới API hoặc lưu trữ
+- KHÔNG BAO GIỜ truyền input chưa sanitize vào truy vấn SQL — dùng truy vấn tham số hóa (sqflite, drift)
+- Sanitize URL deep link trước khi điều hướng — validate scheme, host và các tham số path
+- Dùng `Uri.tryParse` và validate trước khi điều hướng
 
 ```dart
 // BAD — SQL injection
@@ -69,20 +69,20 @@ if (uri != null && uri.host == 'myapp.com' && _allowedPaths.contains(uri.path)) 
 }
 ```
 
-## Data Protection
+## Bảo vệ dữ liệu
 
-- Store tokens, PII, and credentials only in `flutter_secure_storage`
-- Never write sensitive data to `SharedPreferences` or local files in plaintext
-- Clear auth state on logout: tokens, cached user data, cookies
-- Use biometric authentication (`local_auth`) for sensitive operations
-- Avoid logging sensitive data — no `print(token)` or `debugPrint(password)`
+- Chỉ lưu token, PII và credential trong `flutter_secure_storage`
+- KHÔNG BAO GIỜ ghi dữ liệu nhạy cảm vào `SharedPreferences` hoặc file cục bộ dưới dạng plaintext
+- Xóa trạng thái xác thực khi logout: token, dữ liệu người dùng được cache, cookie
+- Dùng xác thực sinh trắc học (`local_auth`) cho các thao tác nhạy cảm
+- Tránh log dữ liệu nhạy cảm — không có `print(token)` hay `debugPrint(password)`
 
-## Android-Specific
+## Riêng cho Android
 
-- Declare only required permissions in `AndroidManifest.xml`
-- Export Android components (`Activity`, `Service`, `BroadcastReceiver`) only when necessary; add `android:exported="false"` where not needed
-- Review intent filters — exported components with implicit intent filters are accessible by any app
-- Use `FLAG_SECURE` for screens displaying sensitive data (prevents screenshots)
+- Chỉ khai báo các permission cần thiết trong `AndroidManifest.xml`
+- Chỉ export các component Android (`Activity`, `Service`, `BroadcastReceiver`) khi cần thiết; thêm `android:exported="false"` ở những chỗ không cần
+- Rà soát intent filter — các component được export với implicit intent filter có thể bị bất kỳ ứng dụng nào truy cập
+- Dùng `FLAG_SECURE` cho các màn hình hiển thị dữ liệu nhạy cảm (ngăn chụp màn hình)
 
 ```xml
 <!-- AndroidManifest.xml — restrict exported components -->
@@ -92,20 +92,20 @@ if (uri != null && uri.host == 'myapp.com' && _allowedPaths.contains(uri.path)) 
 <activity android:name=".SensitiveActivity" android:exported="false" />
 ```
 
-## iOS-Specific
+## Riêng cho iOS
 
-- Declare only required usage descriptions in `Info.plist` (`NSCameraUsageDescription`, etc.)
-- Store secrets in Keychain — `flutter_secure_storage` uses Keychain on iOS
-- Use App Transport Security (ATS) — disallow arbitrary loads
-- Enable data protection entitlement for sensitive files
+- Chỉ khai báo các usage description cần thiết trong `Info.plist` (`NSCameraUsageDescription`, v.v.)
+- Lưu secret trong Keychain — `flutter_secure_storage` dùng Keychain trên iOS
+- Dùng App Transport Security (ATS) — không cho phép arbitrary loads
+- Bật data protection entitlement cho các file nhạy cảm
 
-## WebView Security
+## Bảo mật WebView
 
-- Use `webview_flutter` v4+ (`WebViewController` / `WebViewWidget`) — the legacy `WebView` widget is removed
-- Disable JavaScript unless explicitly required (`JavaScriptMode.disabled`)
-- Validate URLs before loading — never load arbitrary URLs from deep links
-- Never expose Dart callbacks to JavaScript unless absolutely needed and carefully sandboxed
-- Use `NavigationDelegate.onNavigationRequest` to intercept and validate navigation requests
+- Dùng `webview_flutter` v4+ (`WebViewController` / `WebViewWidget`) — widget `WebView` cũ đã bị gỡ bỏ
+- Tắt JavaScript trừ khi thực sự cần (`JavaScriptMode.disabled`)
+- Validate URL trước khi tải — KHÔNG BAO GIỜ tải URL tùy ý từ deep link
+- KHÔNG BAO GIỜ expose Dart callback cho JavaScript trừ khi thực sự cần và đã được sandbox cẩn thận
+- Dùng `NavigationDelegate.onNavigationRequest` để chặn và validate các yêu cầu điều hướng
 
 ```dart
 // webview_flutter v4+ API (WebViewController + WebViewWidget)
@@ -127,9 +127,9 @@ final controller = WebViewController()
 WebViewWidget(controller: controller)
 ```
 
-## Obfuscation and Build Security
+## Obfuscation và bảo mật Build
 
-- Enable obfuscation in release builds: `flutter build apk --obfuscate --split-debug-info=./debug-info/`
-- Keep `--split-debug-info` output out of version control (used for crash symbolication only)
-- Ensure ProGuard/R8 rules don't inadvertently expose serialized classes
-- Run `flutter analyze` and address all warnings before release
+- Bật obfuscation trong bản build release: `flutter build apk --obfuscate --split-debug-info=./debug-info/`
+- Giữ output của `--split-debug-info` ngoài version control (chỉ dùng để symbolicate crash)
+- Đảm bảo rule ProGuard/R8 không vô tình để lộ các class được serialize
+- Chạy `flutter analyze` và xử lý mọi cảnh báo trước khi release

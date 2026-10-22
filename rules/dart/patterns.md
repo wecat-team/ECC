@@ -3,9 +3,9 @@ paths:
   - "**/*.dart"
   - "**/pubspec.yaml"
 ---
-# Dart/Flutter Patterns
+# Pattern Dart/Flutter
 
-> This file extends [common/patterns.md](../common/patterns.md) with Dart, Flutter, and common ecosystem-specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho Dart, Flutter và hệ sinh thái phổ biến.
 
 ## Repository Pattern
 
@@ -56,7 +56,7 @@ class UserRepositoryImpl implements UserRepository {
 }
 ```
 
-## State Management: BLoC/Cubit
+## Quản lý State: BLoC/Cubit
 
 ```dart
 // Cubit — simple state transitions
@@ -92,7 +92,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 }
 ```
 
-## State Management: Riverpod
+## Quản lý State: Riverpod
 
 ```dart
 // Simple provider
@@ -129,7 +129,7 @@ class CartPage extends ConsumerWidget {
 
 ## Dependency Injection
 
-Constructor injection is preferred. Use `get_it` or Riverpod providers at composition root:
+Ưu tiên constructor injection. Dùng `get_it` hoặc Riverpod provider tại composition root:
 
 ```dart
 // get_it registration (in a setup file)
@@ -143,7 +143,7 @@ void setupDependencies() {
 }
 ```
 
-## ViewModel Pattern (without BLoC/Riverpod)
+## ViewModel Pattern (không dùng BLoC/Riverpod)
 
 ```dart
 class UserListViewModel extends ChangeNotifier {
@@ -191,7 +191,7 @@ class CreateUserUseCase {
 }
 ```
 
-## Immutable State with freezed
+## State bất biến với freezed
 
 ```dart
 @freezed
@@ -204,7 +204,7 @@ class UserState with _$UserState {
 }
 ```
 
-## Clean Architecture Layer Boundaries
+## Ranh giới các Layer trong Clean Architecture
 
 ```
 lib/
@@ -222,11 +222,11 @@ lib/
     └── providers/ (or blocs/ or viewmodels/)
 ```
 
-- Domain must not import `package:flutter` or any data-layer package
-- Data layer maps DTOs to domain entities at repository boundaries
-- Presentation calls use cases, not repositories directly
+- Domain không được import `package:flutter` hoặc bất kỳ package nào của data layer
+- Data layer ánh xạ DTO sang domain entity tại ranh giới repository
+- Presentation gọi use case, không gọi repository trực tiếp
 
-## Navigation (GoRouter)
+## Điều hướng (GoRouter)
 
 ```dart
 final router = GoRouter(
@@ -255,7 +255,7 @@ final router = GoRouter(
 );
 ```
 
-## References
+## Tham chiếu
 
-See skill: `flutter-dart-code-review` for the comprehensive review checklist.
-See skill: `compose-multiplatform-patterns` for Kotlin Multiplatform/Flutter interop patterns.
+Xem skill: `flutter-dart-code-review` để có checklist review toàn diện.
+Xem skill: `compose-multiplatform-patterns` để có các pattern tương tác giữa Kotlin Multiplatform và Flutter.

@@ -8,40 +8,40 @@ paths:
   - "**/middleware/**"
 ---
 
-# Nuxt Coding Style
+# Phong cách code Nuxt
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with Nuxt specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho Nuxt.
 
-## Directory layout
+## Cấu trúc thư mục
 
-- Default `srcDir` is `app/`. Framework files live at `app/pages/`, `app/layouts/`, `app/middleware/`, `app/plugins/`, `app/app.config.ts`. `nuxt.config.ts` and `server/` stay at project root.
-- Some projects override `srcDir` to `src/` for a Feature-Sliced Design layout, remapping `dir.pages` (for example to `src/app/routes`), `dir.layouts`, and the `@`/`~` aliases. Always check `nuxt.config.ts` before assuming a path.
+- `srcDir` mặc định là `app/`. Các file của framework nằm ở `app/pages/`, `app/layouts/`, `app/middleware/`, `app/plugins/`, `app/app.config.ts`. `nuxt.config.ts` và `server/` nằm ở root của dự án.
+- Một số dự án ghi đè `srcDir` thành `src/` để dùng cấu trúc Feature-Sliced Design, ánh xạ lại `dir.pages` (ví dụ sang `src/app/routes`), `dir.layouts` và các alias `@`/`~`. Luôn kiểm tra `nuxt.config.ts` trước khi giả định một đường dẫn.
 
-## Auto-imports discipline
+## Kỷ luật với auto-import
 
-- Composables in `app/composables/` and `server/utils/` auto-import. Do NOT manually import Nuxt composables (`useFetch`, `useState`, `navigateTo`) or `defineStore` / `storeToRefs`.
-- Do NOT add a standalone `vue-router` dep (Nuxt bundles v5) or hand-mount `createApp` / `createPinia` / `createRouter`. The framework wires these.
+- Các composable trong `app/composables/` và `server/utils/` được auto-import. KHÔNG import thủ công các composable của Nuxt (`useFetch`, `useState`, `navigateTo`) hay `defineStore` / `storeToRefs`.
+- KHÔNG thêm dependency `vue-router` riêng lẻ (Nuxt đã đóng gói v5) và không tự mount `createApp` / `createPinia` / `createRouter`. Framework đã tự nối các thành phần này.
 
-## Compiler macros
+## Compiler macro
 
-- `definePageMeta` is a compile-time macro. Static values only, no reactive data and no side-effect calls inside it.
-- Augment typed `PageMeta` via `declare module '#app'` rather than casting.
+- `definePageMeta` là một compile-time macro. Chỉ dùng giá trị tĩnh, không dùng dữ liệu reactive và không gọi hàm có side effect bên trong nó.
+- Mở rộng `PageMeta` có kiểu qua `declare module '#app'` thay vì ép kiểu (cast).
 
-## Config file separation
+## Tách biệt các file cấu hình
 
-Three distinct files, do not conflate.
+Có ba file riêng biệt, đừng nhập nhằng.
 
-- `nuxt.config.ts` = build-time only (`routeRules`, `modules`, `nitro`, `ssr` flag). Not reactive.
-- `runtimeConfig` (inside nuxt.config) = per-env runtime values, env-overridable via `NUXT_*`. Root keys are server-only, `public` keys are client-visible.
-- `app/app.config.ts` = public build-fixed reactive settings (theme tokens, feature flags). No env override. NEVER secrets.
+- `nuxt.config.ts` = chỉ dành cho build-time (`routeRules`, `modules`, `nitro`, cờ `ssr`). Không reactive.
+- `runtimeConfig` (bên trong nuxt.config) = giá trị runtime theo từng môi trường, có thể ghi đè qua `NUXT_*`. Các key ở root chỉ dùng phía server, các key `public` hiển thị với client.
+- `app/app.config.ts` = các cài đặt reactive công khai, cố định lúc build (theme token, feature flag). Không ghi đè bằng env. KHÔNG BAO GIỜ chứa secret.
 
-## Head and meta
+## Head và meta
 
-- `app.head` in `nuxt.config.ts` takes static values only.
-- Reactive meta goes through `useHead` / `useSeoMeta` in component setup, never via `app.head`.
+- `app.head` trong `nuxt.config.ts` chỉ nhận giá trị tĩnh.
+- Meta reactive đi qua `useHead` / `useSeoMeta` trong phần setup của component, KHÔNG BAO GIỜ qua `app.head`.
 
-## Reference
+## Tham chiếu
 
-- ECC skills: `nuxt4-patterns`, `vite-patterns`, `frontend-patterns`.
+- Skill ECC: `nuxt4-patterns`, `vite-patterns`, `frontend-patterns`.
 - [Nuxt directory structure](https://nuxt.com/docs/guide/directory-structure/app)
 - [Nuxt configuration](https://nuxt.com/docs/api/nuxt-config)

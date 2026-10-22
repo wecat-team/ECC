@@ -3,31 +3,31 @@ paths:
   - "**/*.php"
   - "**/composer.json"
 ---
-# PHP Patterns
+# Pattern PHP
 
-> This file extends [common/patterns.md](../common/patterns.md) with PHP specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho PHP.
 
-## Thin Controllers, Explicit Services
+## Controller mỏng, Service tường minh
 
-- Keep controllers focused on transport: auth, validation, serialization, status codes.
-- Move business rules into application/domain services that are easy to test without HTTP bootstrapping.
+- Giữ controller tập trung vào tầng truyền tải: auth, validation, serialization, status code.
+- Chuyển business rule vào các application/domain service dễ test mà không cần khởi động HTTP.
 
-## DTOs and Value Objects
+## DTO và Value Object
 
-- Replace shape-heavy associative arrays with DTOs for requests, commands, and external API payloads.
-- Use value objects for money, identifiers, date ranges, and other constrained concepts.
+- Thay các associative array nặng về cấu trúc bằng DTO cho request, command và payload API bên ngoài.
+- Dùng value object cho tiền tệ, định danh, khoảng ngày và các khái niệm có ràng buộc khác.
 
 ## Dependency Injection
 
-- Depend on interfaces or narrow service contracts, not framework globals.
-- Pass collaborators through constructors so services are testable without service-locator lookups.
+- Phụ thuộc vào interface hoặc các service contract hẹp, không phụ thuộc vào global của framework.
+- Truyền các collaborator qua constructor để service test được mà không cần tra cứu service-locator.
 
-## Boundaries
+## Ranh giới
 
-- Isolate ORM models from domain decisions when the model layer is doing more than persistence.
-- Wrap third-party SDKs behind small adapters so the rest of the codebase depends on your contract, not theirs.
+- Cô lập ORM model khỏi các quyết định domain khi tầng model đang làm nhiều hơn việc persistence.
+- Bọc SDK bên thứ ba sau các adapter nhỏ để phần còn lại của codebase phụ thuộc vào contract của bạn, không phải của họ.
 
-## Reference
+## Tham chiếu
 
-See skill: `api-design` for endpoint conventions and response-shape guidance.
-See skill: `laravel-patterns` for Laravel-specific architecture guidance.
+Xem skill: `api-design` để có quy ước endpoint và hướng dẫn về hình dạng response.
+Xem skill: `laravel-patterns` để có hướng dẫn kiến trúc riêng cho Laravel.

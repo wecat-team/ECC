@@ -3,19 +3,19 @@ paths:
   - "**/*.ts"
   - "**/*.tsx"
 ---
-# React Native / Expo Patterns
+# Pattern React Native / Expo
 
-> This file extends [common/patterns.md](../common/patterns.md) with React Native / Expo specific patterns.
-> Note: Do NOT install the `web/` ruleset in a React Native project — those patterns assume the DOM (e.g. URL-as-state) and do not apply here.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với các pattern riêng cho React Native / Expo.
+> Lưu ý: KHÔNG cài bộ rule `web/` trong dự án React Native — các pattern đó giả định có DOM (ví dụ URL-as-state) và không áp dụng ở đây.
 
-## Navigation (Expo Router)
+## Điều hướng (Expo Router)
 
-Expo Router is Expo's built-in, file-based router (`app/` directory); React Navigation is the established alternative. The examples below use Expo Router; the principles apply either way.
+Expo Router là router tích hợp sẵn của Expo, dựa trên file (thư mục `app/`); React Navigation là lựa chọn thay thế đã được thiết lập vững chắc. Các ví dụ bên dưới dùng Expo Router; các nguyên tắc áp dụng cho cả hai.
 
-- Keep route files (`app/**`) thin — they wire params + hooks to a screen component that lives in `components/` or `features/`.
-- Type route params; validate untrusted params (e.g. from deep links) with Zod before use.
-- Use typed navigation helpers (`useLocalSearchParams`, `Link`, `router.push`).
-- Centralize linking config; never trust deep-link params without validation.
+- Giữ các route file (`app/**`) mỏng — chúng nối params + hook vào một screen component nằm trong `components/` hoặc `features/`.
+- Định kiểu cho route param; validate các param không đáng tin (ví dụ từ deep link) bằng Zod trước khi dùng.
+- Dùng các helper điều hướng có kiểu (`useLocalSearchParams`, `Link`, `router.push`).
+- Tập trung hóa cấu hình linking; KHÔNG BAO GIỜ tin param của deep link khi chưa validate.
 
 ```tsx
 // app/user/[id].tsx
@@ -36,31 +36,31 @@ export default function UserScreen() {
 }
 ```
 
-## State Management
+## Quản lý State
 
-The rule is to keep these concerns separate and not duplicate server data into client stores. The tools listed are common choices, not requirements — pick what fits your project.
+Quy tắc là tách biệt các mối quan tâm này và không sao chép dữ liệu server vào client store. Các công cụ liệt kê là lựa chọn phổ biến, không bắt buộc — hãy chọn thứ phù hợp với dự án của bạn.
 
-| Concern | Common choices |
+| Mối quan tâm | Lựa chọn phổ biến |
 |---------|---------|
-| Server state | a server-cache library (TanStack Query, SWR) |
-| Client/UI state | a lightweight store (Zustand, Jotai) or Context |
-| Navigation/route state | Expo Router params (NOT a global store) |
-| Form state | a form library (e.g. React Hook Form) with schema validation |
-| Secure persistence | `expo-secure-store` |
-| Non-secure persistence | `AsyncStorage` / MMKV |
+| Server state | một thư viện server-cache (TanStack Query, SWR) |
+| Client/UI state | một store nhẹ (Zustand, Jotai) hoặc Context |
+| Navigation/route state | param của Expo Router (KHÔNG phải global store) |
+| Form state | một thư viện form (ví dụ React Hook Form) kèm schema validation |
+| Lưu trữ bảo mật | `expo-secure-store` |
+| Lưu trữ không bảo mật | `AsyncStorage` / MMKV |
 
-- Derive values instead of storing redundant computed state.
-- Keep global client state minimal; prefer local `useState` until sharing is actually needed.
+- Dẫn xuất giá trị thay vì lưu state tính toán dư thừa.
+- Giữ global client state ở mức tối thiểu; ưu tiên `useState` cục bộ cho đến khi thực sự cần chia sẻ.
 
-## Data Fetching
+## Lấy dữ liệu (Data Fetching)
 
-Use a server-cache library (TanStack Query, SWR) instead of ad-hoc fetch-in-`useEffect`. The examples use TanStack Query.
+Dùng thư viện server-cache (TanStack Query, SWR) thay vì fetch tùy tiện trong `useEffect`. Các ví dụ dùng TanStack Query.
 
-- Route server reads through the cache (e.g. `useQuery`) and mutations through it (e.g. `useMutation`) with cache invalidation.
-- Validate API responses with Zod at the boundary; infer types from the schema. (Zod is already the validation default in ECC's `typescript/` rules.)
-- Handle the three states explicitly in UI: loading, error, empty.
-- Use optimistic updates for fast interactions: snapshot, apply, roll back on failure with visible feedback.
-- Fetch independent data in parallel; avoid request waterfalls between parent and child.
+- Đưa các lần đọc từ server đi qua cache (ví dụ `useQuery`) và các mutation cũng đi qua nó (ví dụ `useMutation`) kèm vô hiệu hóa cache.
+- Validate API response bằng Zod tại ranh giới; suy ra type từ schema. (Zod đã là mặc định để validate trong các rule `typescript/` của ECC.)
+- Xử lý tường minh ba trạng thái trong UI: loading, error, empty.
+- Dùng optimistic update cho các tương tác nhanh: snapshot, áp dụng, rollback khi thất bại kèm phản hồi hiển thị.
+- Fetch song song các dữ liệu độc lập; tránh request waterfall giữa cha và con.
 
 ```tsx
 function useUser(id: string) {
@@ -71,18 +71,18 @@ function useUser(id: string) {
 }
 ```
 
-## Lists
+## Danh sách
 
-- Use `FlatList`/`SectionList` (or `FlashList` for large/heavy lists) — never `.map()` a large array inside a `ScrollView`.
-- Provide a stable `keyExtractor`; memoize `renderItem`.
-- Paginate or virtualize long data sets.
+- Dùng `FlatList`/`SectionList` (hoặc `FlashList` cho danh sách lớn/nặng) — KHÔNG BAO GIỜ `.map()` một mảng lớn bên trong `ScrollView`.
+- Cung cấp `keyExtractor` ổn định; memoize `renderItem`.
+- Phân trang hoặc ảo hóa (virtualize) các tập dữ liệu dài.
 
-## Custom Hooks
+## Custom Hook
 
-- Extract reusable logic (data, permissions, device APIs) into `use*` hooks.
-- Keep side effects (Expo SDK calls, subscriptions) inside hooks, not in JSX.
+- Tách logic tái sử dụng (dữ liệu, permission, API thiết bị) thành các hook `use*`.
+- Giữ side effect (lời gọi Expo SDK, subscription) bên trong hook, không đặt trong JSX.
 
-## Async & Effects
+## Async & Effect
 
-- Clean up subscriptions, timers, and listeners in the effect's return function.
-- Cancel or ignore stale async results on unmount to avoid setState-after-unmount.
+- Dọn dẹp subscription, timer và listener trong hàm return của effect.
+- Hủy hoặc bỏ qua kết quả async đã cũ khi unmount để tránh setState-after-unmount.

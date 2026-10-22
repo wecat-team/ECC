@@ -8,19 +8,19 @@ paths:
   - "**/Directory.Build.props"
   - "**/Directory.Build.targets"
 ---
-# F# Hooks
+# Hook cho F#
 
-> This file extends [common/hooks.md](../common/hooks.md) with F#-specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung dành riêng cho F#.
 
-## PostToolUse Hooks
+## Hook PostToolUse
 
-Configure in `~/.claude/settings.json`:
+Cấu hình trong `~/.claude/settings.json`:
 
-- **fantomas**: Auto-format edited F# files
-- **dotnet build**: Verify the solution or project still compiles after edits
-- **dotnet test --no-build**: Re-run the nearest relevant test project after behavior changes
+- **fantomas**: Tự động format các file F# đã sửa
+- **dotnet build**: Xác minh solution hoặc project vẫn biên dịch được sau khi sửa
+- **dotnet test --no-build**: Chạy lại project test liên quan gần nhất sau khi hành vi thay đổi
 
-## Stop Hooks
+## Hook Stop
 
-- Run a final `dotnet build` before ending a session with broad F# changes
-- Warn on modified `appsettings*.json` files so secrets do not get committed
+- Chạy `dotnet build` lần cuối trước khi kết thúc phiên có thay đổi F# trên diện rộng
+- Cảnh báo khi các file `appsettings*.json` bị sửa để secret không bị commit nhầm
