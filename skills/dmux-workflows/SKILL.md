@@ -1,31 +1,31 @@
 ---
 name: dmux-workflows
-description: Multi-agent orchestration using dmux (tmux pane manager for AI agents). Patterns for parallel agent workflows across Claude Code, Codex, OpenCode, and other harnesses. Use when running multiple agent sessions in parallel or coordinating multi-agent development workflows.
+description: "Điều phối multi-agent bằng dmux (trình quản lý pane tmux cho AI agent). Các pattern cho workflow agent song song trên Claude Code, Codex, OpenCode và các harness khác. Dùng khi chạy nhiều phiên agent song song hoặc điều phối workflow phát triển multi-agent."
 metadata:
   origin: ECC
 ---
 
-# dmux Workflows
+# Workflow dmux
 
-Orchestrate parallel AI agent sessions using dmux, a tmux pane manager for agent harnesses.
+Điều phối các phiên AI agent song song bằng dmux, một trình quản lý pane tmux cho các agent harness.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Running multiple agent sessions in parallel
-- Coordinating work across Claude Code, Codex, and other harnesses
-- Complex tasks that benefit from divide-and-conquer parallelism
-- User says "run in parallel", "split this work", "use dmux", or "multi-agent"
+- Chạy nhiều phiên agent song song
+- Điều phối công việc giữa Claude Code, Codex và các harness khác
+- Các task phức tạp hưởng lợi từ song song kiểu chia để trị
+- Người dùng nói "run in parallel", "split this work", "use dmux" hoặc "multi-agent"
 
-## What is dmux
+## dmux là gì
 
-dmux is a tmux-based orchestration tool that manages AI agent panes:
-- Press `n` to create a new pane with a prompt
-- Press `m` to merge pane output back to the main session
-- Supports: Claude Code, Codex, OpenCode, Cline, Gemini, Qwen
+dmux là công cụ điều phối dựa trên tmux, quản lý các pane của AI agent:
+- Nhấn `n` để tạo pane mới kèm prompt
+- Nhấn `m` để merge đầu ra của pane về phiên chính
+- Hỗ trợ: Claude Code, Codex, OpenCode, Cline, Gemini, Qwen
 
-**Install:** Install dmux from its repository after reviewing the package. See [github.com/standardagents/dmux](https://github.com/standardagents/dmux)
+**Cài đặt:** Cài dmux từ repository của nó sau khi review package. Xem [github.com/standardagents/dmux](https://github.com/standardagents/dmux)
 
-## Quick Start
+## Bắt đầu nhanh
 
 ```bash
 # Start dmux session
@@ -40,11 +40,11 @@ dmux
 # Press 'm' to merge results back
 ```
 
-## Workflow Patterns
+## Các pattern workflow
 
-### Pattern 1: Research + Implement
+### Pattern 1: Nghiên cứu + Triển khai
 
-Split research and implementation into parallel tracks:
+Tách nghiên cứu và triển khai thành các nhánh song song:
 
 ```
 Pane 1 (Research): "Research best practices for rate limiting in Node.js.
@@ -57,9 +57,9 @@ Pane 2 (Implement): "Implement rate limiting middleware for our Express API.
 # After Pane 1 completes, merge findings into Pane 2's context
 ```
 
-### Pattern 2: Multi-File Feature
+### Pattern 2: Tính năng nhiều file
 
-Parallelize work across independent files:
+Song song hóa công việc trên các file độc lập:
 
 ```
 Pane 1: "Create the database schema and migrations for the billing feature"
@@ -69,9 +69,9 @@ Pane 3: "Create the billing dashboard UI components"
 # Merge all, then do integration in main pane
 ```
 
-### Pattern 3: Test + Fix Loop
+### Pattern 3: Vòng lặp Test + Fix
 
-Run tests in one pane, fix in another:
+Chạy test ở một pane, sửa ở pane khác:
 
 ```
 Pane 1 (Watcher): "Run the test suite in watch mode. When tests fail,
@@ -80,9 +80,9 @@ Pane 1 (Watcher): "Run the test suite in watch mode. When tests fail,
 Pane 2 (Fixer): "Fix failing tests based on the error output from pane 1"
 ```
 
-### Pattern 4: Cross-Harness
+### Pattern 4: Đa harness
 
-Use different AI tools for different tasks:
+Dùng các công cụ AI khác nhau cho các task khác nhau:
 
 ```
 Pane 1 (Claude Code): "Review the security of the auth module"
@@ -90,9 +90,9 @@ Pane 2 (Codex): "Refactor the utility functions for performance"
 Pane 3 (Claude Code): "Write E2E tests for the checkout flow"
 ```
 
-### Pattern 5: Code Review Pipeline
+### Pattern 5: Pipeline code review
 
-Parallel review perspectives:
+Các góc nhìn review song song:
 
 ```
 Pane 1: "Review src/api/ for security vulnerabilities"
@@ -102,17 +102,17 @@ Pane 3: "Review src/api/ for test coverage gaps"
 # Merge all reviews into a single report
 ```
 
-## Best Practices
+## Best practice
 
-1. **Independent tasks only.** Don't parallelize tasks that depend on each other's output.
-2. **Clear boundaries.** Each pane should work on distinct files or concerns.
-3. **Merge strategically.** Review pane output before merging to avoid conflicts.
-4. **Use git worktrees.** For file-conflict-prone work, use separate worktrees per pane.
-5. **Resource awareness.** Each pane uses API tokens — keep total panes under 5-6.
+1. **Chỉ dùng task độc lập.** Không song song hóa các task phụ thuộc vào đầu ra của nhau.
+2. **Ranh giới rõ ràng.** Mỗi pane nên làm việc trên các file hoặc mối quan tâm riêng biệt.
+3. **Merge có chiến lược.** Review đầu ra của pane trước khi merge để tránh xung đột.
+4. **Dùng git worktree.** Với công việc dễ xung đột file, hãy dùng worktree riêng cho mỗi pane.
+5. **Ý thức về tài nguyên.** Mỗi pane tiêu tốn API token — giữ tổng số pane dưới 5-6.
 
-## Git Worktree Integration
+## Tích hợp Git Worktree
 
-For tasks that touch overlapping files:
+Cho các task chạm tới những file chồng chéo:
 
 ```bash
 # Create worktrees for isolation
@@ -128,24 +128,24 @@ git merge feat/auth
 git merge feat/billing
 ```
 
-## Complementary Tools
+## Công cụ bổ trợ
 
-| Tool | What It Does | When to Use |
+| Công cụ | Chức năng | Khi nào dùng |
 |------|-------------|-------------|
-| **dmux** | tmux pane management for agents | Parallel agent sessions |
-| **Superset** | Terminal IDE for 10+ parallel agents | Large-scale orchestration |
-| **Claude Code Task tool** | In-process subagent spawning | Programmatic parallelism within a session |
-| **Codex multi-agent** | Built-in agent roles | Codex-specific parallel work |
+| **dmux** | Quản lý pane tmux cho agent | Các phiên agent song song |
+| **Superset** | Terminal IDE cho 10+ agent song song | Điều phối quy mô lớn |
+| **Claude Code Task tool** | Sinh subagent trong cùng process | Song song theo chương trình trong một phiên |
+| **Codex multi-agent** | Các vai trò agent tích hợp sẵn | Công việc song song riêng cho Codex |
 
 ## ECC Helper
 
-ECC now includes a helper for external tmux-pane orchestration with separate git worktrees:
+ECC hiện có một helper để điều phối pane tmux bên ngoài với các git worktree riêng biệt:
 
 ```bash
 node scripts/orchestrate-worktrees.js plan.json --execute
 ```
 
-Example `plan.json`:
+Ví dụ `plan.json`:
 
 ```json
 {
@@ -159,15 +159,15 @@ Example `plan.json`:
 }
 ```
 
-The helper:
-- Creates one branch-backed git worktree per worker
-- Optionally overlays selected `seedPaths` from the main checkout into each worker worktree
-- Writes per-worker `task.md`, `handoff.md`, and `status.md` files under `.orchestration/<session>/`
-- Starts a tmux session with one pane per worker
-- Launches each worker command in its own pane
-- Leaves the main pane free for the orchestrator
+Helper này:
+- Tạo một git worktree gắn với branch cho mỗi worker
+- Tùy chọn phủ các `seedPaths` được chọn từ bản checkout chính vào worktree của từng worker
+- Ghi các file `task.md`, `handoff.md` và `status.md` cho từng worker dưới `.orchestration/<session>/`
+- Khởi động một phiên tmux với mỗi worker một pane
+- Chạy lệnh của từng worker trong pane riêng của nó
+- Để pane chính rảnh cho orchestrator
 
-Use `seedPaths` when workers need access to dirty or untracked local files that are not yet part of `HEAD`, such as local orchestration scripts, draft plans, or docs:
+Dùng `seedPaths` khi các worker cần truy cập các file local đã bị sửa (dirty) hoặc chưa được theo dõi (untracked) và chưa thuộc `HEAD`, như script điều phối local, kế hoạch nháp hoặc tài liệu:
 
 ```json
 {
@@ -184,9 +184,9 @@ Use `seedPaths` when workers need access to dirty or untracked local files that 
 }
 ```
 
-## Troubleshooting
+## Xử lý sự cố
 
-- **Pane not responding:** Switch to the pane directly or inspect it with `tmux capture-pane -pt <session>:0.<pane-index>`.
-- **Merge conflicts:** Use git worktrees to isolate file changes per pane.
-- **High token usage:** Reduce number of parallel panes. Each pane is a full agent session.
-- **tmux not found:** Install with `brew install tmux` (macOS) or `apt install tmux` (Linux).
+- **Pane không phản hồi:** Chuyển thẳng sang pane đó hoặc kiểm tra bằng `tmux capture-pane -pt <session>:0.<pane-index>`.
+- **Xung đột merge:** Dùng git worktree để cô lập thay đổi file theo từng pane.
+- **Dùng nhiều token:** Giảm số pane song song. Mỗi pane là một phiên agent đầy đủ.
+- **Không tìm thấy tmux:** Cài bằng `brew install tmux` (macOS) hoặc `apt install tmux` (Linux).

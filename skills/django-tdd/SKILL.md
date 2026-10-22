@@ -1,24 +1,24 @@
 ---
 name: django-tdd
-description: Django testing strategies with pytest-django, TDD methodology, factory_boy, mocking, coverage, and testing Django REST Framework APIs. Use when writing Django or DRF tests with pytest-django, or driving a Django feature test-first.
+description: "Chiến lược kiểm thử Django với pytest-django, phương pháp TDD, factory_boy, mocking, coverage và kiểm thử API Django REST Framework. Dùng khi viết test Django hoặc DRF với pytest-django, hoặc phát triển một tính năng Django theo hướng test-first."
 metadata:
   origin: ECC
 ---
 
-# Django Testing with TDD
+# Kiểm thử Django với TDD
 
-Test-driven development for Django applications using pytest, factory_boy, and Django REST Framework.
+Test-driven development cho ứng dụng Django sử dụng pytest, factory_boy và Django REST Framework.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new Django applications
-- Implementing Django REST Framework APIs
-- Testing Django models, views, and serializers
-- Setting up testing infrastructure for Django projects
+- Viết ứng dụng Django mới
+- Triển khai API Django REST Framework
+- Test model, view và serializer của Django
+- Thiết lập hạ tầng test cho dự án Django
 
-## TDD Workflow for Django
+## Workflow TDD cho Django
 
-### Red-Green-Refactor Cycle
+### Chu trình Red-Green-Refactor
 
 ```python
 # Step 1: RED - Write failing test
@@ -34,9 +34,9 @@ def test_user_creation():
 # Step 3: REFACTOR - Improve while keeping tests green
 ```
 
-## Setup
+## Thiết lập
 
-### pytest Configuration
+### Cấu hình pytest
 
 ```ini
 # pytest.ini
@@ -58,7 +58,7 @@ markers =
     integration: marks tests as integration tests
 ```
 
-### Test Settings
+### Settings cho test
 
 ```python
 # config/settings/test.py
@@ -149,7 +149,7 @@ def authenticated_api_client(api_client, user):
 
 ## Factory Boy
 
-### Factory Setup
+### Thiết lập Factory
 
 ```python
 # tests/factories.py
@@ -209,7 +209,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
                 self.tags.add(tag)
 ```
 
-### Using Factories
+### Sử dụng Factory
 
 ```python
 # tests/test_models.py
@@ -235,9 +235,9 @@ def test_multiple_products():
     assert len(products) == 10
 ```
 
-## Model Testing
+## Test Model
 
-### Model Tests
+### Model test
 
 ```python
 # tests/test_models.py
@@ -311,9 +311,9 @@ class TestProductModel:
             product.reduce_stock(10)  # Not enough stock
 ```
 
-## View Testing
+## Test View
 
-### Django View Testing
+### Test View của Django
 
 ```python
 # tests/test_views.py
@@ -371,9 +371,9 @@ class TestProductViews:
         assert Product.objects.filter(name='Test Product').exists()
 ```
 
-## DRF API Testing
+## Test API DRF
 
-### Serializer Testing
+### Test Serializer
 
 ```python
 # tests/test_serializers.py
@@ -441,7 +441,7 @@ class TestProductSerializer:
         assert 'stock' in serializer.errors
 ```
 
-### API ViewSet Testing
+### Test API ViewSet
 
 ```python
 # tests/test_api.py
@@ -547,9 +547,9 @@ class TestProductAPI:
         assert response.data['count'] == 1
 ```
 
-## Mocking and Patching
+## Mocking và Patching
 
-### Mocking External Services
+### Mock service bên ngoài
 
 ```python
 # tests/test_views.py
@@ -593,7 +593,7 @@ class TestPaymentView:
         assert 'error' in response.url
 ```
 
-### Mocking Email Sending
+### Mock việc gửi email
 
 ```python
 # tests/test_email.py
@@ -610,9 +610,9 @@ def test_order_confirmation_email(db, order):
     assert 'Order Confirmation' in mail.outbox[0].subject
 ```
 
-## Integration Testing
+## Integration test
 
-### Full Flow Testing
+### Test toàn bộ luồng
 
 ```python
 # tests/test_integration.py
@@ -666,32 +666,32 @@ class TestCheckoutFlow:
         assert Order.objects.filter(user__email='test@example.com').exists()
 ```
 
-## Testing Best Practices
+## Best practice khi kiểm thử
 
-### DO
+### NÊN
 
-- **Use factories**: Instead of manual object creation
-- **One assertion per test**: Keep tests focused
-- **Descriptive test names**: `test_user_cannot_delete_others_post`
-- **Test edge cases**: Empty inputs, None values, boundary conditions
-- **Mock external services**: Don't depend on external APIs
-- **Use fixtures**: Eliminate duplication
-- **Test permissions**: Ensure authorization works
-- **Keep tests fast**: Use `--reuse-db` and `--nomigrations`
+- **Dùng factory**: Thay vì tạo object thủ công
+- **Một assertion cho mỗi test**: Giữ test tập trung
+- **Tên test mô tả rõ**: `test_user_cannot_delete_others_post`
+- **Test edge case**: Đầu vào rỗng, giá trị None, điều kiện biên
+- **Mock service bên ngoài**: Không phụ thuộc vào API bên ngoài
+- **Dùng fixture**: Loại bỏ trùng lặp
+- **Test quyền (permission)**: Đảm bảo phân quyền hoạt động
+- **Giữ test nhanh**: Dùng `--reuse-db` và `--nomigrations`
 
-### DON'T
+### KHÔNG NÊN
 
-- **Don't test Django internals**: Trust Django to work
-- **Don't test third-party code**: Trust libraries to work
-- **Don't ignore failing tests**: All tests must pass
-- **Don't make tests dependent**: Tests should run in any order
-- **Don't over-mock**: Mock only external dependencies
-- **Don't test private methods**: Test public interface
-- **Don't use production database**: Always use test database
+- **Không test phần nội bộ của Django**: Tin rằng Django hoạt động đúng
+- **Không test code bên thứ ba**: Tin rằng các thư viện hoạt động đúng
+- **Không bỏ qua test đang fail**: Mọi test đều phải pass
+- **Không để test phụ thuộc lẫn nhau**: Test phải chạy được theo bất kỳ thứ tự nào
+- **Không mock quá mức**: Chỉ mock các dependency bên ngoài
+- **Không test private method**: Test public interface
+- **Không dùng database production**: Luôn dùng database test
 
 ## Coverage
 
-### Coverage Configuration
+### Cấu hình Coverage
 
 ```bash
 # Run tests with coverage
@@ -701,30 +701,30 @@ pytest --cov=apps --cov-report=html --cov-report=term-missing
 open htmlcov/index.html
 ```
 
-### Coverage Goals
+### Mục tiêu Coverage
 
-| Component | Target Coverage |
+| Thành phần | Coverage mục tiêu |
 |-----------|-----------------|
 | Models | 90%+ |
 | Serializers | 85%+ |
 | Views | 80%+ |
 | Services | 90%+ |
-| Utilities | 80%+ |
-| Overall | 80%+ |
+| Utility | 80%+ |
+| Tổng thể | 80%+ |
 
-## Quick Reference
+## Tham khảo nhanh
 
-| Pattern | Usage |
+| Pattern | Cách dùng |
 |---------|-------|
-| `@pytest.mark.django_db` | Enable database access |
+| `@pytest.mark.django_db` | Bật quyền truy cập database |
 | `client` | Django test client |
 | `api_client` | DRF API client |
-| `factory.create_batch(n)` | Create multiple objects |
-| `patch('module.function')` | Mock external dependencies |
-| `override_settings` | Temporarily change settings |
-| `force_authenticate()` | Bypass authentication in tests |
-| `assertRedirects` | Check for redirects |
-| `assertTemplateUsed` | Verify template usage |
-| `mail.outbox` | Check sent emails |
+| `factory.create_batch(n)` | Tạo nhiều object |
+| `patch('module.function')` | Mock các dependency bên ngoài |
+| `override_settings` | Thay đổi settings tạm thời |
+| `force_authenticate()` | Bỏ qua xác thực trong test |
+| `assertRedirects` | Kiểm tra redirect |
+| `assertTemplateUsed` | Xác minh việc dùng template |
+| `mail.outbox` | Kiểm tra email đã gửi |
 
-Remember: Tests are documentation. Good tests explain how your code should work. Keep them simple, readable, and maintainable.
+Hãy nhớ: Test chính là tài liệu. Test tốt giải thích code của bạn phải hoạt động như thế nào. Hãy giữ chúng đơn giản, dễ đọc và dễ bảo trì.

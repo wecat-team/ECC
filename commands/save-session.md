@@ -1,59 +1,59 @@
 ---
-description: Save current session state to a dated file in ~/.claude/session-data/ so work can be resumed in a future session with full context.
+description: Lưu trạng thái session hiện tại vào một file có ngày trong ~/.claude/session-data/ để có thể tiếp tục công việc ở session sau với đầy đủ context.
 ---
 
-# Save Session Command
+# Lệnh Save Session
 
-Capture everything that happened in this session — what was built, what worked, what failed, what's left — and write it to a dated file so the next session can pick up exactly where this one left off.
+Ghi lại mọi thứ đã xảy ra trong session này — đã xây dựng gì, cái gì hiệu quả, cái gì thất bại, còn lại gì — và ghi vào một file có ngày để session tiếp theo có thể tiếp tục chính xác từ chỗ session này dừng lại.
 
-## When to Use
+## Khi nào dùng
 
-- End of a work session before closing Claude Code
-- Before hitting context limits (run this first, then start a fresh session)
-- After solving a complex problem you want to remember
-- Any time you need to hand off context to a future session
+- Cuối một phiên làm việc trước khi đóng Claude Code
+- Trước khi chạm giới hạn context (chạy lệnh này trước, rồi bắt đầu session mới)
+- Sau khi giải quyết một vấn đề phức tạp mà bạn muốn ghi nhớ
+- Bất cứ lúc nào cần bàn giao context cho session sau
 
-## Process
+## Quy trình
 
-### Step 1: Gather context
+### Bước 1: Thu thập context
 
-Before writing the file, collect:
+Trước khi ghi file, hãy thu thập:
 
-- Read all files modified during this session (use git diff or recall from conversation)
-- Review what was discussed, attempted, and decided
-- Note any errors encountered and how they were resolved (or not)
-- Check current test/build status if relevant
+- Đọc tất cả file đã sửa trong session này (dùng git diff hoặc nhớ lại từ cuộc hội thoại)
+- Xem lại những gì đã thảo luận, đã thử và đã quyết định
+- Ghi chú mọi lỗi gặp phải và cách chúng được giải quyết (hoặc chưa)
+- Kiểm tra trạng thái test/build hiện tại nếu liên quan
 
-### Step 2: Create the sessions folder if it doesn't exist
+### Bước 2: Tạo thư mục sessions nếu chưa tồn tại
 
-Create the canonical sessions folder in the user's Claude home directory:
+Tạo thư mục sessions chuẩn trong thư mục home của Claude của người dùng:
 
 ```bash
 mkdir -p ~/.claude/session-data
 ```
 
-### Step 3: Write the session file
+### Bước 3: Ghi file session
 
-Create `~/.claude/session-data/YYYY-MM-DD-<short-id>-session.tmp`, using today's actual date and a short-id that satisfies the rules enforced by `SESSION_FILENAME_REGEX` in `session-manager.js`:
+Tạo `~/.claude/session-data/YYYY-MM-DD-<short-id>-session.tmp`, dùng ngày thực tế của hôm nay và một short-id thỏa các quy tắc được `SESSION_FILENAME_REGEX` trong `session-manager.js` áp dụng:
 
-- Compatibility characters: letters `a-z` / `A-Z`, digits `0-9`, hyphens `-`, underscores `_`
-- Compatibility minimum length: 1 character
-- Recommended style for new files: lowercase letters, digits, and hyphens with 8+ characters to avoid collisions
+- Ký tự tương thích: chữ cái `a-z` / `A-Z`, chữ số `0-9`, dấu gạch ngang `-`, dấu gạch dưới `_`
+- Độ dài tối thiểu tương thích: 1 ký tự
+- Phong cách khuyến nghị cho file mới: chữ thường, chữ số và dấu gạch ngang với 8+ ký tự để tránh trùng lặp
 
-Valid examples: `abc123de`, `a1b2c3d4`, `frontend-worktree-1`, `ChezMoi_2`
-Avoid for new files: `A`, `test_id1`, `ABC123de`
+Ví dụ hợp lệ: `abc123de`, `a1b2c3d4`, `frontend-worktree-1`, `ChezMoi_2`
+Tránh cho file mới: `A`, `test_id1`, `ABC123de`
 
-Full valid filename example: `2024-01-15-abc123de-session.tmp`
+Ví dụ tên file hợp lệ đầy đủ: `2024-01-15-abc123de-session.tmp`
 
-The legacy filename `YYYY-MM-DD-session.tmp` is still valid, but new session files should prefer the short-id form to avoid same-day collisions.
+Tên file legacy `YYYY-MM-DD-session.tmp` vẫn hợp lệ, nhưng các file session mới nên ưu tiên dạng short-id để tránh trùng lặp trong cùng ngày.
 
-### Step 4: Populate the file with all sections below
+### Bước 4: Điền vào file tất cả các section bên dưới
 
-Write every section honestly. Do not skip sections — write "Nothing yet" or "N/A" if a section genuinely has no content. An incomplete file is worse than an honest empty section.
+Hãy viết trung thực từng section. Không bỏ qua section nào — hãy viết "Nothing yet" hoặc "N/A" nếu một section thực sự không có nội dung. Một file không đầy đủ còn tệ hơn một section rỗng nhưng trung thực.
 
-### Step 5: Show the file to the user
+### Bước 5: Hiển thị file cho người dùng
 
-After writing, display the full contents and ask:
+Sau khi ghi, hiển thị toàn bộ nội dung và hỏi:
 
 ```
 Session saved to [actual resolved path to the session file]
@@ -61,11 +61,11 @@ Session saved to [actual resolved path to the session file]
 Does this look accurate? Anything to correct or add before we close?
 ```
 
-Wait for confirmation. Make edits if requested.
+Chờ xác nhận. Chỉnh sửa nếu được yêu cầu.
 
 ---
 
-## Session File Format
+## Định dạng file session
 
 ```markdown
 # Session: YYYY-MM-DD
@@ -181,7 +181,7 @@ required, services that need to be running, etc. Skip if standard setup.]
 
 ---
 
-## Example Output
+## Ví dụ Output
 
 ```markdown
 # Session: 2024-01-15
@@ -265,11 +265,11 @@ Then test with Postman — the response should include a `Set-Cookie` header.
 
 ---
 
-## Notes
+## Ghi chú
 
-- Each session gets its own file — never append to a previous session's file
-- The "What Did NOT Work" section is the most critical — future sessions will blindly retry failed approaches without it
-- If the user asks to save mid-session (not just at the end), save what's known so far and mark in-progress items clearly
-- The file is meant to be read by Claude at the start of the next session via `/resume-session`
-- Use the canonical global session store: `~/.claude/session-data/`
-- Prefer the short-id filename form (`YYYY-MM-DD-<short-id>-session.tmp`) for any new session file
+- Mỗi session có file riêng — KHÔNG BAO GIỜ ghi nối vào file của session trước
+- Section "What Did NOT Work" là quan trọng nhất — nếu thiếu nó, các session sau sẽ thử lại một cách mù quáng những cách tiếp cận đã thất bại
+- Nếu người dùng yêu cầu lưu giữa chừng session (không chỉ ở cuối), hãy lưu những gì đã biết đến lúc đó và đánh dấu rõ các mục đang thực hiện
+- File này được thiết kế để Claude đọc ở đầu session tiếp theo qua `/resume-session`
+- Dùng session store global chuẩn: `~/.claude/session-data/`
+- Ưu tiên dạng tên file short-id (`YYYY-MM-DD-<short-id>-session.tmp`) cho mọi file session mới

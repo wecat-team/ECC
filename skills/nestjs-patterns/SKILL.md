@@ -1,23 +1,23 @@
 ---
 name: nestjs-patterns
-description: NestJS architecture patterns for modules, controllers, providers, DTO validation, guards, interceptors, config, and production-grade TypeScript backends. Use when building or reviewing a NestJS backend — modules, providers, DTO validation, guards, or interceptors.
+description: Các pattern kiến trúc NestJS cho module, controller, provider, validation DTO, guard, interceptor, config và backend TypeScript cấp production. Dùng khi xây dựng hoặc review một backend NestJS — module, provider, validation DTO, guard hoặc interceptor.
 metadata:
   origin: ECC
 ---
 
-# NestJS Development Patterns
+# Pattern phát triển NestJS
 
-Production-grade NestJS patterns for modular TypeScript backends.
+Các pattern NestJS cấp production cho backend TypeScript dạng module.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Building NestJS APIs or services
-- Structuring modules, controllers, and providers
-- Adding DTO validation, guards, interceptors, or exception filters
-- Configuring environment-aware settings and database integrations
-- Testing NestJS units or HTTP endpoints
+- Xây dựng API hoặc service NestJS
+- Cấu trúc module, controller và provider
+- Thêm validation DTO, guard, interceptor hoặc exception filter
+- Cấu hình thiết lập theo môi trường và tích hợp database
+- Test unit NestJS hoặc HTTP endpoint
 
-## Project Structure
+## Cấu trúc dự án
 
 ```text
 src/
@@ -48,11 +48,11 @@ src/
 └── prisma/ or database/
 ```
 
-- Keep domain code inside feature modules.
-- Put cross-cutting filters, decorators, guards, and interceptors in `common/`.
-- Keep DTOs close to the module that owns them.
+- Giữ code domain bên trong các feature module.
+- Đặt các filter, decorator, guard và interceptor cắt ngang (cross-cutting) trong `common/`.
+- Giữ DTO gần module sở hữu chúng.
 
-## Bootstrap and Global Validation
+## Bootstrap và Global Validation
 
 ```ts
 async function bootstrap() {
@@ -75,10 +75,10 @@ async function bootstrap() {
 bootstrap();
 ```
 
-- Always enable `whitelist` and `forbidNonWhitelisted` on public APIs.
-- Prefer one global validation pipe instead of repeating validation config per route.
+- Luôn bật `whitelist` và `forbidNonWhitelisted` trên các API công khai.
+- Ưu tiên một global validation pipe thay vì lặp lại cấu hình validation cho từng route.
 
-## Modules, Controllers, and Providers
+## Module, Controller và Provider
 
 ```ts
 @Module({
@@ -113,11 +113,11 @@ export class UsersService {
 }
 ```
 
-- Controllers should stay thin: parse HTTP input, call a provider, return response DTOs.
-- Put business logic in injectable services, not controllers.
-- Export only the providers other modules genuinely need.
+- Controller nên giữ mỏng: parse input HTTP, gọi một provider, trả về response DTO.
+- Đặt business logic trong injectable service, không đặt trong controller.
+- Chỉ export những provider mà các module khác thực sự cần.
 
-## DTOs and Validation
+## DTO và Validation
 
 ```ts
 export class CreateUserDto {
@@ -134,11 +134,11 @@ export class CreateUserDto {
 }
 ```
 
-- Validate every request DTO with `class-validator`.
-- Use dedicated response DTOs or serializers instead of returning ORM entities directly.
-- Avoid leaking internal fields such as password hashes, tokens, or audit columns.
+- Validate mọi request DTO bằng `class-validator`.
+- Dùng response DTO hoặc serializer chuyên dụng thay vì trả về trực tiếp ORM entity.
+- Tránh làm lộ các trường nội bộ như password hash, token hoặc cột audit.
 
-## Auth, Guards, and Request Context
+## Auth, Guard và Request Context
 
 ```ts
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -149,11 +149,11 @@ getAdminReport(@Req() req: AuthenticatedRequest) {
 }
 ```
 
-- Keep auth strategies and guards module-local unless they are truly shared.
-- Encode coarse access rules in guards, then do resource-specific authorization in services.
-- Prefer explicit request types for authenticated request objects.
+- Giữ auth strategy và guard ở phạm vi module trừ khi chúng thực sự được dùng chung.
+- Mã hóa các quy tắc truy cập thô trong guard, rồi thực hiện phân quyền theo từng resource trong service.
+- Ưu tiên kiểu request tường minh cho các đối tượng request đã xác thực.
 
-## Exception Filters and Error Shape
+## Exception Filter và hình dạng lỗi
 
 ```ts
 @Catch()
@@ -177,10 +177,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
 }
 ```
 
-- Keep one consistent error envelope across the API.
-- Throw framework exceptions for expected client errors; log and wrap unexpected failures centrally.
+- Giữ một error envelope nhất quán trên toàn API.
+- Ném framework exception cho các lỗi client dự kiến; log và bọc các lỗi không mong đợi tại một nơi tập trung.
 
-## Config and Environment Validation
+## Config và Environment Validation
 
 ```ts
 ConfigModule.forRoot({
@@ -190,15 +190,15 @@ ConfigModule.forRoot({
 });
 ```
 
-- Validate env at boot, not lazily at first request.
-- Keep config access behind typed helpers or config services.
-- Split dev/staging/prod concerns in config factories instead of branching throughout feature code.
+- Validate env lúc boot, không phải lazily ở request đầu tiên.
+- Giữ việc truy cập config phía sau các helper có kiểu hoặc config service.
+- Tách các mối quan tâm dev/staging/prod trong config factory thay vì rẽ nhánh khắp code tính năng.
 
-## Persistence and Transactions
+## Persistence và Transaction
 
-- Keep repository / ORM code behind providers that speak domain language.
-- For Prisma or TypeORM, isolate transactional workflows in services that own the unit of work.
-- Do not let controllers coordinate multi-step writes directly.
+- Giữ code repository / ORM phía sau các provider nói ngôn ngữ domain.
+- Với Prisma hoặc TypeORM, cô lập các workflow transaction trong service sở hữu unit of work.
+- Không để controller điều phối trực tiếp các thao tác ghi nhiều bước.
 
 ## Testing
 
@@ -218,14 +218,14 @@ describe('UsersController', () => {
 });
 ```
 
-- Unit test providers in isolation with mocked dependencies.
-- Add request-level tests for guards, validation pipes, and exception filters.
-- Reuse the same global pipes/filters in tests that you use in production.
+- Unit test provider một cách cô lập với các dependency được mock.
+- Thêm test ở mức request cho guard, validation pipe và exception filter.
+- Dùng lại các global pipe/filter giống như trong production khi test.
 
-## Production Defaults
+## Mặc định cho Production
 
-- Enable structured logging and request correlation ids.
-- Terminate on invalid env/config instead of booting partially.
-- Prefer async provider initialization for DB/cache clients with explicit health checks.
-- Keep background jobs and event consumers in their own modules, not inside HTTP controllers.
-- Make rate limiting, auth, and audit logging explicit for public endpoints.
+- Bật structured logging và request correlation id.
+- Dừng khi env/config không hợp lệ thay vì boot một phần.
+- Ưu tiên khởi tạo provider bất đồng bộ cho client DB/cache với health check tường minh.
+- Giữ background job và event consumer trong module riêng, không đặt trong HTTP controller.
+- Làm cho rate limiting, auth và audit logging tường minh đối với các endpoint công khai.

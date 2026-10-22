@@ -6,17 +6,17 @@ paths:
   - "**/*.psgi"
   - "**/*.cgi"
 ---
-# Perl Hooks
+# Hook cho Perl
 
-> This file extends [common/hooks.md](../common/hooks.md) with Perl-specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung dành riêng cho Perl.
 
-## PostToolUse Hooks
+## Hook PostToolUse
 
-Configure in `~/.claude/settings.json`:
+Cấu hình trong `~/.claude/settings.json`:
 
-- **perltidy**: Auto-format `.pl` and `.pm` files after edit
-- **perlcritic**: Run lint check after editing `.pm` files
+- **perltidy**: Tự động format các file `.pl` và `.pm` sau khi sửa
+- **perlcritic**: Chạy kiểm tra lint sau khi sửa các file `.pm`
 
-## Warnings
+## Cảnh báo
 
-- Warn about `print` in non-script `.pm` files — use `say` or a logging module (e.g., `Log::Any`)
+- Cảnh báo về `print` trong các file `.pm` không phải script — dùng `say` hoặc một module logging (ví dụ `Log::Any`)

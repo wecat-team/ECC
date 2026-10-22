@@ -1,27 +1,27 @@
 ---
 name: codebase-onboarding
-description: Analyze an unfamiliar codebase and generate a structured onboarding guide with architecture map, key entry points, conventions, and a starter CLAUDE.md. Use when joining a new project or setting up Claude Code for the first time in a repo.
+description: Phân tích một codebase lạ và tạo hướng dẫn onboarding có cấu trúc gồm bản đồ kiến trúc, các entry point chính, convention và một CLAUDE.md khởi đầu. Dùng khi tham gia dự án mới hoặc thiết lập Claude Code lần đầu trong một repo.
 metadata:
   origin: ECC
 ---
 
 # Codebase Onboarding
 
-Systematically analyze an unfamiliar codebase and produce a structured onboarding guide. Designed for developers joining a new project or setting up Claude Code in an existing repo for the first time.
+Phân tích một cách có hệ thống một codebase lạ và tạo ra hướng dẫn onboarding có cấu trúc. Được thiết kế cho developer tham gia dự án mới hoặc thiết lập Claude Code lần đầu trong một repo có sẵn.
 
-## When to Use
+## Khi nào dùng
 
-- First time opening a project with Claude Code
-- Joining a new team or repository
-- User asks "help me understand this codebase"
-- User asks to generate a CLAUDE.md for a project
-- User says "onboard me" or "walk me through this repo"
+- Lần đầu mở một dự án với Claude Code
+- Tham gia một team hoặc repository mới
+- Người dùng hỏi "help me understand this codebase"
+- Người dùng yêu cầu tạo CLAUDE.md cho một dự án
+- Người dùng nói "onboard me" hoặc "walk me through this repo"
 
-## How It Works
+## Cách hoạt động
 
-### Phase 1: Reconnaissance
+### Giai đoạn 1: Trinh sát (Reconnaissance)
 
-Gather raw signals about the project without reading every file. Run these checks in parallel:
+Thu thập các tín hiệu thô về dự án mà không đọc từng file. Chạy các kiểm tra này song song:
 
 ```
 1. Package manifest detection
@@ -48,26 +48,26 @@ Gather raw signals about the project without reading every file. Run these check
      pytest.ini, jest.config.*, vitest.config.*
 ```
 
-### Phase 2: Architecture Mapping
+### Giai đoạn 2: Lập bản đồ kiến trúc
 
-From the reconnaissance data, identify:
+Từ dữ liệu trinh sát, xác định:
 
 **Tech Stack**
-- Language(s) and version constraints
-- Framework(s) and major libraries
-- Database(s) and ORMs
-- Build tools and bundlers
-- CI/CD platform
+- Ngôn ngữ và các ràng buộc phiên bản
+- Framework và các thư viện chính
+- Database và ORM
+- Build tool và bundler
+- Nền tảng CI/CD
 
-**Architecture Pattern**
-- Monolith, monorepo, microservices, or serverless
-- Frontend/backend split or full-stack
-- API style: REST, GraphQL, gRPC, tRPC
+**Kiến trúc (Architecture Pattern)**
+- Monolith, monorepo, microservices hoặc serverless
+- Tách frontend/backend hoặc full-stack
+- Kiểu API: REST, GraphQL, gRPC, tRPC
 
-**Key Directories**
-Map the top-level directories to their purpose:
+**Các thư mục chính**
+Ánh xạ các thư mục cấp cao nhất với mục đích của chúng:
 
-<!-- Example for a React project — replace with detected directories -->
+<!-- Ví dụ cho một dự án React — thay bằng các thư mục phát hiện được -->
 ```
 src/components/  → React UI components
 src/api/         → API route handlers
@@ -77,39 +77,39 @@ tests/           → Test suites
 scripts/         → Build and deployment scripts
 ```
 
-**Data Flow**
-Trace one request from entry to response:
-- Where does a request enter? (router, handler, controller)
-- How is it validated? (middleware, schemas, guards)
-- Where is business logic? (services, models, use cases)
-- How does it reach the database? (ORM, raw queries, repositories)
+**Luồng dữ liệu (Data Flow)**
+Truy vết một request từ điểm vào đến response:
+- Request đi vào đâu? (router, handler, controller)
+- Nó được kiểm tra (validate) như thế nào? (middleware, schema, guard)
+- Business logic nằm ở đâu? (service, model, use case)
+- Nó chạm tới database bằng cách nào? (ORM, raw query, repository)
 
-### Phase 3: Convention Detection
+### Giai đoạn 3: Phát hiện convention
 
-Identify patterns the codebase already follows:
+Xác định các pattern mà codebase đã tuân theo:
 
-**Naming Conventions**
-- File naming: kebab-case, camelCase, PascalCase, snake_case
-- Component/class naming patterns
-- Test file naming: `*.test.ts`, `*.spec.ts`, `*_test.go`
+**Quy ước đặt tên**
+- Đặt tên file: kebab-case, camelCase, PascalCase, snake_case
+- Pattern đặt tên component/class
+- Đặt tên file test: `*.test.ts`, `*.spec.ts`, `*_test.go`
 
-**Code Patterns**
-- Error handling style: try/catch, Result types, error codes
-- Dependency injection or direct imports
-- State management approach
-- Async patterns: callbacks, promises, async/await, channels
+**Pattern code**
+- Phong cách xử lý lỗi: try/catch, Result type, error code
+- Dependency injection hoặc import trực tiếp
+- Cách tiếp cận quản lý state
+- Pattern bất đồng bộ: callback, promise, async/await, channel
 
-**Git Conventions**
-- Branch naming from recent branches
-- Commit message style from recent commits
-- PR workflow (squash, merge, rebase)
-- If the repo has no commits yet or only a shallow history (e.g. `git clone --depth 1`), skip this section and note "Git history unavailable or too shallow to detect conventions"
+**Convention Git**
+- Cách đặt tên branch dựa trên các branch gần đây
+- Phong cách commit message dựa trên các commit gần đây
+- Workflow PR (squash, merge, rebase)
+- Nếu repo chưa có commit nào hoặc chỉ có lịch sử nông (ví dụ `git clone --depth 1`), hãy bỏ qua mục này và ghi chú "Git history unavailable or too shallow to detect conventions"
 
-### Phase 4: Generate Onboarding Artifacts
+### Giai đoạn 4: Tạo các artifact onboarding
 
-Produce two outputs:
+Tạo ra hai output:
 
-#### Output 1: Onboarding Guide
+#### Output 1: Hướng dẫn Onboarding
 
 ```markdown
 # Onboarding Guide: [Project Name]
@@ -168,9 +168,9 @@ Produce two outputs:
 | Change build config | `next.config.ts` |
 ```
 
-#### Output 2: Starter CLAUDE.md
+#### Output 2: CLAUDE.md khởi đầu
 
-Generate or update a project-specific CLAUDE.md based on detected conventions. If `CLAUDE.md` already exists, read it first and enhance it — preserve existing project-specific instructions and clearly call out what was added or changed.
+Tạo hoặc cập nhật một CLAUDE.md riêng cho dự án dựa trên các convention đã phát hiện. Nếu `CLAUDE.md` đã tồn tại, hãy đọc nó trước và bổ sung — giữ nguyên các chỉ dẫn riêng của dự án hiện có và nêu rõ những gì đã được thêm hoặc thay đổi.
 
 ```markdown
 # Project Instructions
@@ -201,34 +201,34 @@ Generate or update a project-specific CLAUDE.md based on detected conventions. I
 - [Error handling patterns]
 ```
 
-## Best Practices
+## Best Practice
 
-1. **Don't read everything** — reconnaissance should use Glob and Grep, not Read on every file. Read selectively only for ambiguous signals.
-2. **Verify, don't guess** — if a framework is detected from config but the actual code uses something different, trust the code.
-3. **Respect existing CLAUDE.md** — if one already exists, enhance it rather than replacing it. Call out what's new vs existing.
-4. **Stay concise** — the onboarding guide should be scannable in 2 minutes. Details belong in the code, not the guide.
-5. **Flag unknowns** — if a convention can't be confidently detected, say so rather than guessing. "Could not determine test runner" is better than a wrong answer.
+1. **Đừng đọc mọi thứ** — trinh sát nên dùng Glob và Grep, không phải Read trên từng file. Chỉ đọc có chọn lọc với các tín hiệu mơ hồ.
+2. **Xác minh, đừng đoán** — nếu một framework được phát hiện từ config nhưng code thực tế dùng thứ khác, hãy tin vào code.
+3. **Tôn trọng CLAUDE.md hiện có** — nếu đã có, hãy bổ sung thay vì thay thế. Nêu rõ cái gì mới so với cái có sẵn.
+4. **Giữ ngắn gọn** — hướng dẫn onboarding nên có thể quét qua trong 2 phút. Chi tiết thuộc về code, không phải về hướng dẫn.
+5. **Đánh dấu điều chưa biết** — nếu không thể tự tin phát hiện một convention, hãy nói rõ thay vì đoán. "Could not determine test runner" tốt hơn một đáp án sai.
 
-## Anti-Patterns to Avoid
+## Anti-Pattern cần tránh
 
-- Generating a CLAUDE.md that's longer than 100 lines — keep it focused
-- Listing every dependency — highlight only the ones that shape how you write code
-- Describing obvious directory names — `src/` doesn't need an explanation
-- Copying the README — the onboarding guide adds structural insight the README lacks
+- Tạo CLAUDE.md dài hơn 100 dòng — hãy giữ cho tập trung
+- Liệt kê mọi dependency — chỉ làm nổi bật những dependency định hình cách bạn viết code
+- Mô tả những tên thư mục hiển nhiên — `src/` không cần giải thích
+- Sao chép README — hướng dẫn onboarding bổ sung góc nhìn cấu trúc mà README thiếu
 
-## Examples
+## Ví dụ
 
-### Example 1: First time in a new repo
-**User**: "Onboard me to this codebase"
-**Action**: Run full 4-phase workflow → produce Onboarding Guide + Starter CLAUDE.md
-**Output**: Onboarding Guide printed directly to the conversation, plus a `CLAUDE.md` written to the project root
+### Ví dụ 1: Lần đầu trong một repo mới
+**Người dùng**: "Onboard me to this codebase"
+**Hành động**: Chạy đầy đủ workflow 4 giai đoạn → tạo Onboarding Guide + CLAUDE.md khởi đầu
+**Output**: Onboarding Guide được in thẳng vào cuộc hội thoại, cộng với một `CLAUDE.md` được ghi vào thư mục gốc của dự án
 
-### Example 2: Generate CLAUDE.md for existing project
-**User**: "Generate a CLAUDE.md for this project"
-**Action**: Run Phases 1-3, skip Onboarding Guide, produce only CLAUDE.md
-**Output**: Project-specific `CLAUDE.md` with detected conventions
+### Ví dụ 2: Tạo CLAUDE.md cho dự án có sẵn
+**Người dùng**: "Generate a CLAUDE.md for this project"
+**Hành động**: Chạy Giai đoạn 1-3, bỏ qua Onboarding Guide, chỉ tạo CLAUDE.md
+**Output**: `CLAUDE.md` riêng cho dự án với các convention đã phát hiện
 
-### Example 3: Enhance existing CLAUDE.md
-**User**: "Update the CLAUDE.md with current project conventions"
-**Action**: Read existing CLAUDE.md, run Phases 1-3, merge new findings
-**Output**: Updated `CLAUDE.md` with additions clearly marked
+### Ví dụ 3: Bổ sung CLAUDE.md hiện có
+**Người dùng**: "Update the CLAUDE.md with current project conventions"
+**Hành động**: Đọc CLAUDE.md hiện có, chạy Giai đoạn 1-3, gộp các phát hiện mới
+**Output**: `CLAUDE.md` đã cập nhật với các phần bổ sung được đánh dấu rõ ràng

@@ -1,12 +1,12 @@
-# Signal Forms
+# Signal Form
 
-Signal Forms are recommended for new forms when the target Angular version supports them. They provide a reactive, type-safe, and model-driven way to manage form state using Angular Signals.
+Signal Form được khuyến nghị cho các form mới khi phiên bản Angular mục tiêu hỗ trợ chúng. Chúng cung cấp cách quản lý state của form theo hướng reactive, type-safe và model-driven bằng Angular Signal.
 
-When using Signal Forms, do not use `null` as a value or type of any fields.
+Khi dùng Signal Form, không dùng `null` làm giá trị hoặc type của bất kỳ field nào.
 
-## Imports
+## Import
 
-You can import the following from `@angular/forms/signals`:
+Bạn có thể import các thành phần sau từ `@angular/forms/signals`:
 
 ```ts
 import {
@@ -31,9 +31,9 @@ import {
 } from '@angular/forms/signals';
 ```
 
-## Creating a Form
+## Tạo một Form
 
-Use the `form()` function with a Signal model. The structure of the form is derived directly from the model.
+Dùng hàm `form()` với một Signal model. Cấu trúc của form được dẫn xuất trực tiếp từ model.
 
 ```ts
 import {Component, signal} from '@angular/core';
@@ -70,13 +70,13 @@ export class Example {
 
 ## Validation
 
-Import validators from `@angular/forms/signals`.
+Import các validator từ `@angular/forms/signals`.
 
 ```ts
 import {required, email, min, max, minLength, maxLength, pattern} from '@angular/forms/signals';
 ```
 
-Use them in the schema function passed to `form()`:
+Dùng chúng trong schema function được truyền vào `form()`:
 
 ```ts
 userForm = form(this.userModel, (schemaPath) => {
@@ -108,11 +108,11 @@ userForm = form(this.userModel, (schemaPath) => {
 });
 ```
 
-## FieldState vs FormField: The Parental Requirement
+## FieldState so với FormField: Yêu cầu bắt buộc phải gọi (The Parental Requirement)
 
-It's important to understand the difference between **FormField** (the structure) and **FieldState** (the actual data/signals).
+Điều quan trọng là phải hiểu sự khác biệt giữa **FormField** (cấu trúc) và **FieldState** (dữ liệu/signal thực sự).
 
-**RULE**: You must **CALL** a field as a function to access its state signals (valid, touched, dirty, hidden, etc.).
+**QUY TẮC**: Bạn PHẢI **GỌI** một field như một hàm để truy cập các state signal của nó (valid, touched, dirty, hidden, v.v.).
 
 ```ts
 // f is a FormField (structural)
@@ -126,7 +126,7 @@ f.cat.name().touched(); // VALID: Accessing the signal
 f.cat().name.touched(); // ERROR: f.cat() is state, it doesn't have children!
 ```
 
-Similarly in a template:
+Tương tự trong template:
 
 ```html
 <!-- WRONG: Property 'hidden' does not exist on type 'FormField' -->
@@ -138,7 +138,7 @@ Similarly in a template:
 
 ## Disabled / Readonly / Hidden
 
-Control field status using rules in the schema.
+Kiểm soát trạng thái field bằng các rule trong schema.
 
 ```ts
 import {disabled, readonly, hidden} from '@angular/forms/signals';
@@ -157,24 +157,24 @@ userForm = form(this.userModel, (schemaPath) => {
 
 ## Binding
 
-Import `FormField` and use the `[formField]` directive.
+Import `FormField` và dùng directive `[formField]`.
 
 ```ts
 import {FormField} from '@angular/forms/signals';
 ```
 
-All props on state, such as `disabled`, `hidden`, `readonly` and `name` are bound automatically.
-Do _NOT_ bind the `name` field.
+Mọi property trên state, như `disabled`, `hidden`, `readonly` và `name`, đều được bind tự động.
+KHÔNG bind field `name`.
 
-**CRITICAL: FORBIDDEN ATTRIBUTES**
-When using `[formField]`, you MUST NOT set the following attributes in the template (either static or bound):
+**QUAN TRỌNG: CÁC ATTRIBUTE BỊ CẤM**
+Khi dùng `[formField]`, bạn KHÔNG ĐƯỢC đặt các attribute sau trong template (dù là tĩnh hay bound):
 
-- `min`, `max` (Use validators in the schema instead)
-- `value`, `[value]`, `[attr.value]` (Already handled by `[formField]`)
+- `min`, `max` (Hãy dùng validator trong schema thay thế)
+- `value`, `[value]`, `[attr.value]` (Đã được `[formField]` xử lý)
 - `[attr.min]`, `[attr.max]`
-- `[disabled]`, `[readonly]` (Already handled by `[formField]`)
+- `[disabled]`, `[readonly]` (Đã được `[formField]` xử lý)
 
-Do NOT do this: `<input min="1" [formField]>` or `<input [value]="val" [formField]>`.
+KHÔNG làm thế này: `<input min="1" [formField]>` hoặc `<input [value]="val" [formField]>`.
 
 ```html
 <!-- Input -->
@@ -192,14 +192,14 @@ Do NOT do this: `<input min="1" [formField]>` or `<input [value]="val" [formFiel
 <input [formField]="userForm.name" />
 ```
 
-## Reactive Forms
+## Reactive Form
 
-**Do NOT import** `FormControl`, `FormGroup`, `FormArray`, or `FormBuilder` from `@angular/forms`. Signal Forms replace these concepts entirely.
-Signal forms does NOT have a builder.
+**KHÔNG import** `FormControl`, `FormGroup`, `FormArray` hay `FormBuilder` từ `@angular/forms`. Signal Form thay thế hoàn toàn các khái niệm này.
+Signal form KHÔNG có builder.
 
-## Accessing State
+## Truy cập State
 
-Each field in the form is a function that returns its state.
+Mỗi field trong form là một hàm trả về state của nó.
 
 ```ts
 // Access the field by calling it
@@ -224,7 +224,7 @@ const isHidden = this.userForm().hidden();
 const isReadonly = this.userForm().readonly();
 ```
 
-IMPORTANT!: Make sure to call the field to get it state.
+QUAN TRỌNG!: Hãy chắc chắn gọi field để lấy state của nó.
 
 ```ts
 form().invalid()
@@ -242,11 +242,11 @@ form.client.addresses.length  // No "()"
 @for (income of form.addresses; track $index) {/**/}
 ```
 
-## Submitting
+## Submit
 
-Use the `submit()` function. It automatically marks all fields as touched before running the action.
+Dùng hàm `submit()`. Nó tự động đánh dấu mọi field là touched trước khi chạy action.
 
-**CRITICAL**: The callback to `submit()` MUST be `async` and MUST return a Promise.
+**QUAN TRỌNG**: Callback của `submit()` PHẢI là `async` và PHẢI trả về một Promise.
 
 ```ts
 import { submit } from '@angular/forms/signals';
@@ -268,9 +268,9 @@ onSubmit() {
 }
 ```
 
-## Handling Errors
+## Xử lý lỗi
 
-`field().errors()` returns the errors array of ValidationError:
+`field().errors()` trả về mảng lỗi kiểu ValidationError:
 
 ```ts
 interface ValidationError {
@@ -279,12 +279,12 @@ interface ValidationError {
 }
 ```
 
-Do _NOT_ return null from validators.
-When there are no errors, return undefined
+KHÔNG trả về null từ validator.
+Khi không có lỗi, hãy trả về undefined
 
 ### Context
 
-Functions passed to rules like `validate()`, `disabled()`, `applyWhen` take a context object. It is **CRITICAL** to understand its structure:
+Các hàm được truyền vào rule như `validate()`, `disabled()`, `applyWhen` nhận một context object. Việc hiểu cấu trúc của nó là **QUAN TRỌNG**:
 
 ```ts
 validate(
@@ -307,9 +307,9 @@ validate(
 );
 ```
 
-### IMPORTANT: Paths are NOT Signals
+### QUAN TRỌNG: Path KHÔNG phải là Signal
 
-Inside the `form()` callback, `schemaPath` and its children (e.g., `schemaPath.user.name`) are **NOT** signals and are **NOT** callable.
+Bên trong callback của `form()`, `schemaPath` và các phần tử con của nó (ví dụ: `schemaPath.user.name`) **KHÔNG** phải là signal và **KHÔNG** thể gọi như hàm.
 
 ```ts
 // WRONG - This will throw an error:
@@ -322,10 +322,10 @@ applyWhen(p.ssn, ({ stateOf }) => stateOf(p.ssn).touched(), (ssnField) => { ... 
 applyWhen(p.ssn, ({ valueOf }) => valueOf(p.ssn) !== '', (ssnField) => { ... });
 ```
 
-### Multiple Items
+### Nhiều phần tử (Multiple Items)
 
-- Use `applyEach` for applying rules per item.
-- **CRITICAL**: `applyEach` callback takes ONLY ONE argument (the item path), NOT two:
+- Dùng `applyEach` để áp dụng rule cho từng phần tử.
+- **QUAN TRỌNG**: Callback của `applyEach` chỉ nhận MỘT tham số (path của phần tử), KHÔNG phải hai:
 
 ```ts
 // CORRECT - single argument
@@ -340,13 +340,13 @@ applyEach(s.items, (item, index) => {
 });
 ```
 
-- In the template use `@for` to iterate over the items.
-- To remove an item from an array, just remove appropriate item from the array in the data.
-- **`select` binding**: You CAN bind to `<select [formField]="form.country">`. Ensure options have `value` attributes.
+- Trong template dùng `@for` để lặp qua các phần tử.
+- Để xóa một phần tử khỏi mảng, chỉ cần xóa phần tử tương ứng khỏi mảng trong dữ liệu.
+- **Binding `select`**: Bạn CÓ THỂ bind vào `<select [formField]="form.country">`. Đảm bảo các option có thuộc tính `value`.
 
-### Nested @for Loops
+### @for lồng nhau
 
-**CRITICAL**: Angular does NOT have `$parent`. In nested loops, store outer index in a variable:
+**QUAN TRỌNG**: Angular KHÔNG có `$parent`. Trong các vòng lặp lồng nhau, hãy lưu index bên ngoài vào một biến:
 
 ```html
 <!-- WRONG - $parent does not exist -->
@@ -362,7 +362,7 @@ track $index) {
 } }
 ```
 
-### Disabling Form Button
+### Vô hiệu hóa nút của Form
 
 ```html
 <button [disabled]="form().invalid() || form().pending()" />
@@ -370,18 +370,18 @@ track $index) {
 <button [disabled]="taxForm.invalid()" />
 ```
 
-Do NOT use `[disabled]` on an input. `[formField]` will do this.
-Do NOT use `[readonly]` on an input. `[formField]` will do this.
-If you need to disable or readonly a field, use `disabled()` or `readonly()` rules in the schema.
+KHÔNG dùng `[disabled]` trên một input. `[formField]` sẽ làm việc này.
+KHÔNG dùng `[readonly]` trên một input. `[formField]` sẽ làm việc này.
+Nếu cần disable hoặc readonly một field, hãy dùng các rule `disabled()` hoặc `readonly()` trong schema.
 
 ### Async Validation
 
-Do not use `validate()` for async, instead use `validateAsync()`:
+Không dùng `validate()` cho async, thay vào đó dùng `validateAsync()`:
 
-**CRITICAL**:
+**QUAN TRỌNG**:
 
-1. The `params` option MUST be a function that returns the value to validate.
-2. The `onError` handler is **REQUIRED** - it is NOT optional!
+1. Tùy chọn `params` PHẢI là một hàm trả về giá trị cần validate.
+2. Handler `onError` là **BẮT BUỘC** - nó KHÔNG phải tùy chọn!
 
 ```ts
 import {resource} from '@angular/core';
@@ -412,7 +412,7 @@ userForm = form(this.userModel, (s) => {
 });
 ```
 
-**WRONG Examples:**
+**Ví dụ SAI:**
 
 ```ts
 // WRONG - params must be a function
@@ -433,9 +433,9 @@ validateAsync(s.username, {
 });
 ```
 
-### Using Resource
+### Dùng Resource
 
-**CRITICAL**: In Angular's `resource()`, use `params` for the input signal.
+**QUAN TRỌNG**: Trong `resource()` của Angular, dùng `params` cho input signal.
 
 ```ts
 // CORRECT
@@ -455,7 +455,7 @@ resource({
 });
 ```
 
-Use `debounce()` to delay synchronization between the UI and the model.
+Dùng `debounce()` để trì hoãn việc đồng bộ giữa UI và model.
 
 ```ts
 import {debounce} from '@angular/forms/signals';
@@ -466,7 +466,7 @@ userForm = form(this.userModel, (s) => {
 });
 ```
 
-### Conditional Validation
+### Validation có điều kiện
 
 ```ts
 form(
@@ -485,8 +485,8 @@ form(
 );
 ```
 
-`applyWhen` passes the path mapped to the first argument.
-If you need parent field, just pass it to `applyWhen`:
+`applyWhen` truyền path đã được ánh xạ vào tham số đầu tiên.
+Nếu cần field cha, chỉ cần truyền nó vào `applyWhen`:
 
 ```ts
 form(
@@ -504,36 +504,36 @@ form(
 );
 ```
 
-## Common Pitfalls (DO NOT DO THESE)
+## Các lỗi thường gặp (KHÔNG LÀM NHỮNG ĐIỀU NÀY)
 
-| Error Scenario         | WRONG (Common Mistake)                        | RIGHT (Correct Way)                                         |
+| Tình huống lỗi         | SAI (Lỗi thường gặp)                          | ĐÚNG (Cách làm đúng)                                        |
 | :--------------------- | :-------------------------------------------- | :---------------------------------------------------------- |
-| **Accessing Flags**    | `form.field.valid()`                          | `form.field().valid()`                                      |
-| **Accessing value**    | `form.field.value()`                          | `form.field().value()`                                      |
-| **Setting value**      | `form.field.set(x)`                           | Update model signal: `this.model.update(...)`               |
-| **Form root flags**    | `form.invalid()`                              | `form().invalid()`                                          |
-| **Double-calling**     | `form.field()()`                              | `form.field().value()`                                      |
+| **Truy cập flag**      | `form.field.valid()`                          | `form.field().valid()`                                      |
+| **Truy cập value**     | `form.field.value()`                          | `form.field().value()`                                      |
+| **Đặt value**          | `form.field.set(x)`                           | Cập nhật model signal: `this.model.update(...)`             |
+| **Flag của form root** | `form.invalid()`                              | `form().invalid()`                                          |
+| **Gọi hai lần**        | `form.field()()`                              | `form.field().value()`                                      |
 | **Rules Context**      | `({ touched }) => touched()`                  | `({ state }) => state.touched()`                            |
-| **Calling Paths**      | `applyWhen(p.foo, () => p.foo() === 'x')`     | `applyWhen(p.foo, ({ valueOf }) => valueOf(p.foo) === 'x')` |
-| **applyWhen args**     | `applyWhen(condition, () => {...})`           | `applyWhen(path, condition, schemaFn)` - needs 3 args       |
-| **Array length**       | `form.items().length`                         | `form.items.length` (structural)                            |
-| **Multi-select array** | `<select [formField]="form.tags">` (string[]) | Use checkboxes for array fields                             |
-| **readonly attribute** | `<input readonly [formField]>`                | Use `readonly()` rule in schema                             |
-| **min/max attributes** | `<input min="1" max="10">`                    | Use `min()` and `max()` rules in schema                     |
-| **value binding**      | `<input [value]="val">`                       | Do NOT use `[value]` with `[formField]`                     |
-| **when option**        | `pattern(p.x, /.../, {when: ...})`            | `when` only works with `required()`                         |
+| **Gọi Path**           | `applyWhen(p.foo, () => p.foo() === 'x')`     | `applyWhen(p.foo, ({ valueOf }) => valueOf(p.foo) === 'x')` |
+| **Tham số applyWhen**  | `applyWhen(condition, () => {...})`           | `applyWhen(path, condition, schemaFn)` - cần 3 tham số      |
+| **Độ dài mảng**        | `form.items().length`                         | `form.items.length` (structural)                            |
+| **Multi-select array** | `<select [formField]="form.tags">` (string[]) | Dùng checkbox cho các field kiểu mảng                       |
+| **Attribute readonly** | `<input readonly [formField]>`                | Dùng rule `readonly()` trong schema                         |
+| **Attribute min/max**  | `<input min="1" max="10">`                    | Dùng các rule `min()` và `max()` trong schema               |
+| **Binding value**      | `<input [value]="val">`                       | KHÔNG dùng `[value]` với `[formField]`                      |
+| **Tùy chọn when**      | `pattern(p.x, /.../, {when: ...})`            | `when` chỉ hoạt động với `required()`                       |
 | **Submit callback**    | `submit(form, () => { ... })`                 | `submit(form, async () => { ... })`                         |
 | **Async params**       | `params: s.field`                             | `params: ({ value }) => value()`                            |
-| **Async onError**      | Omitting `onError`                            | `onError` is REQUIRED in `validateAsync`                    |
-| **resource() API**     | `request: signal`                             | `params: signal`                                            |
-| **applyEach args**     | `applyEach(s.items, (item, index) => ...)`    | `applyEach(s.items, (item) => ...)`                         |
-| **Nested @for**        | `$parent.$index`                              | Use `let outerIndex = $index`                               |
-| **FormState import**   | `import { FormState }`                        | `FormState` does not exist, use `FieldState`                |
-| **Null in model**      | `signal({ name: null })`                      | `signal({ name: '' })` or `signal({ age: 0 })`              |
-| **Validate syntax**    | `validate(s.field, { value } => ...)`         | `validate(s.field, ({ value }) => ...)`                     |
-| **Checkbox Array**     | `[formField]="form.tags"` (string[])          | Checkboxes ONLY bind to `boolean`                           |
+| **Async onError**      | Bỏ qua `onError`                              | `onError` là BẮT BUỘC trong `validateAsync`                 |
+| **API resource()**     | `request: signal`                             | `params: signal`                                            |
+| **Tham số applyEach**  | `applyEach(s.items, (item, index) => ...)`    | `applyEach(s.items, (item) => ...)`                         |
+| **@for lồng nhau**     | `$parent.$index`                              | Dùng `let outerIndex = $index`                              |
+| **Import FormState**   | `import { FormState }`                        | `FormState` không tồn tại, hãy dùng `FieldState`            |
+| **Null trong model**   | `signal({ name: null })`                      | `signal({ name: '' })` hoặc `signal({ age: 0 })`            |
+| **Cú pháp validate**   | `validate(s.field, { value } => ...)`         | `validate(s.field, ({ value }) => ...)`                     |
+| **Checkbox Array**     | `[formField]="form.tags"` (string[])          | Checkbox CHỈ bind với `boolean`                             |
 
-## Big Form Example
+## Ví dụ Form lớn
 
 ### `src/app/app.ts`
 
@@ -752,13 +752,13 @@ export class App {
 </form>
 ```
 
-## Recovering from Build Errors
+## Khắc phục lỗi Build
 
-If you encounter build errors, here are the most common fixes:
+Nếu gặp lỗi build, đây là các cách khắc phục phổ biến nhất:
 
 ### `Property 'value' does not exist on type 'FieldTree'`
 
-**Problem**: Accessing `.value()` directly on a field without calling it first.
+**Vấn đề**: Truy cập `.value()` trực tiếp trên một field mà không gọi nó trước.
 
 ```ts
 // WRONG
@@ -769,7 +769,7 @@ const val = this.form.field().value();
 
 ### `Property 'set' does not exist on type 'FieldTree'`
 
-**Problem**: Trying to set values on the form tree. Signal Forms are model-driven.
+**Vấn đề**: Cố gắng đặt giá trị trên form tree. Signal Form là model-driven.
 
 ```ts
 // WRONG
@@ -780,7 +780,7 @@ this.model.update((m) => ({...m, address: {...m.address, street: 'Main St'}}));
 
 ### `Type 'string[]' is not assignable to type 'string'`
 
-**Problem**: Binding `[formField]` to an array field with a single-value `<select>`.
+**Vấn đề**: Bind `[formField]` vào một field kiểu mảng với `<select>` đơn giá trị.
 
 ```html
 <!-- WRONG - assignees is string[], select expects string -->

@@ -1,29 +1,29 @@
 ---
-description: Run Flutter/Dart tests, report failures, and incrementally fix test issues. Covers unit, widget, golden, and integration tests.
+description: Chạy test Flutter/Dart, báo cáo lỗi và sửa dần các vấn đề của test. Bao gồm unit, widget, golden và integration test.
 ---
 
 # Flutter Test
 
-This command runs the Flutter test suite and reports results. When failures occur, it diagnoses and fixes issues incrementally.
+Command này chạy bộ test Flutter và báo cáo kết quả. Khi có lỗi, nó chẩn đoán và sửa dần từng vấn đề.
 
-## What This Command Does
+## Command này làm gì
 
-1. **Run Tests**: Execute `flutter test` (or scope to changed files)
-2. **Parse Failures**: Identify failing tests by type and cause
-3. **Fix Incrementally**: One failure at a time where possible
-4. **Verify**: Re-run after each fix
-5. **Report**: Show coverage summary and remaining failures
+1. **Chạy test**: Thực thi `flutter test` (hoặc giới hạn trong các file đã thay đổi)
+2. **Phân tích lỗi**: Xác định các test thất bại theo loại và nguyên nhân
+3. **Sửa từng bước**: Mỗi lần một lỗi nếu có thể
+4. **Xác minh**: Chạy lại sau mỗi bản sửa
+5. **Báo cáo**: Hiển thị tóm tắt coverage và các lỗi còn lại
 
-## When to Use
+## Khi nào dùng
 
-Use `/flutter-test` when:
-- After implementing a feature to verify nothing broke
-- After running `/flutter-build` to ensure tests pass
-- To check test coverage on new code
-- When a specific test file is failing
-- Before submitting a PR
+Dùng `/flutter-test` khi:
+- Sau khi triển khai một tính năng để xác minh không có gì bị hỏng
+- Sau khi chạy `/flutter-build` để đảm bảo test thành công
+- Để kiểm tra test coverage trên code mới
+- Khi một file test cụ thể đang thất bại
+- Trước khi gửi PR
 
-## Commands Run
+## Các lệnh được chạy
 
 ```bash
 # Run all tests
@@ -45,7 +45,7 @@ flutter test integration_test/ 2>&1
 flutter test --update-goldens 2>&1
 ```
 
-## Example Session
+## Phiên làm việc ví dụ
 
 ````text
 User: /flutter-test
@@ -118,25 +118,25 @@ Coverage: 84.2% (target: 80%)
 Test Status: PASS ✓
 ````
 
-## Common Test Failures
+## Các lỗi test thường gặp
 
-| Failure | Typical Fix |
+| Lỗi | Cách sửa điển hình |
 |---------|-------------|
-| `Expected: <X> Actual: <Y>` | Update assertion or fix implementation |
-| `Widget not found` | Fix finder selector or update test after widget rename |
-| `Golden file not found` | Run `flutter test --update-goldens` to generate |
-| `Golden mismatch` | Inspect diff; run `--update-goldens` if change was intentional |
-| `MissingPluginException` | Mock platform channel in test setup |
-| `LateInitializationError` | Initialize `late` fields in `setUp()` |
-| `pumpAndSettle timed out` | Replace with explicit `pump(Duration)` calls |
+| `Expected: <X> Actual: <Y>` | Cập nhật assertion hoặc sửa phần triển khai |
+| `Widget not found` | Sửa selector của finder hoặc cập nhật test sau khi đổi tên widget |
+| `Golden file not found` | Chạy `flutter test --update-goldens` để tạo |
+| `Golden mismatch` | Xem diff; chạy `--update-goldens` nếu thay đổi là có chủ đích |
+| `MissingPluginException` | Mock platform channel trong phần setup của test |
+| `LateInitializationError` | Khởi tạo các field `late` trong `setUp()` |
+| `pumpAndSettle timed out` | Thay bằng các lời gọi `pump(Duration)` tường minh |
 
-## Related Commands
+## Các command liên quan
 
-- `/flutter-build` — Fix build errors before running tests
-- `/flutter-review` — Review code after tests pass
-- `tdd-workflow` skill — Test-driven development workflow
+- `/flutter-build` — Sửa lỗi build trước khi chạy test
+- `/flutter-review` — Review code sau khi test thành công
+- skill `tdd-workflow` — Workflow phát triển hướng kiểm thử (TDD)
 
-## Related
+## Liên quan
 
 - Agent: `agents/flutter-reviewer.md`
 - Agent: `agents/dart-build-resolver.md`

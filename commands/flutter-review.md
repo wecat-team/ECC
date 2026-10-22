@@ -1,53 +1,53 @@
 ---
-description: Review Flutter/Dart code for idiomatic patterns, widget best practices, state management, performance, accessibility, and security. Invokes the flutter-reviewer agent.
+description: Review code Flutter/Dart về pattern idiomatic, best practice cho widget, quản lý state, hiệu năng, accessibility và bảo mật. Gọi agent flutter-reviewer.
 ---
 
 # Flutter Code Review
 
-This command invokes the **flutter-reviewer** agent to review Flutter/Dart code changes.
+Command này gọi agent **flutter-reviewer** để review các thay đổi code Flutter/Dart.
 
-## What This Command Does
+## Command này làm gì
 
-1. **Gather Context**: Review `git diff --staged` and `git diff`
-2. **Inspect Project**: Check `pubspec.yaml`, `analysis_options.yaml`, state management solution
-3. **Security Pre-scan**: Check for hardcoded secrets and critical security issues
-4. **Full Review**: Apply the complete review checklist
-5. **Report Findings**: Output issues grouped by severity with fix guidance
+1. **Thu thập context**: Xem `git diff --staged` và `git diff`
+2. **Kiểm tra dự án**: Xem `pubspec.yaml`, `analysis_options.yaml`, giải pháp quản lý state
+3. **Quét bảo mật sơ bộ**: Kiểm tra secret bị hardcode và các vấn đề bảo mật nghiêm trọng
+4. **Review đầy đủ**: Áp dụng toàn bộ checklist review
+5. **Báo cáo phát hiện**: Xuất các vấn đề được nhóm theo mức độ nghiêm trọng kèm hướng dẫn sửa
 
-## Prerequisites
+## Điều kiện tiên quyết
 
-Before running `/flutter-review`, ensure:
-1. **Build passes** — run `/flutter-build` first; a review on broken code is incomplete
-2. **Tests pass** — run `/flutter-test` to confirm no regressions
-3. **No merge conflicts** — resolve all conflicts so the diff reflects only intentional changes
-4. **`flutter analyze` is clean** — fix analyzer warnings before review
+Trước khi chạy `/flutter-review`, hãy đảm bảo:
+1. **Build thành công** — chạy `/flutter-build` trước; review trên code bị hỏng sẽ không đầy đủ
+2. **Test thành công** — chạy `/flutter-test` để xác nhận không có regression
+3. **Không có merge conflict** — giải quyết mọi conflict để diff chỉ phản ánh các thay đổi có chủ đích
+4. **`flutter analyze` sạch** — sửa các warning của analyzer trước khi review
 
-## When to Use
+## Khi nào dùng
 
-Use `/flutter-review` when:
-- Before submitting a PR with Flutter/Dart changes (after build and tests pass)
-- After implementing a new feature to catch issues early
-- When reviewing someone else's Flutter code
-- To audit a widget, state management component, or service class
-- Before a production release
+Dùng `/flutter-review` khi:
+- Trước khi gửi PR có thay đổi Flutter/Dart (sau khi build và test thành công)
+- Sau khi triển khai một tính năng mới để phát hiện vấn đề sớm
+- Khi review code Flutter của người khác
+- Để audit một widget, thành phần quản lý state hoặc service class
+- Trước khi release lên production
 
-## Review Areas
+## Các hạng mục review
 
-| Area | Severity |
+| Hạng mục | Mức độ nghiêm trọng |
 |------|----------|
-| Hardcoded secrets, cleartext HTTP | CRITICAL |
-| Architecture violations, state management anti-patterns | CRITICAL |
-| Widget rebuild issues, resource leaks | HIGH |
-| Missing `dispose()`, `BuildContext` after await | HIGH |
-| Dart null safety, missing error/loading states | HIGH |
-| Const propagation, widget composition | HIGH |
-| Performance: expensive work in `build()` | HIGH |
-| Accessibility, semantic labels | MEDIUM |
-| Missing tests for state transitions | HIGH |
-| Hardcoded strings (l10n) | MEDIUM |
-| Pub dependency hygiene | LOW |
+| Secret bị hardcode, HTTP không mã hóa | CRITICAL |
+| Vi phạm kiến trúc, anti-pattern quản lý state | CRITICAL |
+| Vấn đề rebuild widget, rò rỉ tài nguyên | HIGH |
+| Thiếu `dispose()`, `BuildContext` sau await | HIGH |
+| Dart null safety, thiếu trạng thái error/loading | HIGH |
+| Const propagation, composition của widget | HIGH |
+| Hiệu năng: công việc tốn kém trong `build()` | HIGH |
+| Accessibility, semantic label | MEDIUM |
+| Thiếu test cho các chuyển đổi state | HIGH |
+| String bị hardcode (l10n) | MEDIUM |
+| Sự gọn gàng của pub dependency | LOW |
 
-## Example Session
+## Phiên làm việc ví dụ
 
 ````text
 User: /flutter-review
@@ -98,18 +98,18 @@ Fix: Use the project's l10n accessor: `Text(context.l10n.loginButton)`.
 Verdict: BLOCK — HIGH issues must be fixed before merge.
 ````
 
-## Approval Criteria
+## Tiêu chí phê duyệt
 
-- **Approve**: No CRITICAL or HIGH issues
-- **Block**: Any CRITICAL or HIGH issues must be fixed before merge
+- **Approve**: Không có vấn đề CRITICAL hoặc HIGH
+- **Block**: Mọi vấn đề CRITICAL hoặc HIGH phải được sửa trước khi merge
 
-## Related Commands
+## Các command liên quan
 
-- `/flutter-build` — Fix build errors first
-- `/flutter-test` — Run tests before reviewing
-- `/code-review` — General code review (language-agnostic)
+- `/flutter-build` — Sửa lỗi build trước
+- `/flutter-test` — Chạy test trước khi review
+- `/code-review` — Code review tổng quát (không phụ thuộc ngôn ngữ)
 
-## Related
+## Liên quan
 
 - Agent: `agents/flutter-reviewer.md`
 - Skill: `skills/flutter-dart-code-review/`

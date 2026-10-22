@@ -1,41 +1,41 @@
 ---
 name: rules-distill
-description: "Scan skills to extract cross-cutting principles and distill them into rules — append, revise, or create new rule files. Use when the same principle keeps recurring across skills and belongs in a rule file instead."
+description: "Quét các skill để trích xuất những nguyên tắc xuyên suốt và chưng cất (distill) chúng thành rule — thêm vào, sửa đổi hoặc tạo file rule mới. Dùng khi cùng một nguyên tắc lặp lại ở nhiều skill và nên nằm trong file rule."
 metadata:
   origin: ECC
 ---
 
 # Rules Distill
 
-Scan installed skills, extract cross-cutting principles that appear in multiple skills, and distill them into rules — appending to existing rule files, revising outdated content, or creating new rule files.
+Quét các skill đã cài, trích xuất những nguyên tắc xuyên suốt xuất hiện ở nhiều skill, và chưng cất chúng thành rule — thêm vào file rule hiện có, sửa nội dung đã lỗi thời hoặc tạo file rule mới.
 
-Applies the "deterministic collection + LLM judgment" principle: scripts collect facts exhaustively, then an LLM cross-reads the full context and produces verdicts.
+Áp dụng nguyên tắc "thu thập xác định (deterministic) + phán đoán của LLM": script thu thập đầy đủ mọi dữ kiện, sau đó LLM đọc chéo toàn bộ ngữ cảnh và đưa ra kết luận.
 
-## When to Use
+## Khi nào dùng
 
-- Periodic rules maintenance (monthly or after installing new skills)
-- After a skill-stocktake reveals patterns that should be rules
-- When rules feel incomplete relative to the skills being used
+- Bảo trì rule định kỳ (hàng tháng hoặc sau khi cài skill mới)
+- Sau khi skill-stocktake phát hiện các pattern nên trở thành rule
+- Khi rule có vẻ chưa đầy đủ so với các skill đang dùng
 
-## How It Works
+## Cách hoạt động
 
-The rules distillation process follows three phases:
+Quy trình chưng cất rule gồm ba giai đoạn:
 
-### Phase 1: Inventory (Deterministic Collection)
+### Giai đoạn 1: Kiểm kê (Thu thập xác định)
 
-#### 1a. Collect skill inventory
+#### 1a. Thu thập danh mục skill
 
 ```bash
 bash ~/.claude/skills/rules-distill/scripts/scan-skills.sh
 ```
 
-#### 1b. Collect rules index
+#### 1b. Thu thập chỉ mục rule
 
 ```bash
 bash ~/.claude/skills/rules-distill/scripts/scan-rules.sh
 ```
 
-#### 1c. Present to user
+#### 1c. Trình bày cho người dùng
 
 ```
 Rules Distillation — Phase 1: Inventory
@@ -46,23 +46,23 @@ Rules:  {M} files ({K} headings indexed)
 Proceeding to cross-read analysis...
 ```
 
-### Phase 2: Cross-read, Match & Verdict (LLM Judgment)
+### Giai đoạn 2: Đọc chéo, đối chiếu & kết luận (Phán đoán của LLM)
 
-Extraction and matching are unified in a single pass. Rules files are small enough (~800 lines total) that the full text can be provided to the LLM — no grep pre-filtering needed.
+Việc trích xuất và đối chiếu được gộp trong một lượt duy nhất. Các file rule đủ nhỏ (~800 dòng tổng cộng) nên có thể cung cấp toàn văn cho LLM — không cần lọc sơ bộ bằng grep.
 
-#### Batching
+#### Chia batch
 
-Group skills into **thematic clusters** based on their descriptions. Analyze each cluster in a subagent with the full rules text.
+Nhóm các skill thành **cụm theo chủ đề (thematic cluster)** dựa trên description của chúng. Phân tích từng cụm trong một subagent cùng toàn văn các rule.
 
-#### Cross-batch Merge
+#### Gộp xuyên batch
 
-After all batches complete, merge candidates across batches:
-- Deduplicate candidates with the same or overlapping principles
-- Re-check the "2+ skills" requirement using evidence from **all** batches combined — a principle found in 1 skill per batch but 2+ skills total is valid
+Sau khi tất cả batch hoàn tất, gộp các ứng viên (candidate) giữa các batch:
+- Loại bỏ trùng lặp các candidate có nguyên tắc giống hoặc chồng chéo nhau
+- Kiểm tra lại yêu cầu "từ 2 skill trở lên" bằng bằng chứng từ **tất cả** batch gộp lại — một nguyên tắc xuất hiện ở 1 skill mỗi batch nhưng tổng cộng từ 2 skill trở lên vẫn hợp lệ
 
-#### Subagent Prompt
+#### Prompt cho subagent
 
-Launch a general-purpose Agent with the following prompt:
+Khởi chạy một Agent đa dụng (general-purpose) với prompt sau:
 
 ````
 You are an analyst who cross-reads skills to extract principles that should be promoted to rules.
@@ -117,18 +117,18 @@ For each candidate, compare against the full rules text and assign a verdict:
 - Code examples and commands (belongs in skills)
 ````
 
-#### Verdict Reference
+#### Bảng tham chiếu kết luận
 
-| Verdict | Meaning | Presented to User |
+| Kết luận | Ý nghĩa | Trình bày cho người dùng |
 |---------|---------|-------------------|
-| **Append** | Add to existing section | Target + draft |
-| **Revise** | Fix inaccurate/insufficient content | Target + reason + before/after |
-| **New Section** | Add new section to existing file | Target + draft |
-| **New File** | Create new rule file | Filename + full draft |
-| **Already Covered** | Covered in rules (possibly different wording) | Reason (1 line) |
-| **Too Specific** | Should stay in skills | Link to relevant skill |
+| **Append** | Thêm vào section hiện có | Đích + bản nháp |
+| **Revise** | Sửa nội dung không chính xác/chưa đủ | Đích + lý do + trước/sau |
+| **New Section** | Thêm section mới vào file hiện có | Đích + bản nháp |
+| **New File** | Tạo file rule mới | Tên file + bản nháp đầy đủ |
+| **Already Covered** | Đã có trong rule (có thể diễn đạt khác) | Lý do (1 dòng) |
+| **Too Specific** | Nên giữ ở cấp skill | Link tới skill liên quan |
 
-#### Verdict Quality Requirements
+#### Yêu cầu chất lượng của kết luận
 
 ```
 # Good
@@ -142,9 +142,9 @@ validation only; LLM output trust boundary is missing.
 Append to security.md: Add LLM security principle
 ```
 
-### Phase 3: User Review & Execution
+### Giai đoạn 3: Người dùng review & thực thi
 
-#### Summary Table
+#### Bảng tóm tắt
 
 ```
 # Rules Distillation Report
@@ -163,21 +163,21 @@ Skills scanned: {N} | Rules: {M} files | Candidates: {K}
 (Per-candidate details: evidence, violation_risk, draft text)
 ```
 
-#### User Actions
+#### Hành động của người dùng
 
-User responds with numbers to:
-- **Approve**: Apply draft to rules as-is
-- **Modify**: Edit draft before applying
-- **Skip**: Do not apply this candidate
+Người dùng trả lời bằng số thứ tự để:
+- **Approve (Duyệt)**: Áp dụng bản nháp vào rule nguyên trạng
+- **Modify (Sửa)**: Chỉnh sửa bản nháp trước khi áp dụng
+- **Skip (Bỏ qua)**: Không áp dụng candidate này
 
-**Never modify rules automatically. Always require user approval.**
+**KHÔNG BAO GIỜ tự động sửa rule. LUÔN LUÔN yêu cầu người dùng duyệt.**
 
-#### Save Results
+#### Lưu kết quả
 
-Store results in the skill directory (`results.json`):
+Lưu kết quả trong thư mục của skill (`results.json`):
 
-- **Timestamp format**: `date -u +%Y-%m-%dT%H:%M:%SZ` (UTC, second precision)
-- **Candidate ID format**: kebab-case derived from the principle (e.g., `llm-output-trust-boundary`)
+- **Định dạng timestamp**: `date -u +%Y-%m-%dT%H:%M:%SZ` (UTC, chính xác đến giây)
+- **Định dạng ID của candidate**: kebab-case suy ra từ nguyên tắc (ví dụ: `llm-output-trust-boundary`)
 
 ```json
 {
@@ -203,9 +203,9 @@ Store results in the skill directory (`results.json`):
 }
 ```
 
-## Example
+## Ví dụ
 
-### End-to-end run
+### Chạy end-to-end
 
 ```
 $ /rules-distill
@@ -257,9 +257,9 @@ Approve, modify, or skip each candidate by number:
 Results saved to results.json
 ```
 
-## Design Principles
+## Nguyên tắc thiết kế
 
-- **What, not How**: Extract principles (rules territory) only. Code examples and commands stay in skills.
-- **Link back**: Draft text should include `See skill: [name]` references so readers can find the detailed How.
-- **Deterministic collection, LLM judgment**: Scripts guarantee exhaustiveness; the LLM guarantees contextual understanding.
-- **Anti-abstraction safeguard**: The 3-layer filter (2+ skills evidence, actionable behavior test, violation risk) prevents overly abstract principles from entering rules.
+- **What, không phải How**: Chỉ trích xuất nguyên tắc (lãnh địa của rule). Ví dụ code và lệnh ở lại trong skill.
+- **Link ngược**: Bản nháp nên có tham chiếu `See skill: [name]` để người đọc tìm được phần How chi tiết.
+- **Thu thập xác định, phán đoán bằng LLM**: Script đảm bảo tính đầy đủ; LLM đảm bảo hiểu ngữ cảnh.
+- **Bảo vệ chống trừu tượng hóa**: Bộ lọc 3 lớp (bằng chứng từ 2+ skill, kiểm tra hành vi có thể hành động, rủi ro vi phạm) ngăn các nguyên tắc quá trừu tượng lọt vào rule.

@@ -6,13 +6,13 @@ paths:
   - "**/*.psgi"
   - "**/*.cgi"
 ---
-# Perl Patterns
+# Pattern Perl
 
-> This file extends [common/patterns.md](../common/patterns.md) with Perl-specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho Perl.
 
 ## Repository Pattern
 
-Use **DBI** or **DBIx::Class** behind an interface:
+Dùng **DBI** hoặc **DBIx::Class** sau một interface:
 
 ```perl
 package MyApp::Repo::User;
@@ -27,9 +27,9 @@ sub find_by_id ($self, $id) {
 }
 ```
 
-## DTOs / Value Objects
+## DTO / Value Object
 
-Use **Moo** classes with **Types::Standard** (equivalent to Python dataclasses):
+Dùng class **Moo** với **Types::Standard** (tương đương dataclass của Python):
 
 ```perl
 package MyApp::DTO::User;
@@ -41,10 +41,10 @@ has email => (is => 'ro', isa => Str, required => 1);
 has age   => (is => 'ro', isa => Int);
 ```
 
-## Resource Management
+## Quản lý tài nguyên
 
-- Always use **three-arg open** with `autodie`
-- Use **Path::Tiny** for file operations
+- Luôn dùng **open ba đối số** với `autodie`
+- Dùng **Path::Tiny** cho các thao tác file
 
 ```perl
 use autodie;
@@ -53,24 +53,24 @@ use Path::Tiny;
 my $content = path('config.json')->slurp_utf8;
 ```
 
-## Module Interface
+## Interface của Module
 
-Use `Exporter 'import'` with `@EXPORT_OK` — never `@EXPORT`:
+Dùng `Exporter 'import'` với `@EXPORT_OK` — KHÔNG BAO GIỜ dùng `@EXPORT`:
 
 ```perl
 use Exporter 'import';
 our @EXPORT_OK = qw(parse_config validate_input);
 ```
 
-## Dependency Management
+## Quản lý Dependency
 
-Use **cpanfile** + **carton** for reproducible installs:
+Dùng **cpanfile** + **carton** để cài đặt có thể tái lập:
 
 ```bash
 carton install
 carton exec prove -lr t/
 ```
 
-## Reference
+## Tham chiếu
 
-See skill: `perl-patterns` for comprehensive modern Perl patterns and idioms.
+Xem skill: `perl-patterns` để có các pattern và idiom Perl hiện đại toàn diện.

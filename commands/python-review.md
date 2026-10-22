@@ -1,58 +1,58 @@
 ---
-description: Comprehensive Python code review for PEP 8 compliance, type hints, security, and Pythonic idioms. Invokes the python-reviewer agent.
+description: Code review Python toàn diện về tuân thủ PEP 8, type hint, bảo mật và các idiom Pythonic. Gọi agent python-reviewer.
 ---
 
 # Python Code Review
 
-This command invokes the **python-reviewer** agent for comprehensive Python-specific code review.
+Lệnh này gọi agent **python-reviewer** để thực hiện code review toàn diện dành riêng cho Python.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Identify Python Changes**: Find modified `.py` files via `git diff`
-2. **Run Static Analysis**: Execute `ruff`, `mypy`, `pylint`, `black --check`
-3. **Security Scan**: Check for SQL injection, command injection, unsafe deserialization
-4. **Type Safety Review**: Analyze type hints and mypy errors
-5. **Pythonic Code Check**: Verify code follows PEP 8 and Python best practices
-6. **Generate Report**: Categorize issues by severity
+1. **Xác định thay đổi Python**: Tìm các file `.py` đã sửa qua `git diff`
+2. **Chạy phân tích tĩnh**: Thực thi `ruff`, `mypy`, `pylint`, `black --check`
+3. **Quét bảo mật**: Kiểm tra SQL injection, command injection, deserialization không an toàn
+4. **Review an toàn kiểu (type safety)**: Phân tích type hint và lỗi mypy
+5. **Kiểm tra code Pythonic**: Xác minh code tuân theo PEP 8 và các best practice của Python
+6. **Tạo báo cáo**: Phân loại vấn đề theo mức độ nghiêm trọng
 
-## When to Use
+## Khi nào dùng
 
-Use `/python-review` when:
-- After writing or modifying Python code
-- Before committing Python changes
-- Reviewing pull requests with Python code
-- Onboarding to a new Python codebase
-- Learning Pythonic patterns and idioms
+Dùng `/python-review` khi:
+- Sau khi viết hoặc sửa code Python
+- Trước khi commit các thay đổi Python
+- Review pull request có code Python
+- Làm quen với một codebase Python mới
+- Học các pattern và idiom Pythonic
 
-## Review Categories
+## Các nhóm review
 
-### CRITICAL (Must Fix)
-- SQL/Command injection vulnerabilities
-- Unsafe eval/exec usage
-- Pickle unsafe deserialization
-- Hardcoded credentials
-- YAML unsafe load
-- Bare except clauses hiding errors
+### CRITICAL (Phải sửa)
+- Lỗ hổng SQL/Command injection
+- Dùng eval/exec không an toàn
+- Deserialization không an toàn với pickle
+- Credential hardcode
+- YAML load không an toàn
+- Mệnh đề except trần (bare except) che giấu lỗi
 
-### HIGH (Should Fix)
-- Missing type hints on public functions
-- Mutable default arguments
-- Swallowing exceptions silently
-- Not using context managers for resources
-- C-style looping instead of comprehensions
-- Using type() instead of isinstance()
-- Race conditions without locks
+### HIGH (Nên sửa)
+- Thiếu type hint ở các function public
+- Đối số mặc định có thể thay đổi (mutable default argument)
+- Nuốt exception một cách im lặng
+- Không dùng context manager cho tài nguyên
+- Vòng lặp kiểu C thay vì comprehension
+- Dùng type() thay vì isinstance()
+- Race condition không có lock
 
-### MEDIUM (Consider)
-- PEP 8 formatting violations
-- Missing docstrings on public functions
-- Print statements instead of logging
-- Inefficient string operations
-- Magic numbers without named constants
-- Not using f-strings for formatting
-- Unnecessary list creation
+### MEDIUM (Cân nhắc)
+- Vi phạm định dạng PEP 8
+- Thiếu docstring ở các function public
+- Dùng print thay vì logging
+- Thao tác chuỗi kém hiệu quả
+- Magic number không có hằng số đặt tên
+- Không dùng f-string để định dạng
+- Tạo list không cần thiết
 
-## Automated Checks Run
+## Các kiểm tra tự động được chạy
 
 ```bash
 # Type checking
@@ -74,7 +74,7 @@ safety check
 pytest --cov=app --cov-report=term-missing
 ```
 
-## Example Usage
+## Ví dụ sử dụng
 
 ```text
 User: /python-review
@@ -161,53 +161,53 @@ Recommendation: FAIL: Block merge until CRITICAL issue is fixed
 Run: `black app/routes/user.py app/services/auth.py`
 ```
 
-## Approval Criteria
+## Tiêu chí phê duyệt
 
-| Status | Condition |
+| Trạng thái | Điều kiện |
 |--------|-----------|
-| PASS: Approve | No CRITICAL or HIGH issues |
-| WARNING: Warning | Only MEDIUM issues (merge with caution) |
-| FAIL: Block | CRITICAL or HIGH issues found |
+| PASS: Approve | Không có vấn đề CRITICAL hoặc HIGH |
+| WARNING: Warning | Chỉ có vấn đề MEDIUM (merge cần thận trọng) |
+| FAIL: Block | Phát hiện vấn đề CRITICAL hoặc HIGH |
 
-## Integration with Other Commands
+## Tích hợp với các lệnh khác
 
-- Use the `tdd-workflow` skill first to ensure tests pass
-- Use `/code-review` for non-Python specific concerns
-- Use `/python-review` before committing
-- Use `/build-fix` if static analysis tools fail
+- Dùng skill `tdd-workflow` trước để đảm bảo test pass
+- Dùng `/code-review` cho các mối quan tâm không đặc thù Python
+- Dùng `/python-review` trước khi commit
+- Dùng `/build-fix` nếu các công cụ phân tích tĩnh thất bại
 
-## Framework-Specific Reviews
+## Review theo framework
 
-### Django Projects
-The reviewer checks for:
-- N+1 query issues (use `select_related` and `prefetch_related`)
-- Missing migrations for model changes
-- Raw SQL usage when ORM could work
-- Missing `transaction.atomic()` for multi-step operations
+### Dự án Django
+Reviewer kiểm tra:
+- Vấn đề N+1 query (dùng `select_related` và `prefetch_related`)
+- Thiếu migration khi thay đổi model
+- Dùng raw SQL khi ORM đủ dùng
+- Thiếu `transaction.atomic()` cho các thao tác nhiều bước
 
-### FastAPI Projects
-The reviewer checks for:
-- CORS misconfiguration
-- Pydantic models for request validation
-- Response models correctness
-- Proper async/await usage
-- Dependency injection patterns
+### Dự án FastAPI
+Reviewer kiểm tra:
+- Cấu hình CORS sai
+- Model Pydantic cho việc kiểm tra request
+- Tính đúng đắn của response model
+- Dùng async/await đúng cách
+- Các pattern dependency injection
 
-### Flask Projects
-The reviewer checks for:
-- Context management (app context, request context)
-- Proper error handling
-- Blueprint organization
-- Configuration management
+### Dự án Flask
+Reviewer kiểm tra:
+- Quản lý context (app context, request context)
+- Xử lý lỗi đúng cách
+- Tổ chức Blueprint
+- Quản lý cấu hình
 
-## Related
+## Liên quan
 
 - Agent: `agents/python-reviewer.md`
 - Skills: `skills/python-patterns/`, `skills/python-testing/`
 
-## Common Fixes
+## Các cách sửa phổ biến
 
-### Add Type Hints
+### Thêm Type Hint
 ```python
 # Before
 def calculate(x, y):
@@ -220,7 +220,7 @@ def calculate(x: Union[int, float], y: Union[int, float]) -> Union[int, float]:
     return x + y
 ```
 
-### Use Context Managers
+### Dùng Context Manager
 ```python
 # Before
 f = open("file.txt")
@@ -232,7 +232,7 @@ with open("file.txt") as f:
     data = f.read()
 ```
 
-### Use List Comprehensions
+### Dùng List Comprehension
 ```python
 # Before
 result = []
@@ -244,7 +244,7 @@ for item in items:
 result = [item.name for item in items if item.active]
 ```
 
-### Fix Mutable Defaults
+### Sửa Mutable Default
 ```python
 # Before
 def append(value, items=[]):
@@ -259,7 +259,7 @@ def append(value, items=None):
     return items
 ```
 
-### Use f-strings (Python 3.6+)
+### Dùng f-string (Python 3.6+)
 ```python
 # Before
 name = "Alice"
@@ -270,7 +270,7 @@ greeting2 = "Hello, {}".format(name)
 greeting = f"Hello, {name}!"
 ```
 
-### Fix String Concatenation in Loops
+### Sửa việc nối chuỗi trong vòng lặp
 ```python
 # Before
 result = ""
@@ -281,11 +281,11 @@ for item in items:
 result = "".join(str(item) for item in items)
 ```
 
-## Python Version Compatibility
+## Tương thích phiên bản Python
 
-The reviewer notes when code uses features from newer Python versions:
+Reviewer ghi chú khi code dùng tính năng của các phiên bản Python mới hơn:
 
-| Feature | Minimum Python |
+| Tính năng | Python tối thiểu |
 |---------|----------------|
 | Type hints | 3.5+ |
 | f-strings | 3.6+ |
@@ -294,4 +294,4 @@ The reviewer notes when code uses features from newer Python versions:
 | Match statements | 3.10+ |
 | Type unions (&#96;x &#124; None&#96;) | 3.10+ |
 
-Ensure your project's `pyproject.toml` or `setup.py` specifies the correct minimum Python version.
+Đảm bảo `pyproject.toml` hoặc `setup.py` của dự án chỉ định đúng phiên bản Python tối thiểu.

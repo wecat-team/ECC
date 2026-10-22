@@ -1,10 +1,10 @@
-# Data Resolvers
+# Data Resolver
 
-Data resolvers fetch data before a route activates, ensuring components have the necessary data upon rendering.
+Data resolver lấy dữ liệu trước khi một route được kích hoạt, đảm bảo component có đủ dữ liệu cần thiết khi render.
 
-## Creating a Resolver
+## Tạo một Resolver
 
-Implement the `ResolveFn` type.
+Triển khai type `ResolveFn`.
 
 ```ts
 export const userResolver: ResolveFn<User> = (route, state) => {
@@ -14,9 +14,9 @@ export const userResolver: ResolveFn<User> = (route, state) => {
 };
 ```
 
-## Configuring the Route
+## Cấu hình Route
 
-Add the resolver under the `resolve` key.
+Thêm resolver vào key `resolve`.
 
 ```ts
 {
@@ -28,9 +28,9 @@ Add the resolver under the `resolve` key.
 }
 ```
 
-## Accessing Resolved Data
+## Truy cập dữ liệu đã resolve
 
-### 1. Via `ActivatedRoute` (Traditional)
+### 1. Qua `ActivatedRoute` (Truyền thống)
 
 ```ts
 private route = inject(ActivatedRoute);
@@ -38,9 +38,9 @@ data = toSignal(this.route.data);
 user = computed(() => this.data().user);
 ```
 
-### 2. Via Component Inputs (Modern)
+### 2. Qua Component Input (Hiện đại)
 
-Enable `withComponentInputBinding()` in `provideRouter` to pass resolved data directly to `@Input` or `input()`.
+Bật `withComponentInputBinding()` trong `provideRouter` để truyền dữ liệu đã resolve trực tiếp vào `@Input` hoặc `input()`.
 
 ```ts
 // app.config.ts
@@ -50,12 +50,12 @@ provideRouter(routes, withComponentInputBinding());
 user = input.required<User>();
 ```
 
-## Error Handling
+## Xử lý lỗi
 
-Navigation is blocked if a resolver fails.
+Điều hướng (navigation) bị chặn nếu resolver thất bại.
 
-- Use `withNavigationErrorHandler` for global handling.
-- Use `catchError` within the resolver to return a `RedirectCommand` or fallback data.
+- Dùng `withNavigationErrorHandler` để xử lý toàn cục.
+- Dùng `catchError` trong resolver để trả về một `RedirectCommand` hoặc dữ liệu dự phòng.
 
 ```ts
 return userService
@@ -63,7 +63,7 @@ return userService
   .pipe(catchError(() => of(new RedirectCommand(router.parseUrl('/error')))));
 ```
 
-## Best Practices
+## Best Practice
 
-- **Keep it lightweight**: Fetch only critical data.
-- **Provide feedback**: Listen to router events to show a global loading bar during navigation, as the UI stays on the old page until the resolver finishes.
+- **Giữ nhẹ**: Chỉ lấy dữ liệu quan trọng.
+- **Phản hồi cho người dùng**: Lắng nghe các router event để hiển thị thanh loading toàn cục trong quá trình điều hướng, vì UI vẫn ở trang cũ cho đến khi resolver hoàn tất.

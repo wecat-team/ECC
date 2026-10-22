@@ -2,19 +2,19 @@
 paths:
   - "**/*.rs"
 ---
-# Rust Testing
+# Kiểm thử Rust
 
-> This file extends [common/testing.md](../common/testing.md) with Rust-specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung riêng cho Rust.
 
 ## Test Framework
 
-- **`#[test]`** with `#[cfg(test)]` modules for unit tests
-- **rstest** for parameterized tests and fixtures
-- **proptest** for property-based testing
-- **mockall** for trait-based mocking
-- **`#[tokio::test]`** for async tests
+- **`#[test]`** với module `#[cfg(test)]` cho unit test
+- **rstest** cho test tham số hóa và fixture
+- **proptest** cho property-based testing
+- **mockall** cho mocking dựa trên trait
+- **`#[tokio::test]`** cho test async
 
-## Test Organization
+## Tổ chức test
 
 ```text
 my_crate/
@@ -33,9 +33,9 @@ my_crate/
     └── benchmark.rs
 ```
 
-Unit tests go inside `#[cfg(test)]` modules in the same file. Integration tests go in `tests/`.
+Unit test nằm trong module `#[cfg(test)]` ở cùng file. Integration test nằm trong `tests/`.
 
-## Unit Test Pattern
+## Pattern Unit Test
 
 ```rust
 #[cfg(test)]
@@ -57,7 +57,7 @@ mod tests {
 }
 ```
 
-## Parameterized Tests
+## Test tham số hóa
 
 ```rust
 use rstest::rstest;
@@ -71,7 +71,7 @@ fn test_string_length(#[case] input: &str, #[case] expected: usize) {
 }
 ```
 
-## Async Tests
+## Test Async
 
 ```rust
 #[tokio::test]
@@ -82,9 +82,9 @@ async fn fetches_data_successfully() {
 }
 ```
 
-## Mocking with mockall
+## Mocking với mockall
 
-Define traits in production code; generate mocks in test modules:
+Định nghĩa trait trong code production; sinh mock trong các module test:
 
 ```rust
 // Production trait — pub so integration tests can import it
@@ -119,18 +119,18 @@ mod tests {
 }
 ```
 
-## Test Naming
+## Đặt tên test
 
-Use descriptive names that explain the scenario:
+Dùng tên mô tả giải thích kịch bản:
 - `creates_user_with_valid_email()`
 - `rejects_order_when_insufficient_stock()`
 - `returns_none_when_not_found()`
 
 ## Coverage
 
-- Target 80%+ line coverage
-- Use **cargo-llvm-cov** for coverage reporting
-- Focus on business logic — exclude generated code and FFI bindings
+- Mục tiêu coverage dòng từ 80% trở lên
+- Dùng **cargo-llvm-cov** để báo cáo coverage
+- Tập trung vào logic nghiệp vụ — loại trừ code sinh tự động và FFI binding
 
 ```bash
 cargo llvm-cov                       # Summary
@@ -138,7 +138,7 @@ cargo llvm-cov --html                # HTML report
 cargo llvm-cov --fail-under-lines 80 # Fail if below threshold
 ```
 
-## Testing Commands
+## Lệnh test
 
 ```bash
 cargo test                       # Run all tests
@@ -149,6 +149,6 @@ cargo test --test api_test       # Specific integration test (tests/api_test.rs)
 cargo test --doc                 # Doc tests only
 ```
 
-## References
+## Tham chiếu
 
-See skill: `rust-testing` for comprehensive testing patterns including property-based testing, fixtures, and benchmarking with Criterion.
+Xem skill: `rust-testing` để biết đầy đủ các pattern kiểm thử gồm property-based testing, fixture và benchmark với Criterion.

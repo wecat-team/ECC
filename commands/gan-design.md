@@ -1,24 +1,24 @@
 ---
-description: Run a generator/evaluator design loop for frontend or visual work with bounded iterations and scoring.
+description: Chạy vòng lặp thiết kế generator/evaluator cho công việc frontend hoặc trực quan với số vòng lặp giới hạn và chấm điểm.
 ---
 
-Parse the following from $ARGUMENTS:
-1. `brief` — the user's description of the design to create
-2. `--max-iterations N` — (optional, default 10) maximum design-evaluate cycles
-3. `--pass-threshold N` — (optional, default 7.5) weighted score to pass (higher default for design)
+Parse các mục sau từ $ARGUMENTS:
+1. `brief` — mô tả của người dùng về thiết kế cần tạo
+2. `--max-iterations N` — (tùy chọn, mặc định 10) số chu kỳ design-evaluate tối đa
+3. `--pass-threshold N` — (tùy chọn, mặc định 7.5) điểm có trọng số để đạt (mặc định cao hơn cho design)
 
 ## GAN-Style Design Harness
 
-A two-agent loop (Generator + Evaluator) focused on frontend design quality. No planner — the brief IS the spec.
+Một vòng lặp hai agent (Generator + Evaluator) tập trung vào chất lượng thiết kế frontend. Không có planner — brief CHÍNH LÀ spec.
 
-This is the same mode Anthropic used for their frontend design experiments, where they saw creative breakthroughs like the 3D Dutch art museum with CSS perspective and doorway navigation.
+Đây là chế độ giống với chế độ Anthropic đã dùng cho các thử nghiệm thiết kế frontend, nơi họ thấy những đột phá sáng tạo như bảo tàng nghệ thuật Hà Lan 3D với CSS perspective và điều hướng qua ô cửa.
 
-### Setup
-1. Create `gan-harness/` directory
-2. Write the brief directly as `gan-harness/spec.md`
-3. Write a design-focused `gan-harness/eval-rubric.md` with extra weight on Design Quality and Originality
+### Thiết lập
+1. Tạo thư mục `gan-harness/`
+2. Ghi brief trực tiếp thành `gan-harness/spec.md`
+3. Ghi một `gan-harness/eval-rubric.md` tập trung vào thiết kế, với trọng số cao hơn cho Design Quality và Originality
 
-### Design-Specific Eval Rubric
+### Eval Rubric dành riêng cho thiết kế
 ```markdown
 ### Design Quality (weight: 0.35)
 ### Originality (weight: 0.30)
@@ -26,14 +26,14 @@ This is the same mode Anthropic used for their frontend design experiments, wher
 ### Functionality (weight: 0.10)
 ```
 
-Note: Originality weight is higher (0.30 vs 0.20) to push for creative breakthroughs. Functionality weight is lower since design mode focuses on visual quality.
+Lưu ý: Trọng số Originality cao hơn (0.30 so với 0.20) để thúc đẩy các đột phá sáng tạo. Trọng số Functionality thấp hơn vì chế độ design tập trung vào chất lượng trực quan.
 
-### Loop
-Same as `/project:gan-build` Phase 2, but:
-- Skip the planner
-- Use the design-focused rubric
-- Generator prompt emphasizes visual quality over feature completeness
-- Evaluator prompt emphasizes "would this win a design award?" over "do all features work?"
+### Vòng lặp
+Giống Giai đoạn 2 của `/project:gan-build`, nhưng:
+- Bỏ qua planner
+- Dùng rubric tập trung vào thiết kế
+- Prompt của Generator nhấn mạnh chất lượng trực quan hơn là sự hoàn chỉnh của tính năng
+- Prompt của Evaluator nhấn mạnh "liệu cái này có giành được giải thiết kế không?" hơn là "mọi tính năng có hoạt động không?"
 
-### Key Difference from gan-build
-The Generator is told: "Your PRIMARY goal is visual excellence. A stunning half-finished app beats a functional ugly one. Push for creative leaps — unusual layouts, custom animations, distinctive color work."
+### Khác biệt chính so với gan-build
+Generator được dặn: "Your PRIMARY goal is visual excellence. A stunning half-finished app beats a functional ugly one. Push for creative leaps — unusual layouts, custom animations, distinctive color work."

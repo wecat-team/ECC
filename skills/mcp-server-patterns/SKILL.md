@@ -1,44 +1,44 @@
 ---
 name: mcp-server-patterns
-description: Build MCP servers with Node/TypeScript SDK — tools, resources, prompts, Zod validation, stdio vs Streamable HTTP. Use Context7 or official MCP docs for latest API. Use when building or debugging an MCP server — tools, resources, prompts, validation, or transport choice.
+description: Xây dựng MCP server bằng Node/TypeScript SDK — tool, resource, prompt, validation bằng Zod, stdio so với Streamable HTTP. Dùng Context7 hoặc tài liệu MCP chính thức để biết API mới nhất. Dùng khi xây dựng hoặc debug một MCP server — tool, resource, prompt, validation hoặc lựa chọn transport.
 metadata:
   origin: ECC
 ---
 
 # MCP Server Patterns
 
-The Model Context Protocol (MCP) lets AI assistants call tools, read resources, and use prompts from your server. Use this skill when building or maintaining MCP servers. The SDK API evolves; check Context7 (query-docs for "MCP") or the official MCP documentation for current method names and signatures.
+Model Context Protocol (MCP) cho phép trợ lý AI gọi tool, đọc resource và dùng prompt từ server của bạn. Dùng skill này khi xây dựng hoặc bảo trì MCP server. API của SDK thay đổi theo thời gian; hãy kiểm tra Context7 (query-docs cho "MCP") hoặc tài liệu MCP chính thức để biết tên method và signature hiện hành.
 
-For the broader routing decision of when a capability should be a rule, a skill, MCP, or a plain CLI/API workflow, see [docs/capability-surface-selection.md](../../docs/capability-surface-selection.md).
+Để biết quyết định định tuyến rộng hơn về việc khi nào một khả năng nên là rule, skill, MCP, hay một workflow CLI/API thuần, xem [docs/capability-surface-selection.md](../../docs/capability-surface-selection.md).
 
-## When to Use
+## Khi nào dùng
 
-Use when: implementing a new MCP server, adding tools or resources, choosing stdio vs HTTP, upgrading the SDK, or debugging MCP registration and transport issues.
+Dùng khi: triển khai một MCP server mới, thêm tool hoặc resource, chọn stdio hay HTTP, nâng cấp SDK, hoặc debug các vấn đề về đăng ký MCP và transport.
 
-## How It Works
+## Cách hoạt động
 
-### Core concepts
+### Các khái niệm cốt lõi
 
-- **Tools**: Actions the model can invoke (e.g. search, run a command). Register with `registerTool()` or `tool()` depending on SDK version.
-- **Resources**: Read-only data the model can fetch (e.g. file contents, API responses). Register with `registerResource()` or `resource()`. Handlers typically receive a `uri` argument.
-- **Prompts**: Reusable, parameterised prompt templates the client can surface (e.g. in Claude Desktop). Register with `registerPrompt()` or equivalent.
-- **Transport**: stdio for local clients (e.g. Claude Desktop); Streamable HTTP is preferred for remote (Cursor, cloud). Legacy HTTP/SSE is for backward compatibility.
+- **Tools**: Các hành động mà model có thể gọi (ví dụ tìm kiếm, chạy một lệnh). Đăng ký bằng `registerTool()` hoặc `tool()` tùy phiên bản SDK.
+- **Resources**: Dữ liệu chỉ đọc mà model có thể lấy (ví dụ nội dung file, phản hồi API). Đăng ký bằng `registerResource()` hoặc `resource()`. Handler thường nhận một đối số `uri`.
+- **Prompts**: Các prompt template tái sử dụng, có tham số, mà client có thể hiển thị (ví dụ trong Claude Desktop). Đăng ký bằng `registerPrompt()` hoặc tương đương.
+- **Transport**: stdio cho client cục bộ (ví dụ Claude Desktop); Streamable HTTP được ưu tiên cho remote (Cursor, cloud). HTTP/SSE legacy dành cho tương thích ngược.
 
-The Node/TypeScript SDK may expose `tool()` / `resource()` or `registerTool()` / `registerResource()`; the official SDK has changed over time. Always verify against the current [MCP docs](https://modelcontextprotocol.io) or Context7.
+Node/TypeScript SDK có thể cung cấp `tool()` / `resource()` hoặc `registerTool()` / `registerResource()`; SDK chính thức đã thay đổi theo thời gian. Luôn đối chiếu với [tài liệu MCP](https://modelcontextprotocol.io) hiện hành hoặc Context7.
 
-### Connecting with stdio
+### Kết nối bằng stdio
 
-For local clients, create a stdio transport and pass it to your server’s connect method. The exact API varies by SDK version (e.g. constructor vs factory). See the official MCP documentation or query Context7 for "MCP stdio server" for the current pattern.
+Với client cục bộ, tạo một stdio transport và truyền nó vào method connect của server. API chính xác khác nhau tùy phiên bản SDK (ví dụ constructor so với factory). Xem tài liệu MCP chính thức hoặc truy vấn Context7 với "MCP stdio server" để biết pattern hiện hành.
 
-Keep server logic (tools + resources) independent of transport so you can plug in stdio or HTTP in the entrypoint.
+Giữ logic server (tool + resource) độc lập với transport để bạn có thể cắm stdio hoặc HTTP ở entrypoint.
 
 ### Remote (Streamable HTTP)
 
-For Cursor, cloud, or other remote clients, use **Streamable HTTP** (single MCP HTTP endpoint per current spec). Support legacy HTTP/SSE only when backward compatibility is required.
+Với Cursor, cloud hoặc các client remote khác, dùng **Streamable HTTP** (một MCP HTTP endpoint duy nhất theo spec hiện hành). Chỉ hỗ trợ HTTP/SSE legacy khi cần tương thích ngược.
 
-## Examples
+## Ví dụ
 
-### Install and server setup
+### Cài đặt và thiết lập server
 
 ```bash
 npm install @modelcontextprotocol/sdk zod
@@ -51,20 +51,20 @@ import { z } from "zod";
 const server = new McpServer({ name: "my-server", version: "1.0.0" });
 ```
 
-Register tools and resources using the API your SDK version provides: some versions use `server.tool(name, description, schema, handler)` (positional args), others use `server.tool({ name, description, inputSchema }, handler)` or `registerTool()`. Same for resources — include a `uri` in the handler when the API provides it. Check the official MCP docs or Context7 for the current `@modelcontextprotocol/sdk` signatures to avoid copy-paste errors.
+Đăng ký tool và resource bằng API mà phiên bản SDK của bạn cung cấp: một số phiên bản dùng `server.tool(name, description, schema, handler)` (đối số theo vị trí), số khác dùng `server.tool({ name, description, inputSchema }, handler)` hoặc `registerTool()`. Resource cũng tương tự — thêm `uri` vào handler khi API cung cấp. Kiểm tra tài liệu MCP chính thức hoặc Context7 để biết signature hiện hành của `@modelcontextprotocol/sdk` nhằm tránh lỗi copy-paste.
 
-Use **Zod** (or the SDK’s preferred schema format) for input validation.
+Dùng **Zod** (hoặc định dạng schema ưu tiên của SDK) để kiểm tra đầu vào (input validation).
 
-## Best Practices
+## Best Practice
 
-- **Schema first**: Define input schemas for every tool; document parameters and return shape.
-- **Errors**: Return structured errors or messages the model can interpret; avoid raw stack traces.
-- **Idempotency**: Prefer idempotent tools where possible so retries are safe.
-- **Rate and cost**: For tools that call external APIs, consider rate limits and cost; document in the tool description.
-- **Versioning**: Pin SDK version in package.json; check release notes when upgrading.
+- **Schema trước**: Định nghĩa input schema cho mọi tool; ghi tài liệu các tham số và hình dạng giá trị trả về.
+- **Lỗi**: Trả về lỗi có cấu trúc hoặc thông báo mà model có thể diễn giải; tránh stack trace thô.
+- **Idempotency**: Ưu tiên tool idempotent khi có thể để retry an toàn.
+- **Rate và chi phí**: Với tool gọi API bên ngoài, cân nhắc rate limit và chi phí; ghi rõ trong mô tả tool.
+- **Versioning**: Pin phiên bản SDK trong package.json; xem release note khi nâng cấp.
 
-## Official SDKs and Docs
+## SDK và tài liệu chính thức
 
-- **JavaScript/TypeScript**: `@modelcontextprotocol/sdk` (npm). Use Context7 with library name "MCP" for current registration and transport patterns.
-- **Go**: Official Go SDK on GitHub (`modelcontextprotocol/go-sdk`).
-- **C#**: Official C# SDK for .NET.
+- **JavaScript/TypeScript**: `@modelcontextprotocol/sdk` (npm). Dùng Context7 với tên thư viện "MCP" để biết pattern đăng ký và transport hiện hành.
+- **Go**: SDK Go chính thức trên GitHub (`modelcontextprotocol/go-sdk`).
+- **C#**: SDK C# chính thức cho .NET.

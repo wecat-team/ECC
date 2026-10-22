@@ -6,26 +6,26 @@ paths:
   - "**/Gemfile.lock"
   - "**/config/routes.rb"
 ---
-# Ruby Hooks
+# Hook Ruby
 
-> This file extends [common/hooks.md](../common/hooks.md) with Ruby and Rails specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung riêng cho Ruby và Rails.
 
-## PostToolUse Hooks
+## Hook PostToolUse
 
-Configure project-local hooks to prefer binstubs and checked-in tooling:
+Cấu hình các hook cục bộ của dự án để ưu tiên binstub và công cụ đã commit:
 
-- **RuboCop**: run `bundle exec rubocop -A <file>` or the project's safer formatter command after Ruby edits.
-- **Brakeman**: run `bundle exec brakeman --no-progress` after security-sensitive Rails changes.
-- **Tests**: run the narrowest matching `bin/rails test ...` or `bundle exec rspec ...` command for touched files.
-- **Bundler audit**: run `bundle exec bundle-audit check --update` when `Gemfile` or `Gemfile.lock` changes and the project has bundler-audit installed.
+- **RuboCop**: chạy `bundle exec rubocop -A <file>` hoặc lệnh formatter an toàn hơn của dự án sau khi sửa Ruby.
+- **Brakeman**: chạy `bundle exec brakeman --no-progress` sau các thay đổi Rails nhạy cảm về bảo mật.
+- **Tests**: chạy lệnh `bin/rails test ...` hoặc `bundle exec rspec ...` hẹp nhất khớp với các file đã chạm tới.
+- **Bundler audit**: chạy `bundle exec bundle-audit check --update` khi `Gemfile` hoặc `Gemfile.lock` thay đổi và dự án đã cài bundler-audit.
 
-## Warnings
+## Cảnh báo
 
-- Warn on committed `debugger`, `binding.irb`, `binding.pry`, `puts`, `pp`, or `p` calls in application code.
-- Warn when an edit disables CSRF protection, expands mass-assignment, or adds raw SQL without parameterization.
-- Warn when a migration changes data destructively without a reversible path or documented rollout plan.
+- Cảnh báo khi code ứng dụng có lời gọi `debugger`, `binding.irb`, `binding.pry`, `puts`, `pp` hoặc `p` đã commit.
+- Cảnh báo khi một thay đổi tắt bảo vệ CSRF, mở rộng mass-assignment, hoặc thêm SQL thô không tham số hóa.
+- Cảnh báo khi một migration thay đổi dữ liệu theo cách phá hủy mà không có đường lui (reversible) hoặc kế hoạch rollout được ghi lại.
 
-## CI Gate Suggestions
+## Gợi ý CI Gate
 
 ```bash
 bundle exec rubocop
@@ -34,4 +34,4 @@ bin/rails test
 bundle exec rspec
 ```
 
-Use only the commands that are present in the project; do not install new hook dependencies without maintainer approval.
+Chỉ dùng các lệnh có sẵn trong dự án; không cài thêm dependency mới cho hook khi chưa được maintainer chấp thuận.

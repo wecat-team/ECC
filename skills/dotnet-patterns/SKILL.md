@@ -1,26 +1,26 @@
 ---
 name: dotnet-patterns
-description: Idiomatic C# and .NET patterns, conventions, dependency injection, async/await, and best practices for building robust, maintainable .NET applications. Use when writing or reviewing C# / .NET code — DI, async, or general conventions.
+description: "Các pattern C# và .NET idiomatic, quy ước, dependency injection, async/await và best practice để xây dựng ứng dụng .NET vững chắc, dễ bảo trì. Dùng khi viết hoặc review code C# / .NET — DI, async hoặc các quy ước chung."
 metadata:
   origin: ECC
 ---
 
-# .NET Development Patterns
+# Pattern phát triển .NET
 
-Idiomatic C# and .NET patterns for building robust, performant, and maintainable applications.
+Các pattern C# và .NET idiomatic để xây dựng ứng dụng vững chắc, hiệu năng tốt và dễ bảo trì.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new C# code
-- Reviewing C# code
-- Refactoring existing .NET applications
-- Designing service architectures with ASP.NET Core
+- Viết code C# mới
+- Review code C#
+- Refactor ứng dụng .NET hiện có
+- Thiết kế kiến trúc service với ASP.NET Core
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
-### 1. Prefer Immutability
+### 1. Ưu tiên tính bất biến (Immutability)
 
-Use records and init-only properties for data models. Mutability should be an explicit, justified choice.
+Dùng record và property init-only cho data model. Tính khả biến (mutability) phải là một lựa chọn tường minh, có lý do rõ ràng.
 
 ```csharp
 // Good: Immutable value object
@@ -41,9 +41,9 @@ public class Order
 }
 ```
 
-### 2. Explicit Over Implicit
+### 2. Tường minh hơn ngầm định
 
-Be clear about nullability, access modifiers, and intent.
+Hãy rõ ràng về nullability, access modifier và ý định.
 
 ```csharp
 // Good: Explicit access modifiers and nullability
@@ -65,9 +65,9 @@ public sealed class UserService
 }
 ```
 
-### 3. Depend on Abstractions
+### 3. Phụ thuộc vào abstraction
 
-Use interfaces for service boundaries. Register via DI container.
+Dùng interface cho ranh giới service. Đăng ký qua DI container.
 
 ```csharp
 // Good: Interface-based dependency
@@ -82,9 +82,9 @@ public interface IOrderRepository
 builder.Services.AddScoped<IOrderRepository, SqlOrderRepository>();
 ```
 
-## Async/Await Patterns
+## Pattern Async/Await
 
-### Proper Async Usage
+### Dùng Async đúng cách
 
 ```csharp
 // Good: Async all the way, with CancellationToken
@@ -108,7 +108,7 @@ public OrderSummary GetOrderSummary(Guid orderId)
 }
 ```
 
-### Parallel Async Operations
+### Các thao tác Async song song
 
 ```csharp
 // Good: Concurrent independent operations
@@ -129,7 +129,7 @@ public async Task<DashboardData> LoadDashboardAsync(CancellationToken cancellati
 
 ## Options Pattern
 
-Bind configuration sections to strongly-typed objects.
+Bind các section cấu hình vào các object có kiểu mạnh (strongly-typed).
 
 ```csharp
 public sealed class SmtpOptions
@@ -155,7 +155,7 @@ public class EmailService(IOptions<SmtpOptions> options)
 
 ## Result Pattern
 
-Return explicit success/failure instead of throwing for expected failures.
+Trả về thành công/thất bại tường minh thay vì throw exception cho các thất bại có thể lường trước.
 
 ```csharp
 public sealed record Result<T>
@@ -183,7 +183,7 @@ public async Task<Result<Order>> PlaceOrderAsync(CreateOrderRequest request)
 }
 ```
 
-## Repository Pattern with EF Core
+## Repository Pattern với EF Core
 
 ```csharp
 public sealed class SqlOrderRepository : IOrderRepository
@@ -219,7 +219,7 @@ public sealed class SqlOrderRepository : IOrderRepository
 }
 ```
 
-## Middleware and Pipeline
+## Middleware và Pipeline
 
 ```csharp
 // Custom middleware
@@ -255,7 +255,7 @@ public sealed class RequestTimingMiddleware
 }
 ```
 
-## Minimal API Patterns
+## Pattern Minimal API
 
 ```csharp
 // Organized with route groups
@@ -286,7 +286,7 @@ orders.MapPost("/", async (
 });
 ```
 
-## Guard Clauses
+## Guard Clause
 
 ```csharp
 // Good: Early returns with clear validation
@@ -308,15 +308,15 @@ public async Task<ProcessResult> ProcessPaymentAsync(
 }
 ```
 
-## Anti-Patterns to Avoid
+## Anti-pattern cần tránh
 
-| Anti-Pattern | Fix |
+| Anti-pattern | Cách sửa |
 |---|---|
-| `async void` methods | Return `Task` (except event handlers) |
-| `.Result` or `.Wait()` | Use `await` |
-| `catch (Exception) { }` | Handle or rethrow with context |
-| `new Service()` in constructors | Use constructor injection |
-| `public` fields | Use properties with appropriate accessors |
-| `dynamic` in business logic | Use generics or explicit types |
-| Mutable `static` state | Use DI scoping or `ConcurrentDictionary` |
-| `string.Format` in loops | Use `StringBuilder` or interpolated string handlers |
+| method `async void` | Trả về `Task` (trừ event handler) |
+| `.Result` or `.Wait()` | Dùng `await` |
+| `catch (Exception) { }` | Xử lý hoặc rethrow kèm ngữ cảnh |
+| `new Service()` trong constructor | Dùng constructor injection |
+| field `public` | Dùng property với accessor phù hợp |
+| `dynamic` trong business logic | Dùng generic hoặc kiểu tường minh |
+| State `static` khả biến | Dùng DI scoping hoặc `ConcurrentDictionary` |
+| `string.Format` trong vòng lặp | Dùng `StringBuilder` hoặc interpolated string handler |

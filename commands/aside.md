@@ -1,20 +1,20 @@
 ---
-description: Answer a quick side question without interrupting or losing context from the current task. Resume work automatically after answering.
+description: Trả lời nhanh một câu hỏi phụ mà không làm gián đoạn hay mất context của tác vụ hiện tại. Tự động tiếp tục công việc sau khi trả lời.
 ---
 
-# Aside Command
+# Lệnh Aside
 
-Ask a question mid-task and get an immediate, focused answer — then continue right where you left off. The current task, files, and context are never modified.
+Đặt câu hỏi giữa chừng khi đang làm tác vụ và nhận câu trả lời tập trung ngay lập tức — rồi tiếp tục đúng chỗ đã dừng. Tác vụ, file và context hiện tại không bao giờ bị thay đổi.
 
-## When to Use
+## Khi nào dùng
 
-- You're curious about something while Claude is working and don't want to lose momentum
-- You need a quick explanation of code Claude is currently editing
-- You want a second opinion or clarification on a decision without derailing the task
-- You need to understand an error, concept, or pattern before Claude proceeds
-- You want to ask something unrelated to the current task without starting a new session
+- Bạn tò mò về điều gì đó trong lúc Claude đang làm việc và không muốn mất đà
+- Bạn cần một lời giải thích nhanh về đoạn code Claude đang chỉnh sửa
+- Bạn muốn một ý kiến thứ hai hoặc làm rõ một quyết định mà không làm lệch tác vụ
+- Bạn cần hiểu một lỗi, khái niệm hoặc pattern trước khi Claude tiếp tục
+- Bạn muốn hỏi điều không liên quan đến tác vụ hiện tại mà không phải mở session mới
 
-## Usage
+## Cách dùng
 
 ```
 /aside <your question>
@@ -25,27 +25,27 @@ Ask a question mid-task and get an immediate, focused answer — then continue r
 /aside should we be worried about the N+1 query we just added?
 ```
 
-## Process
+## Quy trình
 
-### Step 1: Freeze the current task state
+### Bước 1: Đóng băng trạng thái tác vụ hiện tại
 
-Before answering anything, mentally note:
-- What is the active task? (what file, feature, or problem was being worked on)
-- What step was in progress at the moment `/aside` was invoked?
-- What was about to happen next?
+Trước khi trả lời bất cứ điều gì, hãy ghi nhớ:
+- Tác vụ đang thực hiện là gì? (file, tính năng hoặc vấn đề nào đang được xử lý)
+- Bước nào đang diễn ra tại thời điểm `/aside` được gọi?
+- Điều gì sắp xảy ra tiếp theo?
 
-Do NOT touch, edit, create, or delete any files during the aside.
+KHÔNG chạm vào, chỉnh sửa, tạo hoặc xóa bất kỳ file nào trong lúc aside.
 
-### Step 2: Answer the question directly
+### Bước 2: Trả lời trực tiếp câu hỏi
 
-Answer the question in the most concise form that is still complete and useful.
+Trả lời câu hỏi dưới dạng ngắn gọn nhất mà vẫn đầy đủ và hữu ích.
 
-- Lead with the answer, not the reasoning
-- Keep it short — if a full explanation is needed, offer to go deeper after the task
-- If the question is about the current file or code being worked on, reference it precisely (file path and line number if relevant)
-- If answering requires reading a file, read it — but read only, never write
+- Mở đầu bằng câu trả lời, không phải lập luận
+- Giữ ngắn gọn — nếu cần giải thích đầy đủ, đề nghị đi sâu hơn sau khi xong tác vụ
+- Nếu câu hỏi liên quan đến file hoặc code đang làm việc, hãy tham chiếu chính xác (đường dẫn file và số dòng nếu liên quan)
+- Nếu để trả lời cần đọc một file, hãy đọc — nhưng chỉ đọc, không bao giờ ghi
 
-Format the response as:
+Định dạng phản hồi như sau:
 
 ```
 ASIDE: [restate the question briefly]
@@ -55,16 +55,16 @@ ASIDE: [restate the question briefly]
 — Back to task: [one-line description of what was being done]
 ```
 
-### Step 3: Resume the main task
+### Bước 3: Tiếp tục tác vụ chính
 
-After delivering the answer, immediately continue the active task from the exact point it was paused. Do not ask for permission to resume unless the aside answer revealed a blocker or a reason to reconsider the current approach (see Edge Cases).
+Sau khi đưa ra câu trả lời, hãy tiếp tục ngay tác vụ đang làm từ đúng điểm đã tạm dừng. Không xin phép để tiếp tục, trừ khi câu trả lời aside làm lộ ra một blocker hoặc lý do để cân nhắc lại cách tiếp cận hiện tại (xem Edge Case).
 
 ---
 
-## Edge Cases
+## Edge Case
 
-**No question provided (`/aside` with nothing after it):**
-Respond:
+**Không có câu hỏi (`/aside` không kèm gì phía sau):**
+Hãy phản hồi:
 ```
 ASIDE: no question provided
 
@@ -73,30 +73,30 @@ What would you like to know? (ask your question and I'll answer without losing t
 — Back to task: [one-line description of what was being done]
 ```
 
-**Question reveals a potential problem with the current task:**
-Flag it clearly before resuming:
+**Câu hỏi làm lộ một vấn đề tiềm ẩn với tác vụ hiện tại:**
+Hãy đánh dấu rõ ràng trước khi tiếp tục:
 ```
 ASIDE: [answer]
 
 WARNING: Note: This answer suggests [issue] with the current approach. Want to address this before continuing, or proceed as planned?
 ```
-Wait for the user's decision before resuming.
+Chờ quyết định của người dùng trước khi tiếp tục.
 
-**Question is actually a task redirect (not a side question):**
-If the question implies changing what is being built (e.g., `/aside actually, let's use Redis instead`), clarify:
+**Câu hỏi thực chất là chuyển hướng tác vụ (không phải câu hỏi phụ):**
+Nếu câu hỏi ngụ ý thay đổi thứ đang được xây dựng (ví dụ `/aside actually, let's use Redis instead`), hãy làm rõ:
 ```
 ASIDE: That sounds like a direction change, not just a side question.
 Do you want to:
   (a) Answer this as information only and keep the current plan
   (b) Pause the current task and change approach
 ```
-Wait for the user's answer — do not make assumptions.
+Chờ câu trả lời của người dùng — không tự đưa ra giả định.
 
-**Question is about the currently open file or code:**
-Answer from the live context. If the file was read earlier in the session, reference it directly. If not, read it now (read-only) and answer with a file:line reference.
+**Câu hỏi về file hoặc code đang mở:**
+Trả lời từ context hiện có. Nếu file đã được đọc trước đó trong session, tham chiếu trực tiếp. Nếu chưa, đọc ngay bây giờ (chỉ đọc) và trả lời kèm tham chiếu file:dòng.
 
-**No active task (nothing in progress when `/aside` is invoked):**
-Still use the standard wrapper so the response shape stays consistent:
+**Không có tác vụ đang chạy (không có gì đang tiến hành khi gọi `/aside`):**
+Vẫn dùng khung chuẩn để hình thức phản hồi nhất quán:
 ```
 ASIDE: [restate the question briefly]
 
@@ -105,29 +105,29 @@ ASIDE: [restate the question briefly]
 — Back to task: no active task to resume
 ```
 
-**Question requires a long answer:**
-Give the essential answer concisely, then offer:
+**Câu hỏi cần câu trả lời dài:**
+Đưa ra câu trả lời thiết yếu một cách ngắn gọn, rồi đề nghị:
 ```
 That's the short version. Want a deeper explanation after we finish [current task]?
 ```
 
-**Multiple `/aside` questions in a row:**
-Answer each one in sequence. After the last answer, resume the main task. Do not lose task state across a chain of asides.
+**Nhiều câu hỏi `/aside` liên tiếp:**
+Trả lời lần lượt từng câu. Sau câu trả lời cuối cùng, tiếp tục tác vụ chính. Không làm mất trạng thái tác vụ qua một chuỗi aside.
 
-**Aside answer implies a code change is needed:**
-Note the change needed but do not make it during the aside:
+**Câu trả lời aside ngụ ý cần thay đổi code:**
+Ghi nhận thay đổi cần thiết nhưng không thực hiện trong lúc aside:
 ```
 ASIDE: [answer]
 
  Worth fixing: [what should be changed]. I'll flag this after the current task unless you want to address it now.
 ```
 
-**Question is ambiguous or too vague:**
-Ask one clarifying question — the shortest question that gets the information needed to answer. Do not ask multiple questions.
+**Câu hỏi mơ hồ hoặc quá chung chung:**
+Hỏi một câu làm rõ — câu ngắn nhất để lấy được thông tin cần thiết để trả lời. Không hỏi nhiều câu.
 
 ---
 
-## Example Output
+## Ví dụ đầu ra
 
 ```
 User: /aside what does fetchWithRetry() actually do?
@@ -155,10 +155,10 @@ WARNING: Note: This could affect the feature we're building. Want to address thi
 
 ---
 
-## Notes
+## Ghi chú
 
-- Never modify files during an aside — read-only access only
-- The aside is a conversation pause, not a new task — the original task must always resume
-- Keep answers focused: the goal is to unblock the user quickly, not to deliver a lecture
-- If an aside sparks a larger discussion, finish the current task first unless the aside reveals a blocker
-- Asides are not saved to session files unless explicitly relevant to the task outcome
+- KHÔNG BAO GIỜ sửa file trong lúc aside — chỉ có quyền đọc
+- Aside là một khoảng tạm dừng hội thoại, không phải tác vụ mới — tác vụ ban đầu phải luôn được tiếp tục
+- Giữ câu trả lời tập trung: mục tiêu là gỡ vướng cho người dùng nhanh chóng, không phải giảng bài
+- Nếu một aside gợi ra thảo luận lớn hơn, hãy hoàn tất tác vụ hiện tại trước, trừ khi aside làm lộ một blocker
+- Aside không được lưu vào file session trừ khi liên quan rõ ràng đến kết quả của tác vụ

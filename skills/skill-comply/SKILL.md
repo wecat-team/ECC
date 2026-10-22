@@ -1,35 +1,35 @@
 ---
 name: skill-comply
-description: Visualize whether skills, rules, and agent definitions are actually followed — auto-generates scenarios at 3 prompt strictness levels, runs agents, classifies behavioral sequences, and reports compliance rates with full tool call timelines. Use when checking whether agents actually follow the skills, rules, and definitions they were given, rather than assuming they do.
+description: "Trực quan hóa việc skill, rule và agent definition có thực sự được tuân thủ hay không — tự động sinh kịch bản ở 3 mức độ chặt chẽ của prompt, chạy agent, phân loại chuỗi hành vi và báo cáo tỷ lệ tuân thủ (compliance) kèm timeline đầy đủ của tool call. Dùng khi cần kiểm tra agent có thực sự tuân theo các skill, rule và definition đã được giao hay không, thay vì mặc định là có."
 metadata:
   origin: ECC
 tools: Read, Bash
 ---
 
-# skill-comply: Automated Compliance Measurement
+# skill-comply: Đo lường mức độ tuân thủ tự động
 
-Measures whether coding agents actually follow skills, rules, or agent definitions by:
-1. Auto-generating expected behavioral sequences (specs) from any .md file
-2. Auto-generating scenarios with decreasing prompt strictness (supportive → neutral → competing)
-3. Running `claude -p` and capturing tool call traces via stream-json
-4. Classifying tool calls against spec steps using LLM (not regex)
-5. Checking temporal ordering deterministically
-6. Generating self-contained reports with spec, prompts, and timelines
+Đo xem coding agent có thực sự tuân theo skill, rule hoặc agent definition hay không bằng cách:
+1. Tự động sinh chuỗi hành vi mong đợi (spec) từ bất kỳ file .md nào
+2. Tự động sinh kịch bản với mức độ chặt chẽ của prompt giảm dần (supportive → neutral → competing)
+3. Chạy `claude -p` và ghi lại trace của tool call qua stream-json
+4. Phân loại tool call theo các bước của spec bằng LLM (không dùng regex)
+5. Kiểm tra thứ tự thời gian một cách xác định (deterministic)
+6. Tạo báo cáo tự chứa (self-contained) gồm spec, prompt và timeline
 
-## Supported Targets
+## Đối tượng được hỗ trợ
 
-- **Skills** (`skills/*/SKILL.md`): Workflow skills like search-first, TDD guides
-- **Rules** (`rules/common/*.md`): Mandatory rules like testing.md, security.md, git-workflow.md
-- **Agent definitions** (`agents/*.md`): Whether an agent gets invoked when expected (internal workflow verification not yet supported)
+- **Skills** (`skills/*/SKILL.md`): Các skill dạng workflow như search-first, hướng dẫn TDD
+- **Rules** (`rules/common/*.md`): Các rule bắt buộc như testing.md, security.md, git-workflow.md
+- **Agent definitions** (`agents/*.md`): Kiểm tra agent có được gọi đúng lúc mong đợi hay không (chưa hỗ trợ xác minh workflow bên trong)
 
-## When to Activate
+## Khi nào kích hoạt
 
-- User runs `/skill-comply <path>`
-- User asks "is this rule actually being followed?"
-- After adding new rules/skills, to verify agent compliance
-- Periodically as part of quality maintenance
+- Người dùng chạy `/skill-comply <path>`
+- Người dùng hỏi "rule này có thực sự được tuân thủ không?"
+- Sau khi thêm rule/skill mới, để xác minh mức độ tuân thủ của agent
+- Định kỳ như một phần của việc duy trì chất lượng
 
-## Usage
+## Cách dùng
 
 ```bash
 # Full run
@@ -42,18 +42,18 @@ uv run python -m scripts.run --dry-run ~/.claude/skills/search-first/SKILL.md
 uv run python -m scripts.run --gen-model haiku --model sonnet <path>
 ```
 
-## Key Concept: Prompt Independence
+## Khái niệm then chốt: Prompt Independence (độc lập với prompt)
 
-Measures whether a skill/rule is followed even when the prompt doesn't explicitly support it.
+Đo xem một skill/rule có được tuân thủ hay không ngay cả khi prompt không hỗ trợ nó một cách tường minh.
 
-## Report Contents
+## Nội dung báo cáo
 
-Reports are self-contained and include:
-1. Expected behavioral sequence (auto-generated spec)
-2. Scenario prompts (what was asked at each strictness level)
-3. Compliance scores per scenario
-4. Tool call timelines with LLM classification labels
+Báo cáo là tự chứa và bao gồm:
+1. Chuỗi hành vi mong đợi (spec tự động sinh)
+2. Prompt của các kịch bản (đã yêu cầu gì ở từng mức độ chặt chẽ)
+3. Điểm tuân thủ theo từng kịch bản
+4. Timeline của tool call kèm nhãn phân loại của LLM
 
-### Advanced (optional)
+### Nâng cao (tùy chọn)
 
-For users familiar with hooks, reports also include hook promotion recommendations for steps with low compliance. This is informational — the main value is the compliance visibility itself.
+Với người dùng đã quen với hook, báo cáo còn kèm các khuyến nghị nâng cấp thành hook cho những bước có mức tuân thủ thấp. Đây chỉ là thông tin tham khảo — giá trị chính là khả năng quan sát được mức độ tuân thủ.

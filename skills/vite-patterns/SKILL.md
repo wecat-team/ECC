@@ -1,38 +1,38 @@
 ---
 name: vite-patterns
-description: Vite build tool patterns including config, plugins, HMR, env variables, proxy setup, SSR, library mode, dependency pre-bundling, and build optimization. Activate when working with vite.config.ts, Vite plugins, or Vite-based projects.
+description: Các pattern cho build tool Vite gồm config, plugin, HMR, biến môi trường (env variables), thiết lập proxy, SSR, library mode, dependency pre-bundling và tối ưu build. Kích hoạt khi làm việc với vite.config.ts, plugin Vite hoặc các dự án dùng Vite.
 metadata:
   origin: ECC
 ---
 
-# Vite Patterns
+# Pattern Vite
 
-Build tool and dev server patterns for Vite 8+ projects. Covers configuration, environment variables, proxy setup, library mode, dependency pre-bundling, and common production pitfalls.
+Các pattern cho build tool và dev server trong dự án Vite 8+. Bao gồm cấu hình, biến môi trường, thiết lập proxy, library mode, dependency pre-bundling và các cạm bẫy thường gặp khi lên production.
 
-## When to Use
+## Khi nào dùng
 
-- Configuring `vite.config.ts` or `vite.config.js`
-- Setting up environment variables or `.env` files
-- Configuring dev server proxy for API backends
-- Optimizing build output (chunks, minification, assets)
-- Publishing libraries with `build.lib`
-- Troubleshooting dependency pre-bundling or CJS/ESM interop
-- Debugging HMR, dev server, or build errors
-- Choosing or ordering Vite plugins
+- Cấu hình `vite.config.ts` hoặc `vite.config.js`
+- Thiết lập biến môi trường hoặc file `.env`
+- Cấu hình proxy của dev server cho backend API
+- Tối ưu đầu ra build (chunk, minification, asset)
+- Publish thư viện với `build.lib`
+- Xử lý sự cố dependency pre-bundling hoặc tương tác CJS/ESM
+- Debug lỗi HMR, dev server hoặc build
+- Chọn hoặc sắp xếp thứ tự các plugin Vite
 
-## How It Works
+## Cách hoạt động
 
-- **Dev mode** serves source files as native ESM — no bundling. Transforms happen on-demand per module request, which is why cold starts are fast and HMR is precise.
-- **Build mode** uses Rolldown (v7+) or Rollup (v5–v6) to bundle the app for production with tree-shaking, code-splitting, and Oxc-based minification.
-- **Dependency pre-bundling** converts CJS/UMD deps to ESM once via esbuild and caches the result under `node_modules/.vite`, so subsequent starts skip the work.
-- **Plugins** share a unified interface across dev and build — the same plugin object works for both the dev server's on-demand transforms and the production pipeline.
-- **Environment variables** are statically inlined at build time. `VITE_`-prefixed vars become public constants in the bundle; everything unprefixed is invisible to client code.
+- **Dev mode** phục vụ source file dưới dạng ESM native — không bundle. Việc transform diễn ra theo yêu cầu cho từng request module, đó là lý do khởi động nguội (cold start) nhanh và HMR chính xác.
+- **Build mode** dùng Rolldown (v7+) hoặc Rollup (v5–v6) để bundle ứng dụng cho production với tree-shaking, code-splitting và minification dựa trên Oxc.
+- **Dependency pre-bundling** chuyển các dependency CJS/UMD sang ESM một lần qua esbuild và cache kết quả dưới `node_modules/.vite`, nên các lần khởi động sau bỏ qua công việc này.
+- **Plugin** dùng chung một interface thống nhất giữa dev và build — cùng một object plugin hoạt động cho cả các transform theo yêu cầu của dev server lẫn pipeline production.
+- **Biến môi trường** được inline tĩnh tại thời điểm build. Các biến có tiền tố `VITE_` trở thành hằng số công khai trong bundle; mọi biến không có tiền tố đều vô hình với code phía client.
 
-## Examples
+## Ví dụ
 
-### Config Structure
+### Cấu trúc config
 
-#### Basic Config
+#### Config cơ bản
 
 ```typescript
 // vite.config.ts
@@ -47,7 +47,7 @@ export default defineConfig({
 })
 ```
 
-#### Conditional Config
+#### Config có điều kiện
 
 ```typescript
 // vite.config.ts
@@ -67,40 +67,40 @@ export default defineConfig(({ command, mode }) => {
 })
 ```
 
-#### Key Config Options
+#### Các tùy chọn config chính
 
-| Key | Default | Description |
+| Key | Mặc định | Mô tả |
 |-----|---------|-------------|
-| `root` | `'.'` | Project root (where `index.html` lives) |
-| `base` | `'/'` | Public base path for deployed assets |
-| `envPrefix` | `'VITE_'` | Prefix for client-exposed env vars |
-| `build.outDir` | `'dist'` | Output directory |
-| `build.minify` | `'oxc'` | Minifier (`'oxc'`, `'terser'`, or `false`) |
-| `build.sourcemap` | `false` | `true`, `'inline'`, or `'hidden'` |
+| `root` | `'.'` | Thư mục gốc dự án (nơi chứa `index.html`) |
+| `base` | `'/'` | Public base path cho các asset đã deploy |
+| `envPrefix` | `'VITE_'` | Tiền tố cho các biến env được expose ra client |
+| `build.outDir` | `'dist'` | Thư mục đầu ra |
+| `build.minify` | `'oxc'` | Minifier (`'oxc'`, `'terser'` hoặc `false`) |
+| `build.sourcemap` | `false` | `true`, `'inline'` hoặc `'hidden'` |
 
-### Plugins
+### Plugin
 
-#### Essential Plugins
+#### Các plugin thiết yếu
 
-Most plugin needs are covered by a handful of well-maintained packages. Reach for these before writing your own.
+Hầu hết nhu cầu về plugin đã được một số ít package được bảo trì tốt đáp ứng. Hãy dùng chúng trước khi tự viết.
 
-| Plugin | Purpose | When to use |
+| Plugin | Mục đích | Khi nào dùng |
 |--------|---------|-------------|
-| `@vitejs/plugin-react-swc` | React HMR + Fast Refresh via SWC | Default for React apps (faster than Babel variant) |
-| `@vitejs/plugin-react` | React HMR + Fast Refresh via Babel | Only if you need Babel plugins (emotion, MobX decorators) |
-| `@vitejs/plugin-vue` | Vue 3 SFC support | Vue apps |
-| `vite-plugin-checker` | Runs `tsc` + ESLint in worker thread with HMR overlay | **Any TypeScript app** — Vite does NOT type-check during `vite build` |
-| `vite-tsconfig-paths` | Honors `tsconfig.json` `paths` aliases | Any time you already have aliases in `tsconfig.json` |
-| `vite-plugin-dts` | Emits `.d.ts` files in library mode | Publishing TypeScript libraries |
-| `vite-plugin-svgr` | Imports SVGs as React components | React apps using SVGs as components |
-| `rollup-plugin-visualizer` | Bundle treemap/sunburst report | Periodic bundle size audits (use `enforce: 'post'`) |
-| `vite-plugin-pwa` | Zero-config PWA + Workbox | Offline-capable apps |
+| `@vitejs/plugin-react-swc` | React HMR + Fast Refresh qua SWC | Mặc định cho ứng dụng React (nhanh hơn bản Babel) |
+| `@vitejs/plugin-react` | React HMR + Fast Refresh qua Babel | Chỉ khi cần plugin Babel (emotion, decorator của MobX) |
+| `@vitejs/plugin-vue` | Hỗ trợ Vue 3 SFC | Ứng dụng Vue |
+| `vite-plugin-checker` | Chạy `tsc` + ESLint trong worker thread với HMR overlay | **Mọi ứng dụng TypeScript** — Vite KHÔNG type-check trong `vite build` |
+| `vite-tsconfig-paths` | Tôn trọng các alias `paths` của `tsconfig.json` | Bất cứ khi nào bạn đã có alias trong `tsconfig.json` |
+| `vite-plugin-dts` | Sinh file `.d.ts` trong library mode | Publish thư viện TypeScript |
+| `vite-plugin-svgr` | Import SVG dưới dạng React component | Ứng dụng React dùng SVG như component |
+| `rollup-plugin-visualizer` | Báo cáo treemap/sunburst của bundle | Kiểm tra kích thước bundle định kỳ (dùng `enforce: 'post'`) |
+| `vite-plugin-pwa` | PWA không cần cấu hình + Workbox | Ứng dụng hỗ trợ offline |
 
-**Critical callout:** `vite build` transpiles but does NOT type-check. Type errors silently ship to production unless you add `vite-plugin-checker` or run `tsc --noEmit` in CI.
+**Lưu ý QUAN TRỌNG:** `vite build` chỉ transpile chứ KHÔNG type-check. Lỗi type sẽ âm thầm lên production trừ khi bạn thêm `vite-plugin-checker` hoặc chạy `tsc --noEmit` trong CI.
 
-#### Authoring Custom Plugins
+#### Tự viết plugin tùy chỉnh
 
-Authoring is rare — most needs are covered by existing plugins. When you do need one, start inline in `vite.config.ts` and only extract if reused.
+Việc tự viết plugin hiếm khi cần — hầu hết nhu cầu đã được các plugin có sẵn đáp ứng. Khi thực sự cần, hãy bắt đầu inline trong `vite.config.ts` và chỉ tách ra khi được tái sử dụng.
 
 ```typescript
 // vite.config.ts — minimal inline plugin
@@ -117,15 +117,15 @@ function myPlugin(): Plugin {
 }
 ```
 
-**Key hooks:** `transform` (modify source), `resolveId` + `load` (virtual modules), `transformIndexHtml` (inject into HTML), `configureServer` (add dev middleware), `hotUpdate` (custom HMR — replaces deprecated `handleHotUpdate` in v7+).
+**Các hook chính:** `transform` (sửa source), `resolveId` + `load` (virtual module), `transformIndexHtml` (chèn vào HTML), `configureServer` (thêm middleware cho dev), `hotUpdate` (HMR tùy chỉnh — thay thế `handleHotUpdate` đã deprecated từ v7+).
 
-**Virtual modules** use the `\0` prefix convention — `resolveId` returns `'\0virtual:my-id'` so other plugins skip it. User code imports `'virtual:my-id'`.
+**Virtual module** dùng quy ước tiền tố `\0` — `resolveId` trả về `'\0virtual:my-id'` để các plugin khác bỏ qua nó. Code của người dùng import `'virtual:my-id'`.
 
-For full plugin API, see [vite.dev/guide/api-plugin](https://vite.dev/guide/api-plugin). Use `vite-plugin-inspect` during development to debug the transform pipeline.
+Để xem API plugin đầy đủ, xem [vite.dev/guide/api-plugin](https://vite.dev/guide/api-plugin). Dùng `vite-plugin-inspect` trong quá trình phát triển để debug pipeline transform.
 
 ### HMR API
 
-Framework plugins (`@vitejs/plugin-react`, `@vitejs/plugin-vue`, etc.) handle HMR automatically. Reach for `import.meta.hot` directly only when building custom state stores, dev tools, or framework-agnostic utilities that need to persist state across updates.
+Các plugin framework (`@vitejs/plugin-react`, `@vitejs/plugin-vue`, v.v.) xử lý HMR tự động. Chỉ dùng trực tiếp `import.meta.hot` khi xây dựng state store tùy chỉnh, dev tool, hoặc tiện ích không phụ thuộc framework cần giữ state qua các lần cập nhật.
 
 ```typescript
 // src/store.ts — manual HMR for a vanilla module
@@ -141,15 +141,15 @@ if (import.meta.hot) {
 }
 ```
 
-All `import.meta.hot` code is tree-shaken out of production builds — no guard removal needed.
+Toàn bộ code `import.meta.hot` được tree-shake khỏi build production — không cần gỡ guard.
 
-### Environment Variables
+### Biến môi trường
 
-Vite loads `.env`, `.env.local`, `.env.[mode]`, and `.env.[mode].local` in that order (later overrides earlier); `*.local` files are gitignored and meant for local secrets.
+Vite nạp `.env`, `.env.local`, `.env.[mode]` và `.env.[mode].local` theo thứ tự đó (file sau ghi đè file trước); các file `*.local` bị gitignore và dành cho secret cục bộ.
 
-#### Client-Side Access
+#### Truy cập phía client
 
-Only `VITE_`-prefixed vars are exposed to client code:
+Chỉ các biến có tiền tố `VITE_` được expose cho code client:
 
 ```typescript
 import.meta.env.VITE_API_URL   // string
@@ -160,7 +160,7 @@ import.meta.env.PROD            // boolean
 import.meta.env.SSR             // boolean
 ```
 
-#### Using Env in Config
+#### Dùng env trong config
 
 ```typescript
 // vite.config.ts
@@ -176,15 +176,15 @@ export default defineConfig(({ mode }) => {
 })
 ```
 
-### Security
+### Bảo mật
 
-#### `VITE_` Prefix is NOT a Security Boundary
+#### Tiền tố `VITE_` KHÔNG phải ranh giới bảo mật
 
-Any variable prefixed with `VITE_` is **statically inlined into the client bundle at build time**. Minification, base64 encoding, and disabling source maps do NOT hide it. A determined attacker can extract any `VITE_` var from the shipped JavaScript.
+Mọi biến có tiền tố `VITE_` đều **được inline tĩnh vào client bundle tại thời điểm build**. Minification, mã hóa base64 và tắt source map KHÔNG che giấu được nó. Kẻ tấn công quyết tâm có thể trích xuất bất kỳ biến `VITE_` nào từ JavaScript đã phát hành.
 
-**Rule:** Only public values (API URLs, feature flags, public keys) go in `VITE_` vars. Secrets (API tokens, database URLs, private keys) MUST live server-side behind an API or serverless function.
+**Quy tắc:** Chỉ các giá trị công khai (URL API, feature flag, public key) mới được đặt trong biến `VITE_`. Secret (API token, URL database, private key) PHẢI nằm phía server sau một API hoặc serverless function.
 
-#### The `loadEnv('')` Trap
+#### Cái bẫy `loadEnv('')`
 
 ```typescript
 // BAD: passing '' as the third arg loads ALL env vars — including server secrets —
@@ -195,9 +195,9 @@ const env = loadEnv(mode, process.cwd(), '')
 const env = loadEnv(mode, process.cwd(), ['VITE_', 'APP_'])
 ```
 
-#### Source Maps in Production
+#### Source map trên production
 
-Production source maps leak your original source code. Disable them unless you upload to an error tracker (Sentry, Bugsnag) and delete locally afterward:
+Source map production làm lộ mã nguồn gốc của bạn. Hãy tắt chúng trừ khi bạn upload lên error tracker (Sentry, Bugsnag) và xóa cục bộ sau đó:
 
 ```typescript
 build: {
@@ -205,11 +205,11 @@ build: {
 }
 ```
 
-#### `.gitignore` Checklist
+#### Checklist `.gitignore`
 
-- `.env.local`, `.env.*.local` — local secret overrides
-- `dist/` — build output
-- `node_modules/.vite` — pre-bundle cache (stale entries cause phantom errors)
+- `.env.local`, `.env.*.local` — ghi đè secret cục bộ
+- `dist/` — đầu ra build
+- `node_modules/.vite` — cache pre-bundle (entry cũ gây ra lỗi ma)
 
 ### Server Proxy
 
@@ -228,9 +228,9 @@ server: {
 }
 ```
 
-For WebSocket proxying, add `ws: true` to the route config.
+Để proxy WebSocket, thêm `ws: true` vào cấu hình route.
 
-### Build Optimization
+### Tối ưu build
 
 #### Manual Chunks
 
@@ -257,11 +257,11 @@ manualChunks(id) {
 }
 ```
 
-### Performance
+### Hiệu năng
 
-#### Avoid Barrel Files
+#### Tránh Barrel File
 
-Barrel files (`index.ts` re-exporting everything from a directory) force Vite to load every re-exported file even when you import a single symbol. This is the #1 dev-server slowdown flagged by the official docs.
+Barrel file (`index.ts` re-export mọi thứ từ một thư mục) buộc Vite phải nạp mọi file được re-export ngay cả khi bạn chỉ import một symbol. Đây là nguyên nhân số 1 làm chậm dev server mà tài liệu chính thức nêu ra.
 
 ```typescript
 // BAD — importing one util forces Vite to load the whole barrel
@@ -271,9 +271,9 @@ import { slash } from '@/utils'
 import { slash } from '@/utils/slash'
 ```
 
-#### Be Explicit with Import Extensions
+#### Ghi rõ phần mở rộng khi import
 
-Each implicit extension forces up to 6 filesystem checks via `resolve.extensions`. In large codebases, this adds up.
+Mỗi phần mở rộng ngầm định buộc tối đa 6 lần kiểm tra filesystem qua `resolve.extensions`. Trong codebase lớn, chi phí này cộng dồn đáng kể.
 
 ```typescript
 // BAD
@@ -283,11 +283,11 @@ import Component from './Component'
 import Component from './Component.tsx'
 ```
 
-Narrow `tsconfig.json` `allowImportingTsExtensions` + `resolve.extensions` to only the extensions you actually use.
+Thu hẹp `allowImportingTsExtensions` của `tsconfig.json` + `resolve.extensions` chỉ còn các phần mở rộng bạn thực sự dùng.
 
-#### Warm-Up Hot-Path Routes
+#### Warm-up các route đường nóng (hot-path)
 
-`server.warmup.clientFiles` pre-transforms known hot entries before the browser requests them — eliminating the cold-load request waterfall on large apps.
+`server.warmup.clientFiles` transform trước các entry nóng đã biết trước khi trình duyệt yêu cầu chúng — loại bỏ thác request (request waterfall) khi tải nguội trên ứng dụng lớn.
 
 ```typescript
 // vite.config.ts
@@ -298,16 +298,16 @@ server: {
 }
 ```
 
-#### Profiling Slow Dev Servers
+#### Profiling dev server chậm
 
-When `vite dev` feels slow, start with `vite --profile`, interact with the app, then press `p+enter` to save a `.cpuprofile`. Load it in [Speedscope](https://www.speedscope.app) to find which plugins are eating time — usually `buildStart`, `config`, or `configResolved` hooks in community plugins.
+Khi `vite dev` chậm, hãy bắt đầu với `vite --profile`, tương tác với ứng dụng, rồi nhấn `p+enter` để lưu file `.cpuprofile`. Nạp nó vào [Speedscope](https://www.speedscope.app) để tìm plugin nào đang ngốn thời gian — thường là các hook `buildStart`, `config` hoặc `configResolved` trong plugin cộng đồng.
 
 ### Library Mode
 
-When publishing an npm package, use `build.lib`. Two footguns matter more than config detail:
+Khi publish một npm package, dùng `build.lib`. Hai cái bẫy quan trọng hơn chi tiết cấu hình:
 
-1. **Types are not emitted** — add `vite-plugin-dts` or run `tsc --emitDeclarationOnly` separately.
-2. **Peer dependencies MUST be externalized** — unlisted peers get bundled into your library, causing duplicate-runtime errors in consumers.
+1. **Type không được sinh ra** — thêm `vite-plugin-dts` hoặc chạy `tsc --emitDeclarationOnly` riêng.
+2. **Peer dependency PHẢI được externalize** — các peer không được liệt kê sẽ bị bundle vào thư viện của bạn, gây lỗi duplicate-runtime ở phía người dùng.
 
 ```typescript
 // vite.config.ts
@@ -325,7 +325,7 @@ build: {
 
 ### SSR Externals
 
-Bare `createServer({ middlewareMode: true })` setups are framework-author territory. Most apps should use Nuxt, Remix, SvelteKit, Astro, or TanStack Start instead. What you *will* tweak as a framework user is the externals config when deps break in SSR:
+Các thiết lập `createServer({ middlewareMode: true })` trần là lãnh địa của tác giả framework. Hầu hết ứng dụng nên dùng Nuxt, Remix, SvelteKit, Astro hoặc TanStack Start. Thứ bạn *sẽ* tinh chỉnh khi là người dùng framework là cấu hình externals khi dependency bị lỗi trong SSR:
 
 ```typescript
 // vite.config.ts — ssr options
@@ -338,7 +338,7 @@ ssr: {
 
 ### Dependency Pre-Bundling
 
-Vite pre-bundles dependencies to convert CJS/UMD to ESM and reduce request count.
+Vite pre-bundle dependency để chuyển CJS/UMD sang ESM và giảm số lượng request.
 
 ```typescript
 // vite.config.ts — optimizeDeps
@@ -353,22 +353,22 @@ optimizeDeps: {
 }
 ```
 
-### Common Pitfalls
+### Các cạm bẫy thường gặp
 
-#### Dev Does Not Match Build
+#### Dev không khớp với Build
 
-Dev uses esbuild/Rolldown for transforms; build uses Rolldown for bundling. CJS libraries can behave differently between the two. Always verify with `vite build && vite preview` before deploying.
+Dev dùng esbuild/Rolldown để transform; build dùng Rolldown để bundle. Thư viện CJS có thể hoạt động khác nhau giữa hai chế độ. Luôn xác minh bằng `vite build && vite preview` trước khi deploy.
 
-#### Stale Chunks After Deployment
+#### Chunk cũ sau khi deploy
 
-New builds produce new chunk hashes. Users with active sessions request old filenames that no longer exist. Vite has no built-in solution. Mitigations:
+Build mới tạo hash chunk mới. Người dùng có phiên đang hoạt động sẽ yêu cầu các tên file cũ không còn tồn tại. Vite không có giải pháp tích hợp. Cách giảm thiểu:
 
-- Keep old `dist/assets/` files live for a deployment window
-- Catch dynamic import errors in your router and force a page reload
+- Giữ các file `dist/assets/` cũ trong một khoảng thời gian deploy
+- Bắt lỗi dynamic import trong router và buộc tải lại trang
 
-#### Docker and Containers
+#### Docker và Container
 
-Vite binds to `localhost` by default, which is unreachable from outside a container:
+Vite mặc định bind vào `localhost`, không thể truy cập từ bên ngoài container:
 
 ```typescript
 // vite.config.ts — Docker/container setup
@@ -378,9 +378,9 @@ server: {
 }
 ```
 
-#### Monorepo File Access
+#### Truy cập file trong Monorepo
 
-Vite restricts file serving to the project root. Packages outside root are blocked:
+Vite giới hạn việc phục vụ file trong thư mục gốc dự án. Các package nằm ngoài root bị chặn:
 
 ```typescript
 // vite.config.ts — monorepo file access
@@ -391,7 +391,7 @@ server: {
 }
 ```
 
-### Anti-Patterns
+### Anti-Pattern
 
 ```typescript
 // BAD: Setting envPrefix to '' exposes ALL env vars (including secrets) to the client
@@ -418,33 +418,33 @@ import.meta.hot.data = { count: 0 }           // WRONG: must mutate properties, 
 import.meta.hot.data.count = 0                 // CORRECT
 ```
 
-**Process anti-patterns:**
+**Anti-pattern về quy trình:**
 
-- **`vite preview` is NOT a production server** — it is a smoke test for the built bundle. Deploy `dist/` to a real static host (NGINX, Cloudflare Pages, Vercel static) or use a multi-stage Dockerfile.
-- **Expecting `vite build` to type-check** — it only transpiles. Type errors silently ship to production. Add `vite-plugin-checker` or run `tsc --noEmit` in CI.
-- **Shipping `@vitejs/plugin-legacy` by default** — it bloats bundles ~40%, breaks source-map bundle analyzers, and is unnecessary for the 95%+ of users on modern browsers. Gate it on real analytics, not assumption.
-- **Hand-rolling 30+ `resolve.alias` entries that duplicate `tsconfig.json` paths** — use `vite-tsconfig-paths` instead. Observed in Excalidraw and PostHog; avoid in new projects.
-- **Leaving stale `node_modules/.vite` after dep changes** — pre-bundle cache causes phantom errors. Clear it when switching branches or after patching deps.
+- **`vite preview` KHÔNG phải server production** — nó là smoke test cho bundle đã build. Deploy `dist/` lên một static host thực thụ (NGINX, Cloudflare Pages, Vercel static) hoặc dùng Dockerfile multi-stage.
+- **Kỳ vọng `vite build` sẽ type-check** — nó chỉ transpile. Lỗi type âm thầm lên production. Thêm `vite-plugin-checker` hoặc chạy `tsc --noEmit` trong CI.
+- **Mặc định phát hành `@vitejs/plugin-legacy`** — nó làm bundle phình ~40%, phá vỡ các công cụ phân tích bundle dựa trên source-map, và không cần thiết cho hơn 95% người dùng trên trình duyệt hiện đại. Hãy quyết định dựa trên analytics thực tế, không phải giả định.
+- **Viết tay 30+ entry `resolve.alias` trùng với `paths` trong `tsconfig.json`** — hãy dùng `vite-tsconfig-paths` thay thế. Gặp ở Excalidraw và PostHog; tránh trong dự án mới.
+- **Để lại `node_modules/.vite` cũ sau khi dependency thay đổi** — cache pre-bundle gây ra lỗi ma. Hãy xóa nó khi chuyển branch hoặc sau khi patch dependency.
 
-## Quick Reference
+## Tham khảo nhanh
 
-| Pattern | When to Use |
+| Pattern | Khi nào dùng |
 |---------|-------------|
-| `defineConfig` | Always — provides type inference |
-| `loadEnv(mode, root, ['VITE_'])` | Access env vars in config (explicit prefix) |
-| `vite-plugin-checker` | Any TypeScript app (fills the type-check gap) |
-| `vite-tsconfig-paths` | Instead of hand-rolled `resolve.alias` |
-| `optimizeDeps.include` | CJS deps causing interop issues |
-| `server.proxy` | Route API requests to backend in dev |
-| `server.host: true` | Docker, containers, remote access |
-| `server.warmup.clientFiles` | Pre-transform hot-path routes |
-| `build.lib` + `external` | Publishing npm packages |
-| `manualChunks` (object) | Vendor bundle splitting |
-| `vite --profile` | Debug slow dev server |
-| `vite build && vite preview` | Smoke-test prod bundle locally (NOT a prod server) |
+| `defineConfig` | Luôn luôn — cung cấp type inference |
+| `loadEnv(mode, root, ['VITE_'])` | Truy cập biến env trong config (tiền tố tường minh) |
+| `vite-plugin-checker` | Mọi ứng dụng TypeScript (lấp khoảng trống type-check) |
+| `vite-tsconfig-paths` | Thay cho `resolve.alias` viết tay |
+| `optimizeDeps.include` | Dependency CJS gây vấn đề interop |
+| `server.proxy` | Chuyển request API tới backend khi dev |
+| `server.host: true` | Docker, container, truy cập từ xa |
+| `server.warmup.clientFiles` | Transform trước các route đường nóng |
+| `build.lib` + `external` | Publish npm package |
+| `manualChunks` (object) | Tách vendor bundle |
+| `vite --profile` | Debug dev server chậm |
+| `vite build && vite preview` | Smoke test bundle prod cục bộ (KHÔNG phải server prod) |
 
-## Related Skills
+## Skill liên quan
 
-- `frontend-patterns` — React component patterns
-- `docker-patterns` — containerized dev with Vite
-- `nextjs-turbopack` — alternative bundler for Next.js
+- `frontend-patterns` — Pattern cho React component
+- `docker-patterns` — dev trong container với Vite
+- `nextjs-turbopack` — bundler thay thế cho Next.js

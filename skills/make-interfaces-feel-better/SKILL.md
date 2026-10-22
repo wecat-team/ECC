@@ -1,63 +1,63 @@
 ---
 name: make-interfaces-feel-better
-description: Apply concrete design-engineering details that make interfaces feel polished. Use when reviewing or improving UI spacing, typography, borders, shadows, motion, hit areas, icons, text wrapping, and interaction states.
+description: Áp dụng các chi tiết design-engineering cụ thể giúp giao diện trông trau chuốt. Dùng khi review hoặc cải thiện UI spacing, typography, border, shadow, motion, hit area, icon, text wrapping và các trạng thái tương tác.
 metadata:
   origin: community
 ---
 
 # Make Interfaces Feel Better
 
-Use this skill for the small design-engineering details that compound into a
-more polished interface.
+Dùng skill này cho những chi tiết design-engineering nhỏ cộng dồn lại thành một giao diện
+trau chuốt hơn.
 
-Source: salvaged from stale community PR #1659 by `linus707`.
+Nguồn: được cứu lại từ PR cộng đồng cũ #1659 của `linus707`.
 
-## When to Use
+## Khi nào dùng
 
-- The user says the UI feels off, flat, generic, cramped, jumpy, or unfinished.
-- You are building controls, cards, lists, dashboards, navigation, forms, or
-  toolbars.
-- A component needs hover, active, focus, enter, exit, loading, or empty states.
-- A frontend review needs specific before/after recommendations.
+- Người dùng nói UI có cảm giác sai sai, phẳng, chung chung, chật chội, giật hoặc chưa hoàn thiện.
+- Bạn đang xây control, card, list, dashboard, điều hướng, form hoặc
+  toolbar.
+- Một component cần các trạng thái hover, active, focus, enter, exit, loading hoặc empty.
+- Một lần review frontend cần các khuyến nghị before/after cụ thể.
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
 ### Concentric Radius
 
-For nearby nested rounded surfaces:
+Với các bề mặt bo góc lồng nhau ở gần nhau:
 
 ```text
 outer radius = inner radius + padding
 ```
 
-If padding is large, treat layers as separate surfaces instead of forcing the
-math. The point is optical coherence, not formula worship.
+Nếu padding lớn, hãy coi các lớp là những bề mặt riêng thay vì ép theo
+công thức. Điều quan trọng là sự nhất quán về thị giác, không phải sùng bái công thức.
 
 ### Optical Alignment
 
-Geometric centering is not always visual centering. Icon buttons, play
-triangles, arrows, stars, and asymmetric icons often need a small offset. Fix the
-SVG when possible; otherwise adjust with a pixel-level margin or padding change.
+Căn giữa theo hình học không phải lúc nào cũng là căn giữa theo thị giác. Nút icon, tam giác
+play, mũi tên, ngôi sao và các icon bất đối xứng thường cần một độ lệch nhỏ. Hãy sửa
+SVG nếu có thể; nếu không thì điều chỉnh bằng margin hoặc padding ở mức pixel.
 
-### Shadows And Borders
+### Shadow và Border
 
-Use borders for separation and focus rings. Use layered shadows when a card,
-button, dropdown, or popover needs depth. Shadows should be transparent and
-subtle enough to work across backgrounds.
+Dùng border để phân tách và cho focus ring. Dùng shadow nhiều lớp khi một card,
+button, dropdown hoặc popover cần chiều sâu. Shadow nên trong suốt và
+đủ tinh tế để hoạt động trên nhiều màu nền.
 
 ### Text Wrapping
 
-- Use `text-wrap: balance` on headings and short titles.
-- Use `text-wrap: pretty` on short-to-medium body text, captions, descriptions,
-  and list items.
-- Avoid both on long prose, code, and preformatted content.
-- Use `font-variant-numeric: tabular-nums` for counters, timers, prices, tables,
-  and other updating numbers.
+- Dùng `text-wrap: balance` cho heading và tiêu đề ngắn.
+- Dùng `text-wrap: pretty` cho văn bản thân bài ngắn đến vừa, caption, mô tả
+  và mục danh sách.
+- Tránh dùng cả hai cho văn xuôi dài, code và nội dung định dạng sẵn.
+- Dùng `font-variant-numeric: tabular-nums` cho bộ đếm, timer, giá, bảng
+  và các số được cập nhật liên tục khác.
 
 ### Font Smoothing
 
-On macOS, apply antialiased font smoothing at the root layout when the project
-does not already do so:
+Trên macOS, áp dụng antialiased font smoothing ở layout gốc khi dự án
+chưa làm vậy:
 
 ```css
 html {
@@ -66,10 +66,10 @@ html {
 }
 ```
 
-### Image Outlines
+### Image Outline
 
-Images often need a subtle inset outline so their edges do not blur into the
-surface.
+Ảnh thường cần một outline inset tinh tế để cạnh của chúng không bị nhòe vào
+bề mặt.
 
 ```css
 img {
@@ -84,27 +84,27 @@ img {
 }
 ```
 
-Use neutral black or white alpha outlines. Do not tint image outlines with the
-brand palette.
+Dùng outline alpha trung tính đen hoặc trắng. Không nhuộm outline của ảnh bằng
+bảng màu thương hiệu.
 
 ### Motion
 
-Use CSS transitions for interactive state changes because they can retarget
-when the user changes intent mid-motion. Reserve keyframes for staged
-one-shot entrances or loading sequences.
+Dùng CSS transition cho các thay đổi trạng thái tương tác vì chúng có thể đổi
+hướng khi người dùng đổi ý giữa chừng chuyển động. Dành keyframe cho các hiệu ứng
+xuất hiện một lần theo từng giai đoạn hoặc các chuỗi loading.
 
-Good motion defaults:
+Các mặc định motion tốt:
 
-- Enter: combine opacity, small `translateY`, and optionally blur.
-- Exit: shorter and quieter than enter, usually 150ms.
-- Press: `scale(0.96)` for tactile buttons, with a way to disable it when the
-  movement distracts.
-- Icon swaps: cross-fade with opacity, scale, and blur instead of instant
-  visibility toggles.
+- Enter: kết hợp opacity, `translateY` nhỏ, và tùy chọn blur.
+- Exit: ngắn hơn và nhẹ hơn enter, thường là 150ms.
+- Press: `scale(0.96)` cho các button cần cảm giác chạm, kèm cách tắt nó khi
+  chuyển động gây xao nhãng.
+- Đổi icon: cross-fade bằng opacity, scale và blur thay vì bật/tắt
+  visibility tức thì.
 
 ### Transition Scope
 
-Never use `transition: all`. Specify the changed properties:
+Không bao giờ dùng `transition: all`. Hãy chỉ định các property thay đổi:
 
 ```css
 .button {
@@ -114,39 +114,39 @@ Never use `transition: all`. Specify the changed properties:
 }
 ```
 
-Use `will-change` only for first-frame stutter on compositor-friendly
-properties such as `transform`, `opacity`, and `filter`. Never use
+Chỉ dùng `will-change` cho hiện tượng giật ở khung hình đầu trên các
+property thân thiện với compositor như `transform`, `opacity` và `filter`. Không bao giờ dùng
 `will-change: all`.
 
-### Hit Areas
+### Hit Area
 
-Interactive controls should have at least a 40x40px hit area, ideally 44x44px
-where the layout allows it. Expand with a pseudo-element when the visible icon
-is smaller, but do not let expanded hit areas overlap.
+Các control tương tác nên có hit area ít nhất 40x40px, lý tưởng là 44x44px
+khi layout cho phép. Mở rộng bằng pseudo-element khi icon hiển thị
+nhỏ hơn, nhưng không để các hit area đã mở rộng chồng lên nhau.
 
-## Review Output
+## Output của Review
 
-When reviewing a UI polish pass, report concrete changes in before/after rows:
+Khi review một lượt trau chuốt UI, hãy báo cáo các thay đổi cụ thể theo từng dòng before/after:
 
-| Principle | Before | After |
+| Nguyên tắc | Before | After |
 | --- | --- | --- |
-| Concentric radius | Same radius on parent and child | Parent radius accounts for padding |
-| Tabular numbers | Counter shifts as digits change | Counter uses `tabular-nums` |
-| Transition scope | `transition: all` | Explicit transition properties |
+| Concentric radius | Cùng radius ở parent và child | Radius của parent tính đến padding |
+| Tabular numbers | Bộ đếm xô lệch khi chữ số thay đổi | Bộ đếm dùng `tabular-nums` |
+| Transition scope | `transition: all` | Các transition property tường minh |
 
-Include file paths and properties when they are not obvious from the snippets.
-Omit principles that you checked but did not change.
+Hãy kèm đường dẫn file và property khi chúng không hiển nhiên từ snippet.
+Bỏ qua các nguyên tắc mà bạn đã kiểm tra nhưng không thay đổi.
 
 ## Checklist
 
-- Nested rounded elements are optically coherent.
-- Icons are visually centered.
-- Buttons, cards, and popovers use borders or shadows for the right reason.
-- Headings and short text avoid awkward wrapping.
-- Dynamic numbers use tabular numerals.
-- Images have neutral outlines where needed.
-- Enter and exit animations are split, subtle, and interruptible where
-  appropriate.
-- Buttons have tactile active states without exaggerated motion.
-- `transition: all` and `will-change: all` are absent.
-- Small controls still have usable hit areas.
+- Các phần tử bo góc lồng nhau nhất quán về thị giác.
+- Icon được căn giữa theo thị giác.
+- Button, card và popover dùng border hoặc shadow vì đúng lý do.
+- Heading và văn bản ngắn tránh xuống dòng vụng về.
+- Số động dùng chữ số tabular.
+- Ảnh có outline trung tính khi cần.
+- Animation enter và exit được tách riêng, tinh tế, và có thể bị ngắt giữa chừng khi
+  phù hợp.
+- Button có trạng thái active tạo cảm giác chạm mà không cường điệu chuyển động.
+- Không có `transition: all` và `will-change: all`.
+- Các control nhỏ vẫn có hit area dùng được.

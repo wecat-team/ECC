@@ -1,80 +1,80 @@
 ---
-description: "Generate a lean, problem-first PRD and hand off to /plan for implementation planning."
-argument-hint: "[product/feature idea] (blank = start with questions)"
+description: "Tạo một PRD gọn, đặt vấn đề lên trước, và bàn giao cho /plan để lập kế hoạch triển khai."
+argument-hint: "[ý tưởng sản phẩm/tính năng] (để trống = bắt đầu bằng các câu hỏi)"
 ---
 
-# PRD Command
+# Lệnh PRD
 
-Produces a **Product Requirements Document** — the requirements-phase artifact of the SDLC. Captures *what* must be true for success and *why*, and stops before *how*. Implementation decomposition is delegated to `/plan`.
+Tạo ra một **Product Requirements Document (PRD)** — artifact của giai đoạn yêu cầu trong SDLC. Ghi lại *điều gì* phải đúng để thành công và *vì sao*, và dừng lại trước *cách làm*. Việc phân rã triển khai được giao cho `/plan`.
 
 **Input**: `$ARGUMENTS`
 
-## Scope of this command
+## Phạm vi của command này
 
-| This command does | This command does NOT do |
+| Command này làm | Command này KHÔNG làm |
 |---|---|
-| Frame the problem and users | Design the architecture |
-| Capture success criteria and scope | Pick files or write patterns |
-| List open questions and risks | Enumerate implementation tasks |
-| Write `.claude/prds/{name}.prd.md` | Produce an implementation plan — that's `/plan` |
+| Đóng khung vấn đề và người dùng | Thiết kế kiến trúc |
+| Ghi lại tiêu chí thành công và phạm vi | Chọn file hay viết pattern |
+| Liệt kê câu hỏi mở và rủi ro | Liệt kê các task triển khai |
+| Ghi `.claude/prds/{name}.prd.md` | Tạo kế hoạch triển khai — đó là việc của `/plan` |
 
-If you find yourself writing implementation detail, stop and cut it. It belongs in `/plan`.
+Nếu bạn thấy mình đang viết chi tiết triển khai, hãy dừng lại và cắt bỏ. Nó thuộc về `/plan`.
 
-**Anti-fluff rule**: When information is missing, write `TBD — needs validation via {method}`. Never invent plausible-sounding requirements.
+**Quy tắc chống hời hợt (Anti-fluff)**: Khi thiếu thông tin, hãy viết `TBD — needs validation via {method}`. KHÔNG BAO GIỜ bịa ra các yêu cầu nghe có vẻ hợp lý.
 
 ## Workflow
 
-Four phases. Each phase is a single gate — ask the questions, wait for the user, then move on. No nested loops, no parallel research ceremony.
+Bốn giai đoạn. Mỗi giai đoạn là một cổng duy nhất — đặt câu hỏi, chờ người dùng, rồi chuyển tiếp. Không vòng lặp lồng nhau, không nghi thức nghiên cứu song song.
 
 ### Phase 1 — FRAME
 
-If `$ARGUMENTS` is empty, ask:
+Nếu `$ARGUMENTS` trống, hãy hỏi:
 
-> What do you want to build? One or two sentences.
+> Bạn muốn xây dựng gì? Một hoặc hai câu.
 
-If provided, restate in one sentence and ask:
+Nếu đã có, hãy diễn đạt lại trong một câu và hỏi:
 
-> I understand: *{restated}*. Correct, or should I adjust?
+> Tôi hiểu là: *{restated}*. Đúng không, hay tôi cần điều chỉnh?
 
-Then ask the framing questions in a single set:
+Sau đó đặt các câu hỏi đóng khung trong một bộ duy nhất:
 
-> 1. **Who** has this problem? (specific role or segment)
-> 2. **What** is the observable pain? (describe behavior, not assumed needs)
-> 3. **Why** can't they solve it with what exists today?
-> 4. **Why now?** — what changed that makes this worth doing?
+> 1. **Ai** gặp vấn đề này? (vai trò hoặc phân khúc cụ thể)
+> 2. **Cái gì** là nỗi đau quan sát được? (mô tả hành vi, không phải nhu cầu giả định)
+> 3. **Vì sao** họ không thể giải quyết nó bằng những gì đang có hiện nay?
+> 4. **Vì sao bây giờ?** — điều gì đã thay đổi khiến việc này đáng làm?
 
-Wait for the user. Do not proceed without answers (or explicit "skip").
+Chờ người dùng. Không tiếp tục nếu chưa có câu trả lời (hoặc "skip" tường minh).
 
 ### Phase 2 — GROUND
 
-Ask for evidence. This is the shortest phase and the most load-bearing:
+Hỏi về bằng chứng. Đây là giai đoạn ngắn nhất và quan trọng nhất:
 
-> What evidence do you have that this problem is real and worth solving? (user quotes, support tickets, metrics, observed behavior, failed workarounds — anything concrete)
+> Bạn có bằng chứng nào cho thấy vấn đề này có thật và đáng giải quyết? (trích dẫn người dùng, support ticket, số liệu, hành vi quan sát được, các workaround đã thất bại — bất cứ thứ gì cụ thể)
 
-If the user has none, record the PRD's Evidence section as `Assumption — needs validation via {user research | analytics | prototype}`. This keeps the PRD honest.
+Nếu người dùng không có, hãy ghi mục Evidence của PRD là `Assumption — needs validation via {user research | analytics | prototype}`. Điều này giữ cho PRD trung thực.
 
 ### Phase 3 — DECIDE
 
-Scope and hypothesis in a single set:
+Phạm vi và giả thuyết trong một bộ duy nhất:
 
-> 1. **Hypothesis** — Complete: *We believe **{capability}** will **{solve problem}** for **{users}**. We'll know we're right when **{measurable outcome}**.*
-> 2. **MVP** — The minimum needed to test the hypothesis?
-> 3. **Out of scope** — What are you explicitly **not** building (even if users ask)?
-> 4. **Open questions** — Uncertainties that could change the approach?
+> 1. **Giả thuyết (Hypothesis)** — Hoàn chỉnh: *We believe **{capability}** will **{solve problem}** for **{users}**. We'll know we're right when **{measurable outcome}**.*
+> 2. **MVP** — Mức tối thiểu cần để kiểm chứng giả thuyết là gì?
+> 3. **Ngoài phạm vi (Out of scope)** — Bạn tường minh **không** xây dựng gì (kể cả khi người dùng yêu cầu)?
+> 4. **Câu hỏi mở** — Những điều chưa chắc chắn có thể thay đổi cách tiếp cận?
 
-Wait for responses.
+Chờ phản hồi.
 
 ### Phase 4 — GENERATE & HAND OFF
 
-Create the directory if needed, write the PRD, and report.
+Tạo thư mục nếu cần, ghi PRD, và báo cáo.
 
 ```bash
 mkdir -p .claude/prds
 ```
 
-**Output path**: `.claude/prds/{kebab-case-name}.prd.md`
+**Đường dẫn output**: `.claude/prds/{kebab-case-name}.prd.md`
 
-#### PRD Template
+#### Template PRD
 
 ```markdown
 # {Product / Feature Name}
@@ -125,7 +125,7 @@ We'll know we're right when **{measurable outcome}**.
 *Status: DRAFT — requirements only. Implementation planning pending via /plan.*
 ```
 
-#### Report to user
+#### Báo cáo cho người dùng
 
 ```
 PRD created: .claude/prds/{name}.prd.md
@@ -145,18 +145,18 @@ Next step: /plan .claude/prds/{name}.prd.md
   → /plan will pick the next pending milestone and produce an implementation plan.
 ```
 
-## Integration
+## Tích hợp
 
-- `/plan <prd-path>` — consume the PRD and produce an implementation plan for the next pending milestone.
-- `tdd-workflow` skill — implement the plan test-first.
-- `/pr` — open a PR that references the PRD and plan.
+- `/plan <prd-path>` — tiêu thụ PRD và tạo kế hoạch triển khai cho milestone pending kế tiếp.
+- skill `tdd-workflow` — triển khai kế hoạch theo hướng test-first.
+- `/pr` — mở một PR tham chiếu tới PRD và kế hoạch.
 
-## Success criteria
+## Tiêu chí thành công
 
-- **PROBLEM_CLEAR**: problem is specific and evidenced (or flagged as assumption).
-- **USER_CONCRETE**: primary user is a specific role, not "users".
-- **HYPOTHESIS_TESTABLE**: measurable outcome included.
-- **SCOPE_BOUNDED**: explicit MVP and explicit out-of-scope.
-- **NO_IMPLEMENTATION_DETAIL**: file paths, libraries, or task breakdowns are absent — if they appeared, move them to the `/plan` step.
+- **PROBLEM_CLEAR**: vấn đề cụ thể và có bằng chứng (hoặc được đánh dấu là giả định).
+- **USER_CONCRETE**: người dùng chính là một vai trò cụ thể, không phải "người dùng" chung chung.
+- **HYPOTHESIS_TESTABLE**: có kết quả đo lường được.
+- **SCOPE_BOUNDED**: MVP tường minh và ngoài phạm vi tường minh.
+- **NO_IMPLEMENTATION_DETAIL**: không có đường dẫn file, thư viện hay phân rã task — nếu chúng xuất hiện, hãy chuyển sang bước `/plan`.
 
-Background on the staged markdown flow: [docs/PLAN-PRD-PATTERN.md](../docs/PLAN-PRD-PATTERN.md).
+Thông tin nền về luồng markdown theo giai đoạn: [docs/PLAN-PRD-PATTERN.md](../docs/PLAN-PRD-PATTERN.md).

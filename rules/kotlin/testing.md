@@ -3,18 +3,18 @@ paths:
   - "**/*.kt"
   - "**/*.kts"
 ---
-# Kotlin Testing
+# Kiểm thử Kotlin
 
-> This file extends [common/testing.md](../common/testing.md) with Kotlin and Android/KMP-specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung dành riêng cho Kotlin và Android/KMP.
 
 ## Test Framework
 
-- **kotlin.test** for multiplatform (KMP) — `@Test`, `assertEquals`, `assertTrue`
-- **JUnit 4/5** for Android-specific tests
-- **Turbine** for testing Flows and StateFlow
-- **kotlinx-coroutines-test** for coroutine testing (`runTest`, `TestDispatcher`)
+- **kotlin.test** cho multiplatform (KMP) — `@Test`, `assertEquals`, `assertTrue`
+- **JUnit 4/5** cho các test riêng của Android
+- **Turbine** để test Flow và StateFlow
+- **kotlinx-coroutines-test** để test coroutine (`runTest`, `TestDispatcher`)
 
-## ViewModel Testing with Turbine
+## Kiểm thử ViewModel với Turbine
 
 ```kotlin
 @Test
@@ -32,9 +32,9 @@ fun `loading state emitted then data`() = runTest {
 }
 ```
 
-## Fakes Over Mocks
+## Ưu tiên Fake hơn Mock
 
-Prefer hand-written fakes over mocking frameworks:
+Ưu tiên fake viết tay hơn các mocking framework:
 
 ```kotlin
 class FakeItemRepository : ItemRepository {
@@ -52,7 +52,7 @@ class FakeItemRepository : ItemRepository {
 }
 ```
 
-## Coroutine Testing
+## Kiểm thử Coroutine
 
 ```kotlin
 @Test
@@ -65,7 +65,7 @@ fun `parallel operations complete`() = runTest {
 }
 ```
 
-Use `runTest` — it auto-advances virtual time and provides `TestScope`.
+Dùng `runTest` — nó tự động tua thời gian ảo và cung cấp `TestScope`.
 
 ## Ktor MockEngine
 
@@ -85,10 +85,10 @@ val client = HttpClient(mockEngine) {
 }
 ```
 
-## Room/SQLDelight Testing
+## Kiểm thử Room/SQLDelight
 
-- Room: Use `Room.inMemoryDatabaseBuilder()` for in-memory testing
-- SQLDelight: Use `JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)` for JVM tests
+- Room: Dùng `Room.inMemoryDatabaseBuilder()` để test in-memory
+- SQLDelight: Dùng `JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)` cho test JVM
 
 ```kotlin
 @Test
@@ -103,9 +103,9 @@ fun `insert and query items`() = runTest {
 }
 ```
 
-## Test Naming
+## Đặt tên Test
 
-Use backtick-quoted descriptive names:
+Dùng tên mô tả đặt trong dấu backtick:
 
 ```kotlin
 @Test
@@ -115,7 +115,7 @@ fun `search with empty query returns all items`() = runTest { }
 fun `delete item emits updated list without deleted item`() = runTest { }
 ```
 
-## Test Organization
+## Tổ chức Test
 
 ```
 src/
@@ -125,4 +125,4 @@ src/
 └── iosTest/kotlin/        # iOS-specific tests
 ```
 
-Minimum test coverage: ViewModel + UseCase for every feature.
+Coverage test tối thiểu: ViewModel + UseCase cho mọi feature.

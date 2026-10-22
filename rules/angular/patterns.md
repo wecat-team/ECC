@@ -6,13 +6,13 @@ paths:
   - "**/*.store.ts"
   - "**/*.routes.ts"
 ---
-# Angular Patterns
+# Pattern Angular
 
-> This file extends [common/patterns.md](../common/patterns.md) with Angular specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho Angular.
 
-## Smart / Dumb Component Split
+## Tách Smart / Dumb Component
 
-Smart (container) components own data fetching and state. Dumb (presentational) components receive inputs and emit outputs only — no service injection.
+Smart component (container) sở hữu việc lấy dữ liệu và state. Dumb component (presentational) chỉ nhận input và phát output — không inject service.
 
 ```typescript
 // Smart — owns data
@@ -28,9 +28,9 @@ export class UserPageComponent {
 <app-user-card [user]="user()" (select)="onSelect($event)" />
 ```
 
-## Service Layer
+## Tầng Service
 
-Services own all data access and business logic. Components delegate — no `HttpClient` in components.
+Service sở hữu toàn bộ việc truy cập dữ liệu và business logic. Component chỉ ủy quyền — không dùng `HttpClient` trong component.
 
 ```typescript
 @Injectable({ providedIn: 'root' })
@@ -43,9 +43,9 @@ export class UserService {
 }
 ```
 
-## Async Data with `resource`
+## Dữ liệu bất đồng bộ với `resource`
 
-Use `resource()` for reactive async fetching. Prefer over manual RxJS pipelines for simple data loading:
+Dùng `resource()` để lấy dữ liệu bất đồng bộ theo kiểu reactive. Ưu tiên hơn pipeline RxJS thủ công cho việc tải dữ liệu đơn giản:
 
 ```typescript
 export class UserDetailComponent {
@@ -59,9 +59,9 @@ export class UserDetailComponent {
 }
 ```
 
-Access state: `userResource.value()`, `userResource.isLoading()`, `userResource.error()`, `userResource.reload()`.
+Truy cập state: `userResource.value()`, `userResource.isLoading()`, `userResource.error()`, `userResource.reload()`.
 
-## Signal State Patterns
+## Pattern cho Signal State
 
 ```typescript
 // Local mutable state
@@ -77,11 +77,11 @@ selectedItem = linkedSignal(() => this.items()[0]);
 users = toSignal(this.userService.getUsers(), { initialValue: [] });
 ```
 
-Never store derived values in separate signals — use `computed`. Never use `effect` to sync signals — use `computed` or `linkedSignal`.
+KHÔNG BAO GIỜ lưu giá trị dẫn xuất trong các signal riêng — hãy dùng `computed`. KHÔNG BAO GIỜ dùng `effect` để đồng bộ signal — hãy dùng `computed` hoặc `linkedSignal`.
 
-## Subscription Cleanup
+## Dọn dẹp Subscription
 
-Use `takeUntilDestroyed()` for all manual subscriptions. Never use manual `ngOnDestroy` + `Subject` + `takeUntil` on new code.
+Dùng `takeUntilDestroyed()` cho mọi subscription thủ công. KHÔNG BAO GIỜ dùng `ngOnDestroy` + `Subject` + `takeUntil` thủ công trong code mới.
 
 ```typescript
 export class UserComponent {
@@ -97,7 +97,7 @@ export class UserComponent {
 
 ## Routing
 
-### Route Definition
+### Định nghĩa Route
 
 ```typescript
 // app.routes.ts
@@ -116,11 +116,11 @@ export const routes: Routes = [
 ];
 ```
 
-- Use `canMatch` over `canActivate` when the route module should not load for unauthorized users
-- Lazy-load all feature modules with `loadChildren`
-- Pre-fetch data with `resolve` to avoid loading states in components
+- Dùng `canMatch` thay cho `canActivate` khi module của route không nên được tải với người dùng không có quyền
+- Lazy-load mọi feature module bằng `loadChildren`
+- Pre-fetch dữ liệu bằng `resolve` để tránh trạng thái loading trong component
 
-### Functional Guards
+### Functional Guard
 
 ```typescript
 export const authGuard: CanActivateFn = () => {
@@ -131,7 +131,7 @@ export const authGuard: CanActivateFn = () => {
 };
 ```
 
-### Data Resolvers
+### Data Resolver
 
 ```typescript
 export const userResolver: ResolveFn<User> = (route) => {
@@ -139,20 +139,20 @@ export const userResolver: ResolveFn<User> = (route) => {
 };
 ```
 
-### View Transitions
+### View Transition
 
-Enable smooth route transitions with the View Transitions API:
+Bật chuyển cảnh route mượt mà bằng View Transitions API:
 
 ```typescript
 // app.config.ts
 provideRouter(routes, withViewTransitions())
 ```
 
-## Dependency Injection Patterns
+## Pattern Dependency Injection
 
-### Scoped Providers
+### Scoped Provider
 
-Provide services at component or route level when they should not be singletons:
+Cung cấp service ở cấp component hoặc route khi chúng không nên là singleton:
 
 ```typescript
 @Component({
@@ -174,14 +174,14 @@ export const CONFIG = new InjectionToken<AppConfig>('APP_CONFIG');
 private config = inject(CONFIG);
 ```
 
-### `viewProviders` vs `providers`
+### `viewProviders` so với `providers`
 
-- `providers`: Available to the component and all its content children
-- `viewProviders`: Available only to the component's own view (not projected content)
+- `providers`: Khả dụng cho component và mọi content children của nó
+- `viewProviders`: Chỉ khả dụng trong view riêng của component (không áp dụng cho nội dung được project vào)
 
-## HTTP Interceptors
+## HTTP Interceptor
 
-Use functional interceptors (v15+) for auth, error handling, and retries:
+Dùng functional interceptor (v15+) cho xác thực, xử lý lỗi và retry:
 
 ```typescript
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -191,18 +191,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 };
 ```
 
-Register in `app.config.ts`:
+Đăng ký trong `app.config.ts`:
 
 ```typescript
 provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))
 ```
 
-## RxJS Operators
+## Toán tử RxJS
 
-- `switchMap` — search, navigation (cancels previous)
-- `mergeMap` — independent parallel requests
-- `exhaustMap` — form submissions (ignores until complete)
-- Always handle errors with `catchError` — never let streams die silently
+- `switchMap` — tìm kiếm, điều hướng (hủy request trước đó)
+- `mergeMap` — các request song song độc lập
+- `exhaustMap` — gửi form (bỏ qua cho đến khi hoàn tất)
+- Luôn xử lý lỗi bằng `catchError` — không bao giờ để stream chết trong im lặng
 
 ```typescript
 search$ = this.query$.pipe(
@@ -212,9 +212,9 @@ search$ = this.query$.pipe(
 );
 ```
 
-## Forms
+## Form
 
-Match the project's existing form strategy. For new v21+ apps, prefer signal forms.
+Khớp với chiến lược form sẵn có của dự án. Với ứng dụng mới v21+, ưu tiên signal forms.
 
 ```typescript
 // Reactive Forms — standard for complex forms
@@ -228,22 +228,22 @@ export class UserFormComponent {
 }
 ```
 
-## Rendering Strategies
+## Chiến lược Rendering
 
-- **CSR** (default): Standard SPA
-- **SSR + Hydration**: `ng add @angular/ssr` — improves FCP and SEO
-- **SSG (Prerendering)**: Static pages at build time for content-heavy routes
+- **CSR** (mặc định): SPA tiêu chuẩn
+- **SSR + Hydration**: `ng add @angular/ssr` — cải thiện FCP và SEO
+- **SSG (Prerendering)**: Trang tĩnh được tạo lúc build cho các route nặng nội dung
 
-When using SSR, avoid `window`, `document`, `localStorage` directly — use `isPlatformBrowser` or `DOCUMENT` token.
+Khi dùng SSR, tránh dùng trực tiếp `window`, `document`, `localStorage` — hãy dùng `isPlatformBrowser` hoặc token `DOCUMENT`.
 
 ## Accessibility
 
-Use Angular CDK for headless, accessible components (Accordion, Listbox, Combobox, Menu, Tabs, Toolbar, Tree, Grid). Style ARIA attributes rather than managing them manually:
+Dùng Angular CDK cho các component headless, accessible (Accordion, Listbox, Combobox, Menu, Tabs, Toolbar, Tree, Grid). Style theo các thuộc tính ARIA thay vì quản lý chúng thủ công:
 
 ```css
 [aria-selected="true"] { background: var(--color-selected); }
 ```
 
-## Skill Reference
+## Tham chiếu Skill
 
-See skill: `angular-developer` for deep guidance on signals, forms, routing, DI, SSR, and accessibility patterns.
+Xem skill: `angular-developer` để có hướng dẫn chuyên sâu về signals, forms, routing, DI, SSR và các pattern accessibility.

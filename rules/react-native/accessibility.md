@@ -3,17 +3,17 @@ paths:
   - "**/*.ts"
   - "**/*.tsx"
 ---
-# React Native / Expo Accessibility
+# Khả năng truy cập (Accessibility) cho React Native / Expo
 
-> Extends the ECC quality bar to accessibility (a11y). Treat a11y as a release requirement, not an afterthought.
-> Target: usable with screen readers (VoiceOver on iOS, TalkBack on Android) and at large font sizes.
+> Mở rộng chuẩn chất lượng của ECC sang khả năng truy cập (a11y). Hãy coi a11y là yêu cầu của bản release, không phải việc làm sau.
+> Mục tiêu: dùng được với trình đọc màn hình (VoiceOver trên iOS, TalkBack trên Android) và ở cỡ chữ lớn.
 
-## Labeling
+## Gắn nhãn
 
-- Every interactive element has an `accessibilityRole` and an `accessibilityLabel` (or readable child text).
-- Icon-only buttons MUST have an `accessibilityLabel` — there is no visible text for the reader to announce.
-- Use `accessibilityHint` only when the action is non-obvious; keep it short.
-- Group related elements with `accessible` on the container so they're announced as one unit when appropriate.
+- Mọi phần tử tương tác đều có `accessibilityRole` và `accessibilityLabel` (hoặc văn bản con có thể đọc được).
+- Nút chỉ có icon PHẢI có `accessibilityLabel` — không có văn bản hiển thị nào để trình đọc thông báo.
+- Chỉ dùng `accessibilityHint` khi hành động không hiển nhiên; giữ ngắn gọn.
+- Nhóm các phần tử liên quan bằng `accessible` trên container để chúng được thông báo như một đơn vị khi phù hợp.
 
 ```tsx
 <Pressable
@@ -25,31 +25,31 @@ paths:
 </Pressable>
 ```
 
-## State & Live Regions
+## State & Live Region
 
-- Communicate state with `accessibilityState` (e.g. `{ disabled, selected, checked, expanded }`).
-- Announce async/transient changes (toasts, validation errors) via `accessibilityLiveRegion` (Android) and `AccessibilityInfo.announceForAccessibility` where needed.
-- Reflect loading/error/empty states in text the reader can reach — not just spinners or color.
+- Truyền đạt state bằng `accessibilityState` (ví dụ `{ disabled, selected, checked, expanded }`).
+- Thông báo các thay đổi bất đồng bộ/tạm thời (toast, lỗi validation) qua `accessibilityLiveRegion` (Android) và `AccessibilityInfo.announceForAccessibility` khi cần.
+- Phản ánh trạng thái loading/error/empty bằng văn bản mà trình đọc tiếp cận được — không chỉ bằng spinner hay màu sắc.
 
-## Touch Targets & Layout
+## Vùng chạm & Bố cục
 
-- Minimum touch target ~44x44pt (iOS) / 48x48dp (Android); use `hitSlop` to enlarge small controls.
-- Respect Dynamic Type / font scaling — avoid fixed heights that clip scaled text; test at the largest accessibility font size.
-- Honor `prefers-reduced-motion` (`AccessibilityInfo.isReduceMotionEnabled`) — gate non-essential animation.
+- Vùng chạm tối thiểu khoảng 44x44pt (iOS) / 48x48dp (Android); dùng `hitSlop` để mở rộng các điều khiển nhỏ.
+- Tôn trọng Dynamic Type / font scaling — tránh chiều cao cố định làm cắt chữ khi phóng to; test ở cỡ chữ accessibility lớn nhất.
+- Tôn trọng `prefers-reduced-motion` (`AccessibilityInfo.isReduceMotionEnabled`) — chặn các animation không thiết yếu.
 
-## Color & Contrast
+## Màu sắc & Độ tương phản
 
-- Do not convey meaning by color alone; pair with text, icon, or shape.
-- Meet WCAG AA contrast: 4.5:1 for body text, 3:1 for large text and meaningful UI/graphical elements.
-- Verify both light and dark themes.
+- Không truyền đạt ý nghĩa chỉ bằng màu; kết hợp với văn bản, icon hoặc hình dạng.
+- Đạt độ tương phản WCAG AA: 4.5:1 cho văn bản thường, 3:1 cho văn bản lớn và các phần tử UI/đồ họa có ý nghĩa.
+- Kiểm tra cả theme sáng và tối.
 
-## Focus & Navigation
+## Focus & Điều hướng
 
-- Logical focus order; move focus to new content (modals, screens) on open and restore on close.
-- Ensure custom components are reachable and operable by the screen reader, not just by touch.
+- Thứ tự focus hợp lý; chuyển focus tới nội dung mới (modal, màn hình) khi mở và khôi phục khi đóng.
+- Đảm bảo các component tùy chỉnh có thể tiếp cận và thao tác được bằng trình đọc màn hình, không chỉ bằng cảm ứng.
 
-## Testing
+## Kiểm thử
 
-- Manually test with VoiceOver and TalkBack on real devices — automated checks do not catch everything.
-- In component tests, query by role/label (see testing.md) so a11y and tests reinforce each other.
-- Add a11y to the pre-release gate: key flows pass a screen-reader walkthrough.
+- Test thủ công với VoiceOver và TalkBack trên thiết bị thật — kiểm tra tự động không bắt được mọi thứ.
+- Trong component test, truy vấn theo role/label (xem testing.md) để a11y và test củng cố lẫn nhau.
+- Đưa a11y vào cổng kiểm tra trước release: các flow chính phải qua được một lượt duyệt bằng trình đọc màn hình.

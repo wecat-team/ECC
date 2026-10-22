@@ -1,35 +1,35 @@
 ---
-description: Generate a local Claude Code cost report from the ECC cost-tracker metrics log. Use for a terminal summary or CSV export of tracked spend; the cost-tracking skill covers the same metrics log for on-demand cost/budget questions asked in conversation.
+description: Tạo báo cáo chi phí Claude Code local từ log metrics của cost-tracker trong ECC. Dùng để xem tóm tắt trên terminal hoặc xuất CSV phần chi tiêu đã theo dõi; skill cost-tracking dùng cùng log metrics này cho các câu hỏi về chi phí/ngân sách theo yêu cầu trong hội thoại.
 argument-hint: "[csv]"
 ---
 
 # Cost Report
 
-Summarize local Claude Code spend by day, model, and session from the metrics
-log that ECC's `stop:cost-tracker` hook writes.
+Tóm tắt chi tiêu Claude Code local theo ngày, model và session từ log metrics
+mà hook `stop:cost-tracker` của ECC ghi ra.
 
-## Where the data lives
+## Dữ liệu nằm ở đâu
 
-The tracker appends one JSON object per session-stop to
-`~/.claude/metrics/costs.jsonl`. Each row is a **cumulative snapshot for that
-session**, so the report takes the **latest row per `session_id`** and sums
-across sessions (summing every row would multiply-count).
+Tracker thêm vào `~/.claude/metrics/costs.jsonl` một JSON object cho mỗi lần
+session dừng. Mỗi dòng là một **snapshot tích lũy của session đó**, nên báo cáo
+lấy **dòng mới nhất cho mỗi `session_id`** rồi cộng tổng qua các session (cộng
+mọi dòng sẽ bị đếm nhiều lần).
 
-Row schema:
+Schema của dòng:
 `{ timestamp, session_id, transcript_path, model, input_tokens, output_tokens, cache_write_tokens, cache_read_tokens, estimated_cost_usd }`
 
-## What this command does
+## Lệnh này làm gì
 
-1. Check that `~/.claude/metrics/costs.jsonl` exists. If it does not, tell the
-   user the tracker is not set up yet (it populates after the first session ends
-   with the `stop:cost-tracker` hook enabled).
-2. Reduce rows to the latest snapshot per session and aggregate.
-3. Present a compact report, or export recent rows as CSV when the argument is `csv`.
+1. Kiểm tra `~/.claude/metrics/costs.jsonl` có tồn tại không. Nếu không, hãy báo
+   người dùng rằng tracker chưa được thiết lập (file được tạo sau khi session
+   đầu tiên kết thúc với hook `stop:cost-tracker` được bật).
+2. Rút gọn các dòng về snapshot mới nhất cho mỗi session và tổng hợp.
+3. Trình bày một báo cáo gọn, hoặc xuất các dòng gần đây dưới dạng CSV khi đối số là `csv`.
 
-`node` is used instead of `sqlite3`/`jq` so this works identically on macOS,
-Linux, and Windows.
+Dùng `node` thay vì `sqlite3`/`jq` để lệnh hoạt động giống hệt nhau trên macOS,
+Linux và Windows.
 
-## Report
+## Báo cáo
 
 ```bash
 node -e '
@@ -58,7 +58,7 @@ const days=new Map();for(const r of latest){const k=day(r);days.set(k,(days.get(
 '
 ```
 
-## CSV export (`/cost-report csv`)
+## Xuất CSV (`/cost-report csv`)
 
 ```bash
 node -e '
@@ -71,11 +71,11 @@ for(const r of rows)console.log([r.timestamp,r.session_id,r.model,r.input_tokens
 '
 ```
 
-## Report format
+## Định dạng báo cáo
 
-1. Summary: today, yesterday, total, session count.
-2. By model: models ranked by total cost.
-3. Last seven days: date and cost.
+1. Tóm tắt: hôm nay, hôm qua, tổng cộng, số session.
+2. Theo model: các model xếp hạng theo tổng chi phí.
+3. Bảy ngày gần nhất: ngày và chi phí.
 
-Rely on the precomputed `estimated_cost_usd` values written by the tracker; do
-not re-estimate pricing from raw tokens here.
+Hãy dựa vào các giá trị `estimated_cost_usd` đã được tính sẵn do tracker ghi;
+không ước tính lại giá từ token thô ở đây.

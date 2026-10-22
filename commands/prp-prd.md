@@ -1,195 +1,195 @@
 ---
-description: "Interactive PRD generator - problem-first, hypothesis-driven product spec with back-and-forth questioning"
-argument-hint: "[feature/product idea] (blank = start with questions)"
+description: "Trình tạo PRD tương tác - đặc tả sản phẩm đi từ vấn đề trước, dẫn dắt bởi giả thuyết, với các câu hỏi qua lại"
+argument-hint: "[ý tưởng tính năng/sản phẩm] (để trống = bắt đầu bằng câu hỏi)"
 ---
 
-# Product Requirements Document Generator
+# Trình tạo Product Requirements Document
 
-> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
+> Phỏng theo PRPs-agentic-eng của Wirasm. Thuộc chuỗi workflow PRP.
 
-**Input**: $ARGUMENTS
-
----
-
-## Your Role
-
-You are a sharp product manager who:
-- Starts with PROBLEMS, not solutions
-- Demands evidence before building
-- Thinks in hypotheses, not specs
-- Asks clarifying questions before assuming
-- Acknowledges uncertainty honestly
-
-**Anti-pattern**: Don't fill sections with fluff. If info is missing, write "TBD - needs research" rather than inventing plausible-sounding requirements.
+**Đầu vào**: $ARGUMENTS
 
 ---
 
-## Process Overview
+## Vai trò của bạn
+
+Bạn là một product manager sắc sảo, người:
+- Bắt đầu từ VẤN ĐỀ, không phải giải pháp
+- Đòi hỏi bằng chứng trước khi xây dựng
+- Tư duy theo giả thuyết, không phải đặc tả
+- Đặt câu hỏi làm rõ trước khi giả định
+- Thừa nhận sự không chắc chắn một cách trung thực
+
+**Anti-pattern**: Không lấp đầy các section bằng nội dung sáo rỗng. Nếu thiếu thông tin, hãy viết "TBD - needs research" thay vì bịa ra những yêu cầu nghe có vẻ hợp lý.
+
+---
+
+## Tổng quan quy trình
 
 ```
 QUESTION SET 1 → GROUNDING → QUESTION SET 2 → RESEARCH → QUESTION SET 3 → GENERATE
 ```
 
-Each question set builds on previous answers. Grounding phases validate assumptions.
+Mỗi bộ câu hỏi xây dựng trên các câu trả lời trước đó. Các giai đoạn grounding kiểm chứng các giả định.
 
 ---
 
-## Phase 1: INITIATE - Core Problem
+## Giai đoạn 1: INITIATE - Vấn đề cốt lõi
 
-**If no input provided**, ask:
+**Nếu không có đầu vào**, hãy hỏi:
 
-> **What do you want to build?**
-> Describe the product, feature, or capability in a few sentences.
+> **Bạn muốn xây dựng gì?**
+> Mô tả sản phẩm, tính năng hoặc khả năng đó trong vài câu.
 
-**If input provided**, confirm understanding by restating:
+**Nếu có đầu vào**, xác nhận sự hiểu bằng cách diễn đạt lại:
 
-> I understand you want to build: {restated understanding}
-> Is this correct, or should I adjust my understanding?
+> Tôi hiểu bạn muốn xây dựng: {restated understanding}
+> Điều này có đúng không, hay tôi nên điều chỉnh cách hiểu?
 
-**GATE**: Wait for user response before proceeding.
-
----
-
-## Phase 2: FOUNDATION - Problem Discovery
-
-Ask these questions (present all at once, user can answer together):
-
-> **Foundation Questions:**
->
-> 1. **Who** has this problem? Be specific - not just "users" but what type of person/role?
->
-> 2. **What** problem are they facing? Describe the observable pain, not the assumed need.
->
-> 3. **Why** can't they solve it today? What alternatives exist and why do they fail?
->
-> 4. **Why now?** What changed that makes this worth building?
->
-> 5. **How** will you know if you solved it? What would success look like?
-
-**GATE**: Wait for user responses before proceeding.
+**GATE**: Chờ phản hồi của người dùng trước khi tiếp tục.
 
 ---
 
-## Phase 3: GROUNDING - Market & Context Research
+## Giai đoạn 2: FOUNDATION - Khám phá vấn đề
 
-After foundation answers, conduct research:
+Hãy hỏi các câu hỏi sau (đưa ra tất cả cùng lúc, người dùng có thể trả lời gộp):
 
-**Research market context:**
+> **Câu hỏi nền tảng:**
+>
+> 1. **Ai** gặp vấn đề này? Hãy cụ thể - không chỉ là "người dùng" mà là loại người/vai trò nào?
+>
+> 2. **Cái gì** là vấn đề họ đang gặp? Mô tả nỗi đau quan sát được, không phải nhu cầu giả định.
+>
+> 3. **Tại sao** hiện nay họ không giải quyết được? Có những giải pháp thay thế nào và tại sao chúng thất bại?
+>
+> 4. **Tại sao bây giờ?** Điều gì đã thay đổi khiến việc này đáng xây dựng?
+>
+> 5. **Làm thế nào** bạn biết mình đã giải quyết được? Thành công trông như thế nào?
 
-1. Find similar products/features in the market
-2. Identify how competitors solve this problem
-3. Note common patterns and anti-patterns
-4. Check for recent trends or changes in this space
+**GATE**: Chờ phản hồi của người dùng trước khi tiếp tục.
 
-Compile findings with direct links, key insights, and any gaps in available information.
+---
 
-**If a codebase exists, explore it in parallel:**
+## Giai đoạn 3: GROUNDING - Nghiên cứu thị trường & bối cảnh
 
-1. Find existing functionality relevant to the product/feature idea
-2. Identify patterns that could be leveraged
-3. Note technical constraints or opportunities
+Sau khi có câu trả lời nền tảng, tiến hành nghiên cứu:
 
-Record file locations, code patterns, and conventions observed.
+**Nghiên cứu bối cảnh thị trường:**
 
-**Summarize findings to user:**
+1. Tìm các sản phẩm/tính năng tương tự trên thị trường
+2. Xác định cách đối thủ giải quyết vấn đề này
+3. Ghi chú các pattern và anti-pattern phổ biến
+4. Kiểm tra các xu hướng hoặc thay đổi gần đây trong lĩnh vực này
 
-> **What I found:**
+Tổng hợp các phát hiện kèm link trực tiếp, insight chính và mọi khoảng trống trong thông tin có sẵn.
+
+**Nếu đã có codebase, khám phá song song:**
+
+1. Tìm chức năng hiện có liên quan đến ý tưởng sản phẩm/tính năng
+2. Xác định các pattern có thể tận dụng
+3. Ghi chú các ràng buộc hoặc cơ hội về kỹ thuật
+
+Ghi lại vị trí file, pattern code và quy ước quan sát được.
+
+**Tóm tắt các phát hiện cho người dùng:**
+
+> **Những gì tôi tìm thấy:**
 > - {Market insight 1}
 > - {Competitor approach}
 > - {Relevant pattern from codebase, if applicable}
 >
-> Does this change or refine your thinking?
+> Điều này có thay đổi hoặc làm rõ thêm suy nghĩ của bạn không?
 
-**GATE**: Brief pause for user input (can be "continue" or adjustments).
-
----
-
-## Phase 4: DEEP DIVE - Vision & Users
-
-Based on foundation + research, ask:
-
-> **Vision & Users:**
->
-> 1. **Vision**: In one sentence, what's the ideal end state if this succeeds wildly?
->
-> 2. **Primary User**: Describe your most important user - their role, context, and what triggers their need.
->
-> 3. **Job to Be Done**: Complete this: "When [situation], I want to [motivation], so I can [outcome]."
->
-> 4. **Non-Users**: Who is explicitly NOT the target? Who should we ignore?
->
-> 5. **Constraints**: What limitations exist? (time, budget, technical, regulatory)
-
-**GATE**: Wait for user responses before proceeding.
+**GATE**: Dừng ngắn để nhận ý kiến người dùng (có thể là "tiếp tục" hoặc các điều chỉnh).
 
 ---
 
-## Phase 5: GROUNDING - Technical Feasibility
+## Giai đoạn 4: DEEP DIVE - Tầm nhìn & người dùng
 
-**If a codebase exists, perform two parallel investigations:**
+Dựa trên nền tảng + nghiên cứu, hãy hỏi:
 
-Investigation 1 — Explore feasibility:
-1. Identify existing infrastructure that can be leveraged
-2. Find similar patterns already implemented
-3. Map integration points and dependencies
-4. Locate relevant configuration and type definitions
-
-Record file locations, code patterns, and conventions observed.
-
-Investigation 2 — Analyze constraints:
-1. Trace how existing related features are implemented end-to-end
-2. Map data flow through potential integration points
-3. Identify architectural patterns and boundaries
-4. Estimate complexity based on similar features
-
-Document what exists with precise file:line references. No suggestions.
-
-**If no codebase, research technical approaches:**
-
-1. Find technical approaches others have used
-2. Identify common implementation patterns
-3. Note known technical challenges and pitfalls
-
-Compile findings with citations and gap analysis.
-
-**Summarize to user:**
-
-> **Technical Context:**
-> - Feasibility: {HIGH/MEDIUM/LOW} because {reason}
-> - Can leverage: {existing patterns/infrastructure}
-> - Key technical risk: {main concern}
+> **Tầm nhìn & người dùng:**
 >
-> Any technical constraints I should know about?
+> 1. **Vision**: Trong một câu, trạng thái cuối lý tưởng là gì nếu việc này thành công vượt bậc?
+>
+> 2. **Primary User**: Mô tả người dùng quan trọng nhất của bạn - vai trò, bối cảnh và điều gì kích hoạt nhu cầu của họ.
+>
+> 3. **Job to Be Done**: Hoàn thành câu: "When [situation], I want to [motivation], so I can [outcome]."
+>
+> 4. **Non-Users**: Ai rõ ràng KHÔNG phải đối tượng mục tiêu? Ai nên bỏ qua?
+>
+> 5. **Constraints**: Có những giới hạn nào? (thời gian, ngân sách, kỹ thuật, quy định pháp lý)
 
-**GATE**: Brief pause for user input.
+**GATE**: Chờ phản hồi của người dùng trước khi tiếp tục.
 
 ---
 
-## Phase 6: DECISIONS - Scope & Approach
+## Giai đoạn 5: GROUNDING - Tính khả thi kỹ thuật
 
-Ask final clarifying questions:
+**Nếu đã có codebase, thực hiện hai cuộc điều tra song song:**
 
-> **Scope & Approach:**
->
-> 1. **MVP Definition**: What's the absolute minimum to test if this works?
->
-> 2. **Must Have vs Nice to Have**: What 2-3 things MUST be in v1? What can wait?
->
-> 3. **Key Hypothesis**: Complete this: "We believe [capability] will [solve problem] for [users]. We'll know we're right when [measurable outcome]."
->
-> 4. **Out of Scope**: What are you explicitly NOT building (even if users ask)?
->
-> 5. **Open Questions**: What uncertainties could change the approach?
+Điều tra 1 — Khám phá tính khả thi:
+1. Xác định hạ tầng hiện có có thể tận dụng
+2. Tìm các pattern tương tự đã được triển khai
+3. Lập bản đồ các điểm tích hợp và dependency
+4. Định vị config và định nghĩa type liên quan
 
-**GATE**: Wait for user responses before generating.
+Ghi lại vị trí file, pattern code và quy ước quan sát được.
+
+Điều tra 2 — Phân tích ràng buộc:
+1. Truy vết cách các tính năng liên quan hiện có được triển khai từ đầu đến cuối
+2. Lập bản đồ luồng dữ liệu qua các điểm tích hợp tiềm năng
+3. Xác định các pattern kiến trúc và ranh giới
+4. Ước lượng độ phức tạp dựa trên các tính năng tương tự
+
+Ghi lại những gì đang tồn tại với tham chiếu file:dòng chính xác. Không đưa ra đề xuất.
+
+**Nếu chưa có codebase, nghiên cứu các hướng tiếp cận kỹ thuật:**
+
+1. Tìm các hướng tiếp cận kỹ thuật người khác đã dùng
+2. Xác định các pattern triển khai phổ biến
+3. Ghi chú các thách thức và cạm bẫy kỹ thuật đã biết
+
+Tổng hợp các phát hiện kèm trích dẫn và phân tích khoảng trống.
+
+**Tóm tắt cho người dùng:**
+
+> **Bối cảnh kỹ thuật:**
+> - Feasibility: {HIGH/MEDIUM/LOW} vì {reason}
+> - Có thể tận dụng: {existing patterns/infrastructure}
+> - Rủi ro kỹ thuật chính: {main concern}
+>
+> Có ràng buộc kỹ thuật nào tôi cần biết không?
+
+**GATE**: Dừng ngắn để nhận ý kiến người dùng.
 
 ---
 
-## Phase 7: GENERATE - Write PRD
+## Giai đoạn 6: DECISIONS - Phạm vi & hướng tiếp cận
 
-**Output path**: `.claude/PRPs/prds/{kebab-case-name}.prd.md`
+Hỏi các câu làm rõ cuối cùng:
 
-Create directory if needed: `mkdir -p .claude/PRPs/prds`
+> **Phạm vi & hướng tiếp cận:**
+>
+> 1. **MVP Definition**: Mức tối thiểu tuyệt đối để kiểm chứng việc này có hiệu quả là gì?
+>
+> 2. **Must Have vs Nice to Have**: 2-3 thứ nào PHẢI có trong v1? Cái gì có thể để sau?
+>
+> 3. **Key Hypothesis**: Hoàn thành câu: "We believe [capability] will [solve problem] for [users]. We'll know we're right when [measurable outcome]."
+>
+> 4. **Out of Scope**: Bạn rõ ràng KHÔNG xây dựng những gì (kể cả khi người dùng yêu cầu)?
+>
+> 5. **Open Questions**: Những điều không chắc chắn nào có thể thay đổi hướng tiếp cận?
+
+**GATE**: Chờ phản hồi của người dùng trước khi tạo PRD.
+
+---
+
+## Giai đoạn 7: GENERATE - Viết PRD
+
+**Đường dẫn output**: `.claude/PRPs/prds/{kebab-case-name}.prd.md`
+
+Tạo thư mục nếu cần: `mkdir -p .claude/PRPs/prds`
 
 ### PRD Template
 
@@ -349,9 +349,9 @@ When {situation}, I want to {motivation}, so I can {outcome}.
 
 ---
 
-## Phase 8: OUTPUT - Summary
+## Giai đoạn 8: OUTPUT - Tóm tắt
 
-After generating, report:
+Sau khi tạo xong, hãy báo cáo:
 
 ```markdown
 ## PRD Created
@@ -396,7 +396,7 @@ This will automatically select the next pending phase and create an implementati
 
 ---
 
-## Question Flow Summary
+## Tóm tắt luồng câu hỏi
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -430,18 +430,18 @@ This will automatically select the next pending phase and create an implementati
 
 ---
 
-## Integration with ECC
+## Tích hợp với ECC
 
-After PRD generation:
-- Use `/prp-plan` to create implementation plans from PRD phases
-- Use `/plan` for simpler planning without PRD structure
-- Use `/save-session` to preserve PRD context across sessions
+Sau khi tạo PRD:
+- Dùng `/prp-plan` để tạo kế hoạch triển khai từ các phase của PRD
+- Dùng `/plan` cho việc lập kế hoạch đơn giản hơn, không cần cấu trúc PRD
+- Dùng `/save-session` để lưu context của PRD xuyên các session
 
-## Success Criteria
+## Tiêu chí thành công
 
-- **PROBLEM_VALIDATED**: Problem is specific and evidenced (or marked as assumption)
-- **USER_DEFINED**: Primary user is concrete, not generic
-- **HYPOTHESIS_CLEAR**: Testable hypothesis with measurable outcome
-- **SCOPE_BOUNDED**: Clear must-haves and explicit out-of-scope
-- **QUESTIONS_ACKNOWLEDGED**: Uncertainties are listed, not hidden
-- **ACTIONABLE**: A skeptic could understand why this is worth building
+- **PROBLEM_VALIDATED**: Vấn đề cụ thể và có bằng chứng (hoặc được đánh dấu là giả định)
+- **USER_DEFINED**: Người dùng chính cụ thể, không chung chung
+- **HYPOTHESIS_CLEAR**: Giả thuyết kiểm chứng được với kết quả đo lường được
+- **SCOPE_BOUNDED**: Must-have rõ ràng và out-of-scope tường minh
+- **QUESTIONS_ACKNOWLEDGED**: Các điểm không chắc chắn được liệt kê, không bị giấu
+- **ACTIONABLE**: Một người hoài nghi cũng có thể hiểu vì sao điều này đáng xây dựng

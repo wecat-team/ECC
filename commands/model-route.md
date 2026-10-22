@@ -1,30 +1,30 @@
 ---
-description: Recommend the best model tier for the current task based on complexity, risk, and budget.
+description: Đề xuất tầng model tốt nhất cho tác vụ hiện tại dựa trên độ phức tạp, rủi ro và ngân sách.
 ---
 
-# Model Route Command
+# Lệnh Model Route
 
-Recommend the best model tier for the current task by complexity and budget.
+Đề xuất tầng model tốt nhất cho tác vụ hiện tại theo độ phức tạp và ngân sách.
 
-## Usage
+## Cách dùng
 
 `/model-route [task-description] [--budget low|med|high]`
 
-## Routing Heuristic
+## Heuristic định tuyến
 
-- `haiku`: deterministic, low-risk mechanical changes
-- `sonnet`: default for implementation and refactors
-- `opus`: architecture, deep review, ambiguous requirements
+- `haiku`: thay đổi cơ học, xác định, rủi ro thấp
+- `sonnet`: mặc định cho triển khai và refactor
+- `opus`: kiến trúc, review chuyên sâu, yêu cầu mơ hồ
 
-## Required Output
+## Output bắt buộc
 
-- recommended model
-- confidence level
-- why this model fits
-- fallback model if first attempt fails
+- model được đề xuất
+- mức độ tin cậy
+- vì sao model này phù hợp
+- model dự phòng nếu lần thử đầu thất bại
 
-## Arguments
+## Đối số
 
 $ARGUMENTS:
-- `[task-description]` optional free-text
-- `--budget low|med|high` optional
+- `[task-description]` văn bản tự do, tùy chọn
+- `--budget low|med|high` tùy chọn

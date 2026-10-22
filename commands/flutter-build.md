@@ -1,29 +1,29 @@
 ---
-description: Fix Dart analyzer errors and Flutter build failures incrementally. Invokes the dart-build-resolver agent for minimal, surgical fixes.
+description: Sửa từng bước các lỗi Dart analyzer và lỗi build Flutter. Gọi agent dart-build-resolver để sửa tối thiểu, chính xác.
 ---
 
-# Flutter Build and Fix
+# Flutter Build và Fix
 
-This command invokes the **dart-build-resolver** agent to incrementally fix Dart/Flutter build errors with minimal changes.
+Command này gọi agent **dart-build-resolver** để sửa từng bước các lỗi build Dart/Flutter với thay đổi tối thiểu.
 
-## What This Command Does
+## Command này làm gì
 
-1. **Run Diagnostics**: Execute `flutter analyze`, `flutter pub get`
-2. **Parse Errors**: Group by file and sort by severity
-3. **Fix Incrementally**: One error at a time
-4. **Verify Each Fix**: Re-run analysis after each change
-5. **Report Summary**: Show what was fixed and what remains
+1. **Chạy chẩn đoán**: Thực thi `flutter analyze`, `flutter pub get`
+2. **Phân tích lỗi**: Nhóm theo file và sắp xếp theo mức độ nghiêm trọng
+3. **Sửa từng bước**: Mỗi lần một lỗi
+4. **Xác minh từng bản sửa**: Chạy lại analysis sau mỗi thay đổi
+5. **Báo cáo tóm tắt**: Hiển thị những gì đã sửa và những gì còn lại
 
-## When to Use
+## Khi nào dùng
 
-Use `/flutter-build` when:
-- `flutter analyze` reports errors
-- `flutter build` fails for any platform
-- `dart pub get` / `flutter pub get` fails with version conflicts
-- `build_runner` fails to generate code
-- After pulling changes that break the build
+Dùng `/flutter-build` khi:
+- `flutter analyze` báo lỗi
+- `flutter build` thất bại trên bất kỳ nền tảng nào
+- `dart pub get` / `flutter pub get` thất bại do xung đột phiên bản
+- `build_runner` không sinh được code
+- Sau khi pull các thay đổi làm hỏng build
 
-## Diagnostic Commands Run
+## Các lệnh chẩn đoán được chạy
 
 ```bash
 # Analysis
@@ -40,7 +40,7 @@ flutter build apk 2>&1
 flutter build web 2>&1
 ```
 
-## Example Session
+## Phiên làm việc ví dụ
 
 ````text
 User: /flutter-build
@@ -125,40 +125,40 @@ All tests passed.
 Build Status: PASS ✓
 ````
 
-## Common Errors Fixed
+## Các lỗi thường gặp đã sửa
 
-| Error | Typical Fix |
+| Lỗi | Cách sửa điển hình |
 |-------|-------------|
-| `A value of type 'X?' can't be assigned to 'X'` | Add `?? default` or null guard |
-| `The name 'X' isn't defined` | Add import or fix typo |
-| `Non-nullable instance field must be initialized` | Add initializer or `late` |
-| `Version solving failed` | Adjust version constraints in pubspec.yaml |
-| `Missing concrete implementation of 'X'` | Implement missing interface method |
-| `build_runner: Part of X expected` | Delete stale `.g.dart` and rebuild |
+| `A value of type 'X?' can't be assigned to 'X'` | Thêm `?? default` hoặc null guard |
+| `The name 'X' isn't defined` | Thêm import hoặc sửa lỗi gõ |
+| `Non-nullable instance field must be initialized` | Thêm initializer hoặc `late` |
+| `Version solving failed` | Điều chỉnh ràng buộc phiên bản trong pubspec.yaml |
+| `Missing concrete implementation of 'X'` | Triển khai method interface còn thiếu |
+| `build_runner: Part of X expected` | Xóa `.g.dart` cũ và build lại |
 
-## Fix Strategy
+## Chiến lược sửa lỗi
 
-1. **Analysis errors first** — code must be error-free
-2. **Warning triage second** — fix warnings that could cause runtime bugs
-3. **pub conflicts third** — fix dependency resolution
-4. **One fix at a time** — verify each change
-5. **Minimal changes** — don't refactor, just fix
+1. **Lỗi analysis trước** — code phải không còn lỗi
+2. **Phân loại warning thứ hai** — sửa các warning có thể gây bug lúc runtime
+3. **Xung đột pub thứ ba** — sửa việc phân giải dependency
+4. **Mỗi lần một bản sửa** — xác minh từng thay đổi
+5. **Thay đổi tối thiểu** — không refactor, chỉ sửa
 
-## Stop Conditions
+## Điều kiện dừng
 
-The agent will stop and report if:
-- Same error persists after 3 attempts
-- Fix introduces more errors
-- Requires architectural changes
-- Package upgrade conflicts need user decision
+Agent sẽ dừng và báo cáo nếu:
+- Cùng một lỗi vẫn còn sau 3 lần thử
+- Bản sửa gây thêm lỗi
+- Cần thay đổi kiến trúc
+- Xung đột khi nâng cấp package cần người dùng quyết định
 
-## Related Commands
+## Các command liên quan
 
-- `/flutter-test` — Run tests after build succeeds
-- `/flutter-review` — Review code quality
-- `verification-loop` skill — Full verification loop
+- `/flutter-test` — Chạy test sau khi build thành công
+- `/flutter-review` — Review chất lượng code
+- skill `verification-loop` — Vòng lặp xác minh đầy đủ
 
-## Related
+## Liên quan
 
 - Agent: `agents/dart-build-resolver.md`
 - Skill: `skills/flutter-dart-code-review/`

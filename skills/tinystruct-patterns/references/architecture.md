@@ -1,28 +1,28 @@
-# tinystruct Architecture and Configuration
+# Kiến trúc và cấu hình của tinystruct
 
-## When to Use
+## Khi nào dùng
 
-Choose **tinystruct** when you need a lightweight, high-performance Java framework that treats CLI and HTTP as equal citizens. Ideal for microservices, CLI utilities, and data-driven applications with a small footprint and zero-dependency JSON handling.
+Chọn **tinystruct** khi bạn cần một framework Java nhẹ, hiệu năng cao, coi CLI và HTTP là hai thành phần ngang hàng. Lý tưởng cho microservice, tiện ích CLI và các ứng dụng hướng dữ liệu với dung lượng nhỏ và xử lý JSON không cần dependency.
 
-## How It Works
+## Cách hoạt động
 
-### Core Architecture
+### Kiến trúc cốt lõi
 
-The framework operates on a singleton `ActionRegistry` that maps URL patterns (or command strings) to `Action` objects. When a request arrives, the system resolves the path and invokes the corresponding method handle.
+Framework vận hành dựa trên một `ActionRegistry` singleton ánh xạ các URL pattern (hoặc chuỗi lệnh) tới các đối tượng `Action`. Khi có request đến, hệ thống resolve đường dẫn và gọi method handle tương ứng.
 
-#### Key Abstractions
+#### Các abstraction chính
 
-| Class/Interface | Role |
+| Class/Interface | Vai trò |
 |---|---|
-| `AbstractApplication` | Base class for all tinystruct applications. Extend this. |
-| `@Action` annotation | Maps a method to a URI path (web) or command name (CLI). The single routing primitive. |
-| `ActionRegistry` | Singleton that maps URL patterns to `Action` objects via regex. Never instantiate directly. |
-| `Action` | Wraps a `MethodHandle` + regex pattern + priority + `Mode` for dispatch. |
-| `Context` | Per-request state store. Access via `getContext()`. Holds CLI args and HTTP request/response. |
-| `Dispatcher` | CLI entry point (`bin/dispatcher`). Reads `--import` to load applications. |
-| `HttpServer` | Built-in HTTP server. Start with `bin/dispatcher start --import org.tinystruct.system.HttpServer`. |
+| `AbstractApplication` | Base class cho mọi ứng dụng tinystruct. Hãy extend class này. |
+| Annotation `@Action` | Ánh xạ một method tới một đường dẫn URI (web) hoặc tên lệnh (CLI). Là primitive định tuyến duy nhất. |
+| `ActionRegistry` | Singleton ánh xạ URL pattern tới các đối tượng `Action` qua regex. KHÔNG BAO GIỜ khởi tạo trực tiếp. |
+| `Action` | Bao bọc một `MethodHandle` + regex pattern + priority + `Mode` để điều phối (dispatch). |
+| `Context` | Kho lưu state theo từng request. Truy cập qua `getContext()`. Chứa các tham số CLI và HTTP request/response. |
+| `Dispatcher` | Điểm vào của CLI (`bin/dispatcher`). Đọc `--import` để nạp các ứng dụng. |
+| `HttpServer` | HTTP server tích hợp sẵn. Khởi động bằng `bin/dispatcher start --import org.tinystruct.system.HttpServer`. |
 
-### Package Map
+### Sơ đồ package
 
 ```
 org.tinystruct/
@@ -56,13 +56,13 @@ org.tinystruct/
 └── net/                          ← URLRequest, HTTPHandler (outbound HTTP)
 ```
 
-### Template Behavior and Dispatch Flow
+### Hành vi của Template và luồng Dispatch
 
-By default, the framework assumes a view template is required. If `templateRequired` is `true`, `toString()` looks for a `.view` file in `src/main/resources/themes/<ClassName>.view`. Use `setVariable("name", value)` to pass data to templates, which use `{%name%}` for interpolation.
+Theo mặc định, framework giả định rằng cần có một view template. Nếu `templateRequired` là `true`, `toString()` sẽ tìm file `.view` trong `src/main/resources/themes/<ClassName>.view`. Dùng `setVariable("name", value)` để truyền dữ liệu cho template, template dùng `{%name%}` để nội suy.
 
-## Examples
+## Ví dụ
 
-### Minimal Application Initialization
+### Khởi tạo ứng dụng tối thiểu
 ```java
 @Override
 public void init() {
@@ -71,22 +71,22 @@ public void init() {
 }
 ```
 
-### Action Definition and CLI Invocation
+### Định nghĩa Action và gọi từ CLI
 ```java
 @Action("hello")
 public String hello() {
     return "Hello, tinystruct!";
 }
 ```
-**Execution via Dispatcher:**
+**Thực thi qua Dispatcher:**
 ```bash
 bin/dispatcher hello
 bin/dispatcher greet/James
 bin/dispatcher echo --words "Hello" --import com.example.HelloApp
 ```
 
-### Configuration Access
-Located at `src/main/resources/application.properties`:
+### Truy cập cấu hình
+Nằm tại `src/main/resources/application.properties`:
 ```java
 String port = this.getConfiguration("server.port");
 ```

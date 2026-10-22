@@ -1,31 +1,31 @@
 ---
 name: browser-qa
-description: "Run automated post-deploy UI verification with a browser automation MCP (claude-in-chrome, Playwright, or Puppeteer): console-error and Core Web Vitals smoke checks, form and auth-flow interaction tests, screenshot visual regression across three breakpoints, and axe-core accessibility audits ending in a SHIP / DO-NOT-SHIP verdict. Use when testing a deployed feature on staging or preview, before shipping frontend changes, reviewing a frontend PR, or checking responsive layout and accessibility."
+description: "Chạy xác minh UI tự động sau deploy bằng một MCP browser automation (claude-in-chrome, Playwright hoặc Puppeteer): smoke check lỗi console và Core Web Vitals, test tương tác form và luồng auth, visual regression bằng screenshot ở ba breakpoint, và audit accessibility bằng axe-core, kết thúc bằng verdict SHIP / DO-NOT-SHIP. Dùng khi test một tính năng đã deploy trên staging hoặc preview, trước khi ship thay đổi frontend, review PR frontend, hoặc kiểm tra responsive layout và accessibility."
 metadata:
   origin: ECC
 ---
 
-# Browser QA — Automated Visual Testing & Interaction
+# Browser QA — Visual Testing & Tương tác tự động
 
-## When to Use
+## Khi nào dùng
 
-- After deploying a feature to staging/preview
-- When you need to verify UI behavior across pages
-- Before shipping — confirm layouts, forms, interactions actually work
-- When reviewing PRs that touch frontend code
-- Accessibility audits and responsive testing
+- Sau khi deploy một tính năng lên staging/preview
+- Khi cần xác minh hành vi UI trên nhiều trang
+- Trước khi ship — xác nhận layout, form, tương tác thực sự hoạt động
+- Khi review các PR chạm vào code frontend
+- Audit accessibility và test responsive
 
-## How It Works
+## Cách hoạt động
 
-Uses the browser automation MCP (claude-in-chrome, Playwright, or Puppeteer) to interact with live pages like a real user.
+Dùng MCP browser automation (claude-in-chrome, Playwright hoặc Puppeteer) để tương tác với các trang đang chạy như một người dùng thật.
 
-### Safety first — blast radius (run read-only by default)
+### An toàn trước tiên — phạm vi ảnh hưởng (blast radius) (mặc định chạy read-only)
 
-Browser QA drives real auth and real user journeys, so treat the blast radius explicitly.
-Default to **read-only**: never run a **mutating** journey (checkout, payment, delete,
-mass-update) against a production URL — require an explicit opt-in **and** a staging/preview
-URL. Use seeded **test credentials**, never real production logins, and **redact**
-credentials/tokens/PII before saving any screenshot.
+Browser QA điều khiển auth thật và các hành trình người dùng thật, nên hãy xử lý phạm vi ảnh hưởng một cách tường minh.
+Mặc định là **read-only**: KHÔNG BAO GIỜ chạy một hành trình **có thay đổi dữ liệu (mutating)** (checkout, thanh toán, xóa,
+cập nhật hàng loạt) trên URL production — yêu cầu opt-in tường minh **và** một URL staging/preview.
+Dùng **test credential** đã seed, không bao giờ dùng đăng nhập production thật, và **che (redact)**
+credential/token/PII trước khi lưu bất kỳ screenshot nào.
 
 ### Phase 1: Smoke Test
 ```
@@ -65,11 +65,11 @@ credentials/tokens/PII before saving any screenshot.
 4. Check screen reader landmarks
 ```
 
-> Note: axe-core automatically covers roughly 30–40% of WCAG. A clean run is **necessary,
-> not sufficient** — keyboard nav, focus order, and a screen-reader pass still need a manual
-> check. Don't report "accessible" from an automated pass alone.
+> Lưu ý: axe-core tự động bao phủ khoảng 30–40% WCAG. Một lần chạy sạch là **cần thiết,
+> chưa đủ** — keyboard nav, focus order và screen-reader pass vẫn cần kiểm tra thủ công.
+> Đừng báo cáo "accessible" chỉ dựa vào kết quả chạy tự động.
 
-## Output Format
+## Định dạng Output
 
 ```markdown
 ## QA Report — [URL] — [timestamp]
@@ -95,11 +95,11 @@ credentials/tokens/PII before saving any screenshot.
 # verdict ∈ SHIP / SHIP WITH FIXES / DO NOT SHIP; use INCONCLUSIVE if no visual baseline
 ```
 
-## Integration
+## Tích hợp
 
-Works with any browser MCP:
-- `mChild__claude-in-chrome__*` tools (preferred — uses your actual Chrome)
-- Playwright via `mcp__browserbase__*`
-- Direct Puppeteer scripts
+Hoạt động với bất kỳ browser MCP nào:
+- Các tool `mChild__claude-in-chrome__*` (ưu tiên — dùng Chrome thực của bạn)
+- Playwright qua `mcp__browserbase__*`
+- Các script Puppeteer trực tiếp
 
-Pair with `/canary-watch` for post-deploy monitoring.
+Kết hợp với `/canary-watch` để giám sát sau deploy.

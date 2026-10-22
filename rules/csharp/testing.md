@@ -4,22 +4,22 @@ paths:
   - "**/*.csx"
   - "**/*.csproj"
 ---
-# C# Testing
+# Kiểm thử C#
 
-> This file extends [common/testing.md](../common/testing.md) with C#-specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung dành riêng cho C#.
 
 ## Test Framework
 
-- Prefer **xUnit** for unit and integration tests
-- Use **AwesomeAssertions** for readable assertions
-- Use **Moq** or **NSubstitute** for mocking dependencies
-- Use **Testcontainers** when integration tests need real infrastructure
+- Ưu tiên **xUnit** cho unit test và integration test
+- Dùng **AwesomeAssertions** để có assertion dễ đọc
+- Dùng **Moq** hoặc **NSubstitute** để mock dependency
+- Dùng **Testcontainers** khi integration test cần hạ tầng thật
 
-## Test Organization
+## Tổ chức Test
 
-- Mirror `src/` structure under `tests/`
-- Separate unit, integration, and end-to-end coverage clearly
-- Name tests by behavior, not implementation details
+- Phản chiếu cấu trúc `src/` dưới `tests/`
+- Tách biệt rõ phần unit, integration và end-to-end
+- Đặt tên test theo hành vi, không theo chi tiết triển khai
 
 ```csharp
 public sealed class OrderServiceTests
@@ -34,13 +34,13 @@ public sealed class OrderServiceTests
 }
 ```
 
-## ASP.NET Core Integration Tests
+## Integration Test ASP.NET Core
 
-- Use `WebApplicationFactory<TEntryPoint>` for API integration coverage
-- Test auth, validation, and serialization through HTTP, not by bypassing middleware
+- Dùng `WebApplicationFactory<TEntryPoint>` để kiểm thử integration cho API
+- Test auth, validation và serialization qua HTTP, không bằng cách bỏ qua middleware
 
 ## Coverage
 
-- Target 80%+ line coverage
-- Focus coverage on domain logic, validation, auth, and failure paths
-- Run `dotnet test` in CI with coverage collection enabled where available
+- Mục tiêu line coverage 80%+
+- Tập trung coverage vào domain logic, validation, auth và các đường lỗi
+- Chạy `dotnet test` trong CI với việc thu thập coverage được bật khi có thể

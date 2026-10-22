@@ -1,10 +1,10 @@
 ---
-description: Analyze a project and generate PM2 service commands for detected frontend, backend, or database services.
+description: Phân tích một dự án và sinh các lệnh dịch vụ PM2 cho các dịch vụ frontend, backend hoặc database được phát hiện.
 ---
 
 # PM2 Init
 
-Auto-analyze project and generate PM2 service commands.
+Tự động phân tích dự án và sinh các lệnh dịch vụ PM2.
 
 **Command**: `$ARGUMENTS`
 
@@ -12,29 +12,29 @@ Auto-analyze project and generate PM2 service commands.
 
 ## Workflow
 
-1. Check PM2 (install via `npm install -g pm2` if missing)
-2. Scan project to identify services (frontend/backend/database)
-3. Generate config files and individual command files
+1. Kiểm tra PM2 (cài qua `npm install -g pm2` nếu thiếu)
+2. Quét dự án để xác định các dịch vụ (frontend/backend/database)
+3. Sinh các file cấu hình và các file command riêng lẻ
 
 ---
 
-## Service Detection
+## Phát hiện dịch vụ
 
-| Type | Detection | Default Port |
+| Loại | Cách nhận diện | Port mặc định |
 |------|-----------|--------------|
 | Vite | vite.config.* | 5173 |
 | Next.js | next.config.* | 3000 |
 | Nuxt | nuxt.config.* | 3000 |
 | CRA | react-scripts in package.json | 3000 |
-| Express/Node | server/backend/api directory + package.json | 3000 |
+| Express/Node | thư mục server/backend/api + package.json | 3000 |
 | FastAPI/Flask | requirements.txt / pyproject.toml | 8000 |
 | Go | go.mod / main.go | 8080 |
 
-**Port Detection Priority**: User specified > .env > config file > scripts args > default port
+**Thứ tự ưu tiên phát hiện port**: Người dùng chỉ định > .env > file cấu hình > đối số script > port mặc định
 
 ---
 
-## Generated Files
+## Các file được sinh ra
 
 ```
 project/
@@ -57,11 +57,11 @@ project/
 
 ---
 
-## Windows Configuration (IMPORTANT)
+## Cấu hình Windows (QUAN TRỌNG)
 
 ### ecosystem.config.cjs
 
-**Must use `.cjs` extension**
+**PHẢI dùng phần mở rộng `.cjs`**
 
 ```javascript
 module.exports = {
@@ -87,7 +87,7 @@ module.exports = {
 }
 ```
 
-**Framework script paths:**
+**Đường dẫn script theo framework:**
 
 | Framework | script | args |
 |-----------|--------|------|
@@ -96,7 +96,7 @@ module.exports = {
 | Nuxt | `node_modules/nuxt/bin/nuxt.mjs` | `dev --port {port}` |
 | Express | `src/index.js` or `server.js` | - |
 
-### Python Wrapper Script (start.cjs)
+### Script wrapper Python (start.cjs)
 
 ```javascript
 const { spawn } = require('child_process');
@@ -108,9 +108,9 @@ proc.on('close', (code) => process.exit(code));
 
 ---
 
-## Command File Templates (Minimal Content)
+## Template file command (nội dung tối thiểu)
 
-### pm2-all.md (Start all + monit)
+### pm2-all.md (Khởi động tất cả + monit)
 ````markdown
 Start all services and open PM2 monitor.
 ```bash
@@ -134,7 +134,7 @@ cd "{PROJECT_ROOT}" && pm2 restart all
 ```
 ````
 
-### pm2-{port}.md (Start single + logs)
+### pm2-{port}.md (Khởi động một dịch vụ + logs)
 ````markdown
 Start {name} ({port}) and open logs.
 ```bash
@@ -174,13 +174,13 @@ cd "{PROJECT_ROOT}" && pm2 status
 ```
 ````
 
-### PowerShell Scripts (pm2-logs-{port}.ps1)
+### Script PowerShell (pm2-logs-{port}.ps1)
 ```powershell
 Set-Location "{PROJECT_ROOT}"
 pm2 logs {name}
 ```
 
-### PowerShell Scripts (pm2-monit.ps1)
+### Script PowerShell (pm2-monit.ps1)
 ```powershell
 Set-Location "{PROJECT_ROOT}"
 pm2 monit
@@ -188,34 +188,34 @@ pm2 monit
 
 ---
 
-## Key Rules
+## Quy tắc chính
 
-1. **Config file**: `ecosystem.config.cjs` (not .js)
-2. **Node.js**: Specify bin path directly + interpreter
-3. **Python**: Node.js wrapper script + `windowsHide: true`
-4. **Open new window**: `start wt.exe -d "{path}" pwsh -NoExit -c "command"`
-5. **Minimal content**: Each command file has only 1-2 lines description + bash block
-6. **Direct execution**: No AI parsing needed, just run the bash command
-
----
-
-## Execute
-
-Based on `$ARGUMENTS`, execute init:
-
-1. Scan project for services
-2. Generate `ecosystem.config.cjs`
-3. Generate `{backend}/start.cjs` for Python services (if applicable)
-4. Generate command files in `.claude/commands/`
-5. Generate script files in `.claude/scripts/`
-6. **Update project CLAUDE.md** with PM2 info (see below)
-7. **Display completion summary** with terminal commands
+1. **File cấu hình**: `ecosystem.config.cjs` (không phải .js)
+2. **Node.js**: Chỉ định trực tiếp đường dẫn bin + interpreter
+3. **Python**: Script wrapper Node.js + `windowsHide: true`
+4. **Mở cửa sổ mới**: `start wt.exe -d "{path}" pwsh -NoExit -c "command"`
+5. **Nội dung tối thiểu**: Mỗi file command chỉ có mô tả 1-2 dòng + khối bash
+6. **Thực thi trực tiếp**: Không cần AI phân tích, chỉ cần chạy lệnh bash
 
 ---
 
-## Post-Init: Update CLAUDE.md
+## Thực thi
 
-After generating files, append PM2 section to project's `CLAUDE.md` (create if not exists):
+Dựa trên `$ARGUMENTS`, thực hiện init:
+
+1. Quét dự án để tìm các dịch vụ
+2. Sinh `ecosystem.config.cjs`
+3. Sinh `{backend}/start.cjs` cho các dịch vụ Python (nếu áp dụng)
+4. Sinh các file command trong `.claude/commands/`
+5. Sinh các file script trong `.claude/scripts/`
+6. **Cập nhật CLAUDE.md của dự án** với thông tin PM2 (xem bên dưới)
+7. **Hiển thị tóm tắt hoàn tất** kèm các lệnh terminal
+
+---
+
+## Sau Init: Cập nhật CLAUDE.md
+
+Sau khi sinh file, nối mục PM2 vào `CLAUDE.md` của dự án (tạo nếu chưa có):
 
 ````markdown
 ## PM2 Services
@@ -236,16 +236,16 @@ pm2 resurrect                    # Restore saved list
 ```
 ````
 
-**Rules for CLAUDE.md update:**
-- If PM2 section exists, replace it
-- If not exists, append to end
-- Keep content minimal and essential
+**Quy tắc cập nhật CLAUDE.md:**
+- Nếu mục PM2 đã tồn tại, thay thế nó
+- Nếu chưa có, nối vào cuối
+- Giữ nội dung tối thiểu và thiết yếu
 
 ---
 
-## Post-Init: Display Summary
+## Sau Init: Hiển thị tóm tắt
 
-After all files generated, output:
+Sau khi sinh xong mọi file, xuất ra:
 
 ```
 ## PM2 Init Complete

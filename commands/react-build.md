@@ -1,35 +1,35 @@
 ---
-description: Fix React build failures (Vite, webpack, Next.js, CRA, Parcel, esbuild, Bun) incrementally — JSX/TSX compile errors, hydration mismatches, server/client component boundary failures, missing types. Invokes the react-build-resolver agent for minimal, surgical fixes.
+description: Sửa dần các lỗi build React (Vite, webpack, Next.js, CRA, Parcel, esbuild, Bun) — lỗi compile JSX/TSX, hydration mismatch, lỗi ranh giới server/client component, thiếu type. Gọi agent react-build-resolver để sửa tối thiểu, chính xác.
 ---
 
 # React Build and Fix
 
-This command invokes the **react-build-resolver** agent to incrementally fix React build errors with minimal changes.
+Lệnh này gọi agent **react-build-resolver** để sửa dần các lỗi build React với thay đổi tối thiểu.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Detect Build System**: Identify Vite, webpack, Next.js, CRA, Parcel, esbuild, or Bun
-2. **Run Build**: Execute the project's build script
-3. **Parse Errors**: Group by layer (TypeScript / bundler config / runtime / hydration)
-4. **Fix Incrementally**: One error at a time, re-running build after each change
-5. **Report Summary**: Show what was fixed and what remains
+1. **Phát hiện hệ thống build**: Xác định Vite, webpack, Next.js, CRA, Parcel, esbuild hoặc Bun
+2. **Chạy build**: Thực thi build script của project
+3. **Phân tích lỗi**: Nhóm theo tầng (TypeScript / cấu hình bundler / runtime / hydration)
+4. **Sửa dần**: Mỗi lần một lỗi, chạy lại build sau mỗi thay đổi
+5. **Báo cáo tóm tắt**: Cho biết đã sửa gì và còn lại gì
 
-## When to Use
+## Khi nào dùng
 
-Use `/react-build` when:
+Dùng `/react-build` khi:
 
-- `npm run build` (or pnpm/yarn/bun equivalent) fails
-- JSX/TSX compile errors after a TypeScript or React upgrade
-- Next.js hydration mismatch errors at runtime
-- Server/Client Component boundary errors in App Router
-- After installing or upgrading `react`, `react-dom`, `@types/react`, or a bundler
-- Missing types or "module not found" errors involving React
+- `npm run build` (hoặc tương đương pnpm/yarn/bun) thất bại
+- Lỗi compile JSX/TSX sau khi nâng cấp TypeScript hoặc React
+- Lỗi hydration mismatch của Next.js lúc runtime
+- Lỗi ranh giới Server/Client Component trong App Router
+- Sau khi cài đặt hoặc nâng cấp `react`, `react-dom`, `@types/react` hoặc một bundler
+- Thiếu type hoặc lỗi "module not found" liên quan đến React
 
-## Scope
+## Phạm vi
 
-This command owns **React build/bundler/runtime hydration** failures. For pure TypeScript type errors with no React involvement, use `/build-fix` (generic) instead.
+Lệnh này phụ trách các lỗi **build React/bundler/runtime hydration**. Với lỗi type TypeScript thuần túy không liên quan React, hãy dùng `/build-fix` (generic).
 
-## Diagnostic Commands Run
+## Các lệnh chẩn đoán được chạy
 
 ```bash
 # Project build script (preferred)
@@ -51,7 +51,7 @@ parcel build src/index.html         # Parcel
 bun build ./src/index.tsx --outdir=dist
 ```
 
-## Example Session
+## Ví dụ phiên làm việc
 
 ````text
 User: /react-build
@@ -142,45 +142,45 @@ $ npm test
 Build Status: PASS: SUCCESS
 ````
 
-## Common Errors Fixed
+## Các lỗi thường gặp đã sửa
 
-| Error | Typical Fix |
+| Lỗi | Cách sửa điển hình |
 |---|---|
-| `'React' is not defined` | Set `"jsx": "react-jsx"` in tsconfig (React 17+) |
-| Missing `@types/react` | `npm i -D @types/react @types/react-dom` |
-| `Unexpected token '<'` | Add `@vitejs/plugin-react` / `babel-loader` |
-| `You're importing a component that needs useState` (Next.js) | Add `"use client"` or move hook to a Client Component child |
-| `Module not found: Can't resolve 'fs'` (Next.js) | Remove `fs` import or move logic into Server Component / API route |
-| `Hydration failed because the initial UI does not match` | Move `Date.now()`/`Math.random()`/`window.*` to `useEffect` |
-| `Invalid hook call` | Multiple React copies — dedupe via `resolutions`/`overrides` |
-| `Element type is invalid` | Default vs named import mismatch |
+| `'React' is not defined` | Đặt `"jsx": "react-jsx"` trong tsconfig (React 17+) |
+| Thiếu `@types/react` | `npm i -D @types/react @types/react-dom` |
+| `Unexpected token '<'` | Thêm `@vitejs/plugin-react` / `babel-loader` |
+| `You're importing a component that needs useState` (Next.js) | Thêm `"use client"` hoặc chuyển hook vào một Client Component con |
+| `Module not found: Can't resolve 'fs'` (Next.js) | Bỏ import `fs` hoặc chuyển logic vào Server Component / API route |
+| `Hydration failed because the initial UI does not match` | Chuyển `Date.now()`/`Math.random()`/`window.*` vào `useEffect` |
+| `Invalid hook call` | Có nhiều bản React — loại trùng qua `resolutions`/`overrides` |
+| `Element type is invalid` | Import default và named không khớp |
 
-## Fix Strategy
+## Chiến lược sửa
 
-1. **Compile errors first** — code must build
-2. **Hydration errors second** — affects production correctness
-3. **Bundler config third** — restore plugin/loader correctness
-4. **One fix at a time** — verify each change
-5. **Minimal changes** — never `// @ts-ignore` without explanation
-6. **Re-run after each fix** — surface new errors immediately
+1. **Lỗi compile trước** — code phải build được
+2. **Lỗi hydration thứ hai** — ảnh hưởng tính đúng đắn ở production
+3. **Cấu hình bundler thứ ba** — khôi phục plugin/loader hoạt động đúng
+4. **Mỗi lần một lỗi** — xác minh từng thay đổi
+5. **Thay đổi tối thiểu** — KHÔNG BAO GIỜ dùng `// @ts-ignore` mà không giải thích
+6. **Chạy lại sau mỗi lần sửa** — để lộ ngay các lỗi mới
 
-## Stop Conditions
+## Điều kiện dừng
 
-The agent will stop and report if:
+Agent sẽ dừng và báo cáo nếu:
 
-- Same error persists after 3 attempts
-- Fix introduces more errors than it resolves
-- Requires architectural change beyond build resolution (e.g., redesigning the RSC boundary)
-- Bundler version no longer supports the installed React major
+- Cùng một lỗi vẫn tồn tại sau 3 lần thử
+- Bản sửa gây ra nhiều lỗi hơn số lỗi nó giải quyết
+- Cần thay đổi kiến trúc vượt quá phạm vi sửa build (ví dụ: thiết kế lại ranh giới RSC)
+- Phiên bản bundler không còn hỗ trợ major React đã cài
 
-## Related Commands
+## Các lệnh liên quan
 
-- `/react-test` — run tests after the build is green
-- `/react-review` — review code quality after the build succeeds
-- `/build-fix` — generic build fixer (non-React)
-- `verification-loop` skill — full verification loop
+- `/react-test` — chạy test sau khi build đã xanh
+- `/react-review` — review chất lượng code sau khi build thành công
+- `/build-fix` — công cụ sửa build chung (không phải React)
+- skill `verification-loop` — vòng lặp verification đầy đủ
 
-## Related
+## Liên quan
 
 - Agent: `agents/react-build-resolver.md`
 - Skills: `skills/react-patterns/`, `skills/frontend-patterns/`

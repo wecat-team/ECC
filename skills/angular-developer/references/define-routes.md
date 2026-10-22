@@ -1,10 +1,10 @@
-# Define Routes
+# Định nghĩa Route
 
-Routes are objects that define which component should render for a specific URL path.
+Route là các object định nghĩa component nào sẽ được render cho một đường dẫn URL cụ thể.
 
-## Basic Configuration
+## Cấu hình cơ bản
 
-Define routes in a `Routes` array and provide them using `provideRouter` in your `appConfig`.
+Định nghĩa route trong một mảng `Routes` và cung cấp chúng bằng `provideRouter` trong `appConfig` của bạn.
 
 ```ts
 // app.routes.ts
@@ -19,41 +19,41 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-## URL Paths
+## Đường dẫn URL
 
-- **Static**: Matches an exact string (e.g., `'admin'`).
-- **Route Parameters**: Dynamic segments prefixed with a colon (e.g., `'user/:id'`).
-- **Wildcard**: Matches any URL using `**`. Useful for "Not Found" pages. **Always place at the end of the array.**
+- **Static**: Khớp một chuỗi chính xác (ví dụ: `'admin'`).
+- **Route Parameter**: Các segment động có tiền tố dấu hai chấm (ví dụ: `'user/:id'`).
+- **Wildcard**: Khớp mọi URL bằng `**`. Hữu ích cho các trang "Not Found". **Luôn đặt ở cuối mảng.**
 
-## Matching Strategy
+## Chiến lược khớp
 
-Angular uses a **first-match wins** strategy. Specific routes must come before less specific ones.
+Angular dùng chiến lược **khớp đầu tiên thắng (first-match wins)**. Các route cụ thể phải đứng trước các route ít cụ thể hơn.
 
-## Redirects
+## Redirect
 
-Use `redirectTo` to point one path to another.
+Dùng `redirectTo` để trỏ một path sang path khác.
 
 ```ts
 { path: 'articles', redirectTo: '/blog' },
 { path: 'blog', component: Blog },
 ```
 
-## Page Titles
+## Tiêu đề trang
 
-Associate titles with routes for accessibility. Titles can be static or dynamic (via `ResolveFn` or a custom `TitleStrategy`).
+Gắn tiêu đề với route để hỗ trợ accessibility. Tiêu đề có thể tĩnh hoặc động (qua `ResolveFn` hoặc một `TitleStrategy` tùy chỉnh).
 
 ```ts
 { path: 'home', component: Home, title: 'Home Page' }
 ```
 
-## Route Data and Providers
+## Route Data và Provider
 
-- **Static Data**: Attach metadata using the `data` property.
-- **Route Providers**: Scope dependencies to a specific route and its children using the `providers` array.
+- **Dữ liệu tĩnh**: Gắn metadata bằng thuộc tính `data`.
+- **Route Provider**: Giới hạn phạm vi dependency vào một route cụ thể và các route con của nó bằng mảng `providers`.
 
-## Nested (Child) Routes
+## Route lồng nhau (Con)
 
-Define sub-views using the `children` property. Parent components must include a `<router-outlet />`.
+Định nghĩa các sub-view bằng thuộc tính `children`. Component cha phải có `<router-outlet />`.
 
 ```ts
 {

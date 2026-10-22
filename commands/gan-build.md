@@ -1,32 +1,32 @@
 ---
-description: Run a generator/evaluator build loop for implementation tasks with bounded iterations and scoring.
+description: Chạy vòng lặp build generator/evaluator cho các tác vụ triển khai với số vòng lặp giới hạn và chấm điểm.
 ---
 
-Parse the following from $ARGUMENTS:
-1. `brief` — the user's one-line description of what to build
-2. `--max-iterations N` — (optional, default 15) maximum generator-evaluator cycles
-3. `--pass-threshold N` — (optional, default 7.0) weighted score to pass
-4. `--skip-planner` — (optional) skip planner, assume spec.md already exists
-5. `--eval-mode MODE` — (optional, default "playwright") one of: playwright, screenshot, code-only
+Parse các mục sau từ $ARGUMENTS:
+1. `brief` — mô tả một dòng của người dùng về thứ cần xây dựng
+2. `--max-iterations N` — (tùy chọn, mặc định 15) số chu kỳ generator-evaluator tối đa
+3. `--pass-threshold N` — (tùy chọn, mặc định 7.0) điểm có trọng số để đạt
+4. `--skip-planner` — (tùy chọn) bỏ qua planner, giả định spec.md đã tồn tại
+5. `--eval-mode MODE` — (tùy chọn, mặc định "playwright") một trong: playwright, screenshot, code-only
 
 ## GAN-Style Harness Build
 
-This command orchestrates a three-agent build loop inspired by Anthropic's March 2026 harness design paper.
+Command này điều phối một vòng lặp build ba agent, lấy cảm hứng từ bài báo về thiết kế harness của Anthropic hồi tháng 3 năm 2026.
 
-### Phase 0: Setup
-1. Create `gan-harness/` directory in project root
-2. Create subdirectories: `gan-harness/feedback/`, `gan-harness/screenshots/`
-3. Initialize git if not already initialized
-4. Log start time and configuration
+### Giai đoạn 0: Thiết lập
+1. Tạo thư mục `gan-harness/` ở gốc dự án
+2. Tạo các thư mục con: `gan-harness/feedback/`, `gan-harness/screenshots/`
+3. Khởi tạo git nếu chưa được khởi tạo
+4. Ghi log thời điểm bắt đầu và cấu hình
 
-### Phase 1: Planning (Planner Agent)
-Unless `--skip-planner` is set:
-1. Launch the `gan-planner` agent via Task tool with the user's brief
-2. Wait for it to produce `gan-harness/spec.md` and `gan-harness/eval-rubric.md`
-3. Display the spec summary to the user
-4. Proceed to Phase 2
+### Giai đoạn 1: Lập kế hoạch (Planner Agent)
+Trừ khi đặt `--skip-planner`:
+1. Khởi chạy agent `gan-planner` qua công cụ Task với brief của người dùng
+2. Chờ nó tạo ra `gan-harness/spec.md` và `gan-harness/eval-rubric.md`
+3. Hiển thị tóm tắt spec cho người dùng
+4. Chuyển sang Giai đoạn 2
 
-### Phase 2: Generator-Evaluator Loop
+### Giai đoạn 2: Vòng lặp Generator-Evaluator
 ```
 iteration = 1
 while iteration <= max_iterations:
@@ -65,12 +65,12 @@ while iteration <= max_iterations:
     iteration += 1
 ```
 
-### Phase 3: Summary
-1. Read all feedback files
-2. Display final scores and iteration history
-3. Show score progression: `iteration 1: 4.2 → iteration 2: 5.8 → ... → iteration N: 7.5`
-4. List any remaining issues from the final evaluation
-5. Report total time and estimated cost
+### Giai đoạn 3: Tóm tắt
+1. Đọc tất cả file feedback
+2. Hiển thị điểm cuối cùng và lịch sử các vòng lặp
+3. Hiển thị diễn biến điểm: `iteration 1: 4.2 → iteration 2: 5.8 → ... → iteration N: 7.5`
+4. Liệt kê các vấn đề còn tồn tại từ lần đánh giá cuối
+5. Báo cáo tổng thời gian và chi phí ước tính
 
 ### Output
 
@@ -100,4 +100,4 @@ while iteration <= max_iterations:
 - gan-harness/build-report.md
 ```
 
-Write the full report to `gan-harness/build-report.md`.
+Ghi báo cáo đầy đủ vào `gan-harness/build-report.md`.

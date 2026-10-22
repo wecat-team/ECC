@@ -1,7 +1,7 @@
 ---
 name: ecc-recipes
-description: Map a described workflow to the right ECC command group with run-order and stop condition, or browse all command-group recipe families read live from the commands directory. Advisory only — never executes. Use when asked which commands run a workflow, the command sequence for a task, or to list ECC pipelines; not for executing the task (route to the command itself), single-command docs (use ecc-guide), or prompt rewrites (use prompt-optimizer).
-argument-hint: <workflow description | empty=list all>
+description: "Ánh xạ một workflow được mô tả tới nhóm lệnh ECC phù hợp kèm thứ tự chạy và điều kiện dừng, hoặc duyệt toàn bộ các họ recipe nhóm lệnh được đọc trực tiếp từ thư mục commands. Chỉ mang tính tư vấn — không bao giờ thực thi. Dùng khi được hỏi lệnh nào chạy một workflow, chuỗi lệnh cho một task, hoặc để liệt kê các pipeline của ECC; không dùng để thực thi task (hãy chuyển tới chính command đó), tài liệu một command đơn lẻ (dùng ecc-guide), hoặc viết lại prompt (dùng prompt-optimizer)."
+argument-hint: <mô tả workflow | để trống=liệt kê tất cả>
 origin: community
 author: KyawZinLatt
 metadata:
@@ -10,40 +10,40 @@ metadata:
 
 # ECC Recipes
 
-One entry point for "which group of ECC slash-commands runs my workflow, in what
-order, and when do I stop." Also browses every command-group recipe family.
+Một điểm vào duy nhất cho câu hỏi "nhóm slash-command ECC nào chạy workflow của tôi, theo
+thứ tự nào, và khi nào thì dừng." Đồng thời cho phép duyệt mọi họ recipe nhóm lệnh.
 
-Fills the gap between two existing skills:
+Lấp khoảng trống giữa hai skill hiện có:
 
-- `ecc-guide` — lists commands and where to read docs, but as a flat catalog.
-- `prompt-optimizer` — matches a task to components, but outputs a single prompt,
-  not a multi-command group with run-order and stop condition.
+- `ecc-guide` — liệt kê command và nơi đọc tài liệu, nhưng dưới dạng catalog phẳng.
+- `prompt-optimizer` — ghép task với các component, nhưng chỉ xuất ra một prompt đơn,
+  không phải một nhóm nhiều command có thứ tự chạy và điều kiện dừng.
 
-This skill adds: **family grouping + run-order + stop condition.**
+Skill này bổ sung: **gom họ (family) + thứ tự chạy + điều kiện dừng.**
 
-## When to Activate
+## Khi nào kích hoạt
 
 - "Which command group do I run for <workflow>?"
 - "What's the command sequence to build an MVP / fix a defect / refactor?"
-- "Show me all ECC command-group recipes" (catalog mode)
+- "Show me all ECC command-group recipes" (chế độ catalog)
 - "How many workflow pipelines does ECC have?"
-- User invokes `/ecc-recipes` with or without a description.
+- Người dùng gọi `/ecc-recipes` có hoặc không kèm mô tả.
 
-### Do Not Use When
+### Không dùng khi
 
-- User wants the task done now — route to the actual command, don't describe it.
-- User wants deep docs for ONE command — use `ecc-guide`.
-- User wants a draft prompt rewritten — use `prompt-optimizer`.
+- Người dùng muốn task được làm ngay — hãy chuyển tới command thực sự, đừng mô tả nó.
+- Người dùng muốn tài liệu chuyên sâu cho MỘT command — dùng `ecc-guide`.
+- Người dùng muốn viết lại một prompt nháp — dùng `prompt-optimizer`.
 
-## Core Principle
+## Nguyên tắc cốt lõi
 
-**Answer from current files, not memory.** The command set changes; never
-hardcode counts or member lists. Read the live `commands/` directory each run,
-then classify into families.
+**Trả lời từ các file hiện tại, không từ trí nhớ.** Tập command thay đổi; không bao giờ
+ghi cứng số lượng hay danh sách thành viên. Hãy đọc trực tiếp thư mục `commands/` mỗi lần chạy,
+rồi mới phân loại thành các họ.
 
-### Live reads
+### Đọc trực tiếp (live read)
 
-Resolve the commands directory (first that exists), then list names:
+Xác định thư mục commands (thư mục đầu tiên tồn tại), rồi liệt kê tên:
 
 ```bash
 for D in \
@@ -58,31 +58,31 @@ done
 find "$CMD_DIR" -maxdepth 1 -name '*.md' -exec basename {} .md \; | sort
 ```
 
-Optionally read `manifests/install-*.json` if present for richer grouping. Use
-the smallest set of reads needed.
+Có thể đọc thêm `manifests/install-*.json` nếu có để gom nhóm phong phú hơn. Chỉ dùng
+tập đọc nhỏ nhất cần thiết.
 
-## Family Classification (by prefix)
+## Phân loại họ (theo tiền tố)
 
-Group command names by leading prefix; map known singletons by hand. Families are
-derived live — the table below is the *classification rule*, not a frozen list.
+Gom tên command theo tiền tố đứng đầu; ánh xạ các command đơn lẻ đã biết bằng tay. Các họ được
+suy ra trực tiếp — bảng dưới đây là *quy tắc phân loại*, không phải danh sách cố định.
 
-| Family prefix | Recipe meaning | Typical run-order |
+| Tiền tố họ | Ý nghĩa recipe | Thứ tự chạy điển hình |
 |---|---|---|
-| `orch-*` | gated Research, Plan, TDD, Review, Commit per task type | pick one orch-* by task kind; it runs its own internal phases |
-| `multi-*` | multi-model workflow | `multi-plan` then `multi-execute` then review (or `multi-workflow` end-to-end) |
-| `prp-*` | PRD to plan to implement to PR pipeline | `prp-prd` then `prp-plan` then `prp-implement` then `prp-commit` then `prp-pr` |
-| `epic-*` | large multi-unit epic, parallel | `epic-decompose` then `epic-claim` then `epic-validate` then `epic-review` then `epic-unblock` then `epic-sync` then `epic-publish` |
-| `loop-*` | managed autonomous loop and monitor | `loop-start <pattern>` then watch with `loop-status` |
-| `gan-*` | generator and evaluator loop | `gan-build` (code) or `gan-design` (UI); self-looping |
-| `*-build` / `*-review` / `*-test` | per-language CI triad | `<lang>-test` (TDD) then `<lang>-build` (fix) then `<lang>-review` |
-| `hookify-*` | behavior-hook management | `hookify` then `hookify-list` then `hookify-configure` |
-| `learn` / `instinct-*` / `evolve` / `promote` / `prune` | continuous-learning | `learn` then `instinct-status` then `evolve` then `promote` |
-| singletons | `santa-loop`, `plan`, `plan-prd`, `pr`, `code-review`, `checkpoint`, etc. | standalone or glue between groups |
+| `orch-*` | Research, Plan, TDD, Review, Commit có kiểm soát theo từng loại task | chọn một orch-* theo loại task; nó tự chạy các giai đoạn nội bộ của mình |
+| `multi-*` | workflow đa mô hình | `multi-plan` rồi `multi-execute` rồi review (hoặc `multi-workflow` từ đầu đến cuối) |
+| `prp-*` | pipeline từ PRD sang plan sang implement sang PR | `prp-prd` rồi `prp-plan` rồi `prp-implement` rồi `prp-commit` rồi `prp-pr` |
+| `epic-*` | epic lớn nhiều đơn vị, song song | `epic-decompose` rồi `epic-claim` rồi `epic-validate` rồi `epic-review` rồi `epic-unblock` rồi `epic-sync` rồi `epic-publish` |
+| `loop-*` | vòng lặp tự trị được quản lý và monitor | `loop-start <pattern>` rồi theo dõi bằng `loop-status` |
+| `gan-*` | vòng lặp generator và evaluator | `gan-build` (code) hoặc `gan-design` (UI); tự lặp |
+| `*-build` / `*-review` / `*-test` | bộ ba CI theo từng ngôn ngữ | `<lang>-test` (TDD) rồi `<lang>-build` (fix) rồi `<lang>-review` |
+| `hookify-*` | quản lý hook hành vi | `hookify` rồi `hookify-list` rồi `hookify-configure` |
+| `learn` / `instinct-*` / `evolve` / `promote` / `prune` | học liên tục | `learn` rồi `instinct-status` rồi `evolve` rồi `promote` |
+| singletons | `santa-loop`, `plan`, `plan-prd`, `pr`, `code-review`, `checkpoint`, v.v. | đứng riêng hoặc làm chất kết nối giữa các nhóm |
 
-Any command not matching a prefix rule → list it under **singletons** with its
-one-line description.
+Command nào không khớp quy tắc tiền tố → liệt kê dưới **singletons** kèm mô tả
+một dòng của nó.
 
-## How It Works
+## Cách hoạt động
 
 ```
 1. Live-read command names from CMD_DIR.
@@ -92,23 +92,23 @@ one-line description.
 4. Advisory only: print the plan. Never run the matched commands.
 ```
 
-### Catalog mode (no description)
+### Chế độ catalog (không có mô tả)
 
-Output the family table: each family, member count, members, one-line meaning,
-typical run-order. End with the total command count and a prompt to describe a
-workflow for a matched recipe.
+Xuất bảng các họ: mỗi họ, số lượng thành viên, các thành viên, ý nghĩa một dòng,
+thứ tự chạy điển hình. Kết thúc bằng tổng số command và lời nhắc hãy mô tả một
+workflow để nhận recipe khớp.
 
-### Match mode (description given)
+### Chế độ match (có mô tả)
 
-1. Restate the workflow in one sentence.
-2. Pick the best 1-2 families; say WHY in one line each.
-3. **Run-order block** — exact command sequence for the matched family.
-4. **Stop condition** — always explicit (max-runs, completion-signal,
-   review-passes, or single-shot). For autonomous loops, warn about subscription
-   burn and recommend a backstop bound.
-5. **Where to read** — the `commands/<name>.md` path plus `/ecc-guide <name>`.
+1. Diễn đạt lại workflow trong một câu.
+2. Chọn 1-2 họ phù hợp nhất; nói VÌ SAO trong một dòng cho mỗi họ.
+3. **Khối thứ tự chạy** — chuỗi command chính xác cho họ khớp.
+4. **Điều kiện dừng** — luôn tường minh (max-runs, completion-signal,
+   review-passes, hoặc single-shot). Với các vòng lặp tự trị, hãy cảnh báo về việc
+   đốt subscription và đề xuất một giới hạn dự phòng (backstop).
+5. **Nơi đọc thêm** — đường dẫn `commands/<name>.md` cùng `/ecc-guide <name>`.
 
-## Output Template (match mode)
+## Mẫu đầu ra (chế độ match)
 
 ```
 Workflow: <one-sentence restatement>
@@ -128,23 +128,23 @@ Read full docs:
   commands/<cmd1>.md   (or: /ecc-guide <cmd1>)
 ```
 
-## Examples
+## Ví dụ
 
-**Catalog:** `/ecc-recipes` → prints the family table and total count.
+**Catalog:** `/ecc-recipes` → in bảng các họ và tổng số lượng.
 
 **Match:** `/ecc-recipes plan a whole app upfront then auto-build with adversarial
-review until done` → Best fit: `loop-*` (autonomous) wrapping `gan-*` or
-`santa-loop` (adversarial). Run-order: `plan-prd` then
-`loop-start rfc-dag --mode safe` then monitor `loop-status`; STOP when all units
-pass review N consecutive times (add a max-iteration backstop to bound burn).
+review until done` → Phù hợp nhất: `loop-*` (tự trị) bao quanh `gan-*` hoặc
+`santa-loop` (đối kháng). Thứ tự chạy: `plan-prd` rồi
+`loop-start rfc-dag --mode safe` rồi theo dõi `loop-status`; DỪNG khi mọi đơn vị
+vượt qua review N lần liên tiếp (thêm backstop max-iteration để giới hạn mức đốt).
 
-**Match:** `/ecc-recipes fix a bug in my Go service` → Best fit: `orch-fix-defect`
-(reproduce, fix, review, commit). Alt: `go-test` then `go-build` then
-`go-review`. STOP: regression test green and review pass.
+**Match:** `/ecc-recipes fix a bug in my Go service` → Phù hợp nhất: `orch-fix-defect`
+(tái hiện, sửa, review, commit). Thay thế: `go-test` rồi `go-build` rồi
+`go-review`. DỪNG: regression test xanh và review đạt.
 
-## Non-Goals
+## Ngoài phạm vi (Non-Goals)
 
-- Not an executor — advisory only.
-- Not per-command deep docs — that's `ecc-guide`.
-- Not prompt rewriting — that's `prompt-optimizer`.
-- Never hardcode command counts or member lists — always live-read.
+- Không phải bộ thực thi — chỉ tư vấn.
+- Không phải tài liệu chuyên sâu theo từng command — đó là việc của `ecc-guide`.
+- Không viết lại prompt — đó là việc của `prompt-optimizer`.
+- Không bao giờ ghi cứng số lượng command hay danh sách thành viên — luôn đọc trực tiếp.

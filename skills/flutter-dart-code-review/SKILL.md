@@ -1,115 +1,115 @@
 ---
 name: flutter-dart-code-review
-description: Library-agnostic Flutter/Dart code review checklist covering widget best practices, state management patterns (BLoC, Riverpod, Provider, GetX, MobX, Signals), Dart idioms, performance, accessibility, security, and clean architecture. Use when reviewing Flutter or Dart code, whatever state management library the project uses.
+description: Checklist code review Flutter/Dart không phụ thuộc thư viện, bao gồm best practice cho widget, pattern state management (BLoC, Riverpod, Provider, GetX, MobX, Signals), idiom Dart, hiệu năng, accessibility, bảo mật và clean architecture. Dùng khi review code Flutter hoặc Dart, bất kể project dùng thư viện state management nào.
 metadata:
   origin: ECC
 ---
 
-# Flutter/Dart Code Review Best Practices
+# Best Practice Code Review Flutter/Dart
 
-Comprehensive, library-agnostic checklist for reviewing Flutter/Dart applications. These principles apply regardless of which state management solution, routing library, or DI framework is used.
-
----
-
-## 1. General Project Health
-
-- [ ] Project follows consistent folder structure (feature-first or layer-first)
-- [ ] Proper separation of concerns: UI, business logic, data layers
-- [ ] No business logic in widgets; widgets are purely presentational
-- [ ] `pubspec.yaml` is clean — no unused dependencies, versions pinned appropriately
-- [ ] `analysis_options.yaml` includes a strict lint set with strict analyzer settings enabled
-- [ ] No `print()` statements in production code — use `dart:developer` `log()` or a logging package
-- [ ] Generated files (`.g.dart`, `.freezed.dart`, `.gr.dart`) are up-to-date or in `.gitignore`
-- [ ] Platform-specific code isolated behind abstractions
+Checklist toàn diện, không phụ thuộc thư viện, để review ứng dụng Flutter/Dart. Các nguyên tắc này áp dụng bất kể dùng giải pháp state management, thư viện routing hay DI framework nào.
 
 ---
 
-## 2. Dart Language Pitfalls
+## 1. Tình trạng chung của project
 
-- [ ] **Implicit dynamic**: Missing type annotations leading to `dynamic` — enable `strict-casts`, `strict-inference`, `strict-raw-types`
-- [ ] **Null safety misuse**: Excessive `!` (bang operator) instead of proper null checks or Dart 3 pattern matching (`if (value case var v?)`)
-- [ ] **Type promotion failures**: Using `this.field` where local variable promotion would work
-- [ ] **Catching too broadly**: `catch (e)` without `on` clause; always specify exception types
-- [ ] **Catching `Error`**: `Error` subtypes indicate bugs and should not be caught
-- [ ] **Unused `async`**: Functions marked `async` that never `await` — unnecessary overhead
-- [ ] **`late` overuse**: `late` used where nullable or constructor initialization would be safer; defers errors to runtime
-- [ ] **String concatenation in loops**: Use `StringBuffer` instead of `+` for iterative string building
-- [ ] **Mutable state in `const` contexts**: Fields in `const` constructor classes should not be mutable
-- [ ] **Ignoring `Future` return values**: Use `await` or explicitly call `unawaited()` to signal intent
-- [ ] **`var` where `final` works**: Prefer `final` for locals and `const` for compile-time constants
-- [ ] **Relative imports**: Use `package:` imports for consistency
-- [ ] **Mutable collections exposed**: Public APIs should return unmodifiable views, not raw `List`/`Map`
-- [ ] **Missing Dart 3 pattern matching**: Prefer switch expressions and `if-case` over verbose `is` checks and manual casting
-- [ ] **Throwaway classes for multiple returns**: Use Dart 3 records `(String, int)` instead of single-use DTOs
-- [ ] **`print()` in production code**: Use `dart:developer` `log()` or the project's logging package; `print()` has no log levels and cannot be filtered
+- [ ] Project theo cấu trúc thư mục nhất quán (feature-first hoặc layer-first)
+- [ ] Tách biệt mối quan tâm (separation of concerns) đúng cách: tầng UI, business logic, data
+- [ ] Không có business logic trong widget; widget thuần trình bày
+- [ ] `pubspec.yaml` gọn gàng — không có dependency không dùng, version được ghim phù hợp
+- [ ] `analysis_options.yaml` có bộ lint nghiêm ngặt với các thiết lập analyzer strict được bật
+- [ ] Không có `print()` trong code production — dùng `log()` của `dart:developer` hoặc một package logging
+- [ ] File sinh tự động (`.g.dart`, `.freezed.dart`, `.gr.dart`) được cập nhật hoặc nằm trong `.gitignore`
+- [ ] Code đặc thù nền tảng được cô lập sau các abstraction
 
 ---
 
-## 3. Widget Best Practices
+## 2. Cạm bẫy của ngôn ngữ Dart
 
-### Widget decomposition:
-- [ ] No single widget with a `build()` method exceeding ~80-100 lines
-- [ ] Widgets split by encapsulation AND by how they change (rebuild boundaries)
-- [ ] Private `_build*()` helper methods that return widgets are extracted to separate widget classes (enables element reuse, const propagation, and framework optimizations)
-- [ ] Stateless widgets preferred over Stateful where no mutable local state is needed
-- [ ] Extracted widgets are in separate files when reusable
+- [ ] **Implicit dynamic**: Thiếu type annotation dẫn đến `dynamic` — bật `strict-casts`, `strict-inference`, `strict-raw-types`
+- [ ] **Lạm dụng null safety**: Dùng `!` (bang operator) quá mức thay vì kiểm tra null đúng cách hoặc pattern matching của Dart 3 (`if (value case var v?)`)
+- [ ] **Type promotion thất bại**: Dùng `this.field` ở chỗ mà promotion của biến cục bộ sẽ hoạt động
+- [ ] **Catch quá rộng**: `catch (e)` không có mệnh đề `on`; luôn chỉ định kiểu exception
+- [ ] **Catch `Error`**: Các subtype của `Error` chỉ ra bug và không nên bị catch
+- [ ] **`async` thừa**: Hàm đánh dấu `async` nhưng không bao giờ `await` — overhead không cần thiết
+- [ ] **Lạm dụng `late`**: `late` được dùng ở nơi nullable hoặc khởi tạo trong constructor sẽ an toàn hơn; đẩy lỗi sang runtime
+- [ ] **Nối chuỗi trong vòng lặp**: Dùng `StringBuffer` thay vì `+` khi xây dựng chuỗi lặp
+- [ ] **State có thể thay đổi trong ngữ cảnh `const`**: Các field trong class có `const` constructor không được mutable
+- [ ] **Bỏ qua giá trị trả về `Future`**: Dùng `await` hoặc gọi `unawaited()` tường minh để thể hiện chủ đích
+- [ ] **`var` ở nơi `final` dùng được**: Ưu tiên `final` cho biến cục bộ và `const` cho hằng số compile-time
+- [ ] **Relative import**: Dùng import `package:` để nhất quán
+- [ ] **Lộ collection mutable**: API public nên trả về view không thể sửa đổi, không phải `List`/`Map` thô
+- [ ] **Thiếu pattern matching của Dart 3**: Ưu tiên switch expression và `if-case` hơn các kiểm tra `is` dài dòng và ép kiểu thủ công
+- [ ] **Class dùng một lần để trả nhiều giá trị**: Dùng record Dart 3 `(String, int)` thay vì DTO chỉ dùng một lần
+- [ ] **`print()` trong code production**: Dùng `log()` của `dart:developer` hoặc package logging của project; `print()` không có log level và không thể lọc
 
-### Const usage:
-- [ ] `const` constructors used wherever possible — prevents unnecessary rebuilds
-- [ ] `const` literals for collections that don't change (`const []`, `const {}`)
-- [ ] Constructor is declared `const` when all fields are final
+---
 
-### Key usage:
-- [ ] `ValueKey` used in lists/grids to preserve state across reorders
-- [ ] `GlobalKey` used sparingly — only when accessing state across the tree is truly needed
-- [ ] `UniqueKey` avoided in `build()` — it forces rebuild every frame
-- [ ] `ObjectKey` used when identity is based on a data object rather than a single value
+## 3. Best Practice cho Widget
+
+### Phân rã widget:
+- [ ] Không có widget nào có phương thức `build()` vượt quá ~80-100 dòng
+- [ ] Widget được tách theo đóng gói (encapsulation) VÀ theo cách chúng thay đổi (ranh giới rebuild)
+- [ ] Các helper method private `_build*()` trả về widget được tách thành class widget riêng (cho phép tái sử dụng element, lan truyền const và các tối ưu của framework)
+- [ ] Ưu tiên Stateless widget hơn Stateful ở nơi không cần state cục bộ có thể thay đổi
+- [ ] Widget được tách ra nằm trong file riêng khi có thể tái sử dụng
+
+### Dùng const:
+- [ ] `const` constructor được dùng bất cứ khi nào có thể — ngăn rebuild không cần thiết
+- [ ] Literal `const` cho collection không thay đổi (`const []`, `const {}`)
+- [ ] Constructor được khai báo `const` khi mọi field đều final
+
+### Dùng key:
+- [ ] `ValueKey` được dùng trong list/grid để giữ state qua các lần sắp xếp lại
+- [ ] `GlobalKey` dùng tiết kiệm — chỉ khi thật sự cần truy cập state xuyên cây widget
+- [ ] Tránh `UniqueKey` trong `build()` — nó ép rebuild mỗi frame
+- [ ] `ObjectKey` được dùng khi định danh dựa trên một data object thay vì một giá trị đơn
 
 ### Theming & design system:
-- [ ] Colors come from `Theme.of(context).colorScheme` — no hardcoded `Colors.red` or hex values
-- [ ] Text styles come from `Theme.of(context).textTheme` — no inline `TextStyle` with raw font sizes
-- [ ] Dark mode compatibility verified — no assumptions about light background
-- [ ] Spacing and sizing use consistent design tokens or constants, not magic numbers
+- [ ] Màu lấy từ `Theme.of(context).colorScheme` — không hardcode `Colors.red` hay giá trị hex
+- [ ] Text style lấy từ `Theme.of(context).textTheme` — không dùng `TextStyle` inline với cỡ chữ thô
+- [ ] Đã xác minh tương thích dark mode — không giả định nền sáng
+- [ ] Khoảng cách và kích thước dùng design token hoặc hằng số nhất quán, không dùng magic number
 
-### Build method complexity:
-- [ ] No network calls, file I/O, or heavy computation in `build()`
-- [ ] No `Future.then()` or `async` work in `build()`
-- [ ] No subscription creation (`.listen()`) in `build()`
-- [ ] `setState()` localized to smallest possible subtree
+### Độ phức tạp của phương thức build:
+- [ ] Không có lời gọi mạng, file I/O hay tính toán nặng trong `build()`
+- [ ] Không có `Future.then()` hay công việc `async` trong `build()`
+- [ ] Không tạo subscription (`.listen()`) trong `build()`
+- [ ] `setState()` được khoanh vùng vào cây con nhỏ nhất có thể
 
 ---
 
-## 4. State Management (Library-Agnostic)
+## 4. State Management (không phụ thuộc thư viện)
 
-These principles apply to all Flutter state management solutions (BLoC, Riverpod, Provider, GetX, MobX, Signals, ValueNotifier, etc.).
+Các nguyên tắc này áp dụng cho mọi giải pháp state management của Flutter (BLoC, Riverpod, Provider, GetX, MobX, Signals, ValueNotifier, v.v.).
 
-### Architecture:
-- [ ] Business logic lives outside the widget layer — in a state management component (BLoC, Notifier, Controller, Store, ViewModel, etc.)
-- [ ] State managers receive dependencies via injection, not by constructing them internally
-- [ ] A service or repository layer abstracts data sources — widgets and state managers should not call APIs or databases directly
-- [ ] State managers have a single responsibility — no "god" managers handling unrelated concerns
-- [ ] Cross-component dependencies follow the solution's conventions:
-  - In **Riverpod**: providers depending on providers via `ref.watch` is expected — flag only circular or overly tangled chains
-  - In **BLoC**: blocs should not directly depend on other blocs — prefer shared repositories or presentation-layer coordination
-  - In other solutions: follow the documented conventions for inter-component communication
+### Kiến trúc:
+- [ ] Business logic nằm ngoài tầng widget — trong một thành phần state management (BLoC, Notifier, Controller, Store, ViewModel, v.v.)
+- [ ] State manager nhận dependency qua injection, không tự khởi tạo bên trong
+- [ ] Một tầng service hoặc repository trừu tượng hóa nguồn dữ liệu — widget và state manager không nên gọi trực tiếp API hay database
+- [ ] State manager có một trách nhiệm duy nhất — không có manager "god" xử lý các mối quan tâm không liên quan
+- [ ] Dependency giữa các thành phần tuân theo quy ước của giải pháp:
+  - Trong **Riverpod**: provider phụ thuộc provider qua `ref.watch` là điều bình thường — chỉ đánh dấu các chuỗi vòng tròn hoặc rối rắm quá mức
+  - Trong **BLoC**: bloc không nên phụ thuộc trực tiếp vào bloc khác — ưu tiên repository dùng chung hoặc điều phối ở tầng presentation
+  - Trong các giải pháp khác: tuân theo quy ước được ghi trong tài liệu cho giao tiếp giữa các thành phần
 
-### Immutability & value equality (for immutable-state solutions: BLoC, Riverpod, Redux):
-- [ ] State objects are immutable — new instances created via `copyWith()` or constructors, never mutated in-place
-- [ ] State classes implement `==` and `hashCode` properly (all fields included in comparison)
-- [ ] Mechanism is consistent across the project — manual override, `Equatable`, `freezed`, Dart records, or other
-- [ ] Collections inside state objects are not exposed as raw mutable `List`/`Map`
+### Bất biến & so sánh theo giá trị (cho các giải pháp state bất biến: BLoC, Riverpod, Redux):
+- [ ] Đối tượng state là bất biến (immutable) — instance mới được tạo qua `copyWith()` hoặc constructor, không bao giờ mutate tại chỗ
+- [ ] Class state implement `==` và `hashCode` đúng cách (mọi field đều được đưa vào so sánh)
+- [ ] Cơ chế nhất quán trong toàn project — override thủ công, `Equatable`, `freezed`, record Dart hoặc cách khác
+- [ ] Collection bên trong đối tượng state không bị lộ dưới dạng `List`/`Map` mutable thô
 
-### Reactivity discipline (for reactive-mutation solutions: MobX, GetX, Signals):
-- [ ] State is only mutated through the solution's reactive API (`@action` in MobX, `.value` on signals, `.obs` in GetX) — direct field mutation bypasses change tracking
-- [ ] Derived values use the solution's computed mechanism rather than being stored redundantly
-- [ ] Reactions and disposers are properly cleaned up (`ReactionDisposer` in MobX, effect cleanup in Signals)
+### Kỷ luật reactivity (cho các giải pháp reactive-mutation: MobX, GetX, Signals):
+- [ ] State chỉ được thay đổi qua API reactive của giải pháp (`@action` trong MobX, `.value` trên signal, `.obs` trong GetX) — thay đổi trực tiếp field sẽ bỏ qua việc theo dõi thay đổi
+- [ ] Giá trị dẫn xuất dùng cơ chế computed của giải pháp thay vì lưu trữ dư thừa
+- [ ] Reaction và disposer được dọn dẹp đúng cách (`ReactionDisposer` trong MobX, effect cleanup trong Signals)
 
-### State shape design:
-- [ ] Mutually exclusive states use sealed types, union variants, or the solution's built-in async state type (e.g. Riverpod's `AsyncValue`) — not boolean flags (`isLoading`, `isError`, `hasData`)
-- [ ] Every async operation models loading, success, and error as distinct states
-- [ ] All state variants are handled exhaustively in UI — no silently ignored cases
-- [ ] Error states carry error information for display; loading states don't carry stale data
-- [ ] Nullable data is not used as a loading indicator — states are explicit
+### Thiết kế hình dạng state:
+- [ ] Các state loại trừ lẫn nhau dùng sealed type, union variant hoặc kiểu async state có sẵn của giải pháp (ví dụ `AsyncValue` của Riverpod) — không dùng cờ boolean (`isLoading`, `isError`, `hasData`)
+- [ ] Mỗi thao tác async mô hình hóa loading, success và error thành các state riêng biệt
+- [ ] Mọi biến thể state đều được xử lý đầy đủ (exhaustive) trong UI — không có trường hợp bị bỏ qua âm thầm
+- [ ] State lỗi mang thông tin lỗi để hiển thị; state loading không mang dữ liệu cũ
+- [ ] Không dùng dữ liệu nullable làm chỉ báo loading — state phải tường minh
 
 ```dart
 // BAD — boolean flag soup allows impossible states
@@ -137,292 +137,292 @@ class UserError extends UserState {
 // Use your solution's observable/signal to wrap status and data separately
 ```
 
-### Rebuild optimization:
-- [ ] State consumer widgets (Builder, Consumer, Observer, Obx, Watch, etc.) scoped as narrow as possible
-- [ ] Selectors used to rebuild only when specific fields change — not on every state emission
-- [ ] `const` widgets used to stop rebuild propagation through the tree
-- [ ] Computed/derived state is calculated reactively, not stored redundantly
+### Tối ưu rebuild:
+- [ ] Widget tiêu thụ state (Builder, Consumer, Observer, Obx, Watch, v.v.) có phạm vi hẹp nhất có thể
+- [ ] Dùng selector để chỉ rebuild khi các field cụ thể thay đổi — không phải mỗi lần state phát ra
+- [ ] Widget `const` được dùng để chặn rebuild lan truyền xuống cây
+- [ ] State computed/dẫn xuất được tính theo cách reactive, không lưu trữ dư thừa
 
-### Subscriptions & disposal:
-- [ ] All manual subscriptions (`.listen()`) are cancelled in `dispose()` / `close()`
-- [ ] Stream controllers are closed when no longer needed
-- [ ] Timers are cancelled in disposal lifecycle
-- [ ] Framework-managed lifecycle is preferred over manual subscription (declarative builders over `.listen()`)
-- [ ] `mounted` check before `setState` in async callbacks
-- [ ] `BuildContext` not used after `await` without checking `context.mounted` (Flutter 3.7+) — stale context causes crashes
-- [ ] No navigation, dialogs, or scaffold messages after async gaps without verifying the widget is still mounted
-- [ ] `BuildContext` never stored in singletons, state managers, or static fields
+### Subscription & hủy tài nguyên:
+- [ ] Mọi subscription thủ công (`.listen()`) được cancel trong `dispose()` / `close()`
+- [ ] Stream controller được đóng khi không còn cần
+- [ ] Timer được cancel trong vòng đời dispose
+- [ ] Ưu tiên vòng đời do framework quản lý hơn subscription thủ công (declarative builder thay vì `.listen()`)
+- [ ] Kiểm tra `mounted` trước `setState` trong callback async
+- [ ] Không dùng `BuildContext` sau `await` mà không kiểm tra `context.mounted` (Flutter 3.7+) — context cũ gây crash
+- [ ] Không điều hướng, hiển thị dialog hay scaffold message sau khoảng trống async mà không xác minh widget vẫn còn mounted
+- [ ] `BuildContext` không bao giờ được lưu trong singleton, state manager hay static field
 
-### Local vs global state:
-- [ ] Ephemeral UI state (checkbox, slider, animation) uses local state (`setState`, `ValueNotifier`)
-- [ ] Shared state is lifted only as high as needed — not over-globalized
-- [ ] Feature-scoped state is properly disposed when the feature is no longer active
+### State cục bộ vs toàn cục:
+- [ ] State UI tạm thời (checkbox, slider, animation) dùng state cục bộ (`setState`, `ValueNotifier`)
+- [ ] State dùng chung chỉ được nâng lên cao đến mức cần thiết — không toàn cục hóa quá mức
+- [ ] State theo phạm vi feature được dispose đúng cách khi feature không còn active
 
 ---
 
-## 5. Performance
+## 5. Hiệu năng
 
-### Unnecessary rebuilds:
-- [ ] `setState()` not called at root widget level — localize state changes
-- [ ] `const` widgets used to stop rebuild propagation
-- [ ] `RepaintBoundary` used around complex subtrees that repaint independently
-- [ ] `AnimatedBuilder` child parameter used for subtrees independent of animation
+### Rebuild không cần thiết:
+- [ ] Không gọi `setState()` ở cấp root widget — khoanh vùng thay đổi state
+- [ ] Widget `const` được dùng để chặn rebuild lan truyền
+- [ ] `RepaintBoundary` được dùng quanh các cây con phức tạp repaint độc lập
+- [ ] Tham số child của `AnimatedBuilder` được dùng cho các cây con độc lập với animation
 
-### Expensive operations in build():
-- [ ] No sorting, filtering, or mapping large collections in `build()` — compute in state management layer
-- [ ] No regex compilation in `build()`
-- [ ] `MediaQuery.of(context)` usage is specific (e.g., `MediaQuery.sizeOf(context)`)
+### Thao tác tốn kém trong build():
+- [ ] Không sắp xếp, lọc hay map collection lớn trong `build()` — tính trong tầng state management
+- [ ] Không compile regex trong `build()`
+- [ ] Cách dùng `MediaQuery.of(context)` phải cụ thể (ví dụ `MediaQuery.sizeOf(context)`)
 
-### Image optimization:
-- [ ] Network images use caching (any caching solution appropriate for the project)
-- [ ] Appropriate image resolution for target device (no loading 4K images for thumbnails)
-- [ ] `Image.asset` with `cacheWidth`/`cacheHeight` to decode at display size
-- [ ] Placeholder and error widgets provided for network images
+### Tối ưu hình ảnh:
+- [ ] Ảnh từ mạng dùng caching (bất kỳ giải pháp caching nào phù hợp với project)
+- [ ] Độ phân giải ảnh phù hợp với thiết bị đích (không tải ảnh 4K cho thumbnail)
+- [ ] `Image.asset` với `cacheWidth`/`cacheHeight` để decode ở kích thước hiển thị
+- [ ] Có placeholder và error widget cho ảnh từ mạng
 
 ### Lazy loading:
-- [ ] `ListView.builder` / `GridView.builder` used instead of `ListView(children: [...])` for large or dynamic lists (concrete constructors are fine for small, static lists)
-- [ ] Pagination implemented for large data sets
-- [ ] Deferred loading (`deferred as`) used for heavy libraries in web builds
+- [ ] Dùng `ListView.builder` / `GridView.builder` thay vì `ListView(children: [...])` cho list lớn hoặc động (constructor cụ thể vẫn ổn cho list nhỏ, tĩnh)
+- [ ] Có phân trang (pagination) cho tập dữ liệu lớn
+- [ ] Dùng deferred loading (`deferred as`) cho thư viện nặng trong bản build web
 
-### Other:
-- [ ] `Opacity` widget avoided in animations — use `AnimatedOpacity` or `FadeTransition`
-- [ ] Clipping avoided in animations — pre-clip images
-- [ ] `operator ==` not overridden on widgets — use `const` constructors instead
-- [ ] Intrinsic dimension widgets (`IntrinsicHeight`, `IntrinsicWidth`) used sparingly (extra layout pass)
+### Khác:
+- [ ] Tránh widget `Opacity` trong animation — dùng `AnimatedOpacity` hoặc `FadeTransition`
+- [ ] Tránh clipping trong animation — clip trước ảnh
+- [ ] Không override `operator ==` trên widget — dùng `const` constructor thay thế
+- [ ] Widget kích thước nội tại (`IntrinsicHeight`, `IntrinsicWidth`) dùng tiết kiệm (thêm một lượt layout)
 
 ---
 
 ## 6. Testing
 
-### Test types and expectations:
-- [ ] **Unit tests**: Cover all business logic (state managers, repositories, utility functions)
-- [ ] **Widget tests**: Cover individual widget behavior, interactions, and visual output
-- [ ] **Integration tests**: Cover critical user flows end-to-end
-- [ ] **Golden tests**: Pixel-perfect comparisons for design-critical UI components
+### Loại test và kỳ vọng:
+- [ ] **Unit test**: Bao phủ toàn bộ business logic (state manager, repository, hàm tiện ích)
+- [ ] **Widget test**: Bao phủ hành vi, tương tác và đầu ra hiển thị của từng widget
+- [ ] **Integration test**: Bao phủ các luồng người dùng quan trọng end-to-end
+- [ ] **Golden test**: So sánh chính xác đến từng pixel cho các thành phần UI quan trọng về thiết kế
 
-### Coverage targets:
-- [ ] Aim for 80%+ line coverage on business logic
-- [ ] All state transitions have corresponding tests (loading → success, loading → error, retry, etc.)
-- [ ] Edge cases tested: empty states, error states, loading states, boundary values
+### Mục tiêu coverage:
+- [ ] Hướng tới 80%+ line coverage cho business logic
+- [ ] Mọi chuyển đổi state đều có test tương ứng (loading → success, loading → error, retry, v.v.)
+- [ ] Đã test các edge case: state rỗng, state lỗi, state loading, giá trị biên
 
-### Test isolation:
-- [ ] External dependencies (API clients, databases, services) are mocked or faked
-- [ ] Each test file tests exactly one class/unit
-- [ ] Tests verify behavior, not implementation details
-- [ ] Stubs define only the behavior needed for each test (minimal stubbing)
-- [ ] No shared mutable state between test cases
+### Cô lập test:
+- [ ] Dependency bên ngoài (API client, database, service) được mock hoặc fake
+- [ ] Mỗi file test chỉ test đúng một class/đơn vị
+- [ ] Test xác minh hành vi, không phải chi tiết triển khai
+- [ ] Stub chỉ định nghĩa hành vi cần cho mỗi test (stub tối thiểu)
+- [ ] Không có state mutable dùng chung giữa các test case
 
-### Widget test quality:
-- [ ] `pumpWidget` and `pump` used correctly for async operations
-- [ ] `find.byType`, `find.text`, `find.byKey` used appropriately
-- [ ] No flaky tests depending on timing — use `pumpAndSettle` or explicit `pump(Duration)`
-- [ ] Tests run in CI and failures block merges
+### Chất lượng widget test:
+- [ ] `pumpWidget` và `pump` được dùng đúng cho thao tác async
+- [ ] `find.byType`, `find.text`, `find.byKey` được dùng phù hợp
+- [ ] Không có test flaky phụ thuộc thời gian — dùng `pumpAndSettle` hoặc `pump(Duration)` tường minh
+- [ ] Test chạy trong CI và test lỗi chặn merge
 
 ---
 
 ## 7. Accessibility
 
-### Semantic widgets:
-- [ ] `Semantics` widget used to provide screen reader labels where automatic labels are insufficient
-- [ ] `ExcludeSemantics` used for purely decorative elements
-- [ ] `MergeSemantics` used to combine related widgets into a single accessible element
-- [ ] Images have `semanticLabel` property set
+### Semantic widget:
+- [ ] Widget `Semantics` được dùng để cung cấp nhãn screen reader ở nơi nhãn tự động không đủ
+- [ ] `ExcludeSemantics` được dùng cho các phần tử thuần trang trí
+- [ ] `MergeSemantics` được dùng để gộp các widget liên quan thành một phần tử accessible duy nhất
+- [ ] Ảnh có thuộc tính `semanticLabel` được đặt
 
-### Screen reader support:
-- [ ] All interactive elements are focusable and have meaningful descriptions
-- [ ] Focus order is logical (follows visual reading order)
+### Hỗ trợ screen reader:
+- [ ] Mọi phần tử tương tác đều focus được và có mô tả có ý nghĩa
+- [ ] Thứ tự focus hợp lý (theo thứ tự đọc trực quan)
 
-### Visual accessibility:
-- [ ] Contrast ratio >= 4.5:1 for text against background
-- [ ] Tappable targets are at least 48x48 pixels
-- [ ] Color is not the sole indicator of state (use icons/text alongside)
-- [ ] Text scales with system font size settings
+### Accessibility thị giác:
+- [ ] Tỷ lệ tương phản >= 4.5:1 cho chữ so với nền
+- [ ] Vùng có thể chạm tối thiểu 48x48 pixel
+- [ ] Màu không phải chỉ báo duy nhất của trạng thái (dùng thêm icon/chữ)
+- [ ] Chữ co giãn theo thiết lập cỡ chữ của hệ thống
 
-### Interaction accessibility:
-- [ ] No no-op `onPressed` callbacks — every button does something or is disabled
-- [ ] Error fields suggest corrections
-- [ ] Context does not change unexpectedly while user is inputting data
-
----
-
-## 8. Platform-Specific Concerns
-
-### iOS/Android differences:
-- [ ] Platform-adaptive widgets used where appropriate
-- [ ] Back navigation handled correctly (Android back button, iOS swipe-to-go-back)
-- [ ] Status bar and safe area handled via `SafeArea` widget
-- [ ] Platform-specific permissions declared in `AndroidManifest.xml` and `Info.plist`
-
-### Responsive design:
-- [ ] `LayoutBuilder` or `MediaQuery` used for responsive layouts
-- [ ] Breakpoints defined consistently (phone, tablet, desktop)
-- [ ] Text doesn't overflow on small screens — use `Flexible`, `Expanded`, `FittedBox`
-- [ ] Landscape orientation tested or explicitly locked
-- [ ] Web-specific: mouse/keyboard interactions supported, hover states present
+### Accessibility tương tác:
+- [ ] Không có callback `onPressed` rỗng — mỗi nút đều làm gì đó hoặc bị disable
+- [ ] Trường lỗi gợi ý cách sửa
+- [ ] Context không thay đổi bất ngờ khi người dùng đang nhập dữ liệu
 
 ---
 
-## 9. Security
+## 8. Vấn đề đặc thù nền tảng
 
-### Secure storage:
-- [ ] Sensitive data (tokens, credentials) stored using platform-secure storage (Keychain on iOS, EncryptedSharedPreferences on Android)
-- [ ] Never store secrets in plaintext storage
-- [ ] Biometric authentication gating considered for sensitive operations
+### Khác biệt iOS/Android:
+- [ ] Widget thích ứng nền tảng được dùng khi phù hợp
+- [ ] Điều hướng quay lại được xử lý đúng (nút back Android, vuốt để quay lại trên iOS)
+- [ ] Status bar và safe area được xử lý qua widget `SafeArea`
+- [ ] Quyền đặc thù nền tảng được khai báo trong `AndroidManifest.xml` và `Info.plist`
 
-### API key handling:
-- [ ] API keys NOT hardcoded in Dart source — use `--dart-define`, `.env` files excluded from VCS, or compile-time configuration
-- [ ] Secrets not committed to git — check `.gitignore`
-- [ ] Backend proxy used for truly secret keys (client should never hold server secrets)
-
-### Input validation:
-- [ ] All user input validated before sending to API
-- [ ] Form validation uses proper validation patterns
-- [ ] No raw SQL or string interpolation of user input
-- [ ] Deep link URLs validated and sanitized before navigation
-
-### Network security:
-- [ ] HTTPS enforced for all API calls
-- [ ] Certificate pinning considered for high-security apps
-- [ ] Authentication tokens refreshed and expired properly
-- [ ] No sensitive data logged or printed
+### Thiết kế responsive:
+- [ ] `LayoutBuilder` hoặc `MediaQuery` được dùng cho layout responsive
+- [ ] Breakpoint được định nghĩa nhất quán (phone, tablet, desktop)
+- [ ] Chữ không tràn trên màn hình nhỏ — dùng `Flexible`, `Expanded`, `FittedBox`
+- [ ] Hướng ngang (landscape) đã được test hoặc khóa tường minh
+- [ ] Riêng web: hỗ trợ tương tác chuột/bàn phím, có hover state
 
 ---
 
-## 10. Package/Dependency Review
+## 9. Bảo mật
 
-### Evaluating pub.dev packages:
-- [ ] Check **pub points score** (aim for 130+/160)
-- [ ] Check **likes** and **popularity** as community signals
-- [ ] Verify the publisher is **verified** on pub.dev
-- [ ] Check last publish date — stale packages (>1 year) are a risk
-- [ ] Review open issues and response time from maintainers
-- [ ] Check license compatibility with your project
-- [ ] Verify platform support covers your targets
+### Lưu trữ an toàn:
+- [ ] Dữ liệu nhạy cảm (token, credential) được lưu bằng secure storage của nền tảng (Keychain trên iOS, EncryptedSharedPreferences trên Android)
+- [ ] KHÔNG BAO GIỜ lưu secret trong storage dạng plaintext
+- [ ] Cân nhắc yêu cầu xác thực sinh trắc học (biometric) cho các thao tác nhạy cảm
 
-### Version constraints:
-- [ ] Use caret syntax (`^1.2.3`) for dependencies — allows compatible updates
-- [ ] Pin exact versions only when absolutely necessary
-- [ ] Run `flutter pub outdated` regularly to track stale dependencies
-- [ ] No dependency overrides in production `pubspec.yaml` — only for temporary fixes with a comment/issue link
-- [ ] Minimize transitive dependency count — each dependency is an attack surface
+### Xử lý API key:
+- [ ] API key KHÔNG được hardcode trong source Dart — dùng `--dart-define`, file `.env` loại khỏi VCS, hoặc cấu hình compile-time
+- [ ] Secret không được commit vào git — kiểm tra `.gitignore`
+- [ ] Dùng backend proxy cho các key thật sự bí mật (client không bao giờ nên giữ secret của server)
 
-### Monorepo-specific (melos/workspace):
-- [ ] Internal packages import only from public API — no `package:other/src/internal.dart` (breaks Dart package encapsulation)
-- [ ] Internal package dependencies use workspace resolution, not hardcoded `path: ../../` relative strings
-- [ ] All sub-packages share or inherit root `analysis_options.yaml`
+### Kiểm tra đầu vào (input validation):
+- [ ] Mọi input của người dùng được validate trước khi gửi tới API
+- [ ] Form validation dùng pattern validation phù hợp
+- [ ] Không có SQL thô hay nội suy chuỗi từ input của người dùng
+- [ ] URL deep link được validate và sanitize trước khi điều hướng
 
----
-
-## 11. Navigation and Routing
-
-### General principles (apply to any routing solution):
-- [ ] One routing approach used consistently — no mixing imperative `Navigator.push` with a declarative router
-- [ ] Route arguments are typed — no `Map<String, dynamic>` or `Object?` casting
-- [ ] Route paths defined as constants, enums, or generated — no magic strings scattered in code
-- [ ] Auth guards/redirects centralized — not duplicated across individual screens
-- [ ] Deep links configured for both Android and iOS
-- [ ] Deep link URLs validated and sanitized before navigation
-- [ ] Navigation state is testable — route changes can be verified in tests
-- [ ] Back behavior is correct on all platforms
+### Bảo mật mạng:
+- [ ] Bắt buộc HTTPS cho mọi lời gọi API
+- [ ] Cân nhắc certificate pinning cho ứng dụng yêu cầu bảo mật cao
+- [ ] Token xác thực được refresh và hết hạn đúng cách
+- [ ] Không log hay print dữ liệu nhạy cảm
 
 ---
 
-## 12. Error Handling
+## 10. Review Package/Dependency
 
-### Framework error handling:
-- [ ] `FlutterError.onError` overridden to capture framework errors (build, layout, paint)
-- [ ] `PlatformDispatcher.instance.onError` set for async errors not caught by Flutter
-- [ ] `ErrorWidget.builder` customized for release mode (user-friendly instead of red screen)
-- [ ] Global error capture wrapper around `runApp` (e.g., `runZonedGuarded`, Sentry/Crashlytics wrapper)
+### Đánh giá package pub.dev:
+- [ ] Kiểm tra **pub points score** (hướng tới 130+/160)
+- [ ] Kiểm tra **likes** và **popularity** như tín hiệu cộng đồng
+- [ ] Xác minh publisher đã được **verified** trên pub.dev
+- [ ] Kiểm tra ngày publish gần nhất — package cũ (>1 năm) là rủi ro
+- [ ] Xem các issue đang mở và thời gian phản hồi của maintainer
+- [ ] Kiểm tra tính tương thích license với project của bạn
+- [ ] Xác minh hỗ trợ nền tảng bao phủ các target của bạn
 
-### Error reporting:
-- [ ] Error reporting service integrated (Firebase Crashlytics, Sentry, or equivalent)
-- [ ] Non-fatal errors reported with stack traces
-- [ ] State management error observer wired to error reporting (e.g., BlocObserver, ProviderObserver, or equivalent for your solution)
-- [ ] User-identifiable info (user ID) attached to error reports for debugging
+### Ràng buộc version:
+- [ ] Dùng cú pháp caret (`^1.2.3`) cho dependency — cho phép cập nhật tương thích
+- [ ] Chỉ ghim version chính xác khi thật sự cần thiết
+- [ ] Chạy `flutter pub outdated` thường xuyên để theo dõi dependency cũ
+- [ ] Không có dependency override trong `pubspec.yaml` production — chỉ cho bản sửa tạm thời kèm comment/link issue
+- [ ] Giảm thiểu số lượng transitive dependency — mỗi dependency là một bề mặt tấn công
 
-### Graceful degradation:
-- [ ] API errors result in user-friendly error UI, not crashes
-- [ ] Retry mechanisms for transient network failures
-- [ ] Offline state handled gracefully
-- [ ] Error states in state management carry error info for display
-- [ ] Raw exceptions (network, parsing) are mapped to user-friendly, localized messages before reaching the UI — never show raw exception strings to users
+### Riêng cho monorepo (melos/workspace):
+- [ ] Package nội bộ chỉ import từ public API — không dùng `package:other/src/internal.dart` (phá vỡ đóng gói của package Dart)
+- [ ] Dependency của package nội bộ dùng workspace resolution, không dùng chuỗi tương đối `path: ../../` hardcode
+- [ ] Mọi sub-package dùng chung hoặc kế thừa `analysis_options.yaml` ở root
 
 ---
 
-## 13. Internationalization (l10n)
+## 11. Điều hướng và Routing
 
-### Setup:
-- [ ] Localization solution configured (Flutter's built-in ARB/l10n, easy_localization, or equivalent)
-- [ ] Supported locales declared in app configuration
+### Nguyên tắc chung (áp dụng cho mọi giải pháp routing):
+- [ ] Dùng một cách tiếp cận routing nhất quán — không trộn `Navigator.push` imperative với router declarative
+- [ ] Tham số route có kiểu — không ép kiểu `Map<String, dynamic>` hay `Object?`
+- [ ] Đường dẫn route được định nghĩa dưới dạng hằng số, enum hoặc sinh tự động — không có magic string rải rác trong code
+- [ ] Auth guard/redirect tập trung — không lặp lại ở từng màn hình
+- [ ] Deep link được cấu hình cho cả Android và iOS
+- [ ] URL deep link được validate và sanitize trước khi điều hướng
+- [ ] State điều hướng test được — thay đổi route có thể được xác minh trong test
+- [ ] Hành vi quay lại đúng trên mọi nền tảng
 
-### Content:
-- [ ] All user-visible strings use the localization system — no hardcoded strings in widgets
-- [ ] Template file includes descriptions/context for translators
-- [ ] ICU message syntax used for plurals, genders, selects
-- [ ] Placeholders defined with types
-- [ ] No missing keys across locales
+---
+
+## 12. Xử lý lỗi
+
+### Xử lý lỗi của framework:
+- [ ] Override `FlutterError.onError` để bắt lỗi framework (build, layout, paint)
+- [ ] Đặt `PlatformDispatcher.instance.onError` cho lỗi async mà Flutter không bắt
+- [ ] Tùy biến `ErrorWidget.builder` cho chế độ release (thân thiện với người dùng thay vì màn hình đỏ)
+- [ ] Wrapper bắt lỗi toàn cục quanh `runApp` (ví dụ `runZonedGuarded`, wrapper Sentry/Crashlytics)
+
+### Báo cáo lỗi:
+- [ ] Đã tích hợp dịch vụ báo cáo lỗi (Firebase Crashlytics, Sentry hoặc tương đương)
+- [ ] Lỗi non-fatal được báo cáo kèm stack trace
+- [ ] Error observer của state management được nối với báo cáo lỗi (ví dụ BlocObserver, ProviderObserver hoặc tương đương cho giải pháp của bạn)
+- [ ] Thông tin định danh người dùng (user ID) được đính kèm báo cáo lỗi để debug
+
+### Suy giảm êm dịu (graceful degradation):
+- [ ] Lỗi API dẫn đến UI lỗi thân thiện với người dùng, không crash
+- [ ] Có cơ chế retry cho lỗi mạng tạm thời
+- [ ] Trạng thái offline được xử lý êm dịu
+- [ ] State lỗi trong state management mang thông tin lỗi để hiển thị
+- [ ] Exception thô (mạng, parsing) được ánh xạ thành thông báo thân thiện, đã bản địa hóa trước khi tới UI — KHÔNG BAO GIỜ hiển thị chuỗi exception thô cho người dùng
+
+---
+
+## 13. Quốc tế hóa (l10n)
+
+### Thiết lập:
+- [ ] Đã cấu hình giải pháp localization (ARB/l10n tích hợp của Flutter, easy_localization hoặc tương đương)
+- [ ] Các locale được hỗ trợ được khai báo trong cấu hình app
+
+### Nội dung:
+- [ ] Mọi chuỗi hiển thị cho người dùng dùng hệ thống localization — không hardcode chuỗi trong widget
+- [ ] File template có mô tả/ngữ cảnh cho người dịch
+- [ ] Cú pháp message ICU được dùng cho số nhiều, giới tính, select
+- [ ] Placeholder được định nghĩa kèm kiểu
+- [ ] Không thiếu key giữa các locale
 
 ### Code review:
-- [ ] Localization accessor used consistently throughout the project
-- [ ] Date, time, number, and currency formatting is locale-aware
-- [ ] Text directionality (RTL) supported if targeting Arabic, Hebrew, etc.
-- [ ] No string concatenation for localized text — use parameterized messages
+- [ ] Accessor localization được dùng nhất quán trong toàn project
+- [ ] Định dạng ngày, giờ, số và tiền tệ nhận biết locale
+- [ ] Hỗ trợ hướng văn bản (RTL) nếu nhắm tới tiếng Ả Rập, Do Thái, v.v.
+- [ ] Không nối chuỗi cho văn bản đã bản địa hóa — dùng message có tham số
 
 ---
 
 ## 14. Dependency Injection
 
-### Principles (apply to any DI approach):
-- [ ] Classes depend on abstractions (interfaces), not concrete implementations at layer boundaries
-- [ ] Dependencies provided externally via constructor, DI framework, or provider graph — not created internally
-- [ ] Registration distinguishes lifetime: singleton vs factory vs lazy singleton
-- [ ] Environment-specific bindings (dev/staging/prod) use configuration, not runtime `if` checks
-- [ ] No circular dependencies in the DI graph
-- [ ] Service locator calls (if used) are not scattered throughout business logic
+### Nguyên tắc (áp dụng cho mọi cách tiếp cận DI):
+- [ ] Class phụ thuộc vào abstraction (interface), không phải implementation cụ thể ở ranh giới giữa các tầng
+- [ ] Dependency được cung cấp từ bên ngoài qua constructor, DI framework hoặc provider graph — không tạo bên trong
+- [ ] Việc đăng ký phân biệt vòng đời: singleton vs factory vs lazy singleton
+- [ ] Binding theo môi trường (dev/staging/prod) dùng cấu hình, không dùng kiểm tra `if` lúc runtime
+- [ ] Không có dependency vòng tròn trong DI graph
+- [ ] Lời gọi service locator (nếu dùng) không rải rác khắp business logic
 
 ---
 
-## 15. Static Analysis
+## 15. Phân tích tĩnh (Static Analysis)
 
-### Configuration:
-- [ ] `analysis_options.yaml` present with strict settings enabled
-- [ ] Strict analyzer settings: `strict-casts: true`, `strict-inference: true`, `strict-raw-types: true`
-- [ ] A comprehensive lint rule set is included (very_good_analysis, flutter_lints, or custom strict rules)
-- [ ] All sub-packages in monorepos inherit or share the root analysis options
+### Cấu hình:
+- [ ] Có `analysis_options.yaml` với các thiết lập strict được bật
+- [ ] Thiết lập analyzer strict: `strict-casts: true`, `strict-inference: true`, `strict-raw-types: true`
+- [ ] Có bao gồm bộ rule lint toàn diện (very_good_analysis, flutter_lints hoặc rule strict tùy chỉnh)
+- [ ] Mọi sub-package trong monorepo kế thừa hoặc dùng chung analysis option ở root
 
-### Enforcement:
-- [ ] No unresolved analyzer warnings in committed code
-- [ ] Lint suppressions (`// ignore:`) are justified with comments explaining why
-- [ ] `flutter analyze` runs in CI and failures block merges
+### Thực thi:
+- [ ] Không còn analyzer warning chưa giải quyết trong code đã commit
+- [ ] Các lint suppression (`// ignore:`) được biện minh bằng comment giải thích lý do
+- [ ] `flutter analyze` chạy trong CI và lỗi chặn merge
 
-### Key rules to verify regardless of lint package:
-- [ ] `prefer_const_constructors` — performance in widget trees
-- [ ] `avoid_print` — use proper logging
-- [ ] `unawaited_futures` — prevent fire-and-forget async bugs
-- [ ] `prefer_final_locals` — immutability at variable level
-- [ ] `always_declare_return_types` — explicit contracts
-- [ ] `avoid_catches_without_on_clauses` — specific error handling
-- [ ] `always_use_package_imports` — consistent import style
+### Các rule chính cần xác minh bất kể package lint:
+- [ ] `prefer_const_constructors` — hiệu năng trong cây widget
+- [ ] `avoid_print` — dùng logging đúng cách
+- [ ] `unawaited_futures` — ngăn bug async fire-and-forget
+- [ ] `prefer_final_locals` — tính bất biến ở cấp biến
+- [ ] `always_declare_return_types` — hợp đồng tường minh
+- [ ] `avoid_catches_without_on_clauses` — xử lý lỗi cụ thể
+- [ ] `always_use_package_imports` — phong cách import nhất quán
 
 ---
 
-## State Management Quick Reference
+## Tham chiếu nhanh State Management
 
-The table below maps universal principles to their implementation in popular solutions. Use this to adapt review rules to whichever solution the project uses.
+Bảng dưới đây ánh xạ các nguyên tắc chung sang cách triển khai trong các giải pháp phổ biến. Dùng nó để điều chỉnh các rule review cho phù hợp với giải pháp mà project đang dùng.
 
-| Principle | BLoC/Cubit | Riverpod | Provider | GetX | MobX | Signals | Built-in |
+| Nguyên tắc | BLoC/Cubit | Riverpod | Provider | GetX | MobX | Signals | Tích hợp sẵn |
 |-----------|-----------|----------|----------|------|------|---------|----------|
 | State container | `Bloc`/`Cubit` | `Notifier`/`AsyncNotifier` | `ChangeNotifier` | `GetxController` | `Store` | `signal()` | `StatefulWidget` |
 | UI consumer | `BlocBuilder` | `ConsumerWidget` | `Consumer` | `Obx`/`GetBuilder` | `Observer` | `Watch` | `setState` |
 | Selector | `BlocSelector`/`buildWhen` | `ref.watch(p.select(...))` | `Selector` | N/A | computed | `computed()` | N/A |
-| Side effects | `BlocListener` | `ref.listen` | `Consumer` callback | `ever()`/`once()` | `reaction` | `effect()` | callbacks |
-| Disposal | auto via `BlocProvider` | `.autoDispose` | auto via `Provider` | `onClose()` | `ReactionDisposer` | manual | `dispose()` |
-| Testing | `blocTest()` | `ProviderContainer` | `ChangeNotifier` directly | `Get.put` in test | store directly | signal directly | widget test |
+| Side effect | `BlocListener` | `ref.listen` | callback của `Consumer` | `ever()`/`once()` | `reaction` | `effect()` | callback |
+| Hủy (disposal) | tự động qua `BlocProvider` | `.autoDispose` | tự động qua `Provider` | `onClose()` | `ReactionDisposer` | thủ công | `dispose()` |
+| Testing | `blocTest()` | `ProviderContainer` | `ChangeNotifier` trực tiếp | `Get.put` trong test | store trực tiếp | signal trực tiếp | widget test |
 
 ---
 
-## Sources
+## Nguồn tham khảo
 
 - [Effective Dart: Style](https://dart.dev/effective-dart/style)
 - [Effective Dart: Usage](https://dart.dev/effective-dart/usage)

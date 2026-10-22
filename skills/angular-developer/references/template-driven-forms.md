@@ -1,18 +1,18 @@
-# Template-Driven Forms
+# Template-Driven Form
 
-Template-driven forms use two-way data binding (`[(ngModel)]`) to update the data model in the component as changes are made in the template and vice versa. They are ideal for simple forms and use directives in the HTML template to manage form state and validation.
+Template-driven form dùng two-way data binding (`[(ngModel)]`) để cập nhật data model trong component khi có thay đổi ở template và ngược lại. Chúng lý tưởng cho các form đơn giản và dùng các directive trong HTML template để quản lý state và validation của form.
 
-## Core Directives
+## Các Directive cốt lõi
 
-Template-driven forms rely on the `FormsModule` which provides these key directives:
+Template-driven form dựa vào `FormsModule`, module cung cấp các directive chính sau:
 
-- `NgModel`: Reconciles value changes in the form element with the data model (`[(ngModel)]`).
-- `NgForm`: Automatically creates a top-level `FormGroup` bound to the `<form>` tag.
-- `NgModelGroup`: Creates a nested `FormGroup` bound to a DOM element.
+- `NgModel`: Đối chiếu các thay đổi giá trị trong phần tử form với data model (`[(ngModel)]`).
+- `NgForm`: Tự động tạo một `FormGroup` cấp cao nhất được bind vào thẻ `<form>`.
+- `NgModelGroup`: Tạo một `FormGroup` lồng nhau được bind vào một phần tử DOM.
 
-## Setup
+## Thiết lập
 
-First, import `FormsModule` into your component or module.
+Trước tiên, import `FormsModule` vào component hoặc module của bạn.
 
 ```ts
 import {Component} from '@angular/core';
@@ -32,11 +32,11 @@ export class UserForm {
 }
 ```
 
-## Building the Form Template
+## Xây dựng Form Template
 
-### Two-Way Binding with `[(ngModel)]`
+### Two-Way Binding với `[(ngModel)]`
 
-Use `[(ngModel)]` on input elements. **Every element using `[(ngModel)]` MUST have a `name` attribute.** Angular uses the `name` attribute to register the control with the parent `NgForm`.
+Dùng `[(ngModel)]` trên các phần tử input. **Mọi phần tử dùng `[(ngModel)]` PHẢI có thuộc tính `name`.** Angular dùng thuộc tính `name` để đăng ký control với `NgForm` cha.
 
 ```html
 <form #userForm="ngForm" (ngSubmit)="onSubmit()">
@@ -60,18 +60,18 @@ Use `[(ngModel)]` on input elements. **Every element using `[(ngModel)]` MUST ha
 </form>
 ```
 
-## Form and Control State
+## Trạng thái Form và Control
 
-Angular automatically applies CSS classes to controls and forms based on their state:
+Angular tự động áp dụng các CSS class cho control và form dựa trên trạng thái của chúng:
 
-| State          | Class if True                     | Class if False |
-| :------------- | :-------------------------------- | :------------- |
-| Visited        | `ng-touched`                      | `ng-untouched` |
-| Value Changed  | `ng-dirty`                        | `ng-pristine`  |
-| Value is Valid | `ng-valid`                        | `ng-invalid`   |
-| Form Submitted | `ng-submitted` (on `<form>` only) | -              |
+| Trạng thái         | Class nếu đúng                      | Class nếu sai  |
+| :----------------- | :---------------------------------- | :------------- |
+| Đã ghé thăm        | `ng-touched`                        | `ng-untouched` |
+| Giá trị đã đổi     | `ng-dirty`                          | `ng-pristine`  |
+| Giá trị hợp lệ     | `ng-valid`                          | `ng-invalid`   |
+| Form đã submit     | `ng-submitted` (chỉ trên `<form>`)  | -              |
 
-You can use these classes to provide visual feedback in your CSS:
+Bạn có thể dùng các class này để tạo phản hồi trực quan trong CSS:
 
 ```css
 .ng-valid[required],
@@ -83,9 +83,9 @@ You can use these classes to provide visual feedback in your CSS:
 }
 ```
 
-## Validation and Error Messages
+## Validation và thông báo lỗi
 
-To display error messages conditionally, export the `ngModel` directive to a template reference variable (e.g., `#nameCtrl="ngModel"`).
+Để hiển thị thông báo lỗi có điều kiện, export directive `ngModel` ra một template reference variable (ví dụ: `#nameCtrl="ngModel"`).
 
 ```html
 <input type="text" id="name" required [(ngModel)]="user.name" name="name" #nameCtrl="ngModel" />
@@ -100,14 +100,14 @@ To display error messages conditionally, export the `ngModel` directive to a tem
 }
 ```
 
-## Submitting the Form
+## Submit Form
 
-1. Use the `(ngSubmit)` event on the `<form>` element.
-2. Bind the submit button's disabled state to the overall form validity using the `NgForm` template reference variable (e.g., `[disabled]="!userForm.form.valid"`).
+1. Dùng event `(ngSubmit)` trên phần tử `<form>`.
+2. Bind trạng thái disabled của nút submit với tính hợp lệ tổng thể của form bằng template reference variable của `NgForm` (ví dụ: `[disabled]="!userForm.form.valid"`).
 
-## Resetting the Form
+## Reset Form
 
-To programmatically reset the form to its pristine state (clearing values and validation flags), use the `reset()` method on the `NgForm` instance.
+Để reset form về trạng thái pristine bằng code (xóa giá trị và các cờ validation), dùng phương thức `reset()` trên instance `NgForm`.
 
 ```html
 <button type="button" (click)="userForm.reset()">Reset</button>

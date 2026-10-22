@@ -1,15 +1,15 @@
 ---
 name: fastapi-patterns
-description: FastAPI best practices covering project structure, Pydantic v2 schemas, dependency injection, async handlers, authentication, authorization, transactional service layers, and testing with httpx and pytest. Use when building or reviewing FastAPI apps — Pydantic schemas, dependencies, async handlers, auth, or tests.
+description: Best practice FastAPI gồm cấu trúc project, schema Pydantic v2, dependency injection, async handler, authentication, authorization, service layer có transaction, và testing với httpx và pytest. Dùng khi xây dựng hoặc review ứng dụng FastAPI — schema Pydantic, dependency, async handler, auth hoặc test.
 metadata:
   origin: ECC
 ---
 
-# FastAPI Patterns
+# Mẫu FastAPI (FastAPI Patterns)
 
-Modern, production-grade FastAPI development: project layout, Pydantic v2 schemas, dependency injection, async patterns, auth, transactional service methods, and testing.
+Phát triển FastAPI hiện đại, đạt chuẩn production: bố cục project, schema Pydantic v2, dependency injection, mẫu async, auth, service method có transaction và testing.
 
-## Project Structure
+## Cấu trúc project
 
 ```text
 my_app/
@@ -35,7 +35,7 @@ my_app/
 
 ---
 
-## App Factory and Lifespan
+## App Factory và Lifespan
 
 ```python
 # app/main.py
@@ -50,12 +50,12 @@ from app.routers import users
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Automatically create tables on startup for ease of use in dev/demo environments.
-    # For strict production applications, manage schemas via Alembic migrations instead.
+    # Tự động tạo bảng khi khởi động để tiện dùng trong môi trường dev/demo.
+    # Với ứng dụng production nghiêm ngặt, hãy quản lý schema bằng Alembic migration.
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
-    # Shutdown: close pooled resources.
+    # Shutdown: đóng các tài nguyên pool.
     await engine.dispose()
 
 
@@ -84,7 +84,7 @@ app = create_app()
 
 ---
 
-## Configuration with pydantic-settings
+## Cấu hình với pydantic-settings
 
 ```python
 # app/config.py
@@ -103,7 +103,7 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
 
-    # Pydantic-settings v2 safely evaluates mutable list literals directly
+    # Pydantic-settings v2 đánh giá an toàn trực tiếp các list literal có thể thay đổi
     allowed_origins: list[str] = ["http://localhost:3000"]
     allowed_methods: list[str] = ["GET", "POST", "PATCH", "DELETE", "OPTIONS"]
     allowed_headers: list[str] = ["Authorization", "Content-Type"]
@@ -115,7 +115,7 @@ settings = Settings()
 
 ---
 
-## Pydantic Schemas (v2)
+## Schema Pydantic (v2)
 
 ```python
 # app/schemas/user.py
@@ -224,7 +224,7 @@ ActiveUserDep = Annotated[User, Depends(get_current_active_user)]
 
 ---
 
-## Router and Endpoint Design
+## Thiết kế Router và Endpoint
 
 ```python
 # app/routers/users.py
@@ -341,7 +341,7 @@ class UserService:
         )
         self.db.add(user)
         try:
-            # Rely on atomic DB constraints rather than race-prone application-level prechecks
+            # Dựa vào ràng buộc nguyên tử của DB thay vì kiểm tra trước ở tầng ứng dụng dễ dính race condition
             await self.db.commit()
         except IntegrityError as exc:
             await self.db.rollback()
@@ -352,7 +352,7 @@ class UserService:
     async def list(self, skip: int = 0, limit: int = 20) -> tuple[list[User], int]:
         total_result = await self.db.execute(select(func.count(User.id)))
         total = total_result.scalar_one()
-        # Enforce explicit deterministic ordering to ensure reliable pagination
+        # Áp dụng thứ tự xác định rõ ràng để phân trang đáng tin cậy
         result = await self.db.execute(
             select(User).order_by(User.id).offset(skip).limit(limit)
         )
@@ -386,11 +386,11 @@ class UserService:
         )
 ```
 
-> **Note on Database Design:** Application-level unique handling requires an underlying unique database index (e.g., `unique=True` on your SQLAlchemy mapping attributes). Without underlying constraints, application layer error-catching cannot safely prevent concurrent race conditions.
+> **Lưu ý về thiết kế Database:** Việc xử lý unique ở tầng ứng dụng đòi hỏi phải có unique index ở database bên dưới (ví dụ `unique=True` trên các thuộc tính mapping SQLAlchemy). Nếu thiếu ràng buộc bên dưới, việc bắt lỗi ở tầng ứng dụng không thể ngăn chặn race condition đồng thời một cách an toàn.
 
 ---
 
-## Testing with httpx and pytest
+## Testing với httpx và pytest
 
 ```python
 # tests/conftest.py
@@ -469,10 +469,10 @@ async def auth_client(client: AsyncClient, auth_token: str) -> AsyncClient:
 
 ---
 
-## Anti-Patterns
+## Anti-Pattern
 
 ```python
-# Bad: business logic inside route handlers.
+# Bad: business logic nằm trong route handler.
 @router.post("/users/")
 async def create_user(payload: UserCreate, db: DbDep):
     hashed = bcrypt.hash(payload.password)
@@ -481,7 +481,7 @@ async def create_user(payload: UserCreate, db: DbDep):
     await db.commit()
     return user
 
-# Good: thin route, transactional service handling.
+# Good: route mỏng, xử lý transaction trong service.
 @router.post("/users/", response_model=UserResponse, status_code=201)
 async def create_user(payload: UserCreate, db: DbDep):
     try:
@@ -490,12 +490,12 @@ async def create_user(payload: UserCreate, db: DbDep):
         raise HTTPException(status_code=400, detail="Email already registered")
 
 
-# Bad: sync DB calls in async routes block the event loop.
+# Bad: lệnh DB đồng bộ trong route async sẽ chặn event loop.
 @router.get("/items/")
 async def list_items(db: Session = Depends(get_db)):
     return db.query(Item).all()
 
-# Good: use async SQLAlchemy executions.
+# Good: dùng thực thi SQLAlchemy async.
 @router.get("/items/")
 async def list_items(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Item))
@@ -504,11 +504,11 @@ async def list_items(db: AsyncSession = Depends(get_db)):
 
 ---
 
-## Best Practices
+## Best Practice
 
-- Always declare a typed `response_model` to prevent accidental PII/data leaks and output clean OpenAPI schemas.
-- Consolidate standard middleware dependency injections via type-aliasing: `DbDep = Annotated[AsyncSession, Depends(get_db)]`.
-- Wrap database mutation boundaries gracefully within transactions inside your service layer, catching structural database errors directly.
-- Parse JWT parameters defensively, expecting potential string/integer cast mismatches from modern payload variations.
-- Enforce deterministic sorting (e.g., `.order_by(Model.id)`) on all offset/limit paginated endpoints to avoid data skips.
-- Isolate authorization checks from core authentication dependencies to provide precise REST status signals (`401` vs `403`).
+- LUÔN LUÔN khai báo `response_model` có kiểu để tránh rò rỉ PII/dữ liệu ngoài ý muốn và tạo schema OpenAPI sạch.
+- Gom các dependency injection middleware chuẩn bằng type alias: `DbDep = Annotated[AsyncSession, Depends(get_db)]`.
+- Bọc các ranh giới thay đổi database trong transaction ở service layer một cách gọn gàng, bắt trực tiếp các lỗi cấu trúc của database.
+- Parse tham số JWT một cách phòng thủ, lường trước khả năng lệch kiểu string/integer từ các biến thể payload hiện đại.
+- Áp dụng sắp xếp xác định (ví dụ `.order_by(Model.id)`) cho mọi endpoint phân trang offset/limit để tránh bỏ sót dữ liệu.
+- Tách các kiểm tra authorization khỏi dependency authentication cốt lõi để trả tín hiệu REST status chính xác (`401` so với `403`).

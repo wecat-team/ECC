@@ -1,57 +1,57 @@
 ---
 name: config-gc
-description: Garbage collection for your Claude Code configuration. Periodically scans ~/.claude (skills, memory, hooks, permissions, MCP servers, caches) for redundant, stale, orphaned, or low-value items, then walks the user through a confirm-each-deletion cleanup. Use when the user says "clean up my config", "config GC", "too many skills", "audit my setup", "my .claude is bloated", or asks for a periodic config review.
+description: Garbage collection cho cấu hình Claude Code của bạn. Định kỳ quét ~/.claude (skill, memory, hook, permission, MCP server, cache) để tìm các mục thừa, lỗi thời, mồ côi hoặc ít giá trị, rồi hướng dẫn người dùng dọn dẹp theo kiểu xác nhận từng mục trước khi xóa. Dùng khi người dùng nói "clean up my config", "config GC", "too many skills", "audit my setup", "my .claude is bloated", hoặc yêu cầu review config định kỳ.
 metadata:
   origin: ECC
 ---
 
-# Config GC — Garbage Collection for Claude Code Setups
+# Config GC — Garbage Collection cho các thiết lập Claude Code
 
-Borrowed from runtime garbage collection: periodically scan for objects that are no longer referenced, redundant, expired, or low-value, and reclaim the space. The critical difference: **here, collection requires a human in the loop. Never delete autonomously.**
+Mượn ý tưởng từ runtime garbage collection: định kỳ quét các đối tượng không còn được tham chiếu, dư thừa, hết hạn hoặc ít giá trị, rồi thu hồi không gian. Khác biệt then chốt: **ở đây, việc thu gom cần có con người trong vòng lặp. KHÔNG BAO GIỜ tự động xóa.**
 
-## When to Activate
+## Khi nào kích hoạt
 
-- The user asks to clean up, audit, or slim down their Claude Code configuration
-- The user complains about too many skills, noisy hooks, or slow session startup
-- A monthly/periodic config review is due
-- After installing a large skill pack (e.g. this repo), to reconcile overlaps with existing setup
+- Người dùng yêu cầu dọn dẹp, audit hoặc thu gọn cấu hình Claude Code của họ
+- Người dùng phàn nàn về quá nhiều skill, hook gây nhiễu hoặc session khởi động chậm
+- Đến hạn review config hằng tháng/định kỳ
+- Sau khi cài một skill pack lớn (ví dụ repo này), để đối chiếu các phần chồng lấn với thiết lập hiện có
 
-Do NOT activate for: cleaning project source code (that's refactoring), clearing chat history, or uninstalling Claude Code itself.
+KHÔNG kích hoạt cho: dọn source code của dự án (đó là refactoring), xóa lịch sử chat, hoặc gỡ cài đặt chính Claude Code.
 
-## Design Philosophy
+## Triết lý thiết kế
 
-1. **Append-only configs leak.** Skills, memory files, hooks, and permission entries only ever get added. Without periodic review they rot silently.
-2. **Regular audits beat one-time purges.** Scan every ~30 days, propose a small batch of candidates each time.
-3. **Per-channel strategies.** Each accumulation type (skills, hooks, permissions, ...) has its own staleness signals — don't apply one rule everywhere.
-4. **Soft-delete first.** Rename to `.disabled` > move to `~/.claude/_gc_trash/` > real deletion. Always keep an undo path.
-5. **Forced human-in-the-loop.** Every candidate gets its own `[y/n/skip]` confirmation. No "yes to all" shortcut.
-6. **Keep a log.** Every GC run appends to `~/.claude/gc_log.md`: what was touched, why, and how to undo it.
+1. **Config chỉ-thêm sẽ bị rò rỉ.** Skill, file memory, hook và permission entry chỉ ngày càng được thêm vào. Không review định kỳ thì chúng mục nát một cách âm thầm.
+2. **Audit đều đặn tốt hơn dọn một lần.** Quét mỗi ~30 ngày, mỗi lần đề xuất một lô nhỏ ứng viên.
+3. **Chiến lược theo từng kênh.** Mỗi loại tích tụ (skill, hook, permission, ...) có tín hiệu lỗi thời riêng — đừng áp một rule cho mọi nơi.
+4. **Soft-delete trước.** Đổi tên thành `.disabled` > chuyển vào `~/.claude/_gc_trash/` > xóa thật. Luôn giữ đường hoàn tác.
+5. **Bắt buộc có con người trong vòng lặp.** Mỗi ứng viên có xác nhận `[y/n/skip]` riêng. Không có lối tắt "yes to all".
+6. **Ghi log.** Mỗi lần chạy GC ghi nối tiếp vào `~/.claude/gc_log.md`: đã động vào gì, vì sao, và cách hoàn tác.
 
-## Scan Channels
+## Các kênh quét
 
-| # | Channel | Path | Staleness / redundancy signals |
-|---|---------|------|--------------------------------|
-| 1 | Skills | `~/.claude/skills/*/` | Heavily overlapping names; never triggered in recent transcripts; domain mismatch with the user's actual work; broken or empty SKILL.md |
-| 2 | Memory | `~/.claude/**/memory/*.md` + its index | Multiple index entries for one topic; contents contradicting newer entries; dates that have passed; orphan files missing from the index; sub-100-word fragments that should merge |
-| 3 | Hooks | `~/.claude/hooks/` + settings | Scripts present on disk but referenced by no hook config; old versions superseded by rewrites |
-| 4 | Permissions | `permissions.allow` in `settings.json` / `settings.local.json` | Duplicate entries; specific entries already covered by a wildcard (e.g. `Bash(git push)` when `Bash(*)` is allowed); one-off grants from past experiments |
-| 5 | MCP servers | `~/.claude.json` or project `.mcp.json` | Servers that fail to connect; functional duplicates; long-unused |
-| 6 | Scheduled reminders / jobs | wherever the user keeps them | Fired one-shots older than 30 days; jobs whose target scripts no longer exist |
-| 7 | Project history | `~/.claude/projects/*/` | Stale handoff snapshots; session records superseded by newer state |
-| 8 | Runtime caches | `cache/`, `file-history/`, `logs/`, `shell-snapshots/` | Sort by size and mtime; propose items >30 days old and large |
+| # | Kênh | Đường dẫn | Tín hiệu lỗi thời / dư thừa |
+|---|------|-----------|-----------------------------|
+| 1 | Skill | `~/.claude/skills/*/` | Tên chồng lấn nhiều; không bao giờ được kích hoạt trong transcript gần đây; lệch domain so với công việc thực tế của người dùng; SKILL.md hỏng hoặc rỗng |
+| 2 | Memory | `~/.claude/**/memory/*.md` + index của nó | Nhiều index entry cho một chủ đề; nội dung mâu thuẫn với các entry mới hơn; ngày tháng đã qua; file mồ côi không có trong index; mảnh dưới 100 từ nên được gộp |
+| 3 | Hook | `~/.claude/hooks/` + settings | Script có trên đĩa nhưng không hook config nào tham chiếu; phiên bản cũ đã bị bản viết lại thay thế |
+| 4 | Permission | `permissions.allow` trong `settings.json` / `settings.local.json` | Entry trùng lặp; entry cụ thể đã được wildcard bao phủ (ví dụ `Bash(git push)` khi `Bash(*)` đã được cho phép); các grant một lần từ những thử nghiệm trong quá khứ |
+| 5 | MCP server | `~/.claude.json` hoặc `.mcp.json` của dự án | Server không kết nối được; trùng lặp về chức năng; lâu không dùng |
+| 6 | Reminder / job đã lên lịch | nơi người dùng lưu chúng | One-shot đã chạy cách đây hơn 30 ngày; job có script đích không còn tồn tại |
+| 7 | Lịch sử dự án | `~/.claude/projects/*/` | Snapshot handoff cũ; bản ghi session đã bị trạng thái mới hơn thay thế |
+| 8 | Runtime cache | `cache/`, `file-history/`, `logs/`, `shell-snapshots/` | Sắp xếp theo kích thước và mtime; đề xuất các mục >30 ngày tuổi và lớn |
 
 ## Workflow
 
-1. **Scan** all channels (or the subset the user names). Collect candidates with: path, channel, signal that flagged it, size, last-modified.
-2. **Rank** by confidence (broken/orphaned = high; merely old = low) and present as a numbered table. Cap each run at ~20 candidates — GC is periodic, not exhaustive.
-3. **Confirm one by one.** For each candidate show the evidence, then ask `[y/n/skip]`. The user can stop at any point.
-4. **Soft-delete confirmed items**: prefer `.disabled` rename for skills/hooks and `_gc_trash/<date>/` move for files. Permission entries live in JSON (no comments possible): back up the settings file, record each removed entry verbatim in `gc_log.md`, then remove it from the `allow` array with `jq`. Only hard-delete when the user explicitly asks.
-5. **Log** the run to `~/.claude/gc_log.md`: timestamp, items actioned, undo instructions.
-6. **Report**: reclaimed size, channels still healthy, suggested next review date.
+1. **Quét** tất cả các kênh (hoặc tập con mà người dùng nêu tên). Thu thập ứng viên kèm: đường dẫn, kênh, tín hiệu đã gắn cờ, kích thước, thời điểm sửa đổi cuối.
+2. **Xếp hạng** theo độ tin cậy (hỏng/mồ côi = cao; chỉ cũ = thấp) và trình bày dưới dạng bảng đánh số. Giới hạn mỗi lần chạy ở ~20 ứng viên — GC mang tính định kỳ, không phải toàn diện.
+3. **Xác nhận từng mục một.** Với mỗi ứng viên, hiển thị bằng chứng rồi hỏi `[y/n/skip]`. Người dùng có thể dừng bất cứ lúc nào.
+4. **Soft-delete các mục đã xác nhận**: ưu tiên đổi tên `.disabled` cho skill/hook và chuyển vào `_gc_trash/<date>/` cho file. Permission entry nằm trong JSON (không thể có comment): sao lưu file settings, ghi từng entry bị xóa nguyên văn vào `gc_log.md`, rồi xóa nó khỏi mảng `allow` bằng `jq`. Chỉ hard-delete khi người dùng yêu cầu rõ ràng.
+5. **Ghi log** lần chạy vào `~/.claude/gc_log.md`: timestamp, các mục đã xử lý, hướng dẫn hoàn tác.
+6. **Báo cáo**: dung lượng thu hồi, các kênh vẫn khỏe mạnh, ngày review tiếp theo được đề xuất.
 
-## Example Scan Commands
+## Ví dụ lệnh quét
 
-Orphaned hook scripts (channel 3) — scripts on disk that no hook config references:
+Script hook mồ côi (kênh 3) — script trên đĩa mà không hook config nào tham chiếu:
 
 ```bash
 for f in ~/.claude/hooks/*; do
@@ -61,7 +61,7 @@ for f in ~/.claude/hooks/*; do
 done
 ```
 
-Redundant permission entries (channel 4) — duplicates, and specific grants shadowed by a wildcard:
+Permission entry dư thừa (kênh 4) — trùng lặp, và các grant cụ thể bị wildcard che khuất:
 
 ```bash
 jq -r '.permissions.allow[]' ~/.claude/settings.local.json | sort | uniq -d
@@ -71,14 +71,14 @@ if jq -e '.permissions.allow | index("Bash(*)")' ~/.claude/settings.local.json >
 fi
 ```
 
-Largest stale caches (channel 8) — `du -k` instead of GNU-only `find -printf`, so it works on macOS/BSD too:
+Các cache cũ lớn nhất (kênh 8) — dùng `du -k` thay vì `find -printf` chỉ có ở GNU, nên cũng chạy được trên macOS/BSD:
 
 ```bash
 find ~/.claude/file-history ~/.claude/shell-snapshots -type f -mtime +30 \
   -exec du -k {} + 2>/dev/null | sort -rn | head -20
 ```
 
-Soft-delete with undo path (capture the date once so the log can't disagree with the directory):
+Soft-delete với đường hoàn tác (lấy ngày một lần để log không thể lệch với tên thư mục):
 
 ```bash
 gc_date=$(date +%Y-%m-%d)
@@ -87,7 +87,7 @@ mv ~/.claude/skills/dead-skill ~/.claude/_gc_trash/$gc_date/
 echo "$(date -Iseconds) moved skills/dead-skill -> _gc_trash/$gc_date/ (undo: mv back)" >> ~/.claude/gc_log.md
 ```
 
-Removing a confirmed-redundant permission entry (JSON has no comments — back up, log, then edit):
+Xóa một permission entry đã xác nhận là dư thừa (JSON không có comment — sao lưu, ghi log, rồi mới sửa):
 
 ```bash
 cp ~/.claude/settings.local.json ~/.claude/settings.local.json.bak
@@ -96,25 +96,25 @@ jq '.permissions.allow -= ["Bash(git push)"]' ~/.claude/settings.local.json.bak 
   > ~/.claude/settings.local.json
 ```
 
-## Anti-Patterns
+## Anti-Pattern
 
-- **Bulk approval.** Asking "delete all 15? [y/n]" defeats the design. One item, one decision.
-- **Hard-deleting on first pass.** If there's no `_gc_trash/` copy or `.disabled` rename, you did it wrong.
-- **Treating "old" as "dead".** A skill untouched for 60 days may be seasonal (tax season, quarterly reviews). Age is a signal, not a verdict — that's why a human confirms.
-- **Cleaning memory by truncation.** Merging two contradicting memory files requires reading both and keeping the newer truth, not deleting the longer one.
-- **Touching anything outside `~/.claude`** (or the project's `.claude/`). Config GC never wanders into source trees.
+- **Phê duyệt hàng loạt.** Hỏi "delete all 15? [y/n]" phá vỡ thiết kế. Một mục, một quyết định.
+- **Hard-delete ngay lần đầu.** Nếu không có bản sao trong `_gc_trash/` hoặc đổi tên `.disabled`, bạn đã làm sai.
+- **Coi "cũ" là "chết".** Một skill không được đụng tới 60 ngày có thể mang tính theo mùa (mùa thuế, review hằng quý). Tuổi là một tín hiệu, không phải bản án — đó là lý do cần con người xác nhận.
+- **Dọn memory bằng cách cắt bớt.** Gộp hai file memory mâu thuẫn đòi hỏi đọc cả hai và giữ sự thật mới hơn, chứ không phải xóa file dài hơn.
+- **Đụng vào bất cứ thứ gì ngoài `~/.claude`** (hoặc `.claude/` của dự án). Config GC không bao giờ lang thang vào cây source.
 
-## Best Practices
+## Best Practice
 
-- Run after big additions, not just on a calendar: installing a 50-skill pack is exactly when overlap with existing skills appears.
-- When two skills overlap, prefer disabling the one with the weaker trigger description — it's the one that was probably never firing anyway.
-- Permission cleanup is the highest-value channel per minute spent: redundant allow-entries make security review harder.
-- Keep `gc_log.md` forever. It's tiny, and "when did I disable that hook and why" comes up more often than you'd think.
+- Chạy sau những lần bổ sung lớn, không chỉ theo lịch: cài một pack 50 skill chính là lúc xuất hiện chồng lấn với các skill hiện có.
+- Khi hai skill chồng lấn, ưu tiên vô hiệu hóa skill có mô tả trigger yếu hơn — đó có lẽ là skill vốn dĩ chưa bao giờ được kích hoạt.
+- Dọn permission là kênh có giá trị cao nhất trên mỗi phút bỏ ra: các allow-entry dư thừa khiến security review khó hơn.
+- Giữ `gc_log.md` mãi mãi. Nó rất nhỏ, và câu hỏi "khi nào và vì sao tôi tắt hook đó" xuất hiện thường xuyên hơn bạn nghĩ.
 
-## Related Skills
+## Skill liên quan
 
-- `skill-stocktake` — audits skill *quality*; config-gc audits skill *existence*. Run stocktake on what survives GC.
-- `workspace-surface-audit` — the additive counterpart: recommends what to install. config-gc is the subtractive half of the same lifecycle.
-- `configure-ecc` — after installing skills with it, run config-gc to reconcile overlaps with your pre-existing setup.
-- `continuous-learning` — produces the memory files this skill later audits.
-- `security-review` — pairs well with the permissions channel.
+- `skill-stocktake` — audit *chất lượng* skill; config-gc audit *sự tồn tại* của skill. Chạy stocktake trên những gì còn sống sót sau GC.
+- `workspace-surface-audit` — đối trọng theo hướng thêm: đề xuất nên cài gì. config-gc là nửa theo hướng bớt của cùng một vòng đời.
+- `configure-ecc` — sau khi cài skill bằng nó, hãy chạy config-gc để đối chiếu các phần chồng lấn với thiết lập sẵn có của bạn.
+- `continuous-learning` — tạo ra các file memory mà skill này sau đó audit.
+- `security-review` — kết hợp tốt với kênh permission.

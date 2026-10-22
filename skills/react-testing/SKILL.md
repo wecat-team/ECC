@@ -1,58 +1,58 @@
 ---
 name: react-testing
-description: React component testing with React Testing Library, Vitest/Jest, MSW for network mocking, accessibility assertions with axe, and the decision boundary between component tests and Playwright/Cypress end-to-end runs. Use when writing or fixing tests for React components, hooks, or pages.
+description: Kiểm thử component React với React Testing Library, Vitest/Jest, MSW để mock mạng, kiểm tra accessibility bằng axe, và ranh giới quyết định giữa component test với E2E (Playwright/Cypress). Dùng khi viết hoặc sửa test cho component, hook hoặc page React.
 metadata:
   origin: ECC
 ---
 
 # React Testing
 
-Comprehensive React testing patterns for behavior-focused component tests, custom hook tests, accessibility assertions, and network-level mocking.
+Các pattern kiểm thử React toàn diện cho component test tập trung vào hành vi, test custom hook, kiểm tra accessibility và mock ở tầng mạng.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing tests for React components, custom hooks, or pages
-- Adding test coverage to legacy untested components
-- Migrating from Enzyme or class-component-era patterns to React Testing Library
-- Setting up Vitest or Jest for a new React project
-- Mocking HTTP requests in tests
-- Asserting accessibility violations
-- Deciding which tests belong in RTL vs Playwright Component Testing vs full E2E
+- Viết test cho component, custom hook hoặc page React
+- Bổ sung coverage cho các component legacy chưa có test
+- Chuyển từ Enzyme hoặc các pattern thời class-component sang React Testing Library
+- Thiết lập Vitest hoặc Jest cho dự án React mới
+- Mock HTTP request trong test
+- Kiểm tra các vi phạm accessibility
+- Quyết định test nào thuộc RTL, test nào thuộc Playwright Component Testing, test nào thuộc E2E đầy đủ
 
-## Core Principle
+## Nguyên tắc cốt lõi
 
-Test what the user sees and does, not implementation details.
+Hãy test những gì người dùng nhìn thấy và thao tác, không test chi tiết triển khai.
 
-A test should:
+Một test nên:
 
-- Render the component with the same providers it has in production
-- Interact with it via accessible queries (role, label) and `userEvent`
-- Assert visible output and observable side effects (callback fired, request sent)
+- Render component với cùng các provider như trong production
+- Tương tác với component qua các query accessible (role, label) và `userEvent`
+- Assert đầu ra hiển thị được và các side effect quan sát được (callback được gọi, request được gửi)
 
-A test should NOT:
+Một test KHÔNG nên:
 
-- Inspect component state, props passed to children, or which hooks were called
-- Mock React itself or framework hooks
-- Assert on the number of renders or DOM structure beyond what affects users
+- Kiểm tra state của component, props truyền cho component con, hoặc hook nào đã được gọi
+- Mock chính React hoặc các hook của framework
+- Assert số lần render hoặc cấu trúc DOM vượt quá những gì ảnh hưởng đến người dùng
 
-## Library Choice
+## Lựa chọn thư viện
 
-| Runner | When | Note |
+| Runner | Khi nào | Ghi chú |
 |---|---|---|
-| **Vitest** | Vite, Remix, modern setups | Faster, native ESM, Jest-compatible API |
-| **Jest** | Next.js, CRA, established repos | Default for many React projects |
-| **Playwright Component Testing** | Real browser engine needed | Use when JSDOM lacks the required feature |
-| **Cypress Component Testing** | Real browser, Cypress already in use | Alternative to Playwright CT |
+| **Vitest** | Vite, Remix, các setup hiện đại | Nhanh hơn, ESM gốc, API tương thích Jest |
+| **Jest** | Next.js, CRA, các repo đã có sẵn | Mặc định của nhiều dự án React |
+| **Playwright Component Testing** | Cần engine trình duyệt thật | Dùng khi JSDOM thiếu tính năng cần thiết |
+| **Cypress Component Testing** | Trình duyệt thật, đã dùng Cypress | Lựa chọn thay thế cho Playwright CT |
 
-Pick one. Do not run RTL + Vitest AND Playwright CT in the same repo unless you have a clear lane separation.
+Chọn một. Không chạy RTL + Vitest VÀ Playwright CT trong cùng một repo trừ khi đã phân chia phạm vi rõ ràng.
 
-## Query Priority
+## Thứ tự ưu tiên của query
 
-React Testing Library exposes queries in three tiers — use top-down:
+React Testing Library cung cấp query theo ba tầng — dùng từ trên xuống:
 
-1. **Accessible to everyone**: `getByRole`, `getByLabelText`, `getByPlaceholderText`, `getByText`, `getByDisplayValue`
-2. **Semantic**: `getByAltText`, `getByTitle`
-3. **Test IDs (escape hatch)**: `getByTestId`
+1. **Accessible với mọi người**: `getByRole`, `getByLabelText`, `getByPlaceholderText`, `getByText`, `getByDisplayValue`
+2. **Ngữ nghĩa (semantic)**: `getByAltText`, `getByTitle`
+3. **Test ID (lối thoát cuối cùng)**: `getByTestId`
 
 ```tsx
 // Best
@@ -65,13 +65,13 @@ screen.getByLabelText("Email");
 screen.getByTestId("save-btn");
 ```
 
-Variants:
+Các biến thể:
 
-- `getBy*` — throws if no match
-- `queryBy*` — returns `null` (use for "assert absence")
-- `findBy*` — async, returns a Promise (use for elements that appear after async work)
+- `getBy*` — throw nếu không có kết quả khớp
+- `queryBy*` — trả về `null` (dùng để "assert không tồn tại")
+- `findBy*` — bất đồng bộ, trả về Promise (dùng cho phần tử xuất hiện sau tác vụ async)
 
-## User Interaction with `userEvent`
+## Tương tác người dùng với `userEvent`
 
 ```tsx
 import userEvent from "@testing-library/user-event";
@@ -88,11 +88,11 @@ test("submits the form", async () => {
 });
 ```
 
-- Always `await` userEvent calls
-- Call `userEvent.setup()` once per test, reuse the returned `user`
-- `userEvent` simulates a real browser sequence; `fireEvent` dispatches a single synthetic event — prefer `userEvent`
+- Luôn `await` các lệnh gọi userEvent
+- Gọi `userEvent.setup()` một lần cho mỗi test, tái sử dụng `user` được trả về
+- `userEvent` mô phỏng chuỗi sự kiện của trình duyệt thật; `fireEvent` chỉ dispatch một sự kiện tổng hợp đơn lẻ — ưu tiên `userEvent`
 
-## Async Patterns
+## Pattern bất đồng bộ
 
 ```tsx
 // Element that appears after async work
@@ -105,13 +105,13 @@ await waitFor(() => expect(saveSpy).toHaveBeenCalled());
 await waitForElementToBeRemoved(() => screen.queryByText("Loading"));
 ```
 
-Never `setTimeout` + assertion — flaky. Use the matchers above.
+Không bao giờ dùng `setTimeout` + assertion — dễ flaky. Hãy dùng các matcher ở trên.
 
-## Network Mocking with MSW
+## Mock mạng với MSW
 
-Mock Service Worker mocks at the network layer. The component, hooks, and fetch library all behave exactly as in production.
+Mock Service Worker mock ở tầng mạng. Component, hook và thư viện fetch đều hoạt động y hệt như trong production.
 
-### Setup
+### Thiết lập
 
 ```ts
 // test/setup.ts
@@ -135,9 +135,9 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 ```
 
-Configure `onUnhandledRequest: "error"` so any unmocked request fails the test loudly — silent passes are worse than red.
+Cấu hình `onUnhandledRequest: "error"` để mọi request chưa được mock đều làm test fail một cách rõ ràng — test pass âm thầm còn tệ hơn test đỏ.
 
-### Per-test override
+### Ghi đè theo từng test
 
 ```tsx
 test("renders error on 500", async () => {
@@ -149,9 +149,9 @@ test("renders error on 500", async () => {
 });
 ```
 
-## Provider Wrapping
+## Bọc Provider
 
-Wrap providers once in a `test-utils.tsx`:
+Bọc các provider một lần duy nhất trong `test-utils.tsx`:
 
 ```tsx
 // test-utils.tsx
@@ -179,9 +179,9 @@ export function renderWithProviders(
 export * from "@testing-library/react";
 ```
 
-Then `import { renderWithProviders, screen } from "test-utils"` in every test file.
+Sau đó `import { renderWithProviders, screen } from "test-utils"` trong mọi file test.
 
-## Custom Hook Testing
+## Test Custom Hook
 
 ```tsx
 import { renderHook, act } from "@testing-library/react";
@@ -220,11 +220,11 @@ test("useUser fetches user data", async () => {
 });
 ```
 
-- Wrap state-changing calls in `act`
-- Test through the hook's public API only
-- For hooks that use context, pass a `wrapper`
+- Bọc các lệnh gọi thay đổi state trong `act`
+- Chỉ test thông qua public API của hook
+- Với hook dùng context, truyền `wrapper`
 
-## Accessibility Assertions
+## Assert Accessibility
 
 ```tsx
 import { axe, toHaveNoViolations } from "jest-axe"; // or vitest-axe
@@ -236,60 +236,60 @@ test("UserCard has no a11y violations", async () => {
 });
 ```
 
-Run axe in component tests for every interactive component. Catches:
+Chạy axe trong component test cho mọi component có tương tác. Phát hiện được:
 
-- Missing labels on form inputs
-- Invalid ARIA usage
-- Poor color contrast (limited — JSDOM has no real CSS engine, so this works for inline styles only; visual contrast belongs in Playwright)
-- Missing alt text on images
-- Heading order violations
+- Thiếu label trên input của form
+- Dùng ARIA không hợp lệ
+- Độ tương phản màu kém (có giới hạn — JSDOM không có CSS engine thật nên chỉ hoạt động với inline style; kiểm tra tương phản trực quan thuộc về Playwright)
+- Thiếu alt text trên ảnh
+- Vi phạm thứ tự heading
 
-Cross-link: [skills/accessibility/SKILL.md](../accessibility/SKILL.md) for the broader a11y testing playbook.
+Tham chiếu chéo: [skills/accessibility/SKILL.md](../accessibility/SKILL.md) cho playbook kiểm thử a11y đầy đủ hơn.
 
-## When NOT to Use Snapshot Tests
+## Khi nào KHÔNG dùng Snapshot Test
 
-Snapshots of rendered output:
+Snapshot của đầu ra được render:
 
-- Break on every styling change
-- Get rubber-stamped during review
-- Test implementation detail (DOM structure), not behavior
+- Vỡ sau mỗi lần đổi style
+- Bị duyệt qua loa trong review
+- Test chi tiết triển khai (cấu trúc DOM), không test hành vi
 
-Acceptable snapshot uses:
+Các trường hợp dùng snapshot chấp nhận được:
 
-- Pure data serialization functions (`formatInvoice(invoice)` -> stable string)
-- Generated config files (e.g., webpack config output)
+- Hàm serialize dữ liệu thuần (`formatInvoice(invoice)` -> chuỗi ổn định)
+- File cấu hình được sinh ra (ví dụ: output cấu hình webpack)
 
-For visual regression on components, use Playwright/Cypress screenshots or Percy/Chromatic — actual visual diffs, not DOM strings.
+Với visual regression của component, hãy dùng ảnh chụp màn hình của Playwright/Cypress hoặc Percy/Chromatic — so sánh khác biệt hình ảnh thực sự, không phải chuỗi DOM.
 
-## When to Reach for Playwright / Cypress
+## Khi nào nên dùng Playwright / Cypress
 
-JSDOM (used by Vitest/Jest) cannot:
+JSDOM (được Vitest/Jest sử dụng) không thể:
 
-- Render real layout (flexbox, grid, viewport queries)
-- Run native browser animation, CSS transitions
-- Test scrolling behavior, drag-and-drop, paste from clipboard
-- Handle iframes, popups, downloads, cross-origin flows
-- Run real network in a controlled environment with full DevTools support
+- Render layout thật (flexbox, grid, viewport query)
+- Chạy animation gốc của trình duyệt, CSS transition
+- Test hành vi scroll, drag-and-drop, paste từ clipboard
+- Xử lý iframe, popup, download, luồng cross-origin
+- Chạy mạng thật trong môi trường được kiểm soát với đầy đủ hỗ trợ DevTools
 
-For any of those, use Playwright Component Testing (component test in real browser) or full E2E. See [e2e-testing skill](../e2e-testing/SKILL.md).
+Với bất kỳ trường hợp nào ở trên, hãy dùng Playwright Component Testing (component test trong trình duyệt thật) hoặc E2E đầy đủ. Xem [e2e-testing skill](../e2e-testing/SKILL.md).
 
-Decision boundary:
+Ranh giới quyết định:
 
-- A hook, a presentational component, a form with logic -> RTL
-- A component whose layout matters or that uses browser APIs not in JSDOM -> Playwright CT
-- A full user flow across multiple pages -> Playwright/Cypress E2E
+- Một hook, một component thuần trình bày, một form có logic -> RTL
+- Một component mà layout quan trọng hoặc dùng các browser API không có trong JSDOM -> Playwright CT
+- Một luồng người dùng đầy đủ qua nhiều trang -> Playwright/Cypress E2E
 
-## Coverage Targets
+## Mục tiêu Coverage
 
-| Layer | Target |
+| Tầng | Mục tiêu |
 |---|---|
-| Pure utilities | >=90% |
-| Custom hooks | >=85% |
-| Presentational components | >=80% — behavior, not lines |
-| Container components | >=70% — golden paths + error states |
-| Pages | E2E covered separately; smoke test minimum |
+| Hàm tiện ích thuần | >=90% |
+| Custom hook | >=85% |
+| Component trình bày | >=80% — hành vi, không phải số dòng |
+| Container component | >=70% — golden path + trạng thái lỗi |
+| Page | E2E bao phủ riêng; tối thiểu có smoke test |
 
-Configure via `vitest.config.ts` / `jest.config.js`:
+Cấu hình qua `vitest.config.ts` / `jest.config.js`:
 
 ```ts
 // vitest.config.ts
@@ -307,17 +307,17 @@ test: {
 }
 ```
 
-## Anti-Patterns
+## Anti-Pattern
 
-- `container.querySelector("...")` — bypasses accessibility queries, lets tests pass when real users would fail
-- Asserting on number of renders — implementation detail
-- `jest.mock("react", ...)` — never mock React. Refactor the component instead
-- Mocking child components by default — tests the integration, not isolation. Mock only when the child has heavy side effects
-- Ignoring `act()` warnings — they signal real bugs (state update after unmount, missing async wrapping)
-- Sharing mutable state across tests — flakes when test order changes
-- Tests that pass with `it.skip()` removed — your test does not actually assert what you think
+- `container.querySelector("...")` — bỏ qua các query accessible, khiến test pass trong khi người dùng thật sẽ gặp lỗi
+- Assert số lần render — là chi tiết triển khai
+- `jest.mock("react", ...)` — không bao giờ mock React. Hãy refactor component thay vào đó
+- Mock component con theo mặc định — chỉ test tích hợp chứ không cô lập. Chỉ mock khi component con có side effect nặng
+- Bỏ qua cảnh báo `act()` — chúng báo hiệu bug thật (cập nhật state sau khi unmount, thiếu bọc async)
+- Chia sẻ mutable state giữa các test — flaky khi thứ tự test thay đổi
+- Test vẫn pass khi bỏ `it.skip()` — nghĩa là test của bạn không thực sự assert những gì bạn nghĩ
 
-## TDD Workflow
+## Quy trình TDD
 
 ```
 RED     -> Write failing test for the next requirement
@@ -326,16 +326,16 @@ REFACTOR -> Improve the component, tests stay green
 REPEAT  -> Next requirement
 ```
 
-For new components:
+Với component mới:
 
-1. Define the component's prop type and signature
-2. Write the first test for the simplest case
-3. Verify it fails for the right reason
-4. Implement just enough to pass
-5. Add the next test case
-6. Refactor when the third similar test reveals a pattern
+1. Định nghĩa kiểu props và signature của component
+2. Viết test đầu tiên cho trường hợp đơn giản nhất
+3. Xác nhận test fail vì đúng lý do
+4. Triển khai vừa đủ để pass
+5. Thêm test case tiếp theo
+6. Refactor khi test tương tự thứ ba làm lộ ra một pattern
 
-## Test Commands
+## Lệnh test
 
 ```bash
 # Vitest
@@ -353,16 +353,16 @@ jest path/to/file.test.tsx
 CI=true vitest run --coverage
 ```
 
-## Related
+## Liên quan
 
 - Rules: [rules/react/testing.md](../../rules/react/testing.md)
 - Skills: [react-patterns](../react-patterns/SKILL.md), [accessibility](../accessibility/SKILL.md), [e2e-testing](../e2e-testing/SKILL.md), [tdd-workflow](../tdd-workflow/SKILL.md)
-- Agents: `react-reviewer` (reviews test quality during code review), `tdd-guide` (enforces TDD process)
+- Agents: `react-reviewer` (review chất lượng test trong lúc code review), `tdd-guide` (thực thi quy trình TDD)
 - Commands: `/react-test`, `/react-review`
 
-## Examples
+## Ví dụ
 
-### Form submission with MSW and userEvent
+### Gửi form với MSW và userEvent
 
 ```tsx
 test("submits user form and shows success", async () => {
@@ -383,7 +383,7 @@ test("submits user form and shows success", async () => {
 });
 ```
 
-### Testing an error boundary
+### Test error boundary
 
 ```tsx
 function Broken() {
@@ -408,7 +408,7 @@ test("error boundary renders fallback", () => {
 });
 ```
 
-### Testing a Suspense boundary
+### Test Suspense boundary
 
 ```tsx
 test("shows loading then content", async () => {

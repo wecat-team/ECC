@@ -3,34 +3,34 @@ paths:
   - "**/*.ets"
   - "**/*.ts"
 ---
-# HarmonyOS / ArkTS Patterns
+# Pattern HarmonyOS / ArkTS
 
-> This file extends [common/patterns.md](../common/patterns.md) with HarmonyOS and ArkTS-specific patterns.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với các pattern riêng cho HarmonyOS và ArkTS.
 
-## State Management: V2 Only
+## Quản lý State: Chỉ dùng V2
 
-**MUST use** ArkUI State Management V2. V1 decorators are deprecated and must not be used.
+**PHẢI dùng** ArkUI State Management V2. Các decorator V1 đã bị deprecated và không được dùng.
 
-### V2 Decorators
+### Decorator V2
 
-| Decorator | Purpose |
+| Decorator | Mục đích |
 |-----------|---------|
-| `@ComponentV2` | Marks a struct as a V2 component |
-| `@Local` | Local state within a component |
-| `@Param` | Props received from parent (read-only) |
-| `@Event` | Callback events from child to parent |
-| `@Provider` | Provides state to descendant components |
-| `@Consumer` | Consumes state from ancestor `@Provider` |
-| `@Monitor` | Watches for state changes (replaces V1 `@Watch`) |
-| `@Computed` | Derived/computed values |
-| `@ObservedV2` | Makes a class observable for V2 state management |
-| `@Trace` | Marks observable properties in `@ObservedV2` classes |
+| `@ComponentV2` | Đánh dấu một struct là component V2 |
+| `@Local` | State cục bộ bên trong component |
+| `@Param` | Props nhận từ component cha (chỉ đọc) |
+| `@Event` | Callback event từ con lên cha |
+| `@Provider` | Cung cấp state cho các component hậu duệ |
+| `@Consumer` | Tiêu thụ state từ `@Provider` của tổ tiên |
+| `@Monitor` | Theo dõi thay đổi state (thay thế `@Watch` của V1) |
+| `@Computed` | Giá trị dẫn xuất/tính toán |
+| `@ObservedV2` | Biến một class thành observable cho V2 state management |
+| `@Trace` | Đánh dấu các thuộc tính observable trong class `@ObservedV2` |
 
-### Prohibited V1 Decorators
+### Các decorator V1 bị cấm
 
-Never use: `@State`, `@Prop`, `@Link`, `@ObjectLink`, `@Observed`, `@Provide`, `@Consume`, `@Watch`, `@Component` (use `@ComponentV2` instead).
+KHÔNG BAO GIỜ dùng: `@State`, `@Prop`, `@Link`, `@ObjectLink`, `@Observed`, `@Provide`, `@Consume`, `@Watch`, `@Component` (dùng `@ComponentV2` thay thế).
 
-### V2 Component Example
+### Ví dụ component V2
 
 ```typescript
 @ObservedV2
@@ -57,7 +57,7 @@ struct UserCard {
 }
 ```
 
-### State Synchronization
+### Đồng bộ State
 
 ```typescript
 @ComponentV2
@@ -81,11 +81,11 @@ struct ChildComponent {
 }
 ```
 
-## Routing: Navigation Only
+## Routing: Chỉ dùng Navigation
 
-**MUST use** `Navigation` component with `NavPathStack`. Never use `@ohos.router`.
+**PHẢI dùng** component `Navigation` với `NavPathStack`. KHÔNG BAO GIỜ dùng `@ohos.router`.
 
-### Navigation Setup
+### Thiết lập Navigation
 
 ```typescript
 @ComponentV2
@@ -110,7 +110,7 @@ struct MainPage {
 }
 ```
 
-### Page Navigation
+### Điều hướng trang
 
 ```typescript
 // Push a new page
@@ -126,7 +126,7 @@ this.navPathStack.pop()
 this.navPathStack.clear()
 ```
 
-### NavDestination Sub-page
+### Trang con NavDestination
 
 ```typescript
 @ComponentV2
@@ -142,9 +142,9 @@ struct DetailPage {
 }
 ```
 
-## Architecture Pattern: MVVM
+## Pattern kiến trúc: MVVM
 
-Recommended architecture for HarmonyOS applications:
+Kiến trúc được khuyến nghị cho ứng dụng HarmonyOS:
 
 ```
 feature/
@@ -154,14 +154,14 @@ feature/
   |-- service/         # API calls, data access
 ```
 
-- **View**: Only rendering logic, no business logic in `build()`
-- **ViewModel**: All business logic encapsulated here
-- **Model**: Pure data classes with `@ObservedV2` and `@Trace`
-- **Service**: Network requests, database operations, file I/O
+- **View**: Chỉ chứa logic render, không có business logic trong `build()`
+- **ViewModel**: Toàn bộ business logic được đóng gói tại đây
+- **Model**: Các data class thuần với `@ObservedV2` và `@Trace`
+- **Service**: Request mạng, thao tác database, file I/O
 
-## ArkUI Animation Patterns
+## Pattern animation của ArkUI
 
-### State-Driven Animation
+### Animation điều khiển bởi State
 
 ```typescript
 @ComponentV2
@@ -183,18 +183,18 @@ struct AnimatedCard {
 }
 ```
 
-### Animation Rules
+### Quy tắc animation
 
-- Prefer native HarmonyOS animation APIs and advanced templates
-- Use declarative UI with state-driven animations (change state variables to trigger animations)
-- Set `renderGroup(true)` for complex sub-component animations to reduce render batches
-- **NEVER** frequently change `width`, `height`, `padding`, `margin` during animations - severe performance impact
-- Use `animateTo` for explicit animation control
-- Prefer `transform` (translate, scale, rotate) and `opacity` for performant animations
+- Ưu tiên các API animation native của HarmonyOS và các advanced template
+- Dùng declarative UI với animation điều khiển bởi state (đổi biến state để kích hoạt animation)
+- Đặt `renderGroup(true)` cho animation của sub-component phức tạp để giảm số batch render
+- **KHÔNG BAO GIỜ** thay đổi thường xuyên `width`, `height`, `padding`, `margin` trong lúc animation - ảnh hưởng hiệu năng nghiêm trọng
+- Dùng `animateTo` để điều khiển animation tường minh
+- Ưu tiên `transform` (translate, scale, rotate) và `opacity` để animation có hiệu năng tốt
 
-## Performance Patterns
+## Pattern hiệu năng
 
-### LazyForEach for Large Lists
+### LazyForEach cho danh sách lớn
 
 ```typescript
 @ComponentV2
@@ -213,15 +213,15 @@ struct LargeList {
 }
 ```
 
-### Component Reuse
+### Tái sử dụng component
 
-- Extract reusable components into separate files
-- Use `@Builder` for lightweight UI fragments within a component
-- Use `@Param` for configurable components
+- Tách các component tái sử dụng được ra file riêng
+- Dùng `@Builder` cho các đoạn UI nhẹ bên trong một component
+- Dùng `@Param` cho component có thể cấu hình
 
-## Resource References
+## Tham chiếu Resource
 
-Always define UI constants as resources and reference via `$r()`:
+Luôn định nghĩa hằng số UI dưới dạng resource và tham chiếu qua `$r()`:
 
 ```typescript
 // BAD: hardcoded values

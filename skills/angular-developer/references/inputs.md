@@ -1,10 +1,10 @@
-# Inputs
+# Input
 
-Inputs allow data to flow from a parent component to a child component. Angular recommends using the signal-based `input` API for modern applications.
+Input cho phép dữ liệu chảy từ component cha sang component con. Angular khuyến nghị dùng API `input` dựa trên signal cho các ứng dụng hiện đại.
 
-## Signal-based Inputs
+## Input dựa trên Signal
 
-Declare inputs using the `input()` function. This returns an `InputSignal`.
+Khai báo input bằng hàm `input()`. Hàm này trả về một `InputSignal`.
 
 ```ts
 import {Component, input, computed} from '@angular/core';
@@ -25,18 +25,18 @@ export class User {
 }
 ```
 
-### Usage in Template
+### Cách dùng trong Template
 
 ```html
 <app-user [name]="userName" [age]="25" />
 ```
 
-## Configuration Options
+## Các tùy chọn cấu hình
 
-The `input` function accepts a config object:
+Hàm `input` nhận một object cấu hình:
 
-- **Alias**: Change the property name used in templates.
-- **Transform**: Modify the value before it reaches the component.
+- **Alias**: Đổi tên property dùng trong template.
+- **Transform**: Biến đổi giá trị trước khi nó tới component.
 
 ```ts
 import { input, booleanAttribute } from '@angular/core';
@@ -51,9 +51,9 @@ export class CustomButton {
 }
 ```
 
-## Model Inputs (Two-Way Binding)
+## Model Input (Two-Way Binding)
 
-Use `model()` to create an input that supports two-way data binding.
+Dùng `model()` để tạo một input hỗ trợ two-way data binding.
 
 ```ts
 @Component({
@@ -69,7 +69,7 @@ export class CustomCounter {
 }
 ```
 
-### Usage
+### Cách dùng
 
 ```html
 <!-- Two-way binding with a signal -->
@@ -79,9 +79,9 @@ export class CustomCounter {
 <custom-counter [(value)]="myProperty" />
 ```
 
-## Decorator-based Inputs (@Input)
+## Input dựa trên Decorator (@Input)
 
-The legacy API remains supported but is not recommended for new code.
+API cũ (legacy) vẫn được hỗ trợ nhưng không được khuyến nghị cho code mới.
 
 ```ts
 import { Component, Input } from '@angular/core';
@@ -93,9 +93,9 @@ export class Legacy {
 }
 ```
 
-## Best Practices
+## Best Practice
 
-- **Prefer Signals**: Use `input()` instead of `@Input()` for better reactivity and type safety.
-- **Required Inputs**: Use `input.required()` for mandatory data to get build-time errors.
-- **Pure Transforms**: Ensure input transform functions are pure and statically analyzable.
-- **Avoid Collisions**: Do not use input names that collide with standard DOM properties (e.g., `id`, `title`).
+- **Ưu tiên Signal**: Dùng `input()` thay vì `@Input()` để có khả năng reactive tốt hơn và type safety.
+- **Input bắt buộc**: Dùng `input.required()` cho dữ liệu bắt buộc để nhận lỗi ngay lúc build.
+- **Transform thuần túy**: Đảm bảo các hàm transform của input là pure và có thể phân tích tĩnh.
+- **Tránh xung đột**: Không dùng tên input trùng với các DOM property chuẩn (ví dụ: `id`, `title`).

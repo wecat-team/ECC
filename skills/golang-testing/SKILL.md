@@ -1,25 +1,25 @@
 ---
 name: golang-testing
-description: Go testing patterns including table-driven tests, subtests, benchmarks, fuzzing, and test coverage. Follows TDD methodology with idiomatic Go practices. Use when writing Go tests — table-driven cases, subtests, benchmarks, fuzzing, or coverage.
+description: Pattern testing Go gồm table-driven test, subtest, benchmark, fuzzing và test coverage. Tuân theo phương pháp TDD với thực hành Go idiomatic. Dùng khi viết test Go — table-driven case, subtest, benchmark, fuzzing hoặc coverage.
 metadata:
   origin: ECC
 ---
 
-# Go Testing Patterns
+# Pattern Testing Go
 
-Comprehensive Go testing patterns for writing reliable, maintainable tests following TDD methodology.
+Các pattern testing Go toàn diện để viết test đáng tin cậy, dễ bảo trì theo phương pháp TDD.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new Go functions or methods
-- Adding test coverage to existing code
-- Creating benchmarks for performance-critical code
-- Implementing fuzz tests for input validation
-- Following TDD workflow in Go projects
+- Viết hàm hoặc method Go mới
+- Bổ sung test coverage cho code hiện có
+- Tạo benchmark cho code quan trọng về hiệu năng
+- Triển khai fuzz test cho input validation
+- Theo workflow TDD trong các project Go
 
-## TDD Workflow for Go
+## Workflow TDD cho Go
 
-### The RED-GREEN-REFACTOR Cycle
+### Chu trình RED-GREEN-REFACTOR
 
 ```
 RED     → Write a failing test first
@@ -28,10 +28,10 @@ REFACTOR → Improve code while keeping tests green
 REPEAT  → Continue with next requirement
 ```
 
-### Step-by-Step TDD in Go
+### TDD từng bước trong Go
 
 ```go
-// Step 1: Define the interface/signature
+// Bước 1: Định nghĩa interface/signature
 // calculator.go
 package calculator
 
@@ -39,7 +39,7 @@ func Add(a, b int) int {
     panic("not implemented") // Placeholder
 }
 
-// Step 2: Write failing test (RED)
+// Bước 2: Viết test thất bại (RED)
 // calculator_test.go
 package calculator
 
@@ -53,26 +53,26 @@ func TestAdd(t *testing.T) {
     }
 }
 
-// Step 3: Run test - verify FAIL
+// Bước 3: Chạy test - xác minh FAIL
 // $ go test
 // --- FAIL: TestAdd (0.00s)
 // panic: not implemented
 
-// Step 4: Implement minimal code (GREEN)
+// Bước 4: Triển khai code tối thiểu (GREEN)
 func Add(a, b int) int {
     return a + b
 }
 
-// Step 5: Run test - verify PASS
+// Bước 5: Chạy test - xác minh PASS
 // $ go test
 // PASS
 
-// Step 6: Refactor if needed, verify tests still pass
+// Bước 6: Refactor nếu cần, xác minh test vẫn pass
 ```
 
-## Table-Driven Tests
+## Table-Driven Test
 
-The standard pattern for Go tests. Enables comprehensive coverage with minimal code.
+Pattern chuẩn cho test Go. Cho phép coverage toàn diện với lượng code tối thiểu.
 
 ```go
 func TestAdd(t *testing.T) {
@@ -100,7 +100,7 @@ func TestAdd(t *testing.T) {
 }
 ```
 
-### Table-Driven Tests with Error Cases
+### Table-Driven Test với các trường hợp lỗi
 
 ```go
 func TestParseConfig(t *testing.T) {
@@ -155,13 +155,13 @@ func TestParseConfig(t *testing.T) {
 }
 ```
 
-## Subtests and Sub-benchmarks
+## Subtest và Sub-benchmark
 
-### Organizing Related Tests
+### Tổ chức các test liên quan
 
 ```go
 func TestUser(t *testing.T) {
-    // Setup shared by all subtests
+    // Setup dùng chung cho mọi subtest
     db := setupTestDB(t)
 
     t.Run("Create", func(t *testing.T) {
@@ -195,7 +195,7 @@ func TestUser(t *testing.T) {
 }
 ```
 
-### Parallel Subtests
+### Subtest song song (Parallel)
 
 ```go
 func TestParallel(t *testing.T) {
@@ -220,9 +220,9 @@ func TestParallel(t *testing.T) {
 }
 ```
 
-## Test Helpers
+## Test Helper
 
-### Helper Functions
+### Hàm Helper
 
 ```go
 func setupTestDB(t *testing.T) *sql.DB {
@@ -233,12 +233,12 @@ func setupTestDB(t *testing.T) *sql.DB {
         t.Fatalf("failed to open database: %v", err)
     }
 
-    // Cleanup when test finishes
+    // Dọn dẹp khi test kết thúc
     t.Cleanup(func() {
         db.Close()
     })
 
-    // Run migrations
+    // Chạy migration
     if _, err := db.Exec(schema); err != nil {
         t.Fatalf("failed to create schema: %v", err)
     }
@@ -261,21 +261,21 @@ func assertEqual[T comparable](t *testing.T, got, want T) {
 }
 ```
 
-### Temporary Files and Directories
+### File và thư mục tạm
 
 ```go
 func TestFileProcessing(t *testing.T) {
-    // Create temp directory - automatically cleaned up
+    // Tạo thư mục tạm - tự động được dọn dẹp
     tmpDir := t.TempDir()
 
-    // Create test file
+    // Tạo file test
     testFile := filepath.Join(tmpDir, "test.txt")
     err := os.WriteFile(testFile, []byte("test content"), 0644)
     if err != nil {
         t.Fatalf("failed to create test file: %v", err)
     }
 
-    // Run test
+    // Chạy test
     result, err := ProcessFile(testFile)
     if err != nil {
         t.Fatalf("ProcessFile failed: %v", err)
@@ -286,9 +286,9 @@ func TestFileProcessing(t *testing.T) {
 }
 ```
 
-## Golden Files
+## Golden File
 
-Testing against expected output files stored in `testdata/`.
+Test dựa trên các file output kỳ vọng được lưu trong `testdata/`.
 
 ```go
 var update = flag.Bool("update", false, "update golden files")
@@ -309,7 +309,7 @@ func TestRender(t *testing.T) {
             golden := filepath.Join("testdata", tt.name+".golden")
 
             if *update {
-                // Update golden file: go test -update
+                // Cập nhật golden file: go test -update
                 err := os.WriteFile(golden, got, 0644)
                 if err != nil {
                     t.Fatalf("failed to update golden file: %v", err)
@@ -329,27 +329,27 @@ func TestRender(t *testing.T) {
 }
 ```
 
-## Mocking with Interfaces
+## Mocking với Interface
 
-### Interface-Based Mocking
+### Mocking dựa trên Interface
 
 ```go
-// Define interface for dependencies
+// Định nghĩa interface cho các dependency
 type UserRepository interface {
     GetUser(id string) (*User, error)
     SaveUser(user *User) error
 }
 
-// Production implementation
+// Implementation cho production
 type PostgresUserRepository struct {
     db *sql.DB
 }
 
 func (r *PostgresUserRepository) GetUser(id string) (*User, error) {
-    // Real database query
+    // Truy vấn database thật
 }
 
-// Mock implementation for tests
+// Implementation mock cho test
 type MockUserRepository struct {
     GetUserFunc  func(id string) (*User, error)
     SaveUserFunc func(user *User) error
@@ -363,7 +363,7 @@ func (m *MockUserRepository) SaveUser(user *User) error {
     return m.SaveUserFunc(user)
 }
 
-// Test using mock
+// Test dùng mock
 func TestUserService(t *testing.T) {
     mock := &MockUserRepository{
         GetUserFunc: func(id string) (*User, error) {
@@ -386,9 +386,9 @@ func TestUserService(t *testing.T) {
 }
 ```
 
-## Benchmarks
+## Benchmark
 
-### Basic Benchmarks
+### Benchmark cơ bản
 
 ```go
 func BenchmarkProcess(b *testing.B) {
@@ -400,11 +400,11 @@ func BenchmarkProcess(b *testing.B) {
     }
 }
 
-// Run: go test -bench=BenchmarkProcess -benchmem
-// Output: BenchmarkProcess-8   10000   105234 ns/op   4096 B/op   10 allocs/op
+// Chạy: go test -bench=BenchmarkProcess -benchmem
+// Kết quả: BenchmarkProcess-8   10000   105234 ns/op   4096 B/op   10 allocs/op
 ```
 
-### Benchmark with Different Sizes
+### Benchmark với các kích thước khác nhau
 
 ```go
 func BenchmarkSort(b *testing.B) {
@@ -416,7 +416,7 @@ func BenchmarkSort(b *testing.B) {
             b.ResetTimer()
 
             for i := 0; i < b.N; i++ {
-                // Make a copy to avoid sorting already sorted data
+                // Tạo bản sao để tránh sort dữ liệu đã được sort
                 tmp := make([]int, len(data))
                 copy(tmp, data)
                 sort.Ints(tmp)
@@ -426,7 +426,7 @@ func BenchmarkSort(b *testing.B) {
 }
 ```
 
-### Memory Allocation Benchmarks
+### Benchmark cấp phát bộ nhớ
 
 ```go
 func BenchmarkStringConcat(b *testing.B) {
@@ -462,11 +462,11 @@ func BenchmarkStringConcat(b *testing.B) {
 
 ## Fuzzing (Go 1.18+)
 
-### Basic Fuzz Test
+### Fuzz Test cơ bản
 
 ```go
 func FuzzParseJSON(f *testing.F) {
-    // Add seed corpus
+    // Thêm seed corpus
     f.Add(`{"name": "test"}`)
     f.Add(`{"count": 123}`)
     f.Add(`[]`)
@@ -477,11 +477,11 @@ func FuzzParseJSON(f *testing.F) {
         err := json.Unmarshal([]byte(input), &result)
 
         if err != nil {
-            // Invalid JSON is expected for random input
+            // JSON không hợp lệ là điều dự kiến với input ngẫu nhiên
             return
         }
 
-        // If parsing succeeded, re-encoding should work
+        // Nếu parse thành công, việc encode lại phải hoạt động
         _, err = json.Marshal(result)
         if err != nil {
             t.Errorf("Marshal failed after successful Unmarshal: %v", err)
@@ -489,10 +489,10 @@ func FuzzParseJSON(f *testing.F) {
     })
 }
 
-// Run: go test -fuzz=FuzzParseJSON -fuzztime=30s
+// Chạy: go test -fuzz=FuzzParseJSON -fuzztime=30s
 ```
 
-### Fuzz Test with Multiple Inputs
+### Fuzz Test với nhiều Input
 
 ```go
 func FuzzCompare(f *testing.F) {
@@ -503,12 +503,12 @@ func FuzzCompare(f *testing.F) {
     f.Fuzz(func(t *testing.T, a, b string) {
         result := Compare(a, b)
 
-        // Property: Compare(a, a) should always equal 0
+        // Property: Compare(a, a) phải luôn bằng 0
         if a == b && result != 0 {
             t.Errorf("Compare(%q, %q) = %d; want 0", a, b, result)
         }
 
-        // Property: Compare(a, b) and Compare(b, a) should have opposite signs
+        // Property: Compare(a, b) và Compare(b, a) phải có dấu trái ngược nhau
         reverse := Compare(b, a)
         if (result > 0 && reverse >= 0) || (result < 0 && reverse <= 0) {
             if result != 0 || reverse != 0 {
@@ -522,55 +522,55 @@ func FuzzCompare(f *testing.F) {
 
 ## Test Coverage
 
-### Running Coverage
+### Chạy Coverage
 
 ```bash
-# Basic coverage
+# Coverage cơ bản
 go test -cover ./...
 
-# Generate coverage profile
+# Tạo coverage profile
 go test -coverprofile=coverage.out ./...
 
-# View coverage in browser
+# Xem coverage trong trình duyệt
 go tool cover -html=coverage.out
 
-# View coverage by function
+# Xem coverage theo hàm
 go tool cover -func=coverage.out
 
-# Coverage with race detection
+# Coverage kèm race detection
 go test -race -coverprofile=coverage.out ./...
 ```
 
-### Coverage Targets
+### Mục tiêu Coverage
 
-| Code Type | Target |
+| Loại code | Mục tiêu |
 |-----------|--------|
-| Critical business logic | 100% |
-| Public APIs | 90%+ |
-| General code | 80%+ |
-| Generated code | Exclude |
+| Business logic quan trọng | 100% |
+| Public API | 90%+ |
+| Code thông thường | 80%+ |
+| Code sinh tự động | Loại trừ |
 
-### Excluding Generated Code from Coverage
+### Loại trừ code sinh tự động khỏi Coverage
 
 ```go
 //go:generate mockgen -source=interface.go -destination=mock_interface.go
 
-// In coverage profile, exclude with build tags:
+// Trong coverage profile, loại trừ bằng build tag:
 // go test -cover -tags=!generate ./...
 ```
 
-## HTTP Handler Testing
+## Test HTTP Handler
 
 ```go
 func TestHealthHandler(t *testing.T) {
-    // Create request
+    // Tạo request
     req := httptest.NewRequest(http.MethodGet, "/health", nil)
     w := httptest.NewRecorder()
 
-    // Call handler
+    // Gọi handler
     HealthHandler(w, req)
 
-    // Check response
+    // Kiểm tra response
     resp := w.Result()
     defer resp.Body.Close()
 
@@ -642,65 +642,65 @@ func TestAPIHandler(t *testing.T) {
 }
 ```
 
-## Testing Commands
+## Lệnh Testing
 
 ```bash
-# Run all tests
+# Chạy tất cả test
 go test ./...
 
-# Run tests with verbose output
+# Chạy test với output chi tiết
 go test -v ./...
 
-# Run specific test
+# Chạy test cụ thể
 go test -run TestAdd ./...
 
-# Run tests matching pattern
+# Chạy test khớp pattern
 go test -run "TestUser/Create" ./...
 
-# Run tests with race detector
+# Chạy test với race detector
 go test -race ./...
 
-# Run tests with coverage
+# Chạy test với coverage
 go test -cover -coverprofile=coverage.out ./...
 
-# Run short tests only
+# Chỉ chạy short test
 go test -short ./...
 
-# Run tests with timeout
+# Chạy test với timeout
 go test -timeout 30s ./...
 
-# Run benchmarks
+# Chạy benchmark
 go test -bench=. -benchmem ./...
 
-# Run fuzzing
+# Chạy fuzzing
 go test -fuzz=FuzzParse -fuzztime=30s ./...
 
-# Count test runs (for flaky test detection)
+# Đếm số lần chạy test (để phát hiện flaky test)
 go test -count=10 ./...
 ```
 
-## Best Practices
+## Best Practice
 
-**DO:**
-- Write tests FIRST (TDD)
-- Use table-driven tests for comprehensive coverage
-- Test behavior, not implementation
-- Use `t.Helper()` in helper functions
-- Use `t.Parallel()` for independent tests
-- Clean up resources with `t.Cleanup()`
-- Use meaningful test names that describe the scenario
+**NÊN:**
+- Viết test TRƯỚC (TDD)
+- Dùng table-driven test để có coverage toàn diện
+- Test hành vi, không test implementation
+- Dùng `t.Helper()` trong các hàm helper
+- Dùng `t.Parallel()` cho các test độc lập
+- Dọn dẹp tài nguyên bằng `t.Cleanup()`
+- Dùng tên test có ý nghĩa mô tả kịch bản
 
-**DON'T:**
-- Test private functions directly (test through public API)
-- Use `time.Sleep()` in tests (use channels or conditions)
-- Ignore flaky tests (fix or remove them)
-- Mock everything (prefer integration tests when possible)
-- Skip error path testing
+**KHÔNG NÊN:**
+- Test trực tiếp các hàm private (test thông qua public API)
+- Dùng `time.Sleep()` trong test (dùng channel hoặc điều kiện)
+- Bỏ qua flaky test (sửa hoặc xóa chúng)
+- Mock mọi thứ (ưu tiên integration test khi có thể)
+- Bỏ qua test đường đi lỗi
 
-## Integration with CI/CD
+## Tích hợp với CI/CD
 
 ```yaml
-# GitHub Actions example
+# Ví dụ GitHub Actions
 test:
   runs-on: ubuntu-latest
   steps:
@@ -718,4 +718,4 @@ test:
         awk -F'%' '{if ($1 < 80) exit 1}'
 ```
 
-**Remember**: Tests are documentation. They show how your code is meant to be used. Write them clearly and keep them up to date.
+**Hãy nhớ**: Test là tài liệu. Chúng cho thấy code của bạn được dùng như thế nào. Hãy viết chúng rõ ràng và luôn cập nhật.

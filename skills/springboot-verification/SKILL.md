@@ -1,23 +1,23 @@
 ---
 name: springboot-verification
-description: Run the full Spring Boot verification loop — Maven or Gradle build, SpotBugs, PMD, and Checkstyle static analysis, unit and Testcontainers integration tests with JaCoCo coverage, OWASP dependency and secret scans, and diff review — producing a pass/fail readiness report. Use when preparing a Spring Boot pull request, validating coverage thresholds, or running pre-deploy verification.
+description: Chạy toàn bộ vòng xác minh (verification loop) cho Spring Boot — build bằng Maven hoặc Gradle, phân tích tĩnh SpotBugs, PMD và Checkstyle, unit test và integration test Testcontainers kèm coverage JaCoCo, quét dependency và secret theo OWASP, và review diff — để tạo báo cáo sẵn sàng (readiness) pass/fail. Dùng khi chuẩn bị pull request Spring Boot, kiểm tra ngưỡng coverage hoặc xác minh trước khi deploy.
 metadata:
   origin: ECC
 ---
 
-# Spring Boot Verification Loop
+# Vòng xác minh Spring Boot
 
-Run before PRs, after major changes, and pre-deploy.
+Chạy trước khi tạo PR, sau các thay đổi lớn và trước khi deploy.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Before opening a pull request for a Spring Boot service
-- After major refactoring or dependency upgrades
-- Pre-deployment verification for staging or production
-- Running full build → lint → test → security scan pipeline
-- Validating test coverage meets thresholds
+- Trước khi mở pull request cho một service Spring Boot
+- Sau khi refactor lớn hoặc nâng cấp dependency
+- Xác minh trước khi deploy lên staging hoặc production
+- Chạy toàn bộ pipeline build → lint → test → quét bảo mật
+- Kiểm tra test coverage đạt ngưỡng yêu cầu
 
-## Phase 1: Build
+## Giai đoạn 1: Build
 
 ```bash
 mvn -T 4 clean verify -DskipTests
@@ -25,21 +25,21 @@ mvn -T 4 clean verify -DskipTests
 ./gradlew clean assemble -x test
 ```
 
-If build fails, stop and fix.
+Nếu build fail, hãy dừng lại và sửa.
 
-## Phase 2: Static Analysis
+## Giai đoạn 2: Phân tích tĩnh
 
-Maven (common plugins):
+Maven (các plugin phổ biến):
 ```bash
 mvn -T 4 spotbugs:check pmd:check checkstyle:check
 ```
 
-Gradle (if configured):
+Gradle (nếu đã cấu hình):
 ```bash
 ./gradlew checkstyleMain pmdMain spotbugsMain
 ```
 
-## Phase 3: Tests + Coverage
+## Giai đoạn 3: Test + Coverage
 
 ```bash
 mvn -T 4 test
@@ -48,13 +48,13 @@ mvn jacoco:report   # verify 80%+ coverage
 ./gradlew test jacocoTestReport
 ```
 
-Report:
-- Total tests, passed/failed
-- Coverage % (lines/branches)
+Báo cáo:
+- Tổng số test, số pass/fail
+- Coverage % (line/branch)
 
-### Unit Tests
+### Unit Test
 
-Test service logic in isolation with mocked dependencies:
+Test logic của service một cách cô lập với các dependency được mock:
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -86,9 +86,9 @@ class UserServiceTest {
 }
 ```
 
-### Integration Tests with Testcontainers
+### Integration Test với Testcontainers
 
-Test against a real database instead of H2:
+Test trên database thật thay vì H2:
 
 ```java
 @SpringBootTest
@@ -120,9 +120,9 @@ class UserRepositoryIntegrationTest {
 }
 ```
 
-### API Tests with MockMvc
+### API Test với MockMvc
 
-Test controller layer with full Spring context:
+Test tầng controller với Spring context đầy đủ:
 
 ```java
 @WebMvcTest(UserController.class)
@@ -157,7 +157,7 @@ class UserControllerTest {
 }
 ```
 
-## Phase 4: Security Scan
+## Giai đoạn 4: Quét bảo mật
 
 ```bash
 # Dependency CVEs
@@ -173,7 +173,7 @@ grep -rn "sk-\|api_key\|secret" src/ --include="*.java" --include="*.yml"
 git secrets --scan  # if configured
 ```
 
-### Common Security Findings
+### Các phát hiện bảo mật phổ biến
 
 ```
 # Check for System.out.println (use logger instead)
@@ -186,14 +186,14 @@ grep -rn "e\.getMessage()" src/main/ --include="*.java"
 grep -rn "allowedOrigins.*\*" src/main/ --include="*.java"
 ```
 
-## Phase 5: Lint/Format (optional gate)
+## Giai đoạn 5: Lint/Format (gate tùy chọn)
 
 ```bash
 mvn spotless:apply   # if using Spotless plugin
 ./gradlew spotlessApply
 ```
 
-## Phase 6: Diff Review
+## Giai đoạn 6: Review Diff
 
 ```bash
 git diff --stat
@@ -201,12 +201,12 @@ git diff
 ```
 
 Checklist:
-- No debugging logs left (`System.out`, `log.debug` without guards)
-- Meaningful errors and HTTP statuses
-- Transactions and validation present where needed
-- Config changes documented
+- Không còn log debug sót lại (`System.out`, `log.debug` không có guard)
+- Lỗi và HTTP status có ý nghĩa
+- Có transaction và validation ở những nơi cần thiết
+- Các thay đổi cấu hình được ghi chép lại
 
-## Output Template
+## Template đầu ra
 
 ```
 VERIFICATION REPORT
@@ -224,9 +224,9 @@ Issues to Fix:
 2. ...
 ```
 
-## Continuous Mode
+## Chế độ liên tục
 
-- Re-run phases on significant changes or every 30–60 minutes in long sessions
-- Keep a short loop: `mvn -T 4 test` + spotbugs for quick feedback
+- Chạy lại các giai đoạn khi có thay đổi đáng kể hoặc mỗi 30–60 phút trong các phiên làm việc dài
+- Giữ một vòng lặp ngắn: `mvn -T 4 test` + spotbugs để có phản hồi nhanh
 
-**Remember**: Fast feedback beats late surprises. Keep the gate strict—treat warnings as defects in production systems.
+**Hãy nhớ**: Phản hồi nhanh tốt hơn những bất ngờ muộn màng. Giữ gate nghiêm ngặt — hãy coi cảnh báo (warning) là lỗi trong các hệ thống production.

@@ -1,30 +1,30 @@
 ---
 name: python-testing
-description: Python testing strategies using pytest, TDD methodology, fixtures, mocking, parametrization, and coverage requirements. Use when writing pytest tests — fixtures, mocks, parametrization, or coverage.
+description: Chiến lược testing cho Python dùng pytest, phương pháp TDD, fixture, mocking, parametrization và yêu cầu coverage. Dùng khi viết test bằng pytest — fixture, mock, parametrization hoặc coverage.
 metadata:
   origin: ECC
 ---
 
-# Python Testing Patterns
+# Các pattern testing cho Python
 
-Comprehensive testing strategies for Python applications using pytest, TDD methodology, and best practices.
+Chiến lược testing toàn diện cho ứng dụng Python dùng pytest, phương pháp TDD và các best practice.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new Python code (follow TDD: red, green, refactor)
-- Designing test suites for Python projects
-- Reviewing Python test coverage
-- Setting up testing infrastructure
+- Viết code Python mới (theo TDD: red, green, refactor)
+- Thiết kế test suite cho dự án Python
+- Review coverage test của Python
+- Thiết lập hạ tầng testing
 
-## Core Testing Philosophy
+## Triết lý testing cốt lõi
 
 ### Test-Driven Development (TDD)
 
-Always follow the TDD cycle:
+LUÔN LUÔN tuân theo chu trình TDD:
 
-1. **RED**: Write a failing test for the desired behavior
-2. **GREEN**: Write minimal code to make the test pass
-3. **REFACTOR**: Improve code while keeping tests green
+1. **RED**: Viết một test thất bại cho hành vi mong muốn
+2. **GREEN**: Viết code tối thiểu để test pass
+3. **REFACTOR**: Cải thiện code trong khi giữ test luôn xanh
 
 ```python
 # Step 1: Write failing test (RED)
@@ -39,19 +39,19 @@ def add(a, b):
 # Step 3: Refactor if needed (REFACTOR)
 ```
 
-### Coverage Requirements
+### Yêu cầu Coverage
 
-- **Target**: 80%+ code coverage
-- **Critical paths**: 100% coverage required
-- Use `pytest --cov` to measure coverage
+- **Mục tiêu**: coverage code từ 80% trở lên
+- **Đường dẫn quan trọng (critical path)**: bắt buộc 100% coverage
+- Dùng `pytest --cov` để đo coverage
 
 ```bash
 pytest --cov=mypackage --cov-report=term-missing --cov-report=html
 ```
 
-## pytest Fundamentals
+## Kiến thức nền tảng về pytest
 
-### Basic Test Structure
+### Cấu trúc test cơ bản
 
 ```python
 import pytest
@@ -73,7 +73,7 @@ def test_list_append():
     assert len(items) == 4
 ```
 
-### Assertions
+### Assertion
 
 ```python
 # Equality
@@ -114,9 +114,9 @@ with pytest.raises(ValueError) as exc_info:
 assert str(exc_info.value) == "error message"
 ```
 
-## Fixtures
+## Fixture
 
-### Basic Fixture Usage
+### Cách dùng Fixture cơ bản
 
 ```python
 import pytest
@@ -132,7 +132,7 @@ def test_sample_data(sample_data):
     assert sample_data["age"] == 30
 ```
 
-### Fixture with Setup/Teardown
+### Fixture với Setup/Teardown
 
 ```python
 @pytest.fixture
@@ -154,7 +154,7 @@ def test_database_query(database):
     assert len(result) > 0
 ```
 
-### Fixture Scopes
+### Scope của Fixture
 
 ```python
 # Function scope (default) - runs for each test
@@ -180,7 +180,7 @@ def shared_resource():
     resource.cleanup()
 ```
 
-### Fixture with Parameters
+### Fixture có tham số
 
 ```python
 @pytest.fixture(params=[1, 2, 3])
@@ -193,7 +193,7 @@ def test_numbers(number):
     assert number > 0
 ```
 
-### Using Multiple Fixtures
+### Dùng nhiều Fixture
 
 ```python
 @pytest.fixture
@@ -209,7 +209,7 @@ def test_user_admin_interaction(user, admin):
     assert admin.can_manage(user)
 ```
 
-### Autouse Fixtures
+### Autouse Fixture
 
 ```python
 @pytest.fixture(autouse=True)
@@ -224,7 +224,7 @@ def test_without_fixture_call():
     assert Config.get_setting("debug") is False
 ```
 
-### Conftest.py for Shared Fixtures
+### Conftest.py cho các Fixture dùng chung
 
 ```python
 # tests/conftest.py
@@ -250,7 +250,7 @@ def auth_headers(client):
 
 ## Parametrization
 
-### Basic Parametrization
+### Parametrization cơ bản
 
 ```python
 @pytest.mark.parametrize("input,expected", [
@@ -263,7 +263,7 @@ def test_uppercase(input, expected):
     assert input.upper() == expected
 ```
 
-### Multiple Parameters
+### Nhiều tham số
 
 ```python
 @pytest.mark.parametrize("a,b,expected", [
@@ -277,7 +277,7 @@ def test_add(a, b, expected):
     assert add(a, b) == expected
 ```
 
-### Parametrize with IDs
+### Parametrize với ID
 
 ```python
 @pytest.mark.parametrize("input,expected", [
@@ -290,7 +290,7 @@ def test_email_validation(input, expected):
     assert is_valid_email(input) is expected
 ```
 
-### Parametrized Fixtures
+### Fixture được parametrize
 
 ```python
 @pytest.fixture(params=["sqlite", "postgresql", "mysql"])
@@ -309,9 +309,9 @@ def test_database_operations(db):
     assert result is not None
 ```
 
-## Markers and Test Selection
+## Marker và chọn test
 
-### Custom Markers
+### Marker tùy chỉnh
 
 ```python
 # Mark slow tests
@@ -331,7 +331,7 @@ def test_unit_logic():
     assert calculate(2, 3) == 5
 ```
 
-### Run Specific Tests
+### Chạy các test cụ thể
 
 ```bash
 # Run only fast tests
@@ -347,7 +347,7 @@ pytest -m "integration or slow"
 pytest -m "unit and not slow"
 ```
 
-### Configure Markers in pytest.ini
+### Cấu hình Marker trong pytest.ini
 
 ```ini
 [pytest]
@@ -358,9 +358,9 @@ markers =
     django: marks tests as requiring Django
 ```
 
-## Mocking and Patching
+## Mocking và Patching
 
-### Mocking Functions
+### Mock hàm
 
 ```python
 from unittest.mock import patch, Mock
@@ -376,7 +376,7 @@ def test_with_mock(api_call_mock):
     assert result["status"] == "success"
 ```
 
-### Mocking Return Values
+### Mock giá trị trả về
 
 ```python
 @patch("mypackage.Database.connect")
@@ -390,7 +390,7 @@ def test_database_connection(connect_mock):
     connect_mock.assert_called_once_with("localhost")
 ```
 
-### Mocking Exceptions
+### Mock Exception
 
 ```python
 @patch("mypackage.api_call")
@@ -404,7 +404,7 @@ def test_api_error_handling(api_call_mock):
     api_call_mock.assert_called_once()
 ```
 
-### Mocking Context Managers
+### Mock Context Manager
 
 ```python
 @patch("builtins.open", new_callable=mock_open)
@@ -418,7 +418,7 @@ def test_file_reading(mock_file):
     assert result == "file content"
 ```
 
-### Using Autospec
+### Dùng Autospec
 
 ```python
 @patch("mypackage.DBConnection", autospec=True)
@@ -431,7 +431,7 @@ def test_autospec(db_mock):
     db_mock.assert_called_once()
 ```
 
-### Mock Class Instances
+### Mock instance của Class
 
 ```python
 class TestUserService:
@@ -464,9 +464,9 @@ def test_with_mock_config(mock_config):
     assert mock_config.api_key == "test-key"
 ```
 
-## Testing Async Code
+## Test code bất đồng bộ (Async)
 
-### Async Tests with pytest-asyncio
+### Test Async với pytest-asyncio
 
 ```python
 import pytest
@@ -501,7 +501,7 @@ async def test_api_endpoint(async_client):
     assert response.status_code == 200
 ```
 
-### Mocking Async Functions
+### Mock hàm Async
 
 ```python
 @pytest.mark.asyncio
@@ -516,9 +516,9 @@ async def test_async_mock(api_call_mock):
     assert result["status"] == "ok"
 ```
 
-## Testing Exceptions
+## Test Exception
 
-### Testing Expected Exceptions
+### Test các Exception được kỳ vọng
 
 ```python
 def test_divide_by_zero():
@@ -532,7 +532,7 @@ def test_custom_exception():
         validate_input("invalid")
 ```
 
-### Testing Exception Attributes
+### Test thuộc tính của Exception
 
 ```python
 def test_exception_with_details():
@@ -544,9 +544,9 @@ def test_exception_with_details():
     assert "error" in str(exc_info.value)
 ```
 
-## Testing Side Effects
+## Test Side Effect
 
-### Testing File Operations
+### Test thao tác file
 
 ```python
 import tempfile
@@ -565,7 +565,7 @@ def test_file_processing():
         os.unlink(temp_path)
 ```
 
-### Testing with pytest's tmp_path Fixture
+### Test với Fixture tmp_path của pytest
 
 ```python
 def test_with_tmp_path(tmp_path):
@@ -578,7 +578,7 @@ def test_with_tmp_path(tmp_path):
     # tmp_path automatically cleaned up
 ```
 
-### Testing with tmpdir Fixture
+### Test với Fixture tmpdir
 
 ```python
 def test_with_tmpdir(tmpdir):
@@ -590,9 +590,9 @@ def test_with_tmpdir(tmpdir):
     assert result == "data"
 ```
 
-## Test Organization
+## Tổ chức test
 
-### Directory Structure
+### Cấu trúc thư mục
 
 ```
 tests/
@@ -612,7 +612,7 @@ tests/
     └── test_user_flow.py
 ```
 
-### Test Classes
+### Class test
 
 ```python
 class TestUserService:
@@ -637,31 +637,31 @@ class TestUserService:
 
 ## Best Practices
 
-### DO
+### NÊN
 
-- **Follow TDD**: Write tests before code (red-green-refactor)
-- **Test one thing**: Each test should verify a single behavior
-- **Use descriptive names**: `test_user_login_with_invalid_credentials_fails`
-- **Use fixtures**: Eliminate duplication with fixtures
-- **Mock external dependencies**: Don't depend on external services
-- **Test edge cases**: Empty inputs, None values, boundary conditions
-- **Aim for 80%+ coverage**: Focus on critical paths
-- **Keep tests fast**: Use marks to separate slow tests
+- **Tuân theo TDD**: Viết test trước code (red-green-refactor)
+- **Mỗi test chỉ kiểm tra một việc**: Mỗi test chỉ nên xác minh một hành vi duy nhất
+- **Dùng tên mô tả rõ ràng**: `test_user_login_with_invalid_credentials_fails`
+- **Dùng fixture**: Loại bỏ trùng lặp bằng fixture
+- **Mock các dependency bên ngoài**: Không phụ thuộc vào dịch vụ bên ngoài
+- **Test các edge case**: Input rỗng, giá trị None, điều kiện biên
+- **Hướng tới coverage từ 80% trở lên**: Tập trung vào các critical path
+- **Giữ test chạy nhanh**: Dùng mark để tách riêng các test chậm
 
-### DON'T
+### KHÔNG NÊN
 
-- **Don't test implementation**: Test behavior, not internals
-- **Don't use complex conditionals in tests**: Keep tests simple
-- **Don't ignore test failures**: All tests must pass
-- **Don't test third-party code**: Trust libraries to work
-- **Don't share state between tests**: Tests should be independent
-- **Don't catch exceptions in tests**: Use `pytest.raises`
-- **Don't use print statements**: Use assertions and pytest output
-- **Don't write tests that are too brittle**: Avoid over-specific mocks
+- **Không test phần implementation**: Test hành vi, không test chi tiết bên trong
+- **Không dùng điều kiện phức tạp trong test**: Giữ test đơn giản
+- **Không bỏ qua test thất bại**: Mọi test đều phải pass
+- **Không test code của bên thứ ba**: Hãy tin tưởng thư viện hoạt động đúng
+- **Không chia sẻ state giữa các test**: Các test phải độc lập
+- **Không bắt exception trong test**: Dùng `pytest.raises`
+- **Không dùng câu lệnh print**: Dùng assertion và output của pytest
+- **Không viết test quá dễ vỡ (brittle)**: Tránh mock quá cụ thể
 
-## Common Patterns
+## Các pattern thường gặp
 
-### Testing API Endpoints (FastAPI/Flask)
+### Test API Endpoint (FastAPI/Flask)
 
 ```python
 @pytest.fixture
@@ -683,7 +683,7 @@ def test_create_user(client):
     assert response.json["name"] == "Alice"
 ```
 
-### Testing Database Operations
+### Test thao tác Database
 
 ```python
 @pytest.fixture
@@ -704,7 +704,7 @@ def test_create_user(db_session):
     assert retrieved.email == "alice@example.com"
 ```
 
-### Testing Class Methods
+### Test method của Class
 
 ```python
 class TestCalculator:
@@ -720,7 +720,7 @@ class TestCalculator:
             calculator.divide(10, 0)
 ```
 
-## pytest Configuration
+## Cấu hình pytest
 
 ### pytest.ini
 
@@ -763,7 +763,7 @@ markers = [
 ]
 ```
 
-## Running Tests
+## Chạy test
 
 ```bash
 # Run all tests
@@ -800,18 +800,18 @@ pytest -k "test_user"
 pytest --pdb
 ```
 
-## Quick Reference
+## Tham khảo nhanh
 
-| Pattern | Usage |
+| Pattern | Cách dùng |
 |---------|-------|
-| `pytest.raises()` | Test expected exceptions |
-| `@pytest.fixture()` | Create reusable test fixtures |
-| `@pytest.mark.parametrize()` | Run tests with multiple inputs |
-| `@pytest.mark.slow` | Mark slow tests |
-| `pytest -m "not slow"` | Skip slow tests |
-| `@patch()` | Mock functions and classes |
-| `tmp_path` fixture | Automatic temp directory |
-| `pytest --cov` | Generate coverage report |
-| `assert` | Simple and readable assertions |
+| `pytest.raises()` | Test các exception được kỳ vọng |
+| `@pytest.fixture()` | Tạo test fixture dùng lại được |
+| `@pytest.mark.parametrize()` | Chạy test với nhiều input |
+| `@pytest.mark.slow` | Đánh dấu test chậm |
+| `pytest -m "not slow"` | Bỏ qua test chậm |
+| `@patch()` | Mock hàm và class |
+| `tmp_path` fixture | Thư mục tạm tự động |
+| `pytest --cov` | Tạo báo cáo coverage |
+| `assert` | Assertion đơn giản và dễ đọc |
 
-**Remember**: Tests are code too. Keep them clean, readable, and maintainable. Good tests catch bugs; great tests prevent them.
+**Hãy nhớ**: Test cũng là code. Hãy giữ chúng sạch, dễ đọc và dễ bảo trì. Test tốt phát hiện bug; test xuất sắc ngăn bug xảy ra.

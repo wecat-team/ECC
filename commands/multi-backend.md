@@ -1,14 +1,14 @@
 ---
-description: Run a backend-focused multi-model workflow for APIs, algorithms, data, and business logic.
+description: Chạy workflow đa model tập trung vào backend cho API, thuật toán, dữ liệu và business logic.
 ---
 
-# Backend - Backend-Focused Development
+# Backend - Phát triển tập trung vào Backend
 
-Backend-focused workflow (Research → Ideation → Plan → Execute → Optimize → Review), Codex-led.
+Workflow tập trung vào backend (Research → Ideation → Plan → Execute → Optimize → Review), do Codex dẫn dắt.
 
-> **Prerequisite:** Requires the external `ccg-workflow` runtime, which is **not** part of the base ECC install. Initialize it with `npx ccg-workflow` to provision `~/.claude/bin/codeagent-wrapper` and the `~/.claude/.ccg/prompts/*` role files this command depends on. Without that runtime, this command will not run correctly.
+> **Điều kiện tiên quyết:** Yêu cầu runtime `ccg-workflow` bên ngoài, runtime này **không** nằm trong bản cài ECC cơ bản. Khởi tạo nó bằng `npx ccg-workflow` để cấp phát `~/.claude/bin/codeagent-wrapper` và các file vai trò `~/.claude/.ccg/prompts/*` mà command này phụ thuộc. Nếu không có runtime đó, command này sẽ không chạy đúng.
 
-## Usage
+## Cách dùng
 
 ```bash
 /backend <backend task description>
@@ -16,24 +16,24 @@ Backend-focused workflow (Research → Ideation → Plan → Execute → Optimiz
 
 ## Context
 
-- Backend task: $ARGUMENTS
-- Codex-led, Gemini for auxiliary reference
-- Applicable: API design, algorithm implementation, database optimization, business logic
+- Tác vụ backend: $ARGUMENTS
+- Codex dẫn dắt, Gemini để tham khảo bổ trợ
+- Áp dụng cho: thiết kế API, triển khai thuật toán, tối ưu database, business logic
 
-## Your Role
+## Vai trò của bạn
 
-You are the **Backend Orchestrator**, coordinating multi-model collaboration for server-side tasks (Research → Ideation → Plan → Execute → Optimize → Review).
+Bạn là **Backend Orchestrator**, điều phối sự cộng tác đa model cho các tác vụ phía server (Research → Ideation → Plan → Execute → Optimize → Review).
 
-**Collaborative Models**:
-- **Codex** – Backend logic, algorithms (**Backend authority, trustworthy**)
-- **Gemini** – Frontend perspective (**Backend opinions for reference only**)
-- **Claude (self)** – Orchestration, planning, execution, delivery
+**Các model cộng tác**:
+- **Codex** – Logic backend, thuật toán (**Thẩm quyền về backend, đáng tin cậy**)
+- **Gemini** – Góc nhìn frontend (**Ý kiến về backend chỉ để tham khảo**)
+- **Claude (chính bạn)** – Điều phối, lập kế hoạch, thực thi, bàn giao
 
 ---
 
-## Multi-Model Call Specification
+## Đặc tả gọi đa model
 
-**Call Syntax**:
+**Cú pháp gọi**:
 
 ```
 # New session call
@@ -67,98 +67,98 @@ EOF",
 })
 ```
 
-**Role Prompts**:
+**Role Prompt**:
 
-| Phase | Codex |
+| Giai đoạn | Codex |
 |-------|-------|
-| Analysis | `~/.claude/.ccg/prompts/codex/analyzer.md` |
-| Planning | `~/.claude/.ccg/prompts/codex/architect.md` |
+| Phân tích | `~/.claude/.ccg/prompts/codex/analyzer.md` |
+| Lập kế hoạch | `~/.claude/.ccg/prompts/codex/architect.md` |
 | Review | `~/.claude/.ccg/prompts/codex/reviewer.md` |
 
-**Session Reuse**: Each call returns `SESSION_ID: xxx`, use `resume xxx` for subsequent phases. Save `CODEX_SESSION` in Phase 2, use `resume` in Phases 3 and 5.
+**Tái sử dụng session**: Mỗi lần gọi trả về `SESSION_ID: xxx`, dùng `resume xxx` cho các giai đoạn tiếp theo. Lưu `CODEX_SESSION` ở Giai đoạn 2, dùng `resume` ở Giai đoạn 3 và 5.
 
 ---
 
-## Communication Guidelines
+## Hướng dẫn giao tiếp
 
-1. Start responses with mode label `[Mode: X]`, initial is `[Mode: Research]`
-2. Follow strict sequence: `Research → Ideation → Plan → Execute → Optimize → Review`
-3. Use `AskUserQuestion` tool for user interaction when needed (e.g., confirmation/selection/approval)
+1. Bắt đầu phản hồi bằng nhãn chế độ `[Mode: X]`, ban đầu là `[Mode: Research]`
+2. Tuân thủ nghiêm ngặt thứ tự: `Research → Ideation → Plan → Execute → Optimize → Review`
+3. Dùng tool `AskUserQuestion` để tương tác với người dùng khi cần (ví dụ: xác nhận/lựa chọn/phê duyệt)
 
 ---
 
-## Core Workflow
+## Workflow cốt lõi
 
-### Phase 0: Prompt Enhancement (Optional)
+### Giai đoạn 0: Cải thiện prompt (Tùy chọn)
 
-`[Mode: Prepare]` - If ace-tool MCP available, call `mcp__ace-tool__enhance_prompt`, **replace original $ARGUMENTS with enhanced result for subsequent Codex calls**. If unavailable, use `$ARGUMENTS` as-is.
+`[Mode: Prepare]` - Nếu ace-tool MCP khả dụng, gọi `mcp__ace-tool__enhance_prompt`, **thay $ARGUMENTS gốc bằng kết quả đã cải thiện cho các lần gọi Codex tiếp theo**. Nếu không khả dụng, dùng nguyên `$ARGUMENTS`.
 
-### Phase 1: Research
+### Giai đoạn 1: Nghiên cứu (Research)
 
-`[Mode: Research]` - Understand requirements and gather context
+`[Mode: Research]` - Hiểu yêu cầu và thu thập context
 
-1. **Code Retrieval** (if ace-tool MCP available): Call `mcp__ace-tool__search_context` to retrieve existing APIs, data models, service architecture. If unavailable, use built-in tools: `Glob` for file discovery, `Grep` for symbol/API search, `Read` for context gathering, `Task` (Explore agent) for deeper exploration.
-2. Requirement completeness score (0-10): >=7 continue, <7 stop and supplement
+1. **Truy xuất code** (nếu ace-tool MCP khả dụng): Gọi `mcp__ace-tool__search_context` để truy xuất các API, data model, kiến trúc service hiện có. Nếu không khả dụng, dùng các tool có sẵn: `Glob` để tìm file, `Grep` để tìm symbol/API, `Read` để thu thập context, `Task` (Explore agent) để khám phá sâu hơn.
+2. Điểm đầy đủ của yêu cầu (0-10): >=7 tiếp tục, <7 dừng lại và bổ sung
 
-### Phase 2: Ideation
+### Giai đoạn 2: Ý tưởng (Ideation)
 
-`[Mode: Ideation]` - Codex-led analysis
+`[Mode: Ideation]` - Phân tích do Codex dẫn dắt
 
-**MUST call Codex** (follow call specification above):
+**PHẢI gọi Codex** (theo đặc tả gọi ở trên):
 - ROLE_FILE: `~/.claude/.ccg/prompts/codex/analyzer.md`
-- Requirement: Enhanced requirement (or $ARGUMENTS if not enhanced)
-- Context: Project context from Phase 1
-- OUTPUT: Technical feasibility analysis, recommended solutions (at least 2), risk assessment
+- Requirement: Yêu cầu đã được cải thiện (hoặc $ARGUMENTS nếu chưa cải thiện)
+- Context: Context dự án từ Giai đoạn 1
+- OUTPUT: Phân tích tính khả thi kỹ thuật, các giải pháp đề xuất (ít nhất 2), đánh giá rủi ro
 
-**Save SESSION_ID** (`CODEX_SESSION`) for subsequent phase reuse.
+**Lưu SESSION_ID** (`CODEX_SESSION`) để tái sử dụng ở các giai đoạn sau.
 
-Output solutions (at least 2), wait for user selection.
+Xuất các giải pháp (ít nhất 2), chờ người dùng lựa chọn.
 
-### Phase 3: Planning
+### Giai đoạn 3: Lập kế hoạch (Planning)
 
-`[Mode: Plan]` - Codex-led planning
+`[Mode: Plan]` - Lập kế hoạch do Codex dẫn dắt
 
-**MUST call Codex** (use `resume <CODEX_SESSION>` to reuse session):
+**PHẢI gọi Codex** (dùng `resume <CODEX_SESSION>` để tái sử dụng session):
 - ROLE_FILE: `~/.claude/.ccg/prompts/codex/architect.md`
-- Requirement: User's selected solution
-- Context: Analysis results from Phase 2
-- OUTPUT: File structure, function/class design, dependency relationships
+- Requirement: Giải pháp người dùng đã chọn
+- Context: Kết quả phân tích từ Giai đoạn 2
+- OUTPUT: Cấu trúc file, thiết kế hàm/class, quan hệ dependency
 
-Claude synthesizes plan, save to `.claude/plan/task-name.md` after user approval.
+Claude tổng hợp kế hoạch, lưu vào `.claude/plan/task-name.md` sau khi người dùng phê duyệt.
 
-### Phase 4: Implementation
+### Giai đoạn 4: Triển khai (Implementation)
 
-`[Mode: Execute]` - Code development
+`[Mode: Execute]` - Phát triển code
 
-- Strictly follow approved plan
-- Follow existing project code standards
-- Ensure error handling, security, performance optimization
+- Tuân thủ nghiêm ngặt kế hoạch đã được duyệt
+- Tuân theo chuẩn code hiện có của dự án
+- Đảm bảo xử lý lỗi, bảo mật, tối ưu hiệu năng
 
-### Phase 5: Optimization
+### Giai đoạn 5: Tối ưu (Optimization)
 
-`[Mode: Optimize]` - Codex-led review
+`[Mode: Optimize]` - Review do Codex dẫn dắt
 
 **MUST call Codex** (follow call specification above):
 - ROLE_FILE: `~/.claude/.ccg/prompts/codex/reviewer.md`
-- Requirement: Review the following backend code changes
-- Context: git diff or code content
-- OUTPUT: Security, performance, error handling, API compliance issues list
+- Requirement: Review các thay đổi code backend sau
+- Context: git diff hoặc nội dung code
+- OUTPUT: Danh sách vấn đề về bảo mật, hiệu năng, xử lý lỗi, tuân thủ API
 
-Integrate review feedback, execute optimization after user confirmation.
+Tích hợp phản hồi review, thực hiện tối ưu sau khi người dùng xác nhận.
 
-### Phase 6: Quality Review
+### Giai đoạn 6: Review chất lượng
 
-`[Mode: Review]` - Final evaluation
+`[Mode: Review]` - Đánh giá cuối cùng
 
-- Check completion against plan
-- Run tests to verify functionality
-- Report issues and recommendations
+- Đối chiếu mức độ hoàn thành với kế hoạch
+- Chạy test để xác minh chức năng
+- Báo cáo các vấn đề và khuyến nghị
 
 ---
 
-## Key Rules
+## Quy tắc chính
 
-1. **Codex backend opinions are trustworthy**
-2. **Gemini backend opinions for reference only**
-3. External models have **zero filesystem write access**
-4. Claude handles all code writes and file operations
+1. **Ý kiến backend của Codex đáng tin cậy**
+2. **Ý kiến backend của Gemini chỉ để tham khảo**
+3. Các model bên ngoài **không có quyền ghi filesystem**
+4. Claude xử lý mọi thao tác ghi code và file

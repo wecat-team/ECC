@@ -1,41 +1,41 @@
 # Angular CLI MCP Server
 
-The Angular CLI includes a Model Context Protocol (MCP) server that enables AI assistants (like Cursor, Gemini CLI, JetBrains AI, etc.) to interact directly with the Angular CLI. It provides tools for code generation, modernizing code, fetching examples, and running builds/tests.
+Angular CLI bao gồm một server Model Context Protocol (MCP) cho phép các trợ lý AI (như Cursor, Gemini CLI, JetBrains AI, v.v.) tương tác trực tiếp với Angular CLI. Nó cung cấp các tool để sinh code, hiện đại hóa code, lấy ví dụ, và chạy build/test.
 
-## Available Tools (Default)
+## Các Tool khả dụng (Mặc định)
 
-When the MCP server is enabled, AI agents have access to the following tools:
+Khi MCP server được bật, các AI agent có quyền truy cập các tool sau:
 
-| Name                        | Description                                                                                               |
-| :-------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| `ai_tutor`                  | Launches an interactive AI-powered Angular tutor.                                                         |
-| `find_examples`             | Finds authoritative, best-practice code examples for modern Angular features.                             |
-| `get_best_practices`        | Retrieves the Angular Best Practices Guide (crucial for standalone components, typed forms, etc.).        |
-| `list_projects`             | Lists all applications and libraries in the workspace by reading `angular.json`.                          |
-| `onpush_zoneless_migration` | Analyzes code and provides a plan to migrate it to `OnPush` change detection (prerequisite for zoneless). |
-| `search_documentation`      | Searches the official documentation at `https://angular.dev`.                                             |
+| Tên                         | Mô tả                                                                                                                  |
+| :-------------------------- | :--------------------------------------------------------------------------------------------------------------------- |
+| `ai_tutor`                  | Khởi chạy một gia sư Angular tương tác chạy bằng AI.                                                                   |
+| `find_examples`             | Tìm các ví dụ code chuẩn mực, theo best practice cho các tính năng Angular hiện đại.                                   |
+| `get_best_practices`        | Lấy Angular Best Practices Guide (rất quan trọng cho standalone component, typed form, v.v.).                          |
+| `list_projects`             | Liệt kê mọi ứng dụng và thư viện trong workspace bằng cách đọc `angular.json`.                                         |
+| `onpush_zoneless_migration` | Phân tích code và đưa ra kế hoạch migrate sang change detection `OnPush` (điều kiện tiên quyết cho zoneless).          |
+| `search_documentation`      | Tìm kiếm tài liệu chính thức tại `https://angular.dev`.                                                                |
 
-## Experimental Tools
+## Các Tool thử nghiệm (Experimental)
 
-Some tools must be enabled explicitly using the `--experimental-tool` (or `-E`) flag.
+Một số tool phải được bật tường minh bằng cờ `--experimental-tool` (hoặc `-E`).
 
-| Name                       | Description                                                              |
-| :------------------------- | :----------------------------------------------------------------------- |
-| `build`                    | Performs a one-off build using `ng build`.                               |
-| `devserver.start`          | Asynchronously starts a dev server (`ng serve`). Returns immediately.    |
-| `devserver.stop`           | Stops the dev server.                                                    |
-| `devserver.wait_for_build` | Returns the logs of the most recent build in a running dev server.       |
-| `e2e`                      | Executes end-to-end tests.                                               |
-| `modernize`                | Performs code migrations to align with latest best practices and syntax. |
-| `test`                     | Runs the project's unit tests.                                           |
+| Tên                        | Mô tả                                                                         |
+| :------------------------- | :---------------------------------------------------------------------------- |
+| `build`                    | Thực hiện một lần build bằng `ng build`.                                      |
+| `devserver.start`          | Khởi động dev server (`ng serve`) bất đồng bộ. Trả về ngay lập tức.           |
+| `devserver.stop`           | Dừng dev server.                                                              |
+| `devserver.wait_for_build` | Trả về log của lần build gần nhất trong một dev server đang chạy.             |
+| `e2e`                      | Thực thi các end-to-end test.                                                 |
+| `modernize`                | Thực hiện các code migration để phù hợp với best practice và cú pháp mới nhất. |
+| `test`                     | Chạy các unit test của dự án.                                                 |
 
-## Configuration
+## Cấu hình
 
-To use the MCP server, you configure your host environment (IDE or CLI) to run `npx @angular/cli mcp`.
+Để dùng MCP server, bạn cấu hình môi trường host (IDE hoặc CLI) để chạy `npx @angular/cli mcp`.
 
 ### Antigravity IDE
 
-Create a file named `.antigravity/mcp.json` in your project's root:
+Tạo file tên `.antigravity/mcp.json` ở thư mục gốc của dự án:
 
 ```json
 {
@@ -50,7 +50,7 @@ Create a file named `.antigravity/mcp.json` in your project's root:
 
 ### Gemini CLI
 
-Create `.gemini/settings.json` in the project root:
+Tạo `.gemini/settings.json` ở thư mục gốc của dự án:
 
 ```json
 {
@@ -65,7 +65,7 @@ Create `.gemini/settings.json` in the project root:
 
 ### Cursor
 
-Create `.cursor/mcp.json` in the project root (or globally at `~/.cursor/mcp.json`):
+Tạo `.cursor/mcp.json` ở thư mục gốc của dự án (hoặc toàn cục tại `~/.cursor/mcp.json`):
 
 ```json
 {
@@ -80,7 +80,7 @@ Create `.cursor/mcp.json` in the project root (or globally at `~/.cursor/mcp.jso
 
 ### VS Code
 
-Create `.vscode/mcp.json`:
+Tạo `.vscode/mcp.json`:
 
 ```json
 {
@@ -93,15 +93,15 @@ Create `.vscode/mcp.json`:
 }
 ```
 
-## Command Options
+## Tùy chọn lệnh
 
-You can pass arguments to the MCP server in the `args` array of your configuration:
+Bạn có thể truyền tham số cho MCP server trong mảng `args` của cấu hình:
 
-- `--read-only`: Only registers tools that do not modify the project.
-- `--local-only`: Only registers tools that do not require an internet connection.
-- `--experimental-tool` (`-E`): Enables specific experimental tools (e.g., `-E build`, `-E devserver`).
+- `--read-only`: Chỉ đăng ký các tool không sửa đổi dự án.
+- `--local-only`: Chỉ đăng ký các tool không cần kết nối internet.
+- `--experimental-tool` (`-E`): Bật các tool thử nghiệm cụ thể (ví dụ: `-E build`, `-E devserver`).
 
-Example for read-only mode with experimental tools enabled:
+Ví dụ cho chế độ read-only với các tool thử nghiệm được bật:
 
 ```json
 "args": ["-y", "@angular/cli", "mcp", "--read-only", "-E", "build", "-E", "modernize"]

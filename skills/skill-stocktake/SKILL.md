@@ -1,69 +1,69 @@
 ---
 name: skill-stocktake
-description: "Use when auditing Claude skills and commands for quality. Supports Quick Scan (changed skills only) and Full Stocktake modes with sequential subagent batch evaluation."
+description: "Dùng khi audit chất lượng các skill và command của Claude. Hỗ trợ chế độ Quick Scan (chỉ các skill đã thay đổi) và Full Stocktake với đánh giá theo batch tuần tự bằng subagent."
 metadata:
   origin: ECC
 ---
 
 # skill-stocktake
 
-Slash command (`/skill-stocktake`) that audits all Claude skills and commands using a quality checklist + AI holistic judgment. Supports two modes: Quick Scan for recently changed skills, and Full Stocktake for a complete review.
+Slash command (`/skill-stocktake`) audit toàn bộ skill và command của Claude bằng checklist chất lượng + đánh giá tổng thể (holistic) của AI. Hỗ trợ hai chế độ: Quick Scan cho các skill mới thay đổi và Full Stocktake cho việc review toàn bộ.
 
-## Scope
+## Phạm vi
 
-The command targets the following paths **relative to the directory where it is invoked**:
+Command nhắm tới các đường dẫn sau **tính tương đối theo thư mục nơi nó được gọi**:
 
-| Path | Description |
+| Đường dẫn | Mô tả |
 |------|-------------|
-| `~/.claude/skills/` | Global skills (all projects) |
-| `{cwd}/.claude/skills/` | Project-level skills (if the directory exists) |
+| `~/.claude/skills/` | Skill toàn cục (mọi dự án) |
+| `{cwd}/.claude/skills/` | Skill cấp dự án (nếu thư mục tồn tại) |
 
-**At the start of Phase 1, the command explicitly lists which paths were found and scanned.**
+**Ở đầu Giai đoạn 1, command liệt kê tường minh những đường dẫn nào đã được tìm thấy và quét.**
 
-Directories named `.trash` are excluded from both scan modes: archived skills are not part of the live inventory. If an older `results.json` contains `.trash` entries, start a new Full Stocktake using the cache initialization below before resuming Quick Scan. An ordinary save merges entries and does not remove archived records.
+Các thư mục tên `.trash` bị loại khỏi cả hai chế độ quét: skill đã lưu trữ (archived) không thuộc danh mục đang hoạt động. Nếu một `results.json` cũ chứa các mục `.trash`, hãy bắt đầu một Full Stocktake mới bằng cách khởi tạo cache bên dưới trước khi tiếp tục Quick Scan. Một lần lưu thông thường chỉ gộp các mục và không xóa các bản ghi đã archive.
 
-### Targeting a specific project
+### Nhắm tới một dự án cụ thể
 
-To include project-level skills, run from that project's root directory:
+Để bao gồm các skill cấp dự án, hãy chạy từ thư mục gốc của dự án đó:
 
 ```bash
 cd ~/path/to/my-project
 /skill-stocktake
 ```
 
-If the project has no `.claude/skills/` directory, only global skills and commands are evaluated.
+Nếu dự án không có thư mục `.claude/skills/`, chỉ các skill và command toàn cục được đánh giá.
 
-## Modes
+## Chế độ
 
-| Mode | Trigger | Duration |
+| Chế độ | Điều kiện kích hoạt | Thời lượng |
 |------|---------|---------|
-| Quick Scan | `results.json` exists (default) | 5–10 min |
-| Full Stocktake | `results.json` absent, or `/skill-stocktake full` | 20–30 min |
+| Quick Scan | `results.json` tồn tại (mặc định) | 5–10 phút |
+| Full Stocktake | `results.json` không tồn tại, hoặc `/skill-stocktake full` | 20–30 phút |
 
-The shell scripts require Bash, Node.js, and `jq` on `PATH`.
+Các shell script yêu cầu Bash, Node.js và `jq` có trong `PATH`.
 
-**Results cache:** `~/.claude/skills/skill-stocktake/results.json`
+**Cache kết quả:** `~/.claude/skills/skill-stocktake/results.json`
 
-## Quick Scan Flow
+## Luồng Quick Scan
 
-Re-evaluate only skills that have changed since the last run (5–10 min).
+Chỉ đánh giá lại các skill đã thay đổi kể từ lần chạy trước (5–10 phút).
 
-1. Read `~/.claude/skills/skill-stocktake/results.json`
-2. Run: `bash ~/.claude/skills/skill-stocktake/scripts/quick-diff.sh \
+1. Đọc `~/.claude/skills/skill-stocktake/results.json`
+2. Chạy: `bash ~/.claude/skills/skill-stocktake/scripts/quick-diff.sh \
          ~/.claude/skills/skill-stocktake/results.json`
-   (Project dir is auto-detected from `$PWD/.claude/skills`; pass it explicitly only if needed)
-3. If output is `[]`: report "No changes since last run." and stop
-4. Re-evaluate only those changed files using the same Phase 2 criteria
-5. Carry forward unchanged skills from previous results
-6. Output only the diff
-7. Run: `bash ~/.claude/skills/skill-stocktake/scripts/save-results.sh \
+   (Thư mục dự án được tự động phát hiện từ `$PWD/.claude/skills`; chỉ truyền tường minh khi cần)
+3. Nếu đầu ra là `[]`: báo cáo "No changes since last run." rồi dừng
+4. Chỉ đánh giá lại các file đã thay đổi đó theo cùng tiêu chí của Giai đoạn 2
+5. Giữ nguyên kết quả trước đó của các skill không thay đổi
+6. Chỉ xuất phần diff
+7. Chạy: `bash ~/.claude/skills/skill-stocktake/scripts/save-results.sh \
          ~/.claude/skills/skill-stocktake/results.json <<< "$EVAL_RESULTS"`
 
-## Full Stocktake Flow
+## Luồng Full Stocktake
 
-### Phase 1 — Inventory
+### Giai đoạn 1 — Kiểm kê (Inventory)
 
-Run this entire block in **one Bash invocation**. It prints the inventory for the agent and initializes a new full run only when there is no unfinished run to resume:
+Chạy toàn bộ khối này trong **một lần gọi Bash duy nhất**. Nó in danh mục cho agent và chỉ khởi tạo một lượt chạy full mới khi không có lượt chạy dở dang nào để tiếp tục:
 
 ```bash
 (
@@ -105,9 +105,9 @@ Run this entire block in **one Bash invocation**. It prints the inventory for th
 )
 ```
 
-The script enumerates skill files, extracts frontmatter, and collects UTC mtimes.
-Project dir is auto-detected from `$PWD/.claude/skills`; pass it explicitly only if needed.
-Present the scan summary and inventory table from the script output:
+Script liệt kê các file skill, trích xuất frontmatter và thu thập mtime theo UTC.
+Thư mục dự án được tự động phát hiện từ `$PWD/.claude/skills`; chỉ truyền tường minh khi cần.
+Trình bày bản tóm tắt quá trình quét và bảng danh mục từ đầu ra của script:
 
 ```
 Scanning:
@@ -115,27 +115,27 @@ Scanning:
   ✗ {cwd}/.claude/skills/    (not found — global skills only)
 ```
 
-| Skill | 7d use | 30d use | Description |
+| Skill | Dùng 7 ngày | Dùng 30 ngày | Mô tả |
 |-------|--------|---------|-------------|
 
-Usage counts come from the optional `~/.claude/observations.jsonl` file (overridable with `SKILL_STOCKTAKE_OBSERVATIONS`), which Claude Code does not create by default. When the file is absent, `use_7d` and `use_30d` are JSON `null`; display them as **unmeasured** in inventory and summary tables. A numeric `0` means the file exists but contains no matching Read observations in that window. Missing usage data is never evidence for retiring a skill.
+Số lần sử dụng lấy từ file tùy chọn `~/.claude/observations.jsonl` (có thể ghi đè bằng `SKILL_STOCKTAKE_OBSERVATIONS`), file này Claude Code không tạo mặc định. Khi file không tồn tại, `use_7d` và `use_30d` là JSON `null`; hiển thị chúng là **unmeasured (chưa đo)** trong bảng danh mục và bảng tóm tắt. Giá trị số `0` nghĩa là file tồn tại nhưng không có quan sát Read khớp nào trong khoảng thời gian đó. Thiếu dữ liệu sử dụng KHÔNG BAO GIỜ là bằng chứng để retire một skill.
 
-`--replace` writes a complete cache snapshot. A new run starts with an empty evaluation; a resumed run instead keeps a saved evaluation only when its path is still live and its saved, non-null mtime matches the fresh inventory. Changed skills and entries without an mtime require re-evaluation. It removes archived/deleted entries and refreshes the progress counts even when no new batch remains. Existing name-keyed entries are normalized using their saved `path`. Never use the empty initialization payload for a resume. Later chunks, completion updates, and Quick Scans must omit `--replace` so they merge into the current run instead of losing earlier results.
+`--replace` ghi một snapshot cache hoàn chỉnh. Một lượt chạy mới bắt đầu với phần đánh giá rỗng; một lượt chạy được tiếp tục (resume) thì chỉ giữ lại một đánh giá đã lưu khi đường dẫn của nó vẫn còn tồn tại và mtime đã lưu (khác null) khớp với danh mục mới. Các skill đã thay đổi và các mục không có mtime cần được đánh giá lại. Nó loại bỏ các mục đã archive/xóa và làm mới số liệu tiến độ ngay cả khi không còn batch mới nào. Các mục hiện có dùng tên làm key được chuẩn hóa dựa trên `path` đã lưu. KHÔNG BAO GIỜ dùng payload khởi tạo rỗng cho việc resume. Các chunk sau, các cập nhật hoàn tất và Quick Scan PHẢI bỏ `--replace` để chúng được gộp vào lượt chạy hiện tại thay vì làm mất kết quả trước đó.
 
-### Phase 2 — Quality Evaluation
+### Giai đoạn 2 — Đánh giá chất lượng
 
-Launch an Agent tool subagent (**general-purpose agent**) with the actual JSON emitted by Phase 1 and the checklist below. Copy the inventory values into the prompt itself; shell variables do not carry over into Agent calls. Include the full inventory for overlap checks and explicitly identify the paths in the current batch to evaluate. Do not send literal inventory or checklist placeholders.
+Khởi chạy một subagent bằng Agent tool (**general-purpose agent**) với JSON thực tế do Giai đoạn 1 phát ra và checklist bên dưới. Sao chép các giá trị của danh mục vào chính prompt; biến shell không được chuyển sang các lệnh gọi Agent. Đưa vào toàn bộ danh mục để kiểm tra mức độ chồng lấn và chỉ rõ các đường dẫn trong batch hiện tại cần đánh giá. Không gửi các placeholder nguyên văn của danh mục hay checklist.
 
-The subagent reads each assigned skill, applies the checklist, and returns a JSON object with a `skills` map keyed by the inventory path. Each entry includes its `path`, scanned `mtime`, `verdict`, and self-contained `reason`. Use the same path keys across all batches so merging results cannot overwrite a different skill with the same name.
+Subagent đọc từng skill được giao, áp dụng checklist và trả về một đối tượng JSON có map `skills` với key là đường dẫn trong danh mục. Mỗi mục gồm `path`, `mtime` đã quét, `verdict` và `reason` tự chứa (self-contained). Dùng cùng key đường dẫn trong mọi batch để việc gộp kết quả không ghi đè nhầm một skill khác trùng tên.
 
-**Chunk guidance:** Process ~20 skills per subagent invocation to keep context manageable. After each chunk, wrap its returned `skills` map with `mode: "full"` and `batch_progress: {total, evaluated, status: "in_progress"}`. Set `total` to the inventory size and `evaluated` to the cumulative number of distinct evaluated paths, including saved batches. Assign this JSON to `CHUNK_RESULTS` and run the following command in the **same Bash invocation as that assignment**:
+**Hướng dẫn chia chunk:** Xử lý khoảng ~20 skill mỗi lần gọi subagent để giữ context ở mức quản lý được. Sau mỗi chunk, bọc map `skills` mà nó trả về với `mode: "full"` và `batch_progress: {total, evaluated, status: "in_progress"}`. Đặt `total` bằng kích thước danh mục và `evaluated` bằng tổng số tích lũy các đường dẫn đã đánh giá khác nhau, bao gồm cả các batch đã lưu. Gán JSON này cho `CHUNK_RESULTS` và chạy lệnh sau trong **cùng một lần gọi Bash với phép gán đó**:
 
 ```bash
 bash ~/.claude/skills/skill-stocktake/scripts/save-results.sh \
   ~/.claude/skills/skill-stocktake/results.json <<< "$CHUNK_RESULTS"
 ```
 
-After all skills are evaluated, persist completion before proceeding to Phase 3:
+Sau khi tất cả skill được đánh giá, hãy lưu trạng thái hoàn tất trước khi sang Giai đoạn 3:
 
 ```bash
 (
@@ -153,9 +153,9 @@ After all skills are evaluated, persist completion before proceeding to Phase 3:
 )
 ```
 
-**Resume detection:** If `status: "in_progress"` is found on startup, run Phase 1 to reconcile the saved results with the fresh inventory, then evaluate only paths absent from the reconciled `skills` map. If none remain, persist completion immediately. Completed evaluations are preserved only for surviving paths with matching, non-null mtimes; new or changed skills and entries without an mtime require evaluation.
+**Phát hiện resume:** Nếu thấy `status: "in_progress"` khi khởi động, hãy chạy Giai đoạn 1 để đối chiếu kết quả đã lưu với danh mục mới, sau đó chỉ đánh giá những đường dẫn không có trong map `skills` đã đối chiếu. Nếu không còn đường dẫn nào, lưu trạng thái hoàn tất ngay lập tức. Các đánh giá đã hoàn tất chỉ được giữ lại cho những đường dẫn còn tồn tại có mtime khớp và khác null; các skill mới hoặc đã thay đổi và các mục không có mtime cần được đánh giá.
 
-Each skill is evaluated against this checklist:
+Mỗi skill được đánh giá theo checklist này:
 
 ```
 - [ ] Content overlap with other skills checked
@@ -164,60 +164,60 @@ Each skill is evaluated against this checklist:
 - [ ] Usage frequency considered when measured; missing observations marked unmeasured, not treated as zero
 ```
 
-Verdict criteria:
+Tiêu chí verdict:
 
-| Verdict | Meaning |
+| Verdict | Ý nghĩa |
 |---------|---------|
-| Keep | Useful and current |
-| Improve | Worth keeping, but specific improvements needed |
-| Update | Referenced technology is outdated (verify with WebSearch) |
-| Retire | Low quality, stale, or cost-asymmetric |
-| Merge into [X] | Substantial overlap with another skill; name the merge target |
+| Keep | Hữu ích và còn cập nhật |
+| Improve | Đáng giữ lại, nhưng cần cải thiện cụ thể |
+| Update | Công nghệ được tham chiếu đã lỗi thời (xác minh bằng WebSearch) |
+| Retire | Chất lượng thấp, lỗi thời hoặc chi phí không cân xứng với giá trị |
+| Merge into [X] | Chồng lấn đáng kể với skill khác; nêu rõ đích để merge |
 
-Evaluation is **holistic AI judgment** — not a numeric rubric. Guiding dimensions:
-- **Actionability**: code examples, commands, or steps that let you act immediately
-- **Scope fit**: name, trigger, and content are aligned; not too broad or narrow
-- **Uniqueness**: value not replaceable by MEMORY.md / CLAUDE.md / another skill
-- **Currency**: technical references work in the current environment
+Việc đánh giá là **phán đoán tổng thể của AI (holistic AI judgment)** — không phải rubric số. Các khía cạnh định hướng:
+- **Actionability (khả năng hành động)**: ví dụ code, lệnh hoặc các bước cho phép hành động ngay lập tức
+- **Scope fit (độ phù hợp phạm vi)**: tên, điều kiện kích hoạt và nội dung thống nhất với nhau; không quá rộng hay quá hẹp
+- **Uniqueness (tính độc nhất)**: giá trị không thể thay thế bằng MEMORY.md / CLAUDE.md / skill khác
+- **Currency (độ cập nhật)**: các tham chiếu kỹ thuật còn hoạt động trong môi trường hiện tại
 
-**Reason quality requirements** — the `reason` field must be self-contained and decision-enabling:
-- Do NOT write "unchanged" alone — always restate the core evidence
-- For **Retire**: state (1) what specific defect was found, (2) what covers the same need instead
+**Yêu cầu chất lượng của reason** — trường `reason` phải tự chứa đầy đủ và đủ để ra quyết định:
+- KHÔNG chỉ viết mỗi "unchanged" — LUÔN LUÔN nêu lại bằng chứng cốt lõi
+- Với **Retire**: nêu (1) lỗi cụ thể nào đã được phát hiện, (2) thứ gì khác đáp ứng cùng nhu cầu đó
   - Bad: `"Superseded"`
   - Good: `"disable-model-invocation: true already set; superseded by continuous-learning-v2 which covers all the same patterns plus confidence scoring. No unique content remains."`
-- For **Merge**: name the target and describe what content to integrate
+- Với **Merge**: nêu rõ đích và mô tả nội dung cần tích hợp
   - Bad: `"Overlaps with X"`
   - Good: `"42-line thin content; Step 4 of chatlog-to-article already covers the same workflow. Integrate the 'article angle' tip as a note in that skill."`
-- For **Improve**: describe the specific change needed (what section, what action, target size if relevant)
+- Với **Improve**: mô tả thay đổi cụ thể cần làm (section nào, hành động gì, kích thước mục tiêu nếu liên quan)
   - Bad: `"Too long"`
   - Good: `"276 lines; Section 'Framework Comparison' (L80–140) duplicates ai-era-architecture-principles; delete it to reach ~150 lines."`
-- For **Keep** (mtime-only change in Quick Scan): restate the original verdict rationale, do not write "unchanged"
+- Với **Keep** (chỉ mtime thay đổi trong Quick Scan): nêu lại lý do của verdict ban đầu, không viết "unchanged"
   - Bad: `"Unchanged"`
   - Good: `"mtime updated but content unchanged. Unique Python reference explicitly imported by rules/python/; no overlap found."`
 
-### Phase 3 — Summary Table
+### Giai đoạn 3 — Bảng tóm tắt
 
-| Skill | 7d use | Verdict | Reason |
+| Skill | Dùng 7 ngày | Verdict | Reason |
 |-------|--------|---------|--------|
 
-### Phase 4 — Consolidation
+### Giai đoạn 4 — Hợp nhất (Consolidation)
 
-1. **Retire / Merge**: present detailed justification per file before confirming with user:
-   - What specific problem was found (overlap, staleness, broken references, etc.)
-   - What alternative covers the same functionality (for Retire: which existing skill/rule; for Merge: the target file and what content to integrate)
-   - Impact of removal (any dependent skills, MEMORY.md references, or workflows affected)
-2. **Improve**: present specific improvement suggestions with rationale:
-   - What to change and why (e.g., "trim 430→200 lines because sections X/Y duplicate python-patterns")
-   - User decides whether to act
-3. **Update**: present updated content with sources checked
-4. Check MEMORY.md line count; propose compression if >100 lines
+1. **Retire / Merge**: trình bày lý do chi tiết cho từng file trước khi xác nhận với người dùng:
+   - Đã phát hiện vấn đề cụ thể nào (chồng lấn, lỗi thời, tham chiếu hỏng, v.v.)
+   - Giải pháp thay thế nào đáp ứng cùng chức năng (với Retire: skill/rule hiện có nào; với Merge: file đích và nội dung cần tích hợp)
+   - Tác động của việc loại bỏ (các skill phụ thuộc, tham chiếu trong MEMORY.md hoặc workflow bị ảnh hưởng)
+2. **Improve**: trình bày các đề xuất cải thiện cụ thể kèm lý do:
+   - Cần thay đổi gì và vì sao (ví dụ: "trim 430→200 lines because sections X/Y duplicate python-patterns")
+   - Người dùng quyết định có thực hiện hay không
+3. **Update**: trình bày nội dung đã cập nhật kèm các nguồn đã kiểm tra
+4. Kiểm tra số dòng của MEMORY.md; đề xuất nén lại nếu >100 dòng
 
-## Results File Schema
+## Schema của file kết quả
 
 `~/.claude/skills/skill-stocktake/results.json`:
 
-**`evaluated_at`**: Must be set to the actual UTC time of evaluation completion.
-Obtain via Bash: `date -u +%Y-%m-%dT%H:%M:%SZ`. Never use a date-only approximation like `T00:00:00Z`.
+**`evaluated_at`**: PHẢI được đặt bằng thời điểm UTC thực tế khi hoàn tất đánh giá.
+Lấy qua Bash: `date -u +%Y-%m-%dT%H:%M:%SZ`. KHÔNG BAO GIỜ dùng giá trị xấp xỉ chỉ có ngày như `T00:00:00Z`.
 
 ```json
 {
@@ -239,8 +239,8 @@ Obtain via Bash: `date -u +%Y-%m-%dT%H:%M:%SZ`. Never use a date-only approximat
 }
 ```
 
-## Notes
+## Ghi chú
 
-- Evaluation is blind: the same checklist applies to all skills regardless of origin (ECC, self-authored, auto-extracted)
-- Archive / delete operations always require explicit user confirmation
-- No verdict branching by skill origin
+- Việc đánh giá là mù (blind): cùng một checklist áp dụng cho mọi skill bất kể nguồn gốc (ECC, tự viết, tự động trích xuất)
+- Các thao tác archive / xóa LUÔN LUÔN yêu cầu người dùng xác nhận tường minh
+- Không phân nhánh verdict theo nguồn gốc của skill

@@ -1,13 +1,13 @@
 ---
-description: Plan and execute a full marketing campaign. Accepts a product brief and returns positioning, landing page copy, email sequence, social posts, ad variants, video scripts, and a content calendar. Can also review existing copy for conversion quality. This is the slash-command entrypoint that delegates to the marketing-agent; prefer the marketing-campaign skill for the same end-to-end workflow in conversation.
+description: Lập kế hoạch và thực thi một chiến dịch marketing đầy đủ. Nhận product brief và trả về định vị (positioning), copy cho landing page, chuỗi email, bài đăng mạng xã hội, các biến thể quảng cáo, kịch bản video và lịch nội dung. Cũng có thể review copy hiện có về chất lượng chuyển đổi. Đây là điểm vào dạng slash command, ủy quyền cho marketing-agent; ưu tiên skill marketing-campaign cho cùng workflow end-to-end trong hội thoại.
 allowed-tools: ["Read", "Grep", "Glob", "WebSearch", "WebFetch", "Write"]
 ---
 
 # /marketing-campaign
 
-Plan and execute a marketing campaign from brief to full content suite.
+Lập kế hoạch và thực thi một chiến dịch marketing từ brief đến bộ nội dung đầy đủ.
 
-## Usage
+## Cách dùng
 
 ```
 /marketing-campaign                          # Prompt for brief interactively
@@ -16,29 +16,29 @@ Plan and execute a marketing campaign from brief to full content suite.
 /marketing-campaign review [file-or-brief]   # Copy audit for conversion and brand consistency
 ```
 
-## What It Does
+## Nó làm gì
 
-1. **Research** — Profiles the target audience and maps competitors before writing anything
-2. **Positioning** — Locks the campaign angle and tone profile first
-3. **Copy production** — Generates the full content suite in the right order (landing page → emails → social → ads → video scripts → calendar)
-4. **Review** — Gates all output through a conversion and brand consistency checklist
+1. **Nghiên cứu** — Lập hồ sơ đối tượng mục tiêu và vẽ bản đồ đối thủ trước khi viết bất cứ thứ gì
+2. **Định vị (Positioning)** — Chốt góc tiếp cận chiến dịch và hồ sơ giọng điệu trước
+3. **Sản xuất copy** — Tạo bộ nội dung đầy đủ theo đúng thứ tự (landing page → email → social → quảng cáo → kịch bản video → lịch)
+4. **Review** — Kiểm soát toàn bộ output qua checklist về chuyển đổi và tính nhất quán thương hiệu
 
-## Modes
+## Các chế độ
 
-### Full Campaign Mode
+### Chế độ Full Campaign
 
-Provide a product brief containing:
-- Product name and description
-- Target audience (specific, not generic)
-- Core problem the product solves
-- Core benefit / outcome
-- Tone guidance
-- Channels required
-- Launch goal or timeline
+Cung cấp một product brief gồm:
+- Tên và mô tả sản phẩm
+- Đối tượng mục tiêu (cụ thể, không chung chung)
+- Vấn đề cốt lõi mà sản phẩm giải quyết
+- Lợi ích / kết quả cốt lõi
+- Hướng dẫn về giọng điệu
+- Các kênh cần có
+- Mục tiêu hoặc mốc thời gian ra mắt
 
-The agent returns all campaign deliverables in order, with a copy review summary at the end.
+Agent trả về tất cả deliverable của chiến dịch theo thứ tự, kèm bản tóm tắt review copy ở cuối.
 
-### Single Deliverable Mode
+### Chế độ Single Deliverable
 
 ```
 /marketing-campaign copy landing-page
@@ -48,24 +48,24 @@ The agent returns all campaign deliverables in order, with a copy review summary
 /marketing-campaign copy video-scripts
 ```
 
-Requires positioning to be defined first. Run full mode or provide the angle before requesting a single deliverable.
+Yêu cầu positioning được xác định trước. Hãy chạy chế độ đầy đủ hoặc cung cấp góc tiếp cận trước khi yêu cầu một deliverable đơn lẻ.
 
-### Copy Review Mode
+### Chế độ Copy Review
 
 ```
 /marketing-campaign review path/to/copy.md
 /marketing-campaign review "paste copy here"
 ```
 
-Returns a structured audit against:
-- 5-second clarity test (above-fold copy)
-- CTA quality (specific, earned, one per piece)
-- Brand tone consistency
-- Claim specificity and supportability
-- Platform-native fit
-- Cross-channel consistency
+Trả về bản audit có cấu trúc theo:
+- Bài test độ rõ ràng trong 5 giây (copy above-fold)
+- Chất lượng CTA (cụ thể, có cơ sở, một CTA cho mỗi sản phẩm nội dung)
+- Tính nhất quán giọng điệu thương hiệu
+- Tính cụ thể và khả năng chứng minh của các tuyên bố
+- Độ phù hợp với đặc thù nền tảng (platform-native)
+- Tính nhất quán xuyên kênh
 
-## Brief Template
+## Template Brief
 
 ```markdown
 Product: [name]
@@ -78,9 +78,9 @@ Channels: [landing page, email, LinkedIn, X, ads, video]
 Goal: [launch, waitlist, signups, awareness — and timeline]
 ```
 
-## Output Location
+## Vị trí output
 
-When saving campaign assets, the convention is `.claude/campaigns/{campaign-name}/`:
+Khi lưu tài sản chiến dịch, quy ước là `.claude/campaigns/{campaign-name}/`:
 
 ```
 .claude/campaigns/product-launch/
@@ -93,9 +93,9 @@ When saving campaign assets, the convention is `.claude/campaigns/{campaign-name
 └── content-calendar.md
 ```
 
-Confirm the save location before writing files.
+Xác nhận vị trí lưu trước khi ghi file.
 
-## Examples
+## Ví dụ
 
 ```
 /marketing-campaign Build a 7-day launch campaign for an AI career platform for UK university students.
@@ -109,21 +109,21 @@ Confirm the save location before writing files.
 /marketing-campaign review .claude/campaigns/the-key/landing-page.md
 ```
 
-## Agent Delegation
+## Ủy quyền cho agent
 
-This command invokes:
-- `marketing-agent` — campaign planning and copy production
-- `brand-voice` — voice capture when tone needs locking across multiple outputs
-- `content-engine` — platform-native social content production
-- `crosspost` — multi-platform distribution
-- `market-research` — deep audience or competitive intelligence
+Command này gọi:
+- `marketing-agent` — lập kế hoạch chiến dịch và sản xuất copy
+- `brand-voice` — nắm bắt giọng điệu khi cần chốt tone xuyên suốt nhiều output
+- `content-engine` — sản xuất nội dung social đúng đặc thù nền tảng
+- `crosspost` — phân phối đa nền tảng
+- `market-research` — thông tin chuyên sâu về đối tượng hoặc đối thủ
 
-## Related Commands
+## Các command liên quan
 
-- `/plan` — Strategic planning before a campaign
-- `/plan-prd` — Product requirements document before briefing a campaign
-- `/code-review` — Review code behind a landing page implementation
+- `/plan` — Lập kế hoạch chiến lược trước một chiến dịch
+- `/plan-prd` — Tài liệu yêu cầu sản phẩm trước khi viết brief cho chiến dịch
+- `/code-review` — Review code đằng sau việc triển khai landing page
 
 ---
 
-*Part of [ECC](https://github.com/affaan-m/ECC)*
+*Một phần của [ECC](https://github.com/affaan-m/ECC)*

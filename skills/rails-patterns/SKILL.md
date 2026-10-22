@@ -1,27 +1,27 @@
 ---
 name: rails-patterns
-description: Ruby on Rails framework patterns for Rails 7.1+ and 8.x apps. Covers the directory contract, skinny controllers with service objects, form objects, query objects, idiomatic ActiveRecord, background jobs, ViewComponent, Hotwire, and the Rails 8 Solid stack. Use when building or reviewing Rails apps, controllers, models, services, jobs, or views.
+description: Các pattern framework Ruby on Rails cho ứng dụng Rails 7.1+ và 8.x. Bao gồm quy ước thư mục (directory contract), skinny controller với service object, form object, query object, ActiveRecord idiomatic, background job, ViewComponent, Hotwire và Rails 8 Solid stack. Dùng khi xây dựng hoặc review ứng dụng Rails, controller, model, service, job hoặc view.
 origin: community
 ---
 
 # Rails Patterns
 
-Framework patterns for modern Ruby on Rails applications (Rails 7.1+ and 8.x). Rails is opinionated by design; these are the patterns the community has converged on for apps that stay maintainable past the 50-model mark. This skill is the "how." For the "what" and "when" (the decisions about which pattern to reach for), see the Ruby patterns rules — `rules/ruby/patterns.md` in this repository, installed as `rules/ecc/ruby/patterns.md`.
+Các pattern framework cho ứng dụng Ruby on Rails hiện đại (Rails 7.1+ và 8.x). Rails vốn có chủ kiến (opinionated) trong thiết kế; đây là các pattern mà cộng đồng đã hội tụ cho những ứng dụng vẫn dễ bảo trì khi vượt mốc 50 model. Skill này nói về "cách làm" (how). Về "cái gì" và "khi nào" (quyết định nên chọn pattern nào), xem các rule về Ruby patterns — `rules/ruby/patterns.md` trong repo này, được cài thành `rules/ecc/ruby/patterns.md`.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Building a Rails application (full-stack, API-only, or hybrid)
-- Reviewing a PR that touches `app/` or `config/`
-- Generating models, controllers, services, or jobs
-- A controller action grows past ~10 lines
-- A model file grows past ~200 lines
-- ActiveRecord queries start appearing in controllers or views
+- Xây dựng ứng dụng Rails (full-stack, API-only hoặc hybrid)
+- Review PR có đụng đến `app/` hoặc `config/`
+- Sinh model, controller, service hoặc job
+- Một controller action dài quá ~10 dòng
+- Một file model dài quá ~200 dòng
+- Các query ActiveRecord bắt đầu xuất hiện trong controller hoặc view
 
-## Core Concepts
+## Khái niệm cốt lõi
 
-### The directory contract
+### Quy ước thư mục (directory contract)
 
-Rails apps follow a predictable structure. Add directories deliberately, not casually.
+Ứng dụng Rails theo một cấu trúc có thể dự đoán được. Hãy thêm thư mục một cách có chủ đích, không tùy tiện.
 
 ```
 app/
@@ -39,49 +39,49 @@ app/
   channels/       ActionCable channels for WebSocket work.
 ```
 
-Avoid `app/lib/`, `app/utils/`, `app/managers/`. If something does not fit the directories above, the design usually needs rethinking, not a new directory. Truly generic code goes in `lib/`.
+Tránh `app/lib/`, `app/utils/`, `app/managers/`. Nếu thứ gì đó không khớp với các thư mục ở trên, thường là thiết kế cần suy nghĩ lại chứ không phải cần thêm thư mục mới. Code thực sự generic thì đặt trong `lib/`.
 
-### Skinny controllers
+### Skinny controller
 
-Controllers receive a request, delegate to the right object, and render a response. Business logic lives elsewhere. (Per the Ruby patterns rules, extract to a service object when the controller starts carrying multiple responsibilities.)
+Controller nhận request, ủy thác cho đúng object và render response. Business logic nằm ở nơi khác. (Theo các rule về Ruby patterns, hãy tách ra service object khi controller bắt đầu gánh nhiều trách nhiệm.)
 
-### Service objects
+### Service object
 
-The default for business operations that touch more than a single model save. Conventions that keep them consistent:
+Là lựa chọn mặc định cho các thao tác nghiệp vụ động đến nhiều hơn một lần save model. Các quy ước giữ cho chúng nhất quán:
 
-- Namespace by domain (`Invoices::Create`), not by suffix (`InvoiceCreator`).
-- A class method `.call` delegates to an instance `#call`.
-- Return a Result object, not a boolean or a bare record, so the caller can branch on success, errors, and the affected record.
-- Wrap multi-record writes in a transaction.
-- Keep each service single-purpose (`Invoices::Create`, `Invoices::MarkPaid`), never `Invoices::Manager`.
+- Đặt namespace theo domain (`Invoices::Create`), không theo hậu tố (`InvoiceCreator`).
+- Class method `.call` ủy thác cho instance `#call`.
+- Trả về một Result object, không phải boolean hay record trần, để phía gọi có thể rẽ nhánh theo thành công, lỗi và record bị ảnh hưởng.
+- Bọc các thao tác ghi nhiều record trong một transaction.
+- Giữ mỗi service chỉ có một mục đích (`Invoices::Create`, `Invoices::MarkPaid`), KHÔNG BAO GIỜ dùng `Invoices::Manager`.
 
-### Form objects
+### Form object
 
-When a form spans multiple models or has fields that do not map to columns, use a form object rather than nested attributes or virtual attributes on the wrong model. It quacks like a model to the view (`form_with model: @form`) while composing records cleanly.
+Khi một form trải rộng nhiều model hoặc có các field không ánh xạ tới cột, hãy dùng form object thay vì nested attributes hay virtual attribute đặt sai model. Nó "quack" như một model đối với view (`form_with model: @form`) trong khi vẫn tổ hợp các record một cách gọn gàng.
 
-### Query objects
+### Query object
 
-For ActiveRecord queries reused across controllers or services, or too complex for a scope, extract a query object that accepts a scope as input so it composes. Rule of thumb: a scope that grows past three chained conditions or starts taking parameters wants to be a query object.
+Với các query ActiveRecord được dùng lại giữa các controller hoặc service, hoặc quá phức tạp cho một scope, hãy tách ra một query object nhận scope làm đầu vào để có thể kết hợp (compose). Quy tắc kinh nghiệm: một scope dài quá ba điều kiện nối chuỗi hoặc bắt đầu nhận tham số thì nên trở thành query object.
 
-### Background jobs
+### Background job
 
-Offload anything slow. (Per the Ruby patterns rules, Solid Queue for greenfield Rails 8 with modest throughput; Sidekiq when you need mature observability, high throughput, or existing Redis.) Regardless of adapter: pass IDs not records, make `perform` idempotent, and set `retry_on`/`discard_on` explicitly.
+Đẩy mọi thứ chậm ra ngoài. (Theo các rule về Ruby patterns: dùng Solid Queue cho Rails 8 greenfield với throughput vừa phải; dùng Sidekiq khi cần observability trưởng thành, throughput cao hoặc đã có sẵn Redis.) Bất kể adapter nào: truyền ID thay vì record, làm cho `perform` idempotent, và đặt `retry_on`/`discard_on` một cách tường minh.
 
-### ViewComponent over partials
+### Ưu tiên ViewComponent hơn partial
 
-For view logic with conditional rendering, more than two arguments, or reuse across more than three places, prefer a ViewComponent. Components are testable in isolation and surface their interface explicitly; partials with deep conditional logic become debt.
+Với view logic có render theo điều kiện, nhiều hơn hai tham số, hoặc được dùng lại ở hơn ba nơi, hãy ưu tiên ViewComponent. Component có thể test độc lập và bộc lộ interface của chúng một cách tường minh; partial có logic điều kiện lồng sâu sẽ trở thành nợ kỹ thuật.
 
-### Hotwire: Turbo and Stimulus
+### Hotwire: Turbo và Stimulus
 
-The default Rails frontend stack. (Per the Ruby patterns rules, prefer Hotwire for server-rendered apps; reach for React/Vue only when interaction complexity justifies the client surface.) Turbo Frames for partial page updates, Turbo Streams for server-driven updates, Stimulus for small client-side behaviors next to the markup.
+Frontend stack mặc định của Rails. (Theo các rule về Ruby patterns, ưu tiên Hotwire cho ứng dụng server-rendered; chỉ dùng React/Vue khi độ phức tạp của tương tác biện minh cho phần client.) Turbo Frames cho cập nhật một phần trang, Turbo Streams cho cập nhật do server điều khiển, Stimulus cho các hành vi nhỏ phía client đặt cạnh markup.
 
-### The Rails 8 Solid stack
+### Rails 8 Solid stack
 
-Rails 8 ships database-backed defaults that previously needed Redis: Solid Queue (jobs), Solid Cache (cache), Solid Cable (ActionCable). The tradeoff is more database load for one fewer infrastructure component; a good fit for modest throughput, with Redis still winning at high scale. Kamal is the default Docker-based deploy tool.
+Rails 8 đi kèm các mặc định dựa trên database mà trước đây cần Redis: Solid Queue (job), Solid Cache (cache), Solid Cable (ActionCable). Đổi lại là tải database nhiều hơn để bớt đi một thành phần hạ tầng; phù hợp với throughput vừa phải, còn Redis vẫn thắng ở quy mô lớn. Kamal là công cụ deploy mặc định dựa trên Docker.
 
-## Code Examples
+## Ví dụ code
 
-### Skinny controller with a service object
+### Skinny controller với service object
 
 ```ruby
 # Bad: business logic in the controller
@@ -118,7 +118,7 @@ class InvoicesController < ApplicationController
 end
 ```
 
-### The service object
+### Service object
 
 ```ruby
 # app/services/invoices/create.rb
@@ -246,9 +246,9 @@ module Invoices
 end
 ```
 
-Query objects accept a scope, so they compose: `Invoices::Overdue.call(scope: current_user.invoices)`.
+Query object nhận một scope nên có thể kết hợp: `Invoices::Overdue.call(scope: current_user.invoices)`.
 
-### N+1 prevention
+### Phòng tránh N+1
 
 ```ruby
 # Bad: N+1 in the view when it calls post.author.name
@@ -258,7 +258,7 @@ Query objects accept a scope, so they compose: `Invoices::Overdue.call(scope: cu
 @posts = Post.published.includes(:author)
 ```
 
-`includes` lets Rails choose preload vs eager_load. Force `preload` for separate queries, `eager_load` for a JOIN when filtering on the association. Since Rails 6.1, `strict_loading` raises on accidental lazy loads.
+`includes` để Rails tự chọn preload hay eager_load. Ép dùng `preload` cho các query riêng biệt, `eager_load` cho JOIN khi lọc theo association. Từ Rails 6.1, `strict_loading` sẽ báo lỗi khi vô tình lazy load.
 
 ### Counter cache
 
@@ -272,15 +272,15 @@ end
 add_column :posts, :comments_count, :integer, default: 0, null: false
 ```
 
-`post.comments_count` becomes a column read instead of a `COUNT(*)`. This example
-assumes a new table; adding a counter cache to a table that already has rows requires a
-backfill, which is out of scope here.
+`post.comments_count` trở thành thao tác đọc một cột thay vì `COUNT(*)`. Ví dụ này
+giả định một bảng mới; thêm counter cache vào bảng đã có dữ liệu cần phải
+backfill, việc này nằm ngoài phạm vi ở đây.
 
-### Background job shape
+### Hình dạng của background job
 
-Pass record IDs, not records. Retries make delivery at-least-once, so any job that calls
-an external service must be idempotent — otherwise a transient failure after the remote
-call succeeds will duplicate the effect on the next attempt.
+Truyền ID của record, không truyền record. Retry khiến việc giao job là at-least-once, nên mọi job gọi
+tới dịch vụ bên ngoài đều phải idempotent — nếu không, một lỗi tạm thời xảy ra sau khi lời gọi
+remote đã thành công sẽ làm nhân đôi hiệu ứng ở lần thử kế tiếp.
 
 ```ruby
 class AccountingExportJob < ApplicationJob
@@ -307,13 +307,13 @@ end
 add_index :accounting_exports, :idempotency_key, unique: true
 ```
 
-The unique index is what makes this safe: when two attempts race, the database rejects
-the second insert and Active Record resolves the conflict inside the call, returning the
-existing row. That happens without any job-level retry — `retry_on` above covers only
-`AccountingApi::TransientError`. The guard
-covers the window before the remote call; passing `idempotency_key` through to the API
-covers the window after it, so a crash between the API call and `update!` still resolves
-to a single export.
+Unique index chính là thứ làm cho việc này an toàn: khi hai lần thử chạy đua, database từ chối
+lần insert thứ hai và Active Record xử lý xung đột ngay trong lời gọi, trả về
+dòng đã tồn tại. Điều đó xảy ra mà không cần retry ở cấp job — `retry_on` ở trên chỉ bao phủ
+`AccountingApi::TransientError`. Guard này
+bao phủ khoảng thời gian trước lời gọi remote; việc truyền `idempotency_key` xuống API
+bao phủ khoảng thời gian sau đó, nên một crash giữa lời gọi API và `update!` vẫn quy về
+đúng một export duy nhất.
 
 ### ViewComponent
 
@@ -377,7 +377,7 @@ export default class extends Controller {
 }
 ```
 
-### Acceptable vs unacceptable callbacks
+### Callback chấp nhận được và không chấp nhận được
 
 ```ruby
 # Acceptable: pure data normalization
@@ -397,7 +397,7 @@ end
 # end
 ```
 
-### Good concern vs bad concern
+### Concern tốt và concern tệ
 
 ```ruby
 # Good: genuinely cross-cutting, reusable across unrelated models
@@ -427,49 +427,49 @@ end
 # hidden in a module for the appearance of a "skinny" model. Put it back on Invoice.
 ```
 
-A concern used by only one class is just moving code; it belongs in that class. A concern should be reusable across at least two unrelated models.
+Một concern chỉ được dùng bởi một class thì chỉ là dời code đi chỗ khác; nó thuộc về chính class đó. Một concern phải dùng lại được ở ít nhất hai model không liên quan.
 
 ## Anti-Patterns
 
-### God controllers
+### God controller
 
-Any controller past ~80 lines is doing too much. Split actions across controllers or extract to services.
+Bất kỳ controller nào dài quá ~80 dòng đều đang làm quá nhiều việc. Hãy chia các action ra nhiều controller hoặc tách sang service.
 
-### Fat models with 30+ methods
+### Fat model với hơn 30 method
 
-Models should know about their own data. Methods that orchestrate other models, send notifications, or coordinate workflows belong in services.
+Model chỉ nên biết về dữ liệu của chính nó. Các method điều phối model khác, gửi thông báo hoặc phối hợp workflow thuộc về service.
 
-### Callback chains
+### Chuỗi callback
 
-`after_save :update_cache, :send_notifications, :enqueue_export` is the start of a debugging nightmare. Move them into a service that runs them explicitly.
+`after_save :update_cache, :send_notifications, :enqueue_export` là khởi đầu của cơn ác mộng khi debug. Hãy chuyển chúng vào một service chạy chúng một cách tường minh.
 
-### Nested attributes for complex forms
+### Nested attributes cho form phức tạp
 
-`accepts_nested_attributes_for` is fine for simple cases. For conditional validation or cross-model logic, use a form object.
+`accepts_nested_attributes_for` ổn với các trường hợp đơn giản. Với validation có điều kiện hoặc logic xuyên model, hãy dùng form object.
 
-### Default scopes on critical models
+### Default scope trên các model quan trọng
 
-`default_scope { where(deleted: false) }` silently excludes records from every query in the app, including the ones you need for support and debugging. Prefer an explicit named scope.
+`default_scope { where(deleted: false) }` âm thầm loại bỏ record khỏi mọi query trong ứng dụng, kể cả những query bạn cần cho hỗ trợ và debug. Hãy ưu tiên named scope tường minh.
 
-### Models named after database concepts
+### Model đặt tên theo khái niệm database
 
-`UserRole`, `OrderStatus`, `InvoiceState` are usually enum candidates, not models.
+`UserRole`, `OrderStatus`, `InvoiceState` thường là ứng viên cho enum, không phải model.
 
-### Reaching for a JS framework before Hotwire
+### Dùng JS framework trước khi cân nhắc Hotwire
 
-If the page is server-rendered with occasional interactivity, Hotwire ships faster. Reserve React/Vue for genuinely SPA-shaped apps.
+Nếu trang được server-render và chỉ thỉnh thoảng có tương tác, Hotwire ship nhanh hơn. Hãy dành React/Vue cho các ứng dụng thực sự có dạng SPA.
 
 ## Best Practices
 
-- Keep controllers thin; push business logic into services.
-- Return Result objects from services so callers branch on outcome, not exceptions.
-- Wrap multi-record writes in a transaction; let notification/side-effect failures log without breaking the primary write.
-- Pass IDs to jobs, keep `perform` idempotent, set retry/discard explicitly.
-- Default to eager loading; treat an accidental N+1 as a bug, not a nuisance.
-- Reserve concerns for behavior shared across at least two unrelated models.
-- Reach for Hotwire before a client-side framework on server-rendered apps.
+- Giữ controller mỏng; đẩy business logic vào service.
+- Trả về Result object từ service để phía gọi rẽ nhánh theo kết quả, không theo exception.
+- Bọc các thao tác ghi nhiều record trong transaction; để lỗi thông báo/side-effect chỉ ghi log mà không làm hỏng thao tác ghi chính.
+- Truyền ID cho job, giữ `perform` idempotent, đặt retry/discard một cách tường minh.
+- Mặc định dùng eager loading; coi N+1 vô tình là bug, không phải chuyện vặt.
+- Chỉ dùng concern cho hành vi được chia sẻ giữa ít nhất hai model không liên quan.
+- Ưu tiên Hotwire trước khi dùng client-side framework cho ứng dụng server-rendered.
 
-## Related Skills
+## Skill liên quan
 
-- `backend-patterns` — service boundaries and adapter patterns (referenced by the Ruby patterns rules)
-- Ruby patterns rules (`rules/ruby/patterns.md`, installed as `rules/ecc/ruby/patterns.md`) — the decisions and when-to-use guidance this skill implements
+- `backend-patterns` — ranh giới service và các pattern adapter (được các rule về Ruby patterns tham chiếu)
+- Các rule về Ruby patterns (`rules/ruby/patterns.md`, được cài thành `rules/ecc/ruby/patterns.md`) — các quyết định và hướng dẫn khi nào dùng mà skill này triển khai

@@ -1,21 +1,21 @@
 ---
-description: List all configured hookify rules
+description: Liệt kê tất cả rule hookify đã cấu hình
 ---
 
-Find and display all hookify rules in a formatted table.
+Tìm và hiển thị tất cả rule hookify dưới dạng bảng có định dạng.
 
-## Steps
+## Các bước
 
-1. Find all `.claude/hookify.*.local.md` files
-2. Read each file's frontmatter:
+1. Tìm tất cả file `.claude/hookify.*.local.md`
+2. Đọc frontmatter của từng file:
    - `name`
    - `enabled`
    - `event`
    - `action`
    - `pattern`
-3. Display them as a table:
+3. Hiển thị dưới dạng bảng:
 
 | Rule | Enabled | Event | Pattern | File |
 |------|---------|-------|---------|------|
 
-4. Show the rule count and remind the user that `/hookify-configure` can change state later.
+4. Hiển thị số lượng rule và nhắc người dùng rằng `/hookify-configure` có thể thay đổi trạng thái sau này.

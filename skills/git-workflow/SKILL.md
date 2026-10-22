@@ -1,28 +1,28 @@
 ---
 name: git-workflow
-description: Git workflow patterns including branching strategies, commit conventions, keeping history clean and readable, tidying local commits before merging, merge vs rebase, conflict resolution, and collaborative development best practices for teams of all sizes. Use when choosing a branching strategy, writing commit conventions, cleaning up history before a pull request, deciding merge versus rebase, or resolving conflicts.
+description: Pattern workflow Git gồm chiến lược branching, quy ước commit, giữ lịch sử sạch và dễ đọc, dọn commit cục bộ trước khi merge, merge vs rebase, giải quyết conflict và best practice phát triển cộng tác cho nhóm mọi quy mô. Dùng khi chọn chiến lược branching, viết quy ước commit, dọn lịch sử trước pull request, quyết định merge hay rebase, hoặc giải quyết conflict.
 metadata:
   origin: ECC
 ---
 
-# Git Workflow Patterns
+# Pattern Workflow Git
 
-Best practices for Git version control, branching strategies, and collaborative development.
+Best practice cho quản lý phiên bản Git, chiến lược branching và phát triển cộng tác.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Setting up Git workflow for a new project
-- Deciding on branching strategy (GitFlow, trunk-based, GitHub flow)
-- Writing commit messages and PR descriptions
-- Resolving merge conflicts
-- Managing releases and version tags
-- Onboarding new team members to Git practices
+- Thiết lập workflow Git cho một project mới
+- Quyết định chiến lược branching (GitFlow, trunk-based, GitHub flow)
+- Viết commit message và mô tả PR
+- Giải quyết merge conflict
+- Quản lý release và version tag
+- Hướng dẫn thành viên mới trong nhóm về thực hành Git
 
-## Branching Strategies
+## Chiến lược Branching
 
-### GitHub Flow (Simple, Recommended for Most)
+### GitHub Flow (Đơn giản, được khuyến nghị cho đa số trường hợp)
 
-Best for continuous deployment and small-to-medium teams.
+Phù hợp nhất cho continuous deployment và nhóm quy mô nhỏ đến vừa.
 
 ```
 main (protected, always deployable)
@@ -32,16 +32,16 @@ main (protected, always deployable)
   └── fix/login-bug          → PR → merge to main
 ```
 
-**Rules:**
-- `main` is always deployable
-- Create feature branches from `main`
-- Open Pull Request when ready for review
-- After approval and CI passes, merge to `main`
-- Deploy immediately after merge
+**Quy tắc:**
+- `main` luôn sẵn sàng để deploy
+- Tạo feature branch từ `main`
+- Mở Pull Request khi sẵn sàng để review
+- Sau khi được duyệt và CI pass, merge vào `main`
+- Deploy ngay sau khi merge
 
-### Trunk-Based Development (High-Velocity Teams)
+### Trunk-Based Development (Nhóm tốc độ cao)
 
-Best for teams with strong CI/CD and feature flags.
+Phù hợp nhất cho nhóm có CI/CD mạnh và feature flag.
 
 ```
 main (trunk)
@@ -51,15 +51,15 @@ main (trunk)
   └── short-lived feature
 ```
 
-**Rules:**
-- Everyone commits to `main` or very short-lived branches
-- Feature flags hide incomplete work
-- CI must pass before merge
-- Deploy multiple times per day
+**Quy tắc:**
+- Mọi người commit vào `main` hoặc các branch tồn tại rất ngắn
+- Feature flag che giấu công việc chưa hoàn thành
+- CI phải pass trước khi merge
+- Deploy nhiều lần mỗi ngày
 
-### GitFlow (Complex, Release-Cycle Driven)
+### GitFlow (Phức tạp, theo chu kỳ release)
 
-Best for scheduled releases and enterprise projects.
+Phù hợp nhất cho release theo lịch và project doanh nghiệp.
 
 ```
 main (production releases)
@@ -74,24 +74,24 @@ main (production releases)
         └── hotfix/critical  → merge to main and develop
 ```
 
-**Rules:**
-- `main` contains production-ready code only
-- `develop` is the integration branch
-- Feature branches from `develop`, merge back to `develop`
-- Release branches from `develop`, merge to `main` and `develop`
-- Hotfix branches from `main`, merge to both `main` and `develop`
+**Quy tắc:**
+- `main` chỉ chứa code sẵn sàng cho production
+- `develop` là branch tích hợp
+- Feature branch tách từ `develop`, merge ngược lại vào `develop`
+- Release branch tách từ `develop`, merge vào `main` và `develop`
+- Hotfix branch tách từ `main`, merge vào cả `main` và `develop`
 
-### When to Use Which
+### Khi nào dùng loại nào
 
-| Strategy | Team Size | Release Cadence | Best For |
+| Chiến lược | Quy mô nhóm | Nhịp release | Phù hợp nhất cho |
 |----------|-----------|-----------------|----------|
-| GitHub Flow | Any | Continuous | SaaS, web apps, startups |
-| Trunk-Based | 5+ experienced | Multiple/day | High-velocity teams, feature flags |
-| GitFlow | 10+ | Scheduled | Enterprise, regulated industries |
+| GitHub Flow | Bất kỳ | Liên tục | SaaS, web app, startup |
+| Trunk-Based | 5+ có kinh nghiệm | Nhiều lần/ngày | Nhóm tốc độ cao, feature flag |
+| GitFlow | 10+ | Theo lịch | Doanh nghiệp, ngành có quy định |
 
-## Commit Messages
+## Commit Message
 
-### Conventional Commits Format
+### Định dạng Conventional Commits
 
 ```
 <type>(<scope>): <subject>
@@ -101,30 +101,30 @@ main (production releases)
 [optional footer(s)]
 ```
 
-### Types
+### Các Type
 
-| Type | Use For | Example |
+| Type | Dùng cho | Ví dụ |
 |------|---------|---------|
-| `feat` | New feature | `feat(auth): add OAuth2 login` |
-| `fix` | Bug fix | `fix(api): handle null response in user endpoint` |
-| `docs` | Documentation | `docs(readme): update installation instructions` |
-| `style` | Formatting, no code change | `style: fix indentation in login component` |
-| `refactor` | Code refactoring | `refactor(db): extract connection pool to module` |
-| `test` | Adding/updating tests | `test(auth): add unit tests for token validation` |
-| `chore` | Maintenance tasks | `chore(deps): update dependencies` |
-| `perf` | Performance improvement | `perf(query): add index to users table` |
-| `ci` | CI/CD changes | `ci: add PostgreSQL service to test workflow` |
-| `revert` | Revert previous commit | `revert: revert "feat(auth): add OAuth2 login"` |
+| `feat` | Tính năng mới | `feat(auth): add OAuth2 login` |
+| `fix` | Sửa bug | `fix(api): handle null response in user endpoint` |
+| `docs` | Tài liệu | `docs(readme): update installation instructions` |
+| `style` | Định dạng, không đổi code | `style: fix indentation in login component` |
+| `refactor` | Refactor code | `refactor(db): extract connection pool to module` |
+| `test` | Thêm/cập nhật test | `test(auth): add unit tests for token validation` |
+| `chore` | Công việc bảo trì | `chore(deps): update dependencies` |
+| `perf` | Cải thiện hiệu năng | `perf(query): add index to users table` |
+| `ci` | Thay đổi CI/CD | `ci: add PostgreSQL service to test workflow` |
+| `revert` | Revert commit trước đó | `revert: revert "feat(auth): add OAuth2 login"` |
 
-### Good vs Bad Examples
+### Ví dụ tốt và xấu
 
 ```
-# BAD: Vague, no context
+# BAD: Mơ hồ, không có ngữ cảnh
 git commit -m "fixed stuff"
 git commit -m "updates"
 git commit -m "WIP"
 
-# GOOD: Clear, specific, explains why
+# GOOD: Rõ ràng, cụ thể, giải thích lý do
 git commit -m "fix(api): retry requests on 503 Service Unavailable
 
 The external API occasionally returns 503 errors during peak hours.
@@ -133,9 +133,9 @@ Added exponential backoff retry logic with max 3 attempts.
 Closes #123"
 ```
 
-### Commit Message Template
+### Template Commit Message
 
-Create `.gitmessage` in repo root:
+Tạo `.gitmessage` ở thư mục gốc repo:
 
 ```
 # <type>(<scope>): <subject>
@@ -147,18 +147,18 @@ Create `.gitmessage` in repo root:
 # [optional footer] - Breaking changes, closes #issue
 ```
 
-Enable with: `git config commit.template .gitmessage`
+Bật bằng: `git config commit.template .gitmessage`
 
 ## Merge vs Rebase
 
-### Merge (Preserves History)
+### Merge (Giữ nguyên lịch sử)
 
 ```bash
-# Creates a merge commit
+# Tạo một merge commit
 git checkout main
 git merge feature/user-auth
 
-# Result:
+# Kết quả:
 # *   merge commit
 # |\
 # | * feature commits
@@ -166,60 +166,60 @@ git merge feature/user-auth
 # * main commits
 ```
 
-**Use when:**
-- Merging feature branches into `main`
-- You want to preserve exact history
-- Multiple people worked on the branch
-- The branch has been pushed and others may have based work on it
+**Dùng khi:**
+- Merge feature branch vào `main`
+- Bạn muốn giữ nguyên lịch sử chính xác
+- Nhiều người cùng làm việc trên branch
+- Branch đã được push và người khác có thể đã dựa công việc của họ trên nó
 
-### Rebase (Linear History)
+### Rebase (Lịch sử tuyến tính)
 
 ```bash
-# Rewrites feature commits onto target branch
+# Ghi lại các feature commit lên branch đích
 git checkout feature/user-auth
 git rebase main
 
-# Result:
-# * feature commits (rewritten)
+# Kết quả:
+# * feature commits (đã viết lại)
 # * main commits
 ```
 
-**Use when:**
-- Updating your local feature branch with latest `main`
-- You want a linear, clean history
-- The branch is local-only (not pushed)
-- You're the only one working on the branch
+**Dùng khi:**
+- Cập nhật feature branch cục bộ với `main` mới nhất
+- Bạn muốn lịch sử tuyến tính, sạch sẽ
+- Branch chỉ tồn tại cục bộ (chưa push)
+- Bạn là người duy nhất làm việc trên branch
 
-### Rebase Workflow
+### Workflow Rebase
 
 ```bash
-# Update feature branch with latest main (before PR)
+# Cập nhật feature branch với main mới nhất (trước khi tạo PR)
 git checkout feature/user-auth
 git fetch origin
 git rebase origin/main
 
-# Fix any conflicts
-# Tests should still pass
+# Sửa các conflict nếu có
+# Test vẫn phải pass
 
-# Force push (only if you're the only contributor)
+# Force push (chỉ khi bạn là người đóng góp duy nhất)
 git push --force-with-lease origin feature/user-auth
 ```
 
-### When NOT to Rebase
+### Khi nào KHÔNG rebase
 
 ```
-# NEVER rebase branches that:
+# KHÔNG BAO GIỜ rebase các branch mà:
 - Have been pushed to a shared repository
 - Other people have based work on
 - Are protected branches (main, develop)
 - Are already merged
 
-# Why: Rebase rewrites history, breaking others' work
+# Lý do: Rebase viết lại lịch sử, làm hỏng công việc của người khác
 ```
 
-## Pull Request Workflow
+## Workflow Pull Request
 
-### PR Title Format
+### Định dạng tiêu đề PR
 
 ```
 <type>(<scope>): <description>
@@ -230,7 +230,7 @@ fix(api): resolve race condition in order processing
 docs(api): add OpenAPI specification for v2 endpoints
 ```
 
-### PR Description Template
+### Template mô tả PR
 
 ```markdown
 ## What
@@ -268,144 +268,144 @@ Before/after screenshots for UI changes.
 Closes #123
 ```
 
-### Code Review Checklist
+### Checklist Code Review
 
-**For Reviewers:**
+**Dành cho Reviewer:**
 
-- [ ] Does the code solve the stated problem?
-- [ ] Are there any edge cases not handled?
-- [ ] Is the code readable and maintainable?
-- [ ] Are there sufficient tests?
-- [ ] Are there security concerns?
-- [ ] Is the commit history clean (squashed if needed)?
+- [ ] Code có giải quyết đúng vấn đề đã nêu không?
+- [ ] Có edge case nào chưa được xử lý không?
+- [ ] Code có dễ đọc và dễ bảo trì không?
+- [ ] Có đủ test không?
+- [ ] Có vấn đề bảo mật nào không?
+- [ ] Lịch sử commit có sạch không (squash nếu cần)?
 
-**For Authors:**
+**Dành cho Tác giả:**
 
-- [ ] Self-review completed before requesting review
-- [ ] CI passes (tests, lint, typecheck)
-- [ ] PR size is reasonable (<500 lines ideal)
-- [ ] Related to a single feature/fix
-- [ ] Description clearly explains the change
+- [ ] Tự review xong trước khi yêu cầu review
+- [ ] CI pass (test, lint, typecheck)
+- [ ] Kích thước PR hợp lý (lý tưởng <500 dòng)
+- [ ] Gắn với một tính năng/bản sửa duy nhất
+- [ ] Mô tả giải thích rõ thay đổi
 
-## Conflict Resolution
+## Giải quyết Conflict
 
-### Identify Conflicts
+### Nhận diện Conflict
 
 ```bash
-# Check for conflicts before merge
+# Kiểm tra conflict trước khi merge
 git checkout main
 git merge feature/user-auth --no-commit --no-ff
 
-# If conflicts, Git will show:
+# Nếu có conflict, Git sẽ hiển thị:
 # CONFLICT (content): Merge conflict in src/auth/login.ts
 # Automatic merge failed; fix conflicts and then commit the result.
 ```
 
-### Resolve Conflicts
+### Giải quyết Conflict
 
 ```bash
-# See conflicted files
+# Xem các file bị conflict
 git status
 
-# View conflict markers in file
+# Xem conflict marker trong file
 # <<<<<<< HEAD
 # content from main
 # =======
 # content from feature branch
 # >>>>>>> feature/user-auth
 
-# Option 1: Manual resolution
-# Edit file, remove markers, keep correct content
+# Cách 1: Giải quyết thủ công
+# Sửa file, xóa marker, giữ nội dung đúng
 
-# Option 2: Use merge tool
+# Cách 2: Dùng merge tool
 git mergetool
 
-# Option 3: Accept one side
+# Cách 3: Chấp nhận một bên
 git checkout --ours src/auth/login.ts    # Keep main version
 git checkout --theirs src/auth/login.ts  # Keep feature version
 
-# After resolving, stage and commit
+# Sau khi giải quyết, stage và commit
 git add src/auth/login.ts
 git commit
 ```
 
-### Conflict Prevention Strategies
+### Chiến lược phòng tránh Conflict
 
 ```bash
-# 1. Keep feature branches small and short-lived
-# 2. Rebase frequently onto main
+# 1. Giữ feature branch nhỏ và tồn tại ngắn
+# 2. Rebase thường xuyên lên main
 git checkout feature/user-auth
 git fetch origin
 git rebase origin/main
 
-# 3. Communicate with team about touching shared files
-# 4. Use feature flags instead of long-lived branches
-# 5. Review and merge PRs promptly
+# 3. Trao đổi với nhóm khi động vào các file dùng chung
+# 4. Dùng feature flag thay vì branch tồn tại lâu
+# 5. Review và merge PR kịp thời
 ```
 
-## Branch Management
+## Quản lý Branch
 
-### Naming Conventions
+### Quy ước đặt tên
 
 ```
-# Feature branches
+# Feature branch
 feature/user-authentication
 feature/JIRA-123-payment-integration
 
-# Bug fixes
+# Sửa bug
 fix/login-redirect-loop
 fix/456-null-pointer-exception
 
-# Hotfixes (production issues)
+# Hotfix (sự cố production)
 hotfix/critical-security-patch
 hotfix/database-connection-leak
 
-# Releases
+# Release
 release/1.2.0
 release/2024-01-hotfix
 
-# Experiments/POCs
+# Thử nghiệm/POC
 experiment/new-caching-strategy
 poc/graphql-migration
 ```
 
-### Branch Cleanup
+### Dọn dẹp Branch
 
 ```bash
-# Delete local branches that are merged
+# Xóa các branch cục bộ đã merge
 git branch --merged main | grep -v "^\*\|main" | xargs -n 1 git branch -d
 
-# Delete remote-tracking references for deleted remote branches
+# Xóa remote-tracking reference của các remote branch đã bị xóa
 git fetch -p
 
-# Delete local branch
+# Xóa branch cục bộ
 git branch -d feature/user-auth  # Safe delete (only if merged)
 git branch -D feature/user-auth  # Force delete
 
-# Delete remote branch
+# Xóa remote branch
 git push origin --delete feature/user-auth
 ```
 
-### Stash Workflow
+### Workflow Stash
 
 ```bash
-# Save work in progress
+# Lưu công việc đang làm dở
 git stash push -m "WIP: user authentication"
 
-# List stashes
+# Liệt kê stash
 git stash list
 
-# Apply most recent stash
+# Áp dụng stash gần nhất
 git stash pop
 
-# Apply specific stash
+# Áp dụng stash cụ thể
 git stash apply stash@{2}
 
-# Drop stash
+# Xóa stash
 git stash drop stash@{0}
 ```
 
-## Release Management
+## Quản lý Release
 
 ### Semantic Versioning
 
@@ -422,10 +422,10 @@ Examples:
 1.1.0 → 2.0.0 (major: breaking change)
 ```
 
-### Creating Releases
+### Tạo Release
 
 ```bash
-# Create annotated tag
+# Tạo annotated tag
 git tag -a v1.2.0 -m "Release v1.2.0
 
 Features:
@@ -438,59 +438,59 @@ Fixes:
 Breaking Changes:
 - None"
 
-# Push tag to remote
+# Push tag lên remote
 git push origin v1.2.0
 
-# List tags
+# Liệt kê tag
 git tag -l
 
-# Delete tag
+# Xóa tag
 git tag -d v1.2.0
 git push origin --delete v1.2.0
 ```
 
-### Changelog Generation
+### Tạo Changelog
 
 ```bash
-# Generate changelog from commits
+# Tạo changelog từ các commit
 git log v1.1.0..v1.2.0 --oneline --no-merges
 
-# Or use conventional-changelog
+# Hoặc dùng conventional-changelog
 npx conventional-changelog -i CHANGELOG.md -s
 ```
 
-## Git Configuration
+## Cấu hình Git
 
-### Essential Configs
+### Cấu hình thiết yếu
 
 ```bash
-# User identity
+# Danh tính người dùng
 git config --global user.name "Your Name"
 git config --global user.email "your@email.com"
 
-# Default branch name
+# Tên branch mặc định
 git config --global init.defaultBranch main
 
-# Pull behavior (rebase instead of merge)
+# Hành vi pull (rebase thay vì merge)
 git config --global pull.rebase true
 
-# Push behavior (push current branch only)
+# Hành vi push (chỉ push branch hiện tại)
 git config --global push.default current
 
-# Auto-correct typos
+# Tự sửa lỗi gõ
 git config --global help.autocorrect 1
 
-# Better diff algorithm
+# Thuật toán diff tốt hơn
 git config --global diff.algorithm histogram
 
-# Color output
+# Output có màu
 git config --global color.ui auto
 ```
 
-### Useful Aliases
+### Alias hữu ích
 
 ```bash
-# Add to ~/.gitconfig
+# Thêm vào ~/.gitconfig
 [alias]
     co = checkout
     br = branch
@@ -505,20 +505,20 @@ git config --global color.ui auto
     contributors = shortlog -sn
 ```
 
-### Gitignore Patterns
+### Mẫu Gitignore
 
 ```gitignore
-# Dependencies
+# Dependency
 node_modules/
 vendor/
 
-# Build outputs
+# Output của build
 dist/
 build/
 *.o
 *.exe
 
-# Environment files
+# File môi trường
 .env
 .env.local
 .env.*.local
@@ -529,11 +529,11 @@ build/
 *.swp
 *.swo
 
-# OS files
+# File hệ điều hành
 .DS_Store
 Thumbs.db
 
-# Logs
+# Log
 *.log
 logs/
 
@@ -545,81 +545,81 @@ coverage/
 *.tsbuildinfo
 ```
 
-## Common Workflows
+## Workflow thường gặp
 
-### Starting a New Feature
+### Bắt đầu một tính năng mới
 
 ```bash
-# 1. Update main branch
+# 1. Cập nhật branch main
 git checkout main
 git pull origin main
 
-# 2. Create feature branch
+# 2. Tạo feature branch
 git checkout -b feature/user-auth
 
-# 3. Make changes and commit
+# 3. Thay đổi và commit
 git add .
 git commit -m "feat(auth): implement OAuth2 login"
 
-# 4. Push to remote
+# 4. Push lên remote
 git push -u origin feature/user-auth
 
-# 5. Create Pull Request on GitHub/GitLab
+# 5. Tạo Pull Request trên GitHub/GitLab
 ```
 
-### Updating a PR with New Changes
+### Cập nhật PR với thay đổi mới
 
 ```bash
-# 1. Make additional changes
+# 1. Thực hiện các thay đổi bổ sung
 git add .
 git commit -m "feat(auth): add error handling"
 
-# 2. Push updates
+# 2. Push cập nhật
 git push origin feature/user-auth
 ```
 
-### Syncing Fork with Upstream
+### Đồng bộ Fork với Upstream
 
 ```bash
-# 1. Add upstream remote (once)
+# 1. Thêm upstream remote (một lần)
 git remote add upstream https://github.com/original/repo.git
 
 # 2. Fetch upstream
 git fetch upstream
 
-# 3. Merge upstream/main into your main
+# 3. Merge upstream/main vào main của bạn
 git checkout main
 git merge upstream/main
 
-# 4. Push to your fork
+# 4. Push lên fork của bạn
 git push origin main
 ```
 
-### Undoing Mistakes
+### Hoàn tác sai sót
 
 ```bash
-# Undo last commit (keep changes)
+# Hoàn tác commit cuối (giữ thay đổi)
 git reset --soft HEAD~1
 
-# Undo last commit (discard changes)
+# Hoàn tác commit cuối (bỏ thay đổi)
 git reset --hard HEAD~1
 
-# Undo last commit pushed to remote
+# Hoàn tác commit cuối đã push lên remote
 git revert HEAD
 git push origin main
 
-# Undo specific file changes
+# Hoàn tác thay đổi của một file cụ thể
 git checkout HEAD -- path/to/file
 
-# Fix last commit message
+# Sửa commit message cuối
 git commit --amend -m "New message"
 
-# Add forgotten file to last commit
+# Thêm file bị quên vào commit cuối
 git add forgotten-file
 git commit --amend --no-edit
 ```
 
-## Git Hooks
+## Git Hook
 
 ### Pre-Commit Hook
 
@@ -627,13 +627,13 @@ git commit --amend --no-edit
 #!/bin/bash
 # .git/hooks/pre-commit
 
-# Run linting
+# Chạy linting
 npm run lint || exit 1
 
-# Run tests
+# Chạy test
 npm test || exit 1
 
-# Check for secrets
+# Kiểm tra secret
 if git diff --cached | grep -E '(password|api_key|secret)'; then
     echo "Possible secret detected. Commit aborted."
     exit 1
@@ -646,71 +646,71 @@ fi
 #!/bin/bash
 # .git/hooks/pre-push
 
-# Run full test suite
+# Chạy toàn bộ test suite
 npm run test:all || exit 1
 
-# Check for console.log statements
+# Kiểm tra các câu lệnh console.log
 if git diff origin/main | grep -E 'console\.log'; then
     echo "Remove console.log statements before pushing."
     exit 1
 fi
 ```
 
-## Anti-Patterns
+## Anti-Pattern
 
 ```
-# BAD: Committing directly to main
+# BAD: Commit trực tiếp vào main
 git checkout main
 git commit -m "fix bug"
 
-# GOOD: Use feature branches and PRs
+# GOOD: Dùng feature branch và PR
 
-# BAD: Committing secrets
+# BAD: Commit secret
 git add .env  # Contains API keys
 
-# GOOD: Add to .gitignore, use environment variables
+# GOOD: Thêm vào .gitignore, dùng biến môi trường
 
-# BAD: Giant PRs (1000+ lines)
-# GOOD: Break into smaller, focused PRs
+# BAD: PR khổng lồ (1000+ dòng)
+# GOOD: Chia thành các PR nhỏ hơn, tập trung
 
-# BAD: "Update" commit messages
+# BAD: Commit message kiểu "Update"
 git commit -m "update"
 git commit -m "fix"
 
-# GOOD: Descriptive messages
+# GOOD: Message mô tả rõ ràng
 git commit -m "fix(auth): resolve redirect loop after login"
 
-# BAD: Rewriting public history
+# BAD: Viết lại lịch sử công khai
 git push --force origin main
 
-# GOOD: Use revert for public branches
+# GOOD: Dùng revert cho branch công khai
 git revert HEAD
 
-# BAD: Long-lived feature branches (weeks/months)
-# GOOD: Keep branches short (days), rebase frequently
+# BAD: Feature branch tồn tại lâu (hàng tuần/tháng)
+# GOOD: Giữ branch ngắn (vài ngày), rebase thường xuyên
 
-# BAD: Committing generated files
+# BAD: Commit file được sinh ra
 git add dist/
 git add node_modules/
 
-# GOOD: Add to .gitignore
+# GOOD: Thêm vào .gitignore
 ```
 
-## Quick Reference
+## Tham chiếu nhanh
 
-| Task | Command |
+| Tác vụ | Lệnh |
 |------|---------|
-| Create branch | `git checkout -b feature/name` |
-| Switch branch | `git checkout branch-name` |
-| Delete branch | `git branch -d branch-name` |
+| Tạo branch | `git checkout -b feature/name` |
+| Chuyển branch | `git checkout branch-name` |
+| Xóa branch | `git branch -d branch-name` |
 | Merge branch | `git merge branch-name` |
 | Rebase branch | `git rebase main` |
-| View history | `git log --oneline --graph` |
-| View changes | `git diff` |
-| Stage changes | `git add .` or `git add -p` |
+| Xem lịch sử | `git log --oneline --graph` |
+| Xem thay đổi | `git diff` |
+| Stage thay đổi | `git add .` hoặc `git add -p` |
 | Commit | `git commit -m "message"` |
 | Push | `git push origin branch-name` |
 | Pull | `git pull origin branch-name` |
 | Stash | `git stash push -m "message"` |
-| Undo last commit | `git reset --soft HEAD~1` |
+| Hoàn tác commit cuối | `git reset --soft HEAD~1` |
 | Revert commit | `git revert HEAD` |

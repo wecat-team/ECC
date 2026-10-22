@@ -1,22 +1,22 @@
 ---
-description: Manage Claude Code session history, aliases, and session metadata.
+description: Quản lý lịch sử session của Claude Code, alias và metadata của session.
 ---
 
-# Sessions Command
+# Lệnh Sessions
 
-Manage Claude Code session history - list, load, alias, and edit sessions stored in `~/.claude/session-data/` with legacy reads from `~/.claude/sessions/`.
+Quản lý lịch sử session của Claude Code - liệt kê, tải, đặt alias và chỉnh sửa các session được lưu trong `~/.claude/session-data/`, đồng thời đọc dữ liệu legacy từ `~/.claude/sessions/`.
 
-## Usage
+## Cách dùng
 
 `/sessions [list|load|alias|info|help] [options]`
 
-## Actions
+## Các hành động
 
-### List Sessions
+### Liệt kê Session
 
-Display all sessions with metadata, filtering, and pagination.
+Hiển thị tất cả session cùng metadata, bộ lọc và phân trang.
 
-Use `/sessions info` when you need operator-surface context for a swarm: branch, worktree path, and session recency.
+Dùng `/sessions info` khi bạn cần ngữ cảnh bề mặt operator cho một swarm: branch, đường dẫn worktree và độ mới của session.
 
 ```bash
 /sessions                              # List all sessions (default)
@@ -57,9 +57,9 @@ for (const s of result.sessions) {
 "
 ```
 
-### Load Session
+### Tải Session
 
-Load and display a session's content (by ID or alias).
+Tải và hiển thị nội dung của một session (theo ID hoặc alias).
 
 ```bash
 /sessions load <id|alias>             # Load session
@@ -133,9 +133,9 @@ if (session.metadata.worktree) {
 " "$ARGUMENTS"
 ```
 
-### Create Alias
+### Tạo Alias
 
-Create a memorable alias for a session.
+Tạo một alias dễ nhớ cho một session.
 
 ```bash
 /sessions alias <id> <name>           # Create alias
@@ -174,9 +174,9 @@ if (result.success) {
 " "$ARGUMENTS"
 ```
 
-### Remove Alias
+### Xóa Alias
 
-Delete an existing alias.
+Xóa một alias hiện có.
 
 ```bash
 /sessions alias --remove <name>        # Remove alias
@@ -205,9 +205,9 @@ if (result.success) {
 " "$ARGUMENTS"
 ```
 
-### Session Info
+### Thông tin Session
 
-Show detailed information about a session.
+Hiển thị thông tin chi tiết về một session.
 
 ```bash
 /sessions info <id|alias>              # Show session details
@@ -256,9 +256,9 @@ if (aliases.length > 0) {
 " "$ARGUMENTS"
 ```
 
-### List Aliases
+### Liệt kê Alias
 
-Show all session aliases.
+Hiển thị tất cả alias của session.
 
 ```bash
 /sessions aliases                      # List all aliases
@@ -289,27 +289,27 @@ if (aliases.length === 0) {
 "
 ```
 
-## Operator Notes
+## Ghi chú cho Operator
 
-- Session files persist `Project`, `Branch`, and `Worktree` in the header so `/sessions info` can disambiguate parallel tmux/worktree runs.
-- For command-center style monitoring, combine `/sessions info`, `git diff --stat`, and the cost metrics emitted by `scripts/hooks/cost-tracker.js`.
+- File session lưu `Project`, `Branch` và `Worktree` trong phần header để `/sessions info` có thể phân biệt các lần chạy tmux/worktree song song.
+- Để giám sát kiểu command-center, hãy kết hợp `/sessions info`, `git diff --stat` và các cost metric do `scripts/hooks/cost-tracker.js` phát ra.
 
-## Arguments
+## Đối số
 
 $ARGUMENTS:
-- `list [options]` - List sessions
-  - `--limit <n>` - Max sessions to show (default: 50)
-  - `--date <YYYY-MM-DD>` - Filter by date
-  - `--search <pattern>` - Search in session ID
-- `load <id|alias>` - Load session content
-- `alias <id> <name>` - Create alias for session
-- `alias --remove <name>` - Remove alias
-- `unalias <name>` - Same as `--remove`
-- `info <id|alias>` - Show session statistics
-- `aliases` - List all aliases
-- `help` - Show this help
+- `list [options]` - Liệt kê session
+  - `--limit <n>` - Số session tối đa hiển thị (mặc định: 50)
+  - `--date <YYYY-MM-DD>` - Lọc theo ngày
+  - `--search <pattern>` - Tìm trong session ID
+- `load <id|alias>` - Tải nội dung session
+- `alias <id> <name>` - Tạo alias cho session
+- `alias --remove <name>` - Xóa alias
+- `unalias <name>` - Giống `--remove`
+- `info <id|alias>` - Hiển thị thống kê session
+- `aliases` - Liệt kê tất cả alias
+- `help` - Hiển thị trợ giúp này
 
-## Examples
+## Ví dụ
 
 ```bash
 # List all sessions
@@ -331,9 +331,9 @@ $ARGUMENTS:
 /sessions aliases
 ```
 
-## Notes
+## Ghi chú
 
-- Sessions are stored as markdown files in `~/.claude/session-data/` with legacy reads from `~/.claude/sessions/`
-- Aliases are stored in `~/.claude/session-aliases.json`
-- Session IDs can be shortened (first 4-8 characters usually unique enough)
-- Use aliases for frequently referenced sessions
+- Session được lưu dưới dạng file markdown trong `~/.claude/session-data/`, đồng thời đọc dữ liệu legacy từ `~/.claude/sessions/`
+- Alias được lưu trong `~/.claude/session-aliases.json`
+- Session ID có thể viết tắt (4-8 ký tự đầu thường đủ để là duy nhất)
+- Dùng alias cho các session được tham chiếu thường xuyên

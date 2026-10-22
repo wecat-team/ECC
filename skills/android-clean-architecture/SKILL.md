@@ -1,25 +1,25 @@
 ---
 name: android-clean-architecture
-description: Clean Architecture patterns for Android and Kotlin Multiplatform projects — module structure, dependency rules, UseCases, Repositories, and data layer patterns. Use when structuring modules, layers, or data flow in an Android or KMP project.
+description: Các pattern Clean Architecture cho dự án Android và Kotlin Multiplatform — cấu trúc module, quy tắc dependency, UseCase, Repository và pattern cho data layer. Dùng khi tổ chức module, layer hoặc luồng dữ liệu trong một dự án Android hoặc KMP.
 metadata:
   origin: ECC
 ---
 
 # Android Clean Architecture
 
-Clean Architecture patterns for Android and KMP projects. Covers module boundaries, dependency inversion, UseCase/Repository patterns, and data layer design with Room, SQLDelight, and Ktor.
+Các pattern Clean Architecture cho dự án Android và KMP. Bao gồm ranh giới module, dependency inversion, pattern UseCase/Repository và thiết kế data layer với Room, SQLDelight và Ktor.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Structuring Android or KMP project modules
-- Implementing UseCases, Repositories, or DataSources
-- Designing data flow between layers (domain, data, presentation)
-- Setting up dependency injection with Koin or Hilt
-- Working with Room, SQLDelight, or Ktor in a layered architecture
+- Tổ chức các module của dự án Android hoặc KMP
+- Triển khai UseCase, Repository hoặc DataSource
+- Thiết kế luồng dữ liệu giữa các layer (domain, data, presentation)
+- Thiết lập dependency injection với Koin hoặc Hilt
+- Làm việc với Room, SQLDelight hoặc Ktor trong kiến trúc phân tầng
 
-## Module Structure
+## Cấu trúc Module
 
-### Recommended Layout
+### Bố cục khuyến nghị
 
 ```
 project/
@@ -35,7 +35,7 @@ project/
     └── profile/
 ```
 
-### Dependency Rules
+### Quy tắc Dependency
 
 ```
 app → presentation, domain, data, core
@@ -45,13 +45,13 @@ domain → core (or no dependencies)
 core → (nothing)
 ```
 
-**Critical**: `domain` must NEVER depend on `data`, `presentation`, or any framework. It contains pure Kotlin only.
+**Quan trọng**: `domain` KHÔNG BAO GIỜ được phụ thuộc vào `data`, `presentation` hay bất kỳ framework nào. Nó chỉ chứa Kotlin thuần.
 
 ## Domain Layer
 
-### UseCase Pattern
+### Pattern UseCase
 
-Each UseCase represents one business operation. Use `operator fun invoke` for clean call sites:
+Mỗi UseCase đại diện cho một thao tác nghiệp vụ. Dùng `operator fun invoke` để nơi gọi gọn gàng:
 
 ```kotlin
 class GetItemsByCategoryUseCase(
@@ -62,7 +62,7 @@ class GetItemsByCategoryUseCase(
     }
 }
 
-// Flow-based UseCase for reactive streams
+// UseCase dựa trên Flow cho các luồng reactive
 class ObserveUserProgressUseCase(
     private val repository: UserRepository
 ) {
@@ -72,9 +72,9 @@ class ObserveUserProgressUseCase(
 }
 ```
 
-### Domain Models
+### Domain Model
 
-Domain models are plain Kotlin data classes — no framework annotations:
+Domain model là các data class Kotlin thuần — không có annotation của framework:
 
 ```kotlin
 data class Item(
@@ -89,9 +89,9 @@ data class Item(
 enum class Status { DRAFT, ACTIVE, ARCHIVED }
 ```
 
-### Repository Interfaces
+### Repository Interface
 
-Defined in domain, implemented in data:
+Định nghĩa trong domain, triển khai trong data:
 
 ```kotlin
 interface ItemRepository {
@@ -103,9 +103,9 @@ interface ItemRepository {
 
 ## Data Layer
 
-### Repository Implementation
+### Triển khai Repository
 
-Coordinates between local and remote data sources:
+Điều phối giữa data source cục bộ và từ xa:
 
 ```kotlin
 class ItemRepositoryImpl(
@@ -135,12 +135,12 @@ class ItemRepositoryImpl(
 }
 ```
 
-### Mapper Pattern
+### Pattern Mapper
 
-Keep mappers as extension functions near the data models:
+Giữ mapper dưới dạng extension function đặt gần các data model:
 
 ```kotlin
-// In data layer
+// Trong data layer
 fun ItemEntity.toDomain() = Item(
     id = id,
     title = title,
@@ -222,7 +222,7 @@ class ItemRemoteDataSource(private val client: HttpClient) {
     }
 }
 
-// HttpClient setup with content negotiation
+// Thiết lập HttpClient với content negotiation
 val httpClient = HttpClient {
     install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
     install(Logging) { level = LogLevel.HEADERS }
@@ -232,7 +232,7 @@ val httpClient = HttpClient {
 
 ## Dependency Injection
 
-### Koin (KMP-friendly)
+### Koin (thân thiện với KMP)
 
 ```kotlin
 // Domain module
@@ -255,7 +255,7 @@ val presentationModule = module {
 }
 ```
 
-### Hilt (Android-only)
+### Hilt (chỉ Android)
 
 ```kotlin
 @Module
@@ -271,11 +271,11 @@ class ItemListViewModel @Inject constructor(
 ) : ViewModel()
 ```
 
-## Error Handling
+## Xử lý lỗi
 
-### Result/Try Pattern
+### Pattern Result/Try
 
-Use `Result<T>` or a custom sealed type for error propagation:
+Dùng `Result<T>` hoặc một sealed type tùy chỉnh để lan truyền lỗi:
 
 ```kotlin
 sealed interface Try<out T> {
@@ -289,7 +289,7 @@ sealed interface AppError {
     data object Unauthorized : AppError
 }
 
-// In ViewModel — map to UI state
+// Trong ViewModel — ánh xạ sang UI state
 viewModelScope.launch {
     when (val result = getItems(category)) {
         is Try.Success -> _state.update { it.copy(items = result.value, isLoading = false) }
@@ -298,9 +298,9 @@ viewModelScope.launch {
 }
 ```
 
-## Convention Plugins (Gradle)
+## Convention Plugin (Gradle)
 
-For KMP projects, use convention plugins to reduce build file duplication:
+Với dự án KMP, dùng convention plugin để giảm trùng lặp trong file build:
 
 ```kotlin
 // build-logic/src/main/kotlin/kmp-library.gradle.kts
@@ -318,23 +318,23 @@ kotlin {
 }
 ```
 
-Apply in modules:
+Áp dụng trong các module:
 
 ```kotlin
 // domain/build.gradle.kts
 plugins { id("kmp-library") }
 ```
 
-## Anti-Patterns to Avoid
+## Anti-Pattern cần tránh
 
-- Importing Android framework classes in `domain` — keep it pure Kotlin
-- Exposing database entities or DTOs to the UI layer — always map to domain models
-- Putting business logic in ViewModels — extract to UseCases
-- Using `GlobalScope` or unstructured coroutines — use `viewModelScope` or structured concurrency
-- Fat repository implementations — split into focused DataSources
-- Circular module dependencies — if A depends on B, B must not depend on A
+- Import class của Android framework trong `domain` — giữ nó là Kotlin thuần
+- Để lộ database entity hoặc DTO ra UI layer — luôn ánh xạ sang domain model
+- Đặt business logic trong ViewModel — hãy tách ra UseCase
+- Dùng `GlobalScope` hoặc coroutine không có cấu trúc — dùng `viewModelScope` hoặc structured concurrency
+- Triển khai repository quá béo — tách thành các DataSource tập trung
+- Dependency vòng giữa các module — nếu A phụ thuộc B thì B không được phụ thuộc A
 
-## References
+## Tham chiếu
 
-See skill: `compose-multiplatform-patterns` for UI patterns.
-See skill: `kotlin-coroutines-flows` for async patterns.
+Xem skill: `compose-multiplatform-patterns` cho các pattern UI.
+Xem skill: `kotlin-coroutines-flows` cho các pattern async.

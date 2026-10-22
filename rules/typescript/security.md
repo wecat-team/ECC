@@ -5,11 +5,11 @@ paths:
   - "**/*.js"
   - "**/*.jsx"
 ---
-# TypeScript/JavaScript Security
+# Bảo mật TypeScript/JavaScript
 
-> This file extends [common/security.md](../common/security.md) with TypeScript/JavaScript specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung riêng cho TypeScript/JavaScript.
 
-## Secret Management
+## Quản lý secret
 
 ```typescript
 // NEVER: Hardcoded secrets
@@ -23,6 +23,6 @@ if (!apiKey) {
 }
 ```
 
-## Agent Support
+## Hỗ trợ từ Agent
 
-- Use **security-reviewer** skill for comprehensive security audits
+- Dùng skill **security-reviewer** cho các cuộc audit bảo mật toàn diện

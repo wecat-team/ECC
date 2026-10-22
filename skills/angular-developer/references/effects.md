@@ -1,23 +1,23 @@
-# Side Effects with `effect` and `afterRenderEffect`
+# Side Effect với `effect` và `afterRenderEffect`
 
-In Angular, an **effect** is an operation that runs whenever one or more signal values it tracks change.
+Trong Angular, **effect** là một thao tác chạy mỗi khi một hoặc nhiều giá trị signal mà nó theo dõi thay đổi.
 
-## When to use `effect`
+## Khi nào dùng `effect`
 
-Effects are intended for syncing signal state to imperative, non-signal APIs.
+Effect được thiết kế để đồng bộ state của signal sang các API mệnh lệnh (imperative), không dựa trên signal.
 
-**Valid Use Cases:**
+**Các trường hợp dùng hợp lệ:**
 
-- Logging analytics.
-- Syncing state to `localStorage` or `sessionStorage`.
-- Performing custom rendering to a `<canvas>` or 3rd-party charting library.
+- Ghi log analytics.
+- Đồng bộ state vào `localStorage` hoặc `sessionStorage`.
+- Thực hiện render tùy chỉnh lên `<canvas>` hoặc thư viện vẽ biểu đồ của bên thứ ba.
 
-**CRITICAL RULE: DO NOT use effects to propagate state.**
-If you find yourself using `.set()` or `.update()` on a signal _inside_ an effect to keep two signals in sync, you are making a mistake. This causes `ExpressionChangedAfterItHasBeenChecked` errors and infinite loops. **Always use `computed()` or `linkedSignal()` for state derivation.**
+**QUY TẮC QUAN TRỌNG: KHÔNG dùng effect để lan truyền state.**
+Nếu bạn thấy mình dùng `.set()` hoặc `.update()` trên một signal _bên trong_ một effect để giữ hai signal đồng bộ, bạn đang mắc lỗi. Điều này gây ra lỗi `ExpressionChangedAfterItHasBeenChecked` và vòng lặp vô hạn. **Luôn dùng `computed()` hoặc `linkedSignal()` để dẫn xuất state.**
 
-## Basic Usage
+## Cách dùng cơ bản
 
-Effects execute asynchronously during the change detection process. They always run at least once.
+Effect thực thi bất đồng bộ trong quá trình change detection. Chúng luôn chạy ít nhất một lần.
 
 ```ts
 import { Component, signal, effect } from '@angular/core';
@@ -40,15 +40,15 @@ export class Example {
 }
 ```
 
-## DOM Manipulation with `afterRenderEffect`
+## Thao tác DOM với `afterRenderEffect`
 
-Standard `effect` runs _before_ Angular updates the DOM. If you need to manually inspect or modify the DOM based on a signal change (e.g., integrating a 3rd party UI library), use `afterRenderEffect`.
+`effect` tiêu chuẩn chạy _trước_ khi Angular cập nhật DOM. Nếu bạn cần kiểm tra hoặc sửa DOM thủ công dựa trên thay đổi của signal (ví dụ: tích hợp thư viện UI của bên thứ ba), hãy dùng `afterRenderEffect`.
 
-`afterRenderEffect` runs after Angular has finished rendering the DOM.
+`afterRenderEffect` chạy sau khi Angular đã render xong DOM.
 
-### Render Phases
+### Các pha Render
 
-To prevent reflows (forced layout thrashing), `afterRenderEffect` forces you to divide your DOM reads and writes into specific phases.
+Để tránh reflow (forced layout thrashing), `afterRenderEffect` buộc bạn chia các thao tác đọc và ghi DOM thành các pha cụ thể.
 
 ```ts
 import { Component, afterRenderEffect, viewChild, ElementRef } from '@angular/core';
@@ -73,11 +73,11 @@ export class Chart {
 }
 ```
 
-**Available Phases (executed in this order):**
+**Các pha khả dụng (thực thi theo thứ tự này):**
 
 1. `earlyRead`
-2. `write` (Never read here)
-3. `mixedReadWrite` (Avoid if possible)
-4. `read` (Never write here)
+2. `write` (Không bao giờ đọc ở đây)
+3. `mixedReadWrite` (Tránh nếu có thể)
+4. `read` (Không bao giờ ghi ở đây)
 
-_Note: `afterRenderEffect` only runs on the client, never during Server-Side Rendering (SSR)._
+_Lưu ý: `afterRenderEffect` chỉ chạy ở phía client, không bao giờ chạy trong Server-Side Rendering (SSR)._

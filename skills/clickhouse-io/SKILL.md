@@ -1,37 +1,37 @@
 ---
 name: clickhouse-io
-description: ClickHouse database patterns, query optimization, analytics, and data engineering best practices for high-performance analytical workloads. Use when writing ClickHouse schemas or queries, or when an analytical query is too slow.
+description: Các pattern cho cơ sở dữ liệu ClickHouse, tối ưu query, analytics và best practice về data engineering cho các workload phân tích hiệu năng cao. Dùng khi viết schema hoặc query ClickHouse, hoặc khi một analytical query quá chậm.
 metadata:
   origin: ECC
 ---
 
-# ClickHouse Analytics Patterns
+# Các pattern Analytics với ClickHouse
 
-ClickHouse-specific patterns for high-performance analytics and data engineering.
+Các pattern đặc thù của ClickHouse cho analytics hiệu năng cao và data engineering.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Designing ClickHouse table schemas (MergeTree engine selection)
-- Writing analytical queries (aggregations, window functions, joins)
-- Optimizing query performance (partition pruning, projections, materialized views)
-- Ingesting large volumes of data (batch inserts, Kafka integration)
-- Migrating from PostgreSQL/MySQL to ClickHouse for analytics
-- Implementing real-time dashboards or time-series analytics
+- Thiết kế schema bảng ClickHouse (chọn engine MergeTree)
+- Viết analytical query (aggregation, window function, join)
+- Tối ưu hiệu năng query (partition pruning, projection, materialized view)
+- Ingest khối lượng dữ liệu lớn (batch insert, tích hợp Kafka)
+- Migrate từ PostgreSQL/MySQL sang ClickHouse cho analytics
+- Triển khai dashboard real-time hoặc time-series analytics
 
-## Overview
+## Tổng quan
 
-ClickHouse is a column-oriented database management system (DBMS) for online analytical processing (OLAP). It's optimized for fast analytical queries on large datasets.
+ClickHouse là hệ quản trị cơ sở dữ liệu (DBMS) hướng cột cho xử lý phân tích trực tuyến (OLAP). Nó được tối ưu cho các analytical query nhanh trên tập dữ liệu lớn.
 
-**Key Features:**
-- Column-oriented storage
-- Data compression
-- Parallel query execution
-- Distributed queries
-- Real-time analytics
+**Tính năng chính:**
+- Lưu trữ hướng cột
+- Nén dữ liệu
+- Thực thi query song song
+- Query phân tán
+- Analytics real-time
 
-## Table Design Patterns
+## Các pattern thiết kế bảng
 
-### MergeTree Engine (Most Common)
+### MergeTree Engine (Phổ biến nhất)
 
 ```sql
 CREATE TABLE markets_analytics (
@@ -49,7 +49,7 @@ ORDER BY (date, market_id)
 SETTINGS index_granularity = 8192;
 ```
 
-### ReplacingMergeTree (Deduplication)
+### ReplacingMergeTree (Khử trùng lặp)
 
 ```sql
 -- For data that may have duplicates (e.g., from multiple sources)
@@ -65,7 +65,7 @@ ORDER BY (user_id, event_id, timestamp)
 PRIMARY KEY (user_id, event_id);
 ```
 
-### AggregatingMergeTree (Pre-aggregation)
+### AggregatingMergeTree (Tiền tổng hợp)
 
 ```sql
 -- For maintaining aggregated metrics
@@ -92,9 +92,9 @@ GROUP BY hour, market_id
 ORDER BY hour DESC;
 ```
 
-## Query Optimization Patterns
+## Các pattern tối ưu query
 
-### Efficient Filtering
+### Lọc hiệu quả
 
 ```sql
 -- PASS: GOOD: Use indexed columns first
@@ -114,7 +114,7 @@ WHERE volume > 1000
   AND date >= '2025-01-01';
 ```
 
-### Aggregations
+### Aggregation
 
 ```sql
 -- PASS: GOOD: Use ClickHouse-specific aggregation functions
@@ -139,7 +139,7 @@ FROM trades
 WHERE created_at >= now() - INTERVAL 1 HOUR;
 ```
 
-### Window Functions
+### Window Function
 
 ```sql
 -- Calculate running totals
@@ -157,9 +157,9 @@ WHERE date >= today() - INTERVAL 30 DAY
 ORDER BY market_id, date;
 ```
 
-## Data Insertion Patterns
+## Các pattern chèn dữ liệu
 
-### Bulk Insert (Recommended)
+### Bulk Insert (Khuyến nghị)
 
 ```typescript
 import { createClient } from '@clickhouse/client'
@@ -217,9 +217,9 @@ async function streamInserts(dataSource: AsyncIterable<Record<string, unknown>>)
 }
 ```
 
-## Materialized Views
+## Materialized View
 
-### Real-time Aggregations
+### Aggregation real-time
 
 ```sql
 -- Create materialized view for hourly stats
@@ -246,9 +246,9 @@ WHERE hour >= now() - INTERVAL 24 HOUR
 GROUP BY hour, market_id;
 ```
 
-## Performance Monitoring
+## Giám sát hiệu năng
 
-### Query Performance
+### Hiệu năng query
 
 ```sql
 -- Check slow queries
@@ -268,7 +268,7 @@ ORDER BY query_duration_ms DESC
 LIMIT 10;
 ```
 
-### Table Statistics
+### Thống kê bảng
 
 ```sql
 -- Check table sizes
@@ -284,9 +284,9 @@ GROUP BY database, table
 ORDER BY sum(bytes) DESC;
 ```
 
-## Common Analytics Queries
+## Các query analytics phổ biến
 
-### Time Series Analysis
+### Phân tích chuỗi thời gian (Time Series)
 
 ```sql
 -- Daily active users
@@ -318,7 +318,7 @@ GROUP BY signup_date
 ORDER BY signup_date DESC;
 ```
 
-### Funnel Analysis
+### Phân tích Funnel
 
 ```sql
 -- Conversion funnel
@@ -339,7 +339,7 @@ FROM (
 GROUP BY session_id;
 ```
 
-### Cohort Analysis
+### Phân tích Cohort
 
 ```sql
 -- User cohorts by signup month
@@ -359,9 +359,9 @@ GROUP BY cohort, month, months_since_signup
 ORDER BY cohort, months_since_signup;
 ```
 
-## Data Pipeline Patterns
+## Các pattern Data Pipeline
 
-### ETL Pattern
+### Pattern ETL
 
 ```typescript
 // Extract, Transform, Load
@@ -413,33 +413,33 @@ pgClient.on('notification', async (msg) => {
 })
 ```
 
-## Best Practices
+## Best Practice
 
-### 1. Partitioning Strategy
-- Partition by time (usually month or day)
-- Avoid too many partitions (performance impact)
-- Use DATE type for partition key
+### 1. Chiến lược Partitioning
+- Partition theo thời gian (thường là tháng hoặc ngày)
+- Tránh quá nhiều partition (ảnh hưởng hiệu năng)
+- Dùng kiểu DATE cho partition key
 
 ### 2. Ordering Key
-- Put most frequently filtered columns first
-- Consider cardinality (high cardinality first)
-- Order impacts compression
+- Đặt các cột được lọc thường xuyên nhất lên đầu
+- Cân nhắc cardinality (cardinality cao đặt trước)
+- Thứ tự ảnh hưởng đến nén
 
-### 3. Data Types
-- Use smallest appropriate type (UInt32 vs UInt64)
-- Use LowCardinality for repeated strings
-- Use Enum for categorical data
+### 3. Kiểu dữ liệu
+- Dùng kiểu nhỏ nhất phù hợp (UInt32 so với UInt64)
+- Dùng LowCardinality cho các chuỗi lặp lại
+- Dùng Enum cho dữ liệu phân loại
 
-### 4. Avoid
-- SELECT * (specify columns)
-- FINAL (merge data before query instead)
-- Too many JOINs (denormalize for analytics)
-- Small frequent inserts (batch instead)
+### 4. Cần tránh
+- SELECT * (hãy chỉ định cột)
+- FINAL (thay vào đó hãy merge dữ liệu trước khi query)
+- Quá nhiều JOIN (denormalize cho analytics)
+- Insert nhỏ và thường xuyên (hãy batch thay vào đó)
 
-### 5. Monitoring
-- Track query performance
-- Monitor disk usage
-- Check merge operations
+### 5. Giám sát
+- Theo dõi hiệu năng query
+- Giám sát dung lượng đĩa
+- Kiểm tra các thao tác merge
 - Review slow query log
 
-**Remember**: ClickHouse excels at analytical workloads. Design tables for your query patterns, batch inserts, and leverage materialized views for real-time aggregations.
+**Hãy nhớ**: ClickHouse vượt trội với các workload phân tích. Hãy thiết kế bảng theo pattern query của bạn, batch insert, và tận dụng materialized view cho aggregation real-time.

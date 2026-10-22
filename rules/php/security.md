@@ -4,34 +4,34 @@ paths:
   - "**/composer.lock"
   - "**/composer.json"
 ---
-# PHP Security
+# Bảo mật PHP
 
-> This file extends [common/security.md](../common/security.md) with PHP specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho PHP.
 
-## Input and Output
+## Input và Output
 
-- Validate request input at the framework boundary (`FormRequest`, Symfony Validator, or explicit DTO validation).
-- Escape output in templates by default; treat raw HTML rendering as an exception that must be justified.
-- Never trust query params, cookies, headers, or uploaded file metadata without validation.
+- Validate input của request tại ranh giới framework (`FormRequest`, Symfony Validator, hoặc validation DTO tường minh).
+- Mặc định escape output trong template; coi việc render HTML thô là ngoại lệ phải được biện minh.
+- KHÔNG BAO GIỜ tin query param, cookie, header hay metadata của file upload khi chưa validate.
 
-## Database Safety
+## An toàn Database
 
-- Use prepared statements (`PDO`, Doctrine, Eloquent query builder) for all dynamic queries.
-- Avoid string-building SQL in controllers/views.
-- Scope ORM mass-assignment carefully and whitelist writable fields.
+- Dùng prepared statement (`PDO`, Doctrine, query builder của Eloquent) cho mọi truy vấn động.
+- Tránh dựng SQL bằng nối chuỗi trong controller/view.
+- Giới hạn mass-assignment của ORM một cách cẩn thận và dùng whitelist cho các field được phép ghi.
 
-## Secrets and Dependencies
+## Secret và Dependency
 
-- Load secrets from environment variables or a secret manager, never from committed config files.
-- Run `composer audit` in CI and review new package maintainer trust before adding dependencies.
-- Pin major versions deliberately and remove abandoned packages quickly.
+- Nạp secret từ biến môi trường hoặc secret manager, KHÔNG BAO GIỜ từ các file config được commit.
+- Chạy `composer audit` trong CI và xem xét độ tin cậy của maintainer package mới trước khi thêm dependency.
+- Ghim major version một cách có chủ đích và loại bỏ nhanh các package đã bị bỏ rơi.
 
-## Auth and Session Safety
+## An toàn Auth và Session
 
-- Use `password_hash()` / `password_verify()` for password storage.
-- Regenerate session identifiers after authentication and privilege changes.
-- Enforce CSRF protection on state-changing web requests.
+- Dùng `password_hash()` / `password_verify()` để lưu mật khẩu.
+- Tạo lại session identifier sau khi xác thực và khi thay đổi quyền.
+- Ép buộc bảo vệ CSRF cho các web request làm thay đổi state.
 
-## Reference
+## Tham chiếu
 
-See skill: `laravel-security` for Laravel-specific security guidance.
+Xem skill: `laravel-security` để có hướng dẫn bảo mật riêng cho Laravel.

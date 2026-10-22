@@ -1,32 +1,32 @@
 ---
 name: django-celery
-description: Django + Celery async task patterns — configuration, task design, beat scheduling, retries, canvas workflows, monitoring, and testing. Use when adding background jobs, scheduled tasks, or async processing to a Django app.
+description: "Các pattern async task Django + Celery — cấu hình, thiết kế task, beat scheduling, retry, canvas workflow, monitoring và testing. Dùng khi thêm background job, scheduled task hoặc xử lý bất đồng bộ (async processing) vào ứng dụng Django."
 metadata:
   origin: ECC
 ---
 
-# Django + Celery Async Task Patterns
+# Pattern Async Task Django + Celery
 
-Production-grade patterns for background task processing in Django using Celery with Redis or RabbitMQ.
+Các pattern chuẩn production để xử lý background task trong Django bằng Celery với Redis hoặc RabbitMQ.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Adding background jobs or async processing to a Django app
-- Implementing periodic/scheduled tasks
-- Offloading slow operations (email, PDF generation, API calls) from request cycle
-- Setting up Celery Beat for cron-like scheduling
-- Debugging task failures, retries, or queue backlogs
-- Writing tests for Celery tasks
+- Thêm background job hoặc xử lý bất đồng bộ vào ứng dụng Django
+- Triển khai task định kỳ/theo lịch
+- Chuyển các thao tác chậm (email, tạo PDF, gọi API) ra khỏi chu trình request
+- Thiết lập Celery Beat cho lập lịch kiểu cron
+- Debug lỗi task, retry hoặc queue bị tồn đọng
+- Viết test cho Celery task
 
-## Project Setup
+## Thiết lập dự án
 
-### Installation
+### Cài đặt
 
 ```bash
 pip install 'celery[redis]' django-celery-results django-celery-beat
 ```
 
-### `celery.py` — App Entrypoint
+### `celery.py` — Điểm vào của ứng dụng
 
 ```python
 # config/celery.py
@@ -85,7 +85,7 @@ INSTALLED_APPS += [
 ]
 ```
 
-### Running Workers
+### Chạy Worker
 
 ```bash
 # Start worker (development)
@@ -101,9 +101,9 @@ celery -A config worker --beat --loglevel=info
 celery -A config worker --loglevel=warning --concurrency=4 -Q default,high_priority
 ```
 
-## Task Design Patterns
+## Pattern thiết kế Task
 
-### Basic Task
+### Task cơ bản
 
 ```python
 # apps/notifications/tasks.py
@@ -128,7 +128,7 @@ def send_welcome_email(user_id: int) -> None:
     logger.info('Welcome email sent to user %s', user_id)
 ```
 
-### Retryable Task
+### Task có thể retry
 
 ```python
 @shared_task(
@@ -153,9 +153,9 @@ def sync_contact_to_crm(self, contact_id: int) -> dict:
         raise self.retry(exc=exc, countdown=int(exc.retry_after))
 ```
 
-### Idempotent Task Pattern
+### Pattern Task idempotent
 
-Design tasks so they can safely run multiple times with the same inputs:
+Thiết kế task sao cho có thể chạy nhiều lần an toàn với cùng đầu vào:
 
 ```python
 @shared_task(name='orders.mark_shipped')
@@ -175,7 +175,7 @@ def mark_order_shipped(order_id: int, tracking_number: str) -> None:
         logger.info('mark_order_shipped: order %s already shipped or not found', order_id)
 ```
 
-### Task with Soft Time Limit
+### Task với Soft Time Limit
 
 ```python
 from celery.exceptions import SoftTimeLimitExceeded
@@ -199,7 +199,7 @@ def generate_pdf_report(self, report_id: int) -> str:
         raise
 ```
 
-## Calling Tasks
+## Gọi Task
 
 ```python
 from datetime import timedelta
@@ -219,9 +219,9 @@ sync_contact_to_crm.apply_async(args=[contact.pk], queue='high_priority')
 result = generate_pdf_report.apply(args=[report.pk])
 ```
 
-## Beat Scheduling (Periodic Tasks)
+## Beat Scheduling (Task định kỳ)
 
-### Code-Defined Schedule
+### Lịch định nghĩa trong code
 
 ```python
 # config/settings/base.py
@@ -243,7 +243,7 @@ CELERY_BEAT_SCHEDULE = {
 }
 ```
 
-### Database-Defined Schedule (via django-celery-beat)
+### Lịch định nghĩa trong database (qua django-celery-beat)
 
 ```python
 # Manage periodic tasks from Django admin or code
@@ -266,7 +266,7 @@ PeriodicTask.objects.update_or_create(
 )
 ```
 
-## Canvas: Chaining and Grouping Tasks
+## Canvas: Chain và Group Task
 
 ```python
 from celery import chain, group, chord
@@ -294,7 +294,7 @@ result = chord(
 result.delay()
 ```
 
-## Error Handling and Dead Letter Queue
+## Xử lý lỗi và Dead Letter Queue
 
 ```python
 # apps/core/tasks.py
@@ -338,9 +338,9 @@ def charge_card(self, order_id: int) -> None:
         raise self.retry(exc=exc)
 ```
 
-## Testing Celery Tasks
+## Test Celery Task
 
-### Unit Testing (No Broker)
+### Unit test (không cần Broker)
 
 ```python
 # tests/test_tasks.py
@@ -362,7 +362,7 @@ class TestSendWelcomeEmail:
         send_welcome_email(99999)  # Non-existent user — must not raise
 ```
 
-### Integration Testing with CELERY_TASK_ALWAYS_EAGER
+### Integration test với CELERY_TASK_ALWAYS_EAGER
 
 ```python
 # config/settings/test.py
@@ -382,7 +382,7 @@ def test_registration_triggers_welcome_email(client):
     mock_email.send_welcome.assert_called_once()
 ```
 
-### Testing Retries
+### Test Retry
 
 ```python
 @pytest.mark.django_db
@@ -412,7 +412,7 @@ pip install flower
 celery -A config flower --port=5555
 ```
 
-## Anti-Patterns
+## Anti-pattern
 
 ```python
 # BAD: Passing model instances — they may be stale by execution time
@@ -438,21 +438,21 @@ def charge_and_fulfill(order_id):
     order.fulfill()
 ```
 
-## Production Checklist
+## Checklist Production
 
-| Check | Setting |
+| Kiểm tra | Cấu hình |
 |-------|---------|
-| Worker restarts on crash | `supervisord` or `systemd` unit |
-| `CELERY_TASK_ACKS_LATE = True` | Re-queue tasks on worker crash |
-| `CELERY_WORKER_PREFETCH_MULTIPLIER = 1` | Fair distribution of long tasks |
-| Separate queues per priority | `-Q default,high_priority,low_priority` |
-| `CELERY_TASK_SOFT_TIME_LIMIT` set | Graceful timeout before hard kill |
-| Sentry integration | Capture all `task_failure` signals |
-| Flower or other monitor | Visibility into queue depths |
-| Beat runs on single node only | Prevents duplicate scheduled task execution |
+| Worker khởi động lại khi crash | `supervisord` hoặc `systemd` unit |
+| `CELERY_TASK_ACKS_LATE = True` | Đưa task trở lại queue khi worker crash |
+| `CELERY_WORKER_PREFETCH_MULTIPLIER = 1` | Phân phối công bằng các task dài |
+| Queue riêng theo mức ưu tiên | `-Q default,high_priority,low_priority` |
+| Đã đặt `CELERY_TASK_SOFT_TIME_LIMIT` | Timeout êm trước khi bị kill cứng |
+| Tích hợp Sentry | Bắt mọi signal `task_failure` |
+| Flower hoặc monitor khác | Quan sát độ sâu queue |
+| Beat chỉ chạy trên một node | Ngăn thực thi trùng lặp task theo lịch |
 
-## Related Skills
+## Skill liên quan
 
-- `django-patterns` — ORM, service layer, and project structure
-- `django-tdd` — Testing Django models, views, and services
-- `python-testing` — pytest configuration and fixtures
+- `django-patterns` — ORM, service layer và cấu trúc dự án
+- `django-tdd` — Test model, view và service của Django
+- `python-testing` — cấu hình pytest và fixture

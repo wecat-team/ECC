@@ -1,52 +1,52 @@
 ---
-description: Run the ECC formatter quality gate for a single file and report remediation steps.
+description: Chạy quality gate formatter của ECC cho một file đơn lẻ và báo cáo các bước khắc phục.
 ---
 
-# Quality Gate Command
+# Lệnh Quality Gate
 
-Operator entry point for the formatter quality gate that normally runs as the
-`post:quality-gate` PostToolUse hook (`scripts/hooks/quality-gate.js`).
+Điểm vào dành cho operator của quality gate formatter, vốn thường chạy dưới dạng
+hook PostToolUse `post:quality-gate` (`scripts/hooks/quality-gate.js`).
 
-## How it actually works
+## Cách hoạt động thực tế
 
-The gate is a single-file formatter check driven by hook input, not CLI flags:
+Gate là một bước kiểm tra formatter trên một file đơn lẻ, được điều khiển bởi đầu vào của hook, không phải bởi CLI flag:
 
-- The script reads the target from the hook's stdin JSON
-  (`tool_input.file_path`); it does not take a path argument.
-- Behavior toggles are environment variables:
-  - `ECC_QUALITY_GATE_FIX=true` - apply formatting fixes instead of check-only
-  - `ECC_QUALITY_GATE_STRICT=true` - log formatter failures as gate failures
-- Coverage by file type:
-  - `.ts/.tsx/.js/.jsx/.json/.md` - Biome `check` or Prettier `--check`,
-    whichever the project ships (JS/TS under Biome is skipped here because
-    `post-edit-format` already runs `biome check --write`)
+- Script đọc mục tiêu từ JSON stdin của hook
+  (`tool_input.file_path`); nó không nhận đối số đường dẫn.
+- Các công tắc hành vi là biến môi trường:
+  - `ECC_QUALITY_GATE_FIX=true` - áp dụng sửa định dạng thay vì chỉ kiểm tra
+  - `ECC_QUALITY_GATE_STRICT=true` - ghi log lỗi formatter như là lỗi của gate
+- Phạm vi theo loại file:
+  - `.ts/.tsx/.js/.jsx/.json/.md` - Biome `check` hoặc Prettier `--check`,
+    tùy cái nào project có (JS/TS dùng Biome sẽ bị bỏ qua ở đây vì
+    `post-edit-format` đã chạy `biome check --write`)
   - `.go` - `gofmt`
   - `.py` - `ruff format`
-- Lint and type checks are not part of this gate. Use the `verification-loop`
-  skill or the language verification skills for lint/type/test pipelines.
+- Kiểm tra lint và type không thuộc gate này. Hãy dùng skill `verification-loop`
+  hoặc các skill verification theo ngôn ngữ cho pipeline lint/type/test.
 
-## Usage
+## Cách dùng
 
-To run the gate manually against one file, pipe hook-style JSON into the
-script (set the env toggles first if you want fix or strict behavior):
+Để chạy gate thủ công trên một file, hãy pipe JSON kiểu hook vào
+script (đặt các công tắc env trước nếu bạn muốn hành vi fix hoặc strict):
 
 ```bash
 echo '{"tool_input":{"file_path":"src/example.ts"}}' \
   | ECC_QUALITY_GATE_FIX=true node scripts/hooks/quality-gate.js
 ```
 
-Then report formatter findings and concrete remediation steps.
+Sau đó báo cáo các phát hiện của formatter và các bước khắc phục cụ thể.
 
-## Notes
+## Ghi chú
 
-Hook wiring enters through the async PostToolUse dispatcher in
-`hooks/hooks.json`. Its internal registry preserves the `post:quality-gate`
-ID and the `standard`/`strict` profiles.
+Việc nối hook đi vào qua dispatcher PostToolUse bất đồng bộ trong
+`hooks/hooks.json`. Registry nội bộ của nó giữ nguyên ID `post:quality-gate`
+và các profile `standard`/`strict`.
 
-## Arguments
+## Đối số
 
 $ARGUMENTS:
 
-- `[path]` optional file to check. The script itself takes no CLI
-  arguments - when a path is given, substitute it as `tool_input.file_path`
-  in the stdin JSON shown above before running the command
+- `[path]` file tùy chọn cần kiểm tra. Bản thân script không nhận CLI
+  argument - khi có đường dẫn, hãy thay nó vào `tool_input.file_path`
+  trong JSON stdin ở trên trước khi chạy lệnh

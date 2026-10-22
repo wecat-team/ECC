@@ -1,33 +1,33 @@
 ---
 name: click-path-audit
-description: "Trace every user-facing button/touchpoint through its full state change sequence to find bugs where functions individually work but cancel each other out, produce wrong final state, or leave the UI in an inconsistent state. Use when: systematic debugging found no bugs but users report broken buttons, or after any major refactor touching shared state stores."
+description: "Truy vết mọi button/touchpoint hướng người dùng qua toàn bộ chuỗi thay đổi state để tìm các bug mà từng hàm riêng lẻ chạy đúng nhưng lại triệt tiêu lẫn nhau, tạo ra state cuối sai, hoặc để UI ở trạng thái không nhất quán. Dùng khi: systematic debugging không tìm ra bug nhưng người dùng báo button hỏng, hoặc sau bất kỳ refactor lớn nào đụng tới shared state store."
 metadata:
   origin: community
 ---
 
-# /click-path-audit — Behavioural Flow Audit
+# /click-path-audit — Kiểm tra luồng hành vi (Behavioural Flow Audit)
 
-Find bugs that static code reading misses: state interaction side effects, race conditions between sequential calls, and handlers that silently undo each other.
+Tìm các bug mà việc đọc code tĩnh bỏ sót: side effect do tương tác state, race condition giữa các lời gọi tuần tự, và các handler âm thầm hoàn tác lẫn nhau.
 
-## The Problem This Solves
+## Vấn đề skill này giải quyết
 
-Traditional debugging checks:
-- Does the function exist? (missing wiring)
-- Does it crash? (runtime errors)
-- Does it return the right type? (data flow)
+Debugging truyền thống kiểm tra:
+- Hàm có tồn tại không? (thiếu wiring)
+- Nó có crash không? (lỗi runtime)
+- Nó có trả về đúng type không? (luồng dữ liệu)
 
-But it does NOT check:
-- **Does the final UI state match what the button label promises?**
-- **Does function B silently undo what function A just did?**
-- **Does shared state (Zustand/Redux/context) have side effects that cancel the intended action?**
+Nhưng KHÔNG kiểm tra:
+- **State UI cuối cùng có khớp với những gì label của button hứa hẹn không?**
+- **Hàm B có âm thầm hoàn tác việc hàm A vừa làm không?**
+- **Shared state (Zustand/Redux/context) có side effect triệt tiêu hành động dự định không?**
 
-Real example: A "New Email" button called `setComposeMode(true)` then `selectThread(null)`. Both worked individually. But `selectThread` had a side effect resetting `composeMode: false`. The button did nothing. 54 bugs were found by systematic debugging — this one was missed.
+Ví dụ thực tế: Một button "New Email" gọi `setComposeMode(true)` rồi `selectThread(null)`. Cả hai đều chạy đúng khi đứng riêng. Nhưng `selectThread` có side effect đặt lại `composeMode: false`. Button không làm gì cả. 54 bug đã được tìm thấy bằng systematic debugging — bug này bị bỏ sót.
 
 ---
 
-## How It Works
+## Cách hoạt động
 
-For EVERY interactive touchpoint in the target area:
+Với MỌI touchpoint tương tác trong khu vực mục tiêu:
 
 ```
 1. IDENTIFY the handler (onClick, onSubmit, onChange, etc.)
@@ -44,11 +44,11 @@ For EVERY interactive touchpoint in the target area:
 
 ---
 
-## Execution Steps
+## Các bước thực hiện
 
-### Step 1: Map State Stores
+### Bước 1: Lập bản đồ State Store
 
-Before auditing any touchpoint, build a side-effect map of every state store action:
+Trước khi audit bất kỳ touchpoint nào, hãy xây dựng bản đồ side effect của mọi action trong state store:
 
 ```
 For each Zustand store / React context in scope:
@@ -58,9 +58,9 @@ For each Zustand store / React context in scope:
     - Document: actionName → {sets: [...], resets: [...]}
 ```
 
-This is the critical reference. The "New Email" bug was invisible without knowing that `selectThread` resets `composeMode`.
+Đây là tài liệu tham chiếu then chốt. Bug "New Email" không thể thấy được nếu không biết rằng `selectThread` đặt lại `composeMode`.
 
-**Output format:**
+**Định dạng output:**
 ```
 STORE: emailStore
   setComposeMode(bool) → sets: {composeMode}
@@ -73,9 +73,9 @@ DANGEROUS RESETS (actions that clear state they don't own):
   reset → resets everything
 ```
 
-### Step 2: Audit Each Touchpoint
+### Bước 2: Audit từng touchpoint
 
-For each button/toggle/form submit in the target area:
+Với mỗi button/toggle/form submit trong khu vực mục tiêu:
 
 ```
 TOUCHPOINT: [Button label] in [Component:line]
@@ -88,9 +88,9 @@ TOUCHPOINT: [Button label] in [Component:line]
   VERDICT: BUG — [description]
 ```
 
-**Check each of these bug patterns:**
+**Kiểm tra từng bug pattern sau:**
 
-#### Pattern 1: Sequential Undo
+#### Pattern 1: Sequential Undo (Hoàn tác tuần tự)
 ```
 handler() {
   setState_A(true)     // sets X = true
@@ -99,7 +99,7 @@ handler() {
 // Result: X is false. First call was pointless.
 ```
 
-#### Pattern 2: Async Race
+#### Pattern 2: Async Race (Race condition bất đồng bộ)
 ```
 handler() {
   fetchA().then(() => setState({ loading: false }))
@@ -108,7 +108,7 @@ handler() {
 // Result: final loading state depends on which resolves first
 ```
 
-#### Pattern 3: Stale Closure
+#### Pattern 3: Stale Closure (Closure cũ)
 ```
 const [count, setCount] = useState(0)
 const handler = useCallback(() => {
@@ -117,14 +117,14 @@ const handler = useCallback(() => {
 }, [count])
 ```
 
-#### Pattern 4: Missing State Transition
+#### Pattern 4: Missing State Transition (Thiếu chuyển đổi state)
 ```
 // Button says "Save" but handler only validates, never actually saves
 // Button says "Delete" but handler sets a flag without calling the API
 // Button says "Send" but the API endpoint is removed/broken
 ```
 
-#### Pattern 5: Conditional Dead Path
+#### Pattern 5: Conditional Dead Path (Nhánh điều kiện chết)
 ```
 handler() {
   if (someState) {        // someState is ALWAYS false at this point
@@ -133,16 +133,16 @@ handler() {
 }
 ```
 
-#### Pattern 6: useEffect Interference
+#### Pattern 6: useEffect Interference (useEffect can thiệp)
 ```
 // Button sets stateX = true
 // A useEffect watches stateX and resets it to false
 // User sees nothing happen
 ```
 
-### Step 3: Report
+### Bước 3: Báo cáo
 
-For each bug found:
+Với mỗi bug tìm thấy:
 
 ```
 CLICK-PATH-NNN: [severity: CRITICAL/HIGH/MEDIUM/LOW]
@@ -159,15 +159,15 @@ CLICK-PATH-NNN: [severity: CRITICAL/HIGH/MEDIUM/LOW]
 
 ---
 
-## Scope Control
+## Kiểm soát phạm vi
 
-This audit is expensive. Scope it appropriately:
+Audit này tốn kém. Hãy giới hạn phạm vi cho phù hợp:
 
-- **Full app audit:** Use when launching or after major refactor. Launch parallel agents per page.
-- **Single page audit:** Use after building a new page or after a user reports a broken button.
-- **Store-focused audit:** Use after modifying a Zustand store — audit all consumers of the changed actions.
+- **Audit toàn bộ ứng dụng:** Dùng khi chuẩn bị launch hoặc sau refactor lớn. Chạy các agent song song theo từng trang.
+- **Audit một trang:** Dùng sau khi xây dựng trang mới hoặc sau khi người dùng báo một button hỏng.
+- **Audit theo store:** Dùng sau khi sửa một Zustand store — audit tất cả consumer của các action đã thay đổi.
 
-### Recommended agent split for full app:
+### Cách chia agent được khuyến nghị cho toàn bộ ứng dụng:
 
 ```
 Agent 1: Map ALL state stores (Step 1) — this is shared context for all other agents
@@ -180,37 +180,37 @@ Agent 7: Profile, Settings, Vault, Notifications
 Agent 8: Management Suite (all pages)
 ```
 
-Agent 1 MUST complete first. Its output is input for all other agents.
+Agent 1 PHẢI hoàn thành trước. Output của nó là input cho tất cả các agent khác.
 
 ---
 
-## When to Use
+## Khi nào dùng
 
-- After systematic debugging finds "no bugs" but users report broken UI
-- After modifying any Zustand store action (check all callers)
-- After any refactor that touches shared state
-- Before release, on critical user flows
-- When a button "does nothing" — this is THE tool for that
+- Sau khi systematic debugging cho kết quả "không có bug" nhưng người dùng báo UI hỏng
+- Sau khi sửa bất kỳ action nào của Zustand store (kiểm tra tất cả nơi gọi)
+- Sau bất kỳ refactor nào đụng tới shared state
+- Trước khi release, trên các luồng người dùng quan trọng
+- Khi một button "không làm gì cả" — đây CHÍNH là công cụ cho trường hợp đó
 
-## When NOT to Use
+## Khi nào KHÔNG dùng
 
-- For API-level bugs (wrong response shape, missing endpoint) — use systematic-debugging
-- For styling/layout issues — visual inspection
-- For performance issues — profiling tools
-
----
-
-## Integration with Other Skills
-
-- Run AFTER `/superpowers:systematic-debugging` (which finds the other 54 bug types)
-- Run BEFORE `/superpowers:verification-before-completion` (which verifies fixes work)
-- Feeds into `/superpowers:test-driven-development` — every bug found here should get a test
+- Với bug ở mức API (sai shape của response, thiếu endpoint) — dùng systematic-debugging
+- Với vấn đề styling/layout — kiểm tra bằng mắt
+- Với vấn đề hiệu năng — dùng công cụ profiling
 
 ---
 
-## Example: The Bug That Inspired This Skill
+## Tích hợp với các skill khác
 
-**ThreadList.tsx "New Email" button:**
+- Chạy SAU `/superpowers:systematic-debugging` (skill tìm ra 54 loại bug còn lại)
+- Chạy TRƯỚC `/superpowers:verification-before-completion` (skill xác minh các bản sửa hoạt động)
+- Đưa kết quả vào `/superpowers:test-driven-development` — mỗi bug tìm được ở đây đều nên có một test
+
+---
+
+## Ví dụ: Bug đã truyền cảm hứng cho skill này
+
+**Button "New Email" trong ThreadList.tsx:**
 ```
 onClick={() => {
   useEmailStore.getState().setComposeMode(true)   // ✓ sets composeMode = true
@@ -218,7 +218,7 @@ onClick={() => {
 }}
 ```
 
-Store definition:
+Định nghĩa store:
 ```
 selectThread: (thread) => set({
   selectedThread: thread,
@@ -233,13 +233,13 @@ selectThread: (thread) => set({
 })
 ```
 
-**Systematic debugging missed it** because:
-- The button has an onClick handler (not dead)
-- Both functions exist (no missing wiring)
-- Neither function crashes (no runtime error)
-- The data types are correct (no type mismatch)
+**Systematic debugging bỏ sót nó** vì:
+- Button có onClick handler (không phải code chết)
+- Cả hai hàm đều tồn tại (không thiếu wiring)
+- Không hàm nào crash (không có lỗi runtime)
+- Kiểu dữ liệu đều đúng (không lệch type)
 
-**Click-path audit catches it** because:
-- Step 1 maps `selectThread` resets `composeMode`
-- Step 2 traces the handler: call 1 sets true, call 2 resets false
-- Verdict: Sequential Undo — final state contradicts button intent
+**Click-path audit bắt được nó** vì:
+- Bước 1 lập bản đồ rằng `selectThread` đặt lại `composeMode`
+- Bước 2 truy vết handler: lời gọi 1 đặt true, lời gọi 2 đặt lại false
+- Kết luận: Sequential Undo — state cuối mâu thuẫn với ý định của button

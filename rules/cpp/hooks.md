@@ -8,13 +8,13 @@ paths:
   - "**/*.h"
   - "**/CMakeLists.txt"
 ---
-# C++ Hooks
+# Hook cho C++
 
-> This file extends [common/hooks.md](../common/hooks.md) with C++ specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung dành riêng cho C++.
 
-## Build Hooks
+## Build Hook
 
-Run these checks before committing C++ changes:
+Chạy các kiểm tra sau trước khi commit thay đổi C++:
 
 ```bash
 # Format check
@@ -30,10 +30,10 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-## Recommended CI Pipeline
+## Pipeline CI được khuyến nghị
 
-1. **clang-format** — formatting check
-2. **clang-tidy** — static analysis
-3. **cppcheck** — additional analysis
-4. **cmake build** — compilation
-5. **ctest** — test execution with sanitizers
+1. **clang-format** — kiểm tra định dạng
+2. **clang-tidy** — phân tích tĩnh
+3. **cppcheck** — phân tích bổ sung
+4. **cmake build** — biên dịch
+5. **ctest** — chạy test với sanitizer

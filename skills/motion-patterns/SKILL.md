@@ -1,6 +1,6 @@
 ---
 name: motion-patterns
-description: Production-ready animation patterns for React / Next.js — button, modal, toast, stagger, page transitions, exit animations, scroll, and layout — built on motion-foundations tokens and springs. Use when animating a specific UI element in React or Next.js — button, modal, toast, stagger, page transition, or scroll.
+description: Các pattern animation sẵn sàng cho production trong React / Next.js — button, modal, toast, stagger, page transition, exit animation, scroll và layout — xây trên token và spring của motion-foundations. Dùng khi animate một phần tử UI cụ thể trong React hoặc Next.js — button, modal, toast, stagger, page transition hoặc scroll.
 tags: [motion, animation, ui-patterns]
 category: frontend
 author: jeff
@@ -10,91 +10,91 @@ metadata:
 
 # Motion Patterns
 
-Copy-paste patterns for the most common UI animation needs.
-Every pattern here is built on `motion-foundations` tokens and springs.
-Do not define new duration or easing values here — import them.
+Các pattern copy-paste cho những nhu cầu animation UI phổ biến nhất.
+Mọi pattern ở đây đều xây trên token và spring của `motion-foundations`.
+Không định nghĩa giá trị duration hoặc easing mới ở đây — hãy import chúng.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Animating a button, card, modal, or toast notification
-- Building list entrances with stagger
-- Setting up page transitions in Next.js App Router
-- Adding entrance or exit animations to conditional content
-- Implementing scroll-reveal, scroll-linked progress, or sticky story sections
-- Building expanding cards, accordions, or shared-element transitions
+- Animate button, card, modal hoặc toast notification
+- Xây dựng hiệu ứng xuất hiện của list với stagger
+- Thiết lập page transition trong Next.js App Router
+- Thêm animation vào/ra cho nội dung có điều kiện
+- Triển khai scroll-reveal, tiến trình liên kết với scroll, hoặc các section sticky story
+- Xây dựng card mở rộng, accordion, hoặc shared-element transition
 
-## Outputs
+## Đầu ra
 
-This skill produces:
+Skill này tạo ra:
 
-- Accessible, SSR-safe animation for all standard UI components
-- `AnimatePresence`-wrapped conditional renders with correct exit behavior
-- Page transition wrapper component for Next.js App Router
-- Scroll-reveal and scroll-linked patterns using `useScroll` + `useTransform`
-- Layout animation patterns (`layout`, `layoutId`) for expanding and crossfading elements
+- Animation accessible, an toàn với SSR cho mọi component UI tiêu chuẩn
+- Các render có điều kiện bọc trong `AnimatePresence` với hành vi exit đúng
+- Component bọc page transition cho Next.js App Router
+- Các pattern scroll-reveal và liên kết với scroll dùng `useScroll` + `useTransform`
+- Các pattern layout animation (`layout`, `layoutId`) cho phần tử mở rộng và crossfade
 
-## Principles
+## Nguyên tắc
 
-- Every pattern imports from `motion-foundations`. No raw numbers.
-- Every conditional render is wrapped in `AnimatePresence` with a `key`.
-- Exit animations are always defined alongside enter animations — never as an afterthought.
-- `layout` is used only for small, isolated shifts. Large subtrees get explicit transforms.
+- Mọi pattern đều import từ `motion-foundations`. Không dùng số thô.
+- Mọi render có điều kiện đều bọc trong `AnimatePresence` với một `key`.
+- Exit animation luôn được định nghĩa cùng với enter animation — không bao giờ để sau.
+- `layout` chỉ dùng cho các dịch chuyển nhỏ, tách biệt. Subtree lớn dùng transform tường minh.
 
-## Rules
+## Quy tắc
 
-1. **Always wrap conditional renders in `AnimatePresence` with a `key`** on the direct child. Without a key, exit animations never fire.
-2. **Always define `exit` when defining `initial` + `animate`.** An animation without an exit is incomplete.
-3. **Use `mode="wait"` on page transitions.** Enter must not start until exit completes.
-4. **Never use `layout` on subtrees with more than ~5 children or deeply nested DOM.** Use explicit `x`/`y` transforms instead.
-5. **Stagger interval must stay between `0.05s` and `0.10s`.** Below feels mechanical; above feels sluggish.
-6. **Modals must always include:** focus trap, Escape-key close, scroll lock, `role="dialog"`, `aria-modal="true"`.
-7. **Scroll reveals use `viewport={{ once: true }}`.** Repeating on scroll-out is distracting, not informative.
-8. **All token values are imported from `motion-foundations`.** No inline numbers.
+1. **Luôn bọc render có điều kiện trong `AnimatePresence` với một `key`** trên phần tử con trực tiếp. Không có key thì exit animation không bao giờ chạy.
+2. **Luôn định nghĩa `exit` khi định nghĩa `initial` + `animate`.** Một animation không có exit là chưa hoàn chỉnh.
+3. **Dùng `mode="wait"` cho page transition.** Enter không được bắt đầu cho đến khi exit hoàn tất.
+4. **Không bao giờ dùng `layout` trên subtree có hơn ~5 phần tử con hoặc DOM lồng sâu.** Hãy dùng transform `x`/`y` tường minh thay thế.
+5. **Khoảng stagger phải nằm giữa `0.05s` và `0.10s`.** Thấp hơn cảm giác máy móc; cao hơn cảm giác ì ạch.
+6. **Modal luôn phải có:** focus trap, đóng bằng phím Escape, scroll lock, `role="dialog"`, `aria-modal="true"`.
+7. **Scroll reveal dùng `viewport={{ once: true }}`.** Lặp lại khi cuộn ra gây xao nhãng, không cung cấp thông tin.
+8. **Mọi giá trị token được import từ `motion-foundations`.** Không dùng số inline.
 
-## Decision Guidance
+## Hướng dẫn quyết định
 
-### Choosing the right pattern
+### Chọn đúng pattern
 
-| Situation | Pattern |
+| Tình huống | Pattern |
 | ---------------------------------------- | ---------------------- |
-| Element appears / disappears             | `AnimatePresence`      |
-| List of items loading in sequence        | Stagger variants       |
-| Navigating between routes                | Page transition wrapper|
-| Element changes size in place            | `layout` prop          |
-| Same element moves across page contexts  | `layoutId`             |
-| Element enters when scrolled into view   | `whileInView`          |
-| Value tied to scroll position            | `useScroll` + `useTransform` |
+| Phần tử xuất hiện / biến mất             | `AnimatePresence`      |
+| List các mục tải lần lượt        | Stagger variants       |
+| Điều hướng giữa các route                | Page transition wrapper|
+| Phần tử đổi kích thước tại chỗ            | prop `layout`          |
+| Cùng một phần tử di chuyển giữa các ngữ cảnh trang             | `layoutId`             |
+| Phần tử xuất hiện khi cuộn vào tầm nhìn   | `whileInView`          |
+| Giá trị gắn với vị trí cuộn            | `useScroll` + `useTransform` |
 
-### When to use `mode="wait"` vs `mode="sync"`
+### Khi nào dùng `mode="wait"` so với `mode="sync"`
 
-| Mode | Use when |
+| Mode | Dùng khi |
 | ------- | --------------------------------------- |
-| `wait` | Page transitions, content swaps (one at a time) |
-| `sync` | Stacked notifications, list items (overlap is fine) |
-| `popLayout` | Items removed from a reflow list |
+| `wait` | Page transition, hoán đổi nội dung (từng cái một) |
+| `sync` | Notification xếp chồng, mục list (chồng lên nhau cũng được) |
+| `popLayout` | Các mục bị xóa khỏi list có reflow |
 
-## Core Concepts
+## Khái niệm cốt lõi
 
-### AnimatePresence contract
+### Hợp đồng của AnimatePresence
 
-Three things must always be true:
+Ba điều phải luôn đúng:
 
-1. `AnimatePresence` wraps the conditional
-2. The direct child has a `key`
-3. The child has an `exit` prop
+1. `AnimatePresence` bọc lấy phần điều kiện
+2. Phần tử con trực tiếp có một `key`
+3. Phần tử con có prop `exit`
 
-Miss any one of these and the exit animation silently fails.
+Thiếu bất kỳ điều nào trong số này thì exit animation sẽ lặng lẽ thất bại.
 
-### layout vs layoutId
+### layout so với layoutId
 
-- `layout` — animates the element's own size/position change in place
-- `layoutId` — links two separate elements, crossfading between them across renders
+- `layout` — animate sự thay đổi kích thước/vị trí của chính phần tử đó tại chỗ
+- `layoutId` — liên kết hai phần tử riêng biệt, crossfade giữa chúng qua các lần render
 
-Use `layout="position"` on text inside an expanding container to prevent text reflow from animating.
+Dùng `layout="position"` cho chữ bên trong container đang mở rộng để ngăn việc reflow chữ bị animate.
 
-## Code Examples
+## Ví dụ code
 
-### Button feedback
+### Phản hồi button
 
 ```tsx
 "use client"
@@ -281,7 +281,7 @@ export function ScrollProgress() {
 }
 ```
 
-### Expanding card
+### Card mở rộng
 
 ```tsx
 "use client"
@@ -342,11 +342,11 @@ export function ExpandingCard({ title, body }: { title: string; body: string }) 
 </motion.div>
 ```
 
-## End-to-End Example
+## Ví dụ end-to-end
 
-A staggered list that enters on mount, handles conditional presence, and
-respects reduced motion — combining tokens, springs, AnimatePresence, and
-the accessibility hook from `motion-foundations`:
+Một list stagger xuất hiện khi mount, xử lý presence có điều kiện, và
+tôn trọng reduced motion — kết hợp token, spring, AnimatePresence và
+hook accessibility từ `motion-foundations`:
 
 ```tsx
 "use client"
@@ -405,31 +405,31 @@ export function AnimatedList({ items, onRemove }: {
 }
 ```
 
-## Constraints / Non-Goals
+## Ràng buộc / Ngoài phạm vi
 
-This skill does **not** cover:
+Skill này **không** bao gồm:
 
-- Token and spring definitions → see `motion-foundations`
-- Drag interactions, swipe gestures, reorderable lists → see `motion-advanced`
-- Text animations (word/character reveal, counters) → see `motion-advanced`
-- SVG path drawing or morphing → see `motion-advanced`
-- Custom animation hooks → see `motion-advanced`
-- CSS-only transitions not using `motion/react`
+- Định nghĩa token và spring → xem `motion-foundations`
+- Tương tác drag, gesture swipe, list có thể sắp xếp lại → xem `motion-advanced`
+- Animation chữ (word/character reveal, counter) → xem `motion-advanced`
+- Vẽ hoặc morph SVG path → xem `motion-advanced`
+- Custom animation hook → xem `motion-advanced`
+- Transition chỉ dùng CSS không dùng `motion/react`
 
-## Anti-Patterns
+## Anti-Pattern
 
-| Anti-pattern | Rule violated | Fix |
+| Anti-pattern | Quy tắc bị vi phạm | Cách sửa |
 | -------------------------------------------- | ------- | ------------------------------------------ |
-| `AnimatePresence` child missing `key` | Rule 1 | Add stable `key` to the direct child |
-| `initial` + `animate` without `exit` | Rule 2 | Always define all three together |
-| Page transition without `mode="wait"` | Rule 3 | Add `mode="wait"` to `AnimatePresence` |
-| `layout` on a 50-item list | Rule 4 | Use `mode="popLayout"` or explicit transforms |
-| `staggerChildren: 0.2` on a 10-item list | Rule 5 | Cap at `0.08–0.10` |
-| Modal without focus trap | Rule 6 | Add `focus-trap-react` or Radix Dialog |
-| `whileInView` without `viewport={{ once: true }}` | Rule 7 | Repeating entrances distract, not inform |
-| `transition={{ duration: 0.3 }}` inline | Rule 8 | Use `motionTokens.duration.normal` |
+| Phần tử con của `AnimatePresence` thiếu `key` | Quy tắc 1 | Thêm `key` ổn định cho phần tử con trực tiếp |
+| `initial` + `animate` không có `exit` | Quy tắc 2 | Luôn định nghĩa cả ba cùng nhau |
+| Page transition không có `mode="wait"` | Quy tắc 3 | Thêm `mode="wait"` vào `AnimatePresence` |
+| `layout` trên list 50 mục | Quy tắc 4 | Dùng `mode="popLayout"` hoặc transform tường minh |
+| `staggerChildren: 0.2` trên list 10 mục | Quy tắc 5 | Giới hạn ở `0.08–0.10` |
+| Modal không có focus trap | Quy tắc 6 | Thêm `focus-trap-react` hoặc Radix Dialog |
+| `whileInView` không có `viewport={{ once: true }}` | Quy tắc 7 | Hiệu ứng xuất hiện lặp lại gây xao nhãng, không cung cấp thông tin |
+| `transition={{ duration: 0.3 }}` inline | Quy tắc 8 | Dùng `motionTokens.duration.normal` |
 
-## Related Skills
+## Skill liên quan
 
-- **`motion-foundations`** — defines all tokens, springs, the `useSafeMotion` hook, and SSR guards that every pattern here imports. Must be set up first.
-- **`motion-advanced`** — extends these patterns with drag, gestures, SVG, text, custom hooks, and imperative sequencing. Does not redefine any patterns from this skill.
+- **`motion-foundations`** — định nghĩa mọi token, spring, hook `useSafeMotion` và các SSR guard mà mọi pattern ở đây đều import. Phải được thiết lập trước.
+- **`motion-advanced`** — mở rộng các pattern này với drag, gesture, SVG, chữ, custom hook và sequencing imperative. Không định nghĩa lại bất kỳ pattern nào của skill này.

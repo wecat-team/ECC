@@ -1,25 +1,25 @@
 ---
 name: architecture-decision-records
-description: Capture architectural decisions as numbered ADR markdown files in docs/adr/ with context, alternatives considered, consequences, and an index README. Use when the user says 'record this decision' or 'ADR this', chooses between frameworks or databases, discusses trade-offs, or asks why the codebase is shaped this way.
+description: Ghi lại các quyết định kiến trúc thành các file markdown ADR có đánh số trong docs/adr/ với context, các phương án đã cân nhắc, hệ quả, và một README làm mục lục. Dùng khi người dùng nói 'record this decision' hoặc 'ADR this', chọn giữa các framework hoặc database, thảo luận trade-off, hoặc hỏi vì sao codebase có hình hài như hiện tại.
 metadata:
   origin: ECC
 ---
 
-# Architecture Decision Records
+# Architecture Decision Record
 
-Capture architectural decisions as they happen during coding sessions. Instead of decisions living only in Slack threads, PR comments, or someone's memory, this skill produces structured ADR documents that live alongside the code.
+Ghi lại các quyết định kiến trúc ngay khi chúng xảy ra trong các phiên coding. Thay vì để quyết định chỉ tồn tại trong các thread Slack, comment PR hoặc trí nhớ của ai đó, skill này tạo ra các tài liệu ADR có cấu trúc nằm cạnh code.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- User explicitly says "let's record this decision" or "ADR this"
-- User chooses between significant alternatives (framework, library, pattern, database, API design)
-- User says "we decided to..." or "the reason we're doing X instead of Y is..."
-- User asks "why did we choose X?" (read existing ADRs)
-- During planning phases when architectural trade-offs are discussed
+- Người dùng nói tường minh "let's record this decision" hoặc "ADR this"
+- Người dùng chọn giữa các phương án quan trọng (framework, library, pattern, database, thiết kế API)
+- Người dùng nói "we decided to..." hoặc "the reason we're doing X instead of Y is..."
+- Người dùng hỏi "why did we choose X?" (đọc các ADR hiện có)
+- Trong các giai đoạn lập kế hoạch khi thảo luận các trade-off kiến trúc
 
-## ADR Format
+## Định dạng ADR
 
-Use the lightweight ADR format proposed by Michael Nygard, adapted for AI-assisted development:
+Dùng định dạng ADR gọn nhẹ do Michael Nygard đề xuất, được điều chỉnh cho phát triển có AI hỗ trợ:
 
 ```markdown
 # ADR-NNNN: [Decision Title]
@@ -70,29 +70,29 @@ What becomes easier or more difficult to do because of this change?
 
 ## Workflow
 
-### Capturing a New ADR
+### Ghi lại một ADR mới
 
-When a decision moment is detected:
+Khi phát hiện một thời điểm đưa ra quyết định:
 
-1. **Initialize (first time only)** — if `docs/adr/` does not exist, ask the user for confirmation before creating the directory, a `README.md` seeded with the index table header (see ADR Index Format below), and a blank `template.md` for manual use. Do not create files without explicit consent.
-2. **Identify the decision** — extract the core architectural choice being made
-3. **Gather context** — what problem prompted this? What constraints exist?
-4. **Document alternatives** — what other options were considered? Why were they rejected?
-5. **State consequences** — what are the trade-offs? What becomes easier/harder?
-6. **Assign a number** — scan existing ADRs in `docs/adr/` and increment
-7. **Confirm and write** — present the draft ADR to the user for review. Only write to `docs/adr/NNNN-decision-title.md` after explicit approval. If the user declines, discard the draft without writing any files.
-8. **Update the index** — append to `docs/adr/README.md`
+1. **Khởi tạo (chỉ lần đầu)** — nếu `docs/adr/` chưa tồn tại, hãy hỏi người dùng xác nhận trước khi tạo thư mục, một `README.md` có sẵn header bảng mục lục (xem Định dạng mục lục ADR bên dưới), và một `template.md` trống để dùng thủ công. KHÔNG tạo file khi chưa có sự đồng ý tường minh.
+2. **Xác định quyết định** — trích xuất lựa chọn kiến trúc cốt lõi đang được đưa ra
+3. **Thu thập context** — vấn đề nào dẫn đến quyết định này? Có những ràng buộc gì?
+4. **Ghi lại các phương án** — đã cân nhắc những lựa chọn nào khác? Vì sao chúng bị loại?
+5. **Nêu hệ quả** — các trade-off là gì? Điều gì trở nên dễ hơn/khó hơn?
+6. **Gán số thứ tự** — quét các ADR hiện có trong `docs/adr/` rồi tăng thêm một
+7. **Xác nhận và ghi** — đưa bản nháp ADR cho người dùng review. Chỉ ghi vào `docs/adr/NNNN-decision-title.md` sau khi được chấp thuận tường minh. Nếu người dùng từ chối, hãy bỏ bản nháp mà không ghi file nào.
+8. **Cập nhật mục lục** — thêm vào cuối `docs/adr/README.md`
 
-### Reading Existing ADRs
+### Đọc các ADR hiện có
 
-When a user asks "why did we choose X?":
+Khi người dùng hỏi "why did we choose X?":
 
-1. Check if `docs/adr/` exists — if not, respond: "No ADRs found in this project. Would you like to start recording architectural decisions?"
-2. If it exists, scan `docs/adr/README.md` index for relevant entries
-3. Read matching ADR files and present the Context and Decision sections
-4. If no match is found, respond: "No ADR found for that decision. Would you like to record one now?"
+1. Kiểm tra `docs/adr/` có tồn tại không — nếu không, trả lời: "No ADRs found in this project. Would you like to start recording architectural decisions?"
+2. Nếu có, quét mục lục `docs/adr/README.md` để tìm các mục liên quan
+3. Đọc các file ADR khớp và trình bày các phần Context và Decision
+4. Nếu không tìm thấy kết quả khớp, trả lời: "No ADR found for that decision. Would you like to record one now?"
 
-### ADR Directory Structure
+### Cấu trúc thư mục ADR
 
 ```
 docs/
@@ -104,7 +104,7 @@ docs/
     └── template.md            ← blank template for manual use
 ```
 
-### ADR Index Format
+### Định dạng mục lục ADR
 
 ```markdown
 # Architecture Decision Records
@@ -116,65 +116,65 @@ docs/
 | [0003](0003-rest-over-graphql.md) | REST API over GraphQL | accepted | 2026-02-01 |
 ```
 
-## Decision Detection Signals
+## Tín hiệu nhận biết quyết định
 
-Watch for these patterns in conversation that indicate an architectural decision:
+Hãy để ý các pattern sau trong hội thoại cho thấy một quyết định kiến trúc:
 
-**Explicit signals**
+**Tín hiệu tường minh**
 - "Let's go with X"
 - "We should use X instead of Y"
 - "The trade-off is worth it because..."
 - "Record this as an ADR"
 
-**Implicit signals** (suggest recording an ADR — do not auto-create without user confirmation)
-- Comparing two frameworks or libraries and reaching a conclusion
-- Making a database schema design choice with stated rationale
-- Choosing between architectural patterns (monolith vs microservices, REST vs GraphQL)
-- Deciding on authentication/authorization strategy
-- Selecting deployment infrastructure after evaluating alternatives
+**Tín hiệu ngầm** (gợi ý ghi một ADR — KHÔNG tự động tạo khi chưa có xác nhận của người dùng)
+- So sánh hai framework hoặc library và đi đến kết luận
+- Đưa ra lựa chọn thiết kế database schema kèm lý do được nêu rõ
+- Chọn giữa các architectural pattern (monolith so với microservices, REST so với GraphQL)
+- Quyết định chiến lược authentication/authorization
+- Chọn hạ tầng deployment sau khi đánh giá các phương án
 
-## What Makes a Good ADR
+## Điều gì làm nên một ADR tốt
 
-### Do
-- **Be specific** — "Use Prisma ORM" not "use an ORM"
-- **Record the why** — the rationale matters more than the what
-- **Include rejected alternatives** — future developers need to know what was considered
-- **State consequences honestly** — every decision has trade-offs
-- **Keep it short** — an ADR should be readable in 2 minutes
-- **Use present tense** — "We use X" not "We will use X"
+### Nên làm
+- **Cụ thể** — "Use Prisma ORM" chứ không phải "use an ORM"
+- **Ghi lại lý do** — lý do quan trọng hơn nội dung quyết định
+- **Bao gồm các phương án bị loại** — các developer sau này cần biết đã cân nhắc những gì
+- **Nêu hệ quả một cách trung thực** — mọi quyết định đều có trade-off
+- **Giữ ngắn gọn** — một ADR nên đọc được trong 2 phút
+- **Dùng thì hiện tại** — "We use X" chứ không phải "We will use X"
 
-### Don't
-- Record trivial decisions — variable naming or formatting choices don't need ADRs
-- Write essays — if the context section exceeds 10 lines, it's too long
-- Omit alternatives — "we just picked it" is not a valid rationale
-- Backfill without marking it — if recording a past decision, note the original date
-- Let ADRs go stale — superseded decisions should reference their replacement
+### Không nên làm
+- Ghi lại các quyết định tầm thường — việc đặt tên biến hay chọn định dạng không cần ADR
+- Viết thành bài luận — nếu phần context dài quá 10 dòng thì là quá dài
+- Bỏ qua các phương án thay thế — "we just picked it" không phải là lý do hợp lệ
+- Điền bổ sung (backfill) mà không đánh dấu — nếu ghi lại một quyết định trong quá khứ, hãy ghi chú ngày gốc
+- Để ADR lỗi thời — các quyết định bị thay thế phải tham chiếu tới quyết định thay thế chúng
 
-## ADR Lifecycle
+## Vòng đời ADR
 
 ```
 proposed → accepted → [deprecated | superseded by ADR-NNNN]
 ```
 
-- **proposed**: decision is under discussion, not yet committed
-- **accepted**: decision is in effect and being followed
-- **deprecated**: decision is no longer relevant (e.g., feature removed)
-- **superseded**: a newer ADR replaces this one (always link the replacement)
+- **proposed**: quyết định đang được thảo luận, chưa cam kết
+- **accepted**: quyết định đang có hiệu lực và được tuân theo
+- **deprecated**: quyết định không còn phù hợp (ví dụ: tính năng đã bị gỡ)
+- **superseded**: một ADR mới hơn thay thế ADR này (luôn liên kết tới ADR thay thế)
 
-## Categories of Decisions Worth Recording
+## Các nhóm quyết định đáng ghi lại
 
-| Category | Examples |
+| Nhóm | Ví dụ |
 |----------|---------|
-| **Technology choices** | Framework, language, database, cloud provider |
-| **Architecture patterns** | Monolith vs microservices, event-driven, CQRS |
-| **API design** | REST vs GraphQL, versioning strategy, auth mechanism |
-| **Data modeling** | Schema design, normalization decisions, caching strategy |
-| **Infrastructure** | Deployment model, CI/CD pipeline, monitoring stack |
-| **Security** | Auth strategy, encryption approach, secret management |
-| **Testing** | Test framework, coverage targets, E2E vs integration balance |
-| **Process** | Branching strategy, review process, release cadence |
+| **Lựa chọn công nghệ** | Framework, ngôn ngữ, database, cloud provider |
+| **Architecture pattern** | Monolith so với microservices, event-driven, CQRS |
+| **Thiết kế API** | REST so với GraphQL, chiến lược versioning, cơ chế auth |
+| **Mô hình hóa dữ liệu** | Thiết kế schema, quyết định chuẩn hóa, chiến lược cache |
+| **Hạ tầng** | Mô hình deployment, CI/CD pipeline, monitoring stack |
+| **Bảo mật** | Chiến lược auth, cách tiếp cận mã hóa, quản lý secret |
+| **Testing** | Test framework, mục tiêu coverage, cân bằng E2E so với integration |
+| **Quy trình** | Chiến lược branching, quy trình review, nhịp release |
 
-## Integration with Other Skills
+## Tích hợp với các Skill khác
 
-- **Planner agent**: when the planner proposes architecture changes, suggest creating an ADR
-- **Code reviewer agent**: flag PRs that introduce architectural changes without a corresponding ADR
+- **Planner agent**: khi planner đề xuất thay đổi kiến trúc, hãy gợi ý tạo một ADR
+- **Code reviewer agent**: đánh dấu các PR đưa vào thay đổi kiến trúc mà không có ADR tương ứng

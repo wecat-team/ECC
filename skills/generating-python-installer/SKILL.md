@@ -1,172 +1,172 @@
 ---
 name: generating-python-installer
-description: "Commercial-grade Python installer expert for Windows: Nuitka extreme compilation, dist slimming, DLL footprint analysis, and Inno Setup packaging to ship the smallest, fastest installers. Use when a Python app must ship as a minimal, fast-starting Windows installer; not for basic script-to-exe conversion. 中文触发：Nuitka 极限优化、Python 商业打包、极限编译 Python、dist 瘦身、DLL 分析、最小安装包、最快启动、商业级打包风格"
+description: "Chuyên gia installer Python cấp thương mại cho Windows: biên dịch cực hạn bằng Nuitka, làm gọn dist, phân tích footprint DLL và đóng gói Inno Setup để tạo ra installer nhỏ nhất, nhanh nhất. Dùng khi một ứng dụng Python phải được phát hành dưới dạng installer Windows tối thiểu, khởi động nhanh; không dùng cho việc chuyển script thành exe cơ bản. 中文触发：Nuitka 极限优化、Python 商业打包、极限编译 Python、dist 瘦身、DLL 分析、最小安装包、最快启动、商业级打包风格"
 ---
 
-# Generating Python Installer (Commercial-Grade)
+# Tạo Python Installer (Cấp thương mại)
 
-You are a **Python commercial deployment expert**. Your goal is the **smallest, fastest-starting, cleanest** Windows installer. The core approach is **"Nuitka folder mode (dist) + Inno Setup packaging"** — no single-file builds, no stray console window.
+Bạn là **chuyên gia triển khai thương mại Python**. Mục tiêu của bạn là installer Windows **nhỏ nhất, khởi động nhanh nhất, sạch nhất**. Cách tiếp cận cốt lõi là **"Nuitka folder mode (dist) + đóng gói Inno Setup"** — không build single-file, không có cửa sổ console thừa.
 
-## When to Activate
+## Khi nào kích hoạt
 
-Activate when the user explicitly asks for **advanced** Python packaging or size/startup optimization on Windows:
+Kích hoạt khi người dùng yêu cầu rõ ràng đóng gói Python **nâng cao** hoặc tối ưu dung lượng/tốc độ khởi động trên Windows:
 
-- Nuitka extreme / commercial-grade compilation, smallest-size or fastest-startup builds
-- `dist` folder slimming, DLL footprint analysis, 32-bit vs 64-bit size tradeoffs
-- Inno Setup packaging with full metadata and a clean, residue-free uninstall
+- Biên dịch Nuitka cực hạn/cấp thương mại, build nhỏ nhất hoặc khởi động nhanh nhất
+- Làm gọn thư mục `dist`, phân tích footprint DLL, đánh đổi dung lượng giữa 32-bit và 64-bit
+- Đóng gói Inno Setup với metadata đầy đủ và gỡ cài đặt sạch, không để lại dấu vết
 
-This skill targets advanced size/startup optimization — not basic one-file "script to exe" conversion.
+Skill này nhắm đến tối ưu nâng cao về dung lượng/khởi động — không phải chuyển đổi "script thành exe" một file cơ bản.
 
-## How It Works
+## Cách hoạt động
 
-1. **Confirm build parameters** — app name, version, publisher, exe name, source/output dirs, icon. Never auto-fill; ask the user.
-2. **Verify the source build** — console disabled, LTO enabled, VC++ runtime present.
-3. **Compile with Nuitka** using the module-exclusion and plugin strategy below.
-4. **Slim the `dist` folder** — strip debug symbols, caches, tests, and docs, with safeguards for runtime-required metadata.
-5. **Analyze DLLs** to find and trim the largest dependencies.
-6. **Package with Inno Setup** — LZMA2 ultra compression, full metadata, residue-free uninstall, and an arch-matched VC++ redistributable.
+1. **Xác nhận tham số build** — tên ứng dụng, phiên bản, publisher, tên exe, thư mục nguồn/đầu ra, icon. KHÔNG BAO GIỜ tự động điền; hãy hỏi người dùng.
+2. **Xác minh bản build nguồn** — đã tắt console, bật LTO, có VC++ runtime.
+3. **Biên dịch bằng Nuitka** theo chiến lược loại trừ module và plugin bên dưới.
+4. **Làm gọn thư mục `dist`** — loại bỏ debug symbol, cache, test và tài liệu, có biện pháp bảo vệ metadata cần thiết lúc runtime.
+5. **Phân tích DLL** để tìm và cắt giảm các dependency lớn nhất.
+6. **Đóng gói bằng Inno Setup** — nén LZMA2 ultra, metadata đầy đủ, gỡ cài đặt không để lại dấu vết, và VC++ redistributable khớp kiến trúc.
 
-## Examples
+## Ví dụ
 
-- "用 Nuitka 把这个 PySide2 项目打成最小体积的商业安装包" → run the full workflow: recommend 32-bit, exclude WebEngine/3D/Charts, slim `dist`, package with Inno Setup.
-- "我的 exe 有 400 MB，怎么瘦身到一半" → analyze DLLs, switch to `opencv-python-headless`, drop `opengl32sw`, apply `dist` slimming.
-- "安装后在纯净系统打不开" → ensure the matching-arch VC++ redistributable is bundled in the Inno Setup script.
-
----
-
-## 核心理念
-
-坚持 **"Nuitka 文件夹模式(dist) + Inno Setup 封装"** 方案。拒绝单文件版，拒绝黑窗。
+- "用 Nuitka 把这个 PySide2 项目打成最小体积的商业安装包" → chạy toàn bộ workflow: khuyến nghị 32-bit, loại trừ WebEngine/3D/Charts, làm gọn `dist`, đóng gói bằng Inno Setup.
+- "我的 exe 有 400 MB，怎么瘦身到一半" → phân tích DLL, chuyển sang `opencv-python-headless`, bỏ `opengl32sw`, áp dụng làm gọn `dist`.
+- "安装后在纯净系统打不开" → đảm bảo VC++ redistributable đúng kiến trúc được đóng gói trong script Inno Setup.
 
 ---
 
-## 实战参考案例（生产级 PySide2 桌面应用，323 MB，含 OpenCV / Playwright）
+## Triết lý cốt lõi
 
-### 项目概况
-- **总体积**: 323 MB
-- **打包工具**: PyInstaller 4.7 (32位)
-- **主要依赖**: PySide2 (22.52 MB), OpenCV (62.38 MB), Playwright (76.74 MB)
-- **Python 版本**: Python 3.8 (32位)
-- **DLL 数量**: 71 个，总计 93.23 MB
+Kiên định với giải pháp **"Nuitka folder mode (dist) + đóng gói Inno Setup"**. Từ chối bản single-file, từ chối cửa sổ console đen.
 
-### 关键优化策略
-1. PASS: **使用 32 位 Python** → 体积减少 20-30%
-2. PASS: **base_library.zip 压缩标准库** → 0.74 MB
-3. PASS: **精简模块排除** → 无 pytest/unittest/setuptools
-4. PASS: **精简 Qt 插件** → 只保留必要插件
+---
 
-### 体积分布
+## Case study thực chiến (ứng dụng desktop PySide2 cấp production, 323 MB, gồm OpenCV / Playwright)
 
-| 组件 | 体积 | 占比 | 优化建议 |
+### Tổng quan project
+- **Tổng dung lượng**: 323 MB
+- **Công cụ đóng gói**: PyInstaller 4.7 (32-bit)
+- **Dependency chính**: PySide2 (22.52 MB), OpenCV (62.38 MB), Playwright (76.74 MB)
+- **Phiên bản Python**: Python 3.8 (32-bit)
+- **Số lượng DLL**: 71 file, tổng cộng 93.23 MB
+
+### Chiến lược tối ưu then chốt
+1. PASS: **Dùng Python 32-bit** → giảm 20-30% dung lượng
+2. PASS: **Nén thư viện chuẩn bằng base_library.zip** → 0.74 MB
+3. PASS: **Loại trừ module gọn gàng** → không có pytest/unittest/setuptools
+4. PASS: **Làm gọn plugin Qt** → chỉ giữ plugin cần thiết
+
+### Phân bố dung lượng
+
+| Thành phần | Dung lượng | Tỷ lệ | Gợi ý tối ưu |
 |------|------|------|---------|
-| playwright | 76.74 MB | 23.8% | 非必要可移除 |
-| OpenCV | 62.38 MB | 19.3% | 用 opencv-python-headless |
-| PySide2 | 22.52 MB | 7.0% | 排除 WebEngine/3D/Charts |
-| 其他依赖 | 161.36 MB | 49.9% | - |
+| playwright | 76.74 MB | 23.8% | Có thể bỏ nếu không cần thiết |
+| OpenCV | 62.38 MB | 19.3% | Dùng opencv-python-headless |
+| PySide2 | 22.52 MB | 7.0% | Loại trừ WebEngine/3D/Charts |
+| Các dependency khác | 161.36 MB | 49.9% | - |
 
-### 预期效果对比
+### So sánh hiệu quả kỳ vọng
 
-| 项目类型 | Nuitka 原始 | 优化后 | 参考项目实测 |
+| Loại project | Nuitka gốc | Sau tối ưu | Đo thực tế trên project tham chiếu |
 |---------|------------|--------|----------------|
-| Tkinter + 标准库 | 150-250 MB | **80-120 MB** | - |
-| PyQt/PySide | 200-400 MB | **120-250 MB** | 323 MB (含 OpenCV 等) |
-| 含 numpy/pandas | 300-600 MB | **180-350 MB** | - |
+| Tkinter + thư viện chuẩn | 150-250 MB | **80-120 MB** | - |
+| PyQt/PySide | 200-400 MB | **120-250 MB** | 323 MB (gồm OpenCV, v.v.) |
+| Có numpy/pandas | 300-600 MB | **180-350 MB** | - |
 
 ---
 
-## 核心工作流 (Workflow) - WARNING: 严格执行
+## Workflow cốt lõi - WARNING: Thực hiện nghiêm ngặt
 
-当用户请求打包时，按照以下步骤操作：
+Khi người dùng yêu cầu đóng gói, thực hiện theo các bước sau:
 
-**步骤 1：强制参数确认（FAIL: 禁止使用默认值）**
+**Bước 1: Bắt buộc xác nhận tham số (FAIL: Cấm dùng giá trị mặc định)**
 
-> **WARNING: 重要规则：以下所有参数必须逐一向用户确认，禁止自动填充或使用默认值！**
+> **WARNING: Quy tắc QUAN TRỌNG: PHẢI xác nhận lần lượt với người dùng tất cả các tham số dưới đây, CẤM tự động điền hoặc dùng giá trị mặc định!**
 
-必须向用户询问并确认以下信息（*等待用户明确回复后才能继续*）：
+PHẢI hỏi và xác nhận với người dùng các thông tin sau (*chờ người dùng trả lời rõ ràng rồi mới được tiếp tục*):
 
-| 参数 | 说明 | 示例 |
+| Tham số | Mô tả | Ví dụ |
 |------|------|------|
-| **软件名称** (App Name) | 软件显示名称 | `红墨批注` |
-| **版本号** (Version) | 语义化版本号 | `1.0.0` |
-| **发布者/公司名** (Publisher) | 控制面板显示的发布者 | `YourCompany` |
-| **主程序** (Exe Name) | 主可执行文件名 | `RedInk.exe` |
-| **源路径** (Source Dir) | Nuitka dist 文件夹绝对路径 | `D:\project\dist` |
-| **输出路径** (Output Dir) | 安装包生成位置 | `D:\project\output` |
-| **图标路径** (Icon Path) | .ico 文件绝对路径（可选但推荐） | `D:\project\icon.ico` |
-| **官网地址** (URL) | 可选，用于控制面板链接 | `https://example.com` |
+| **Tên phần mềm** (App Name) | Tên hiển thị của phần mềm | `红墨批注` |
+| **Số phiên bản** (Version) | Số phiên bản theo semantic versioning | `1.0.0` |
+| **Publisher/Tên công ty** (Publisher) | Publisher hiển thị trong Control Panel | `YourCompany` |
+| **Chương trình chính** (Exe Name) | Tên file thực thi chính | `RedInk.exe` |
+| **Đường dẫn nguồn** (Source Dir) | Đường dẫn tuyệt đối của thư mục Nuitka dist | `D:\project\dist` |
+| **Đường dẫn đầu ra** (Output Dir) | Nơi tạo ra installer | `D:\project\output` |
+| **Đường dẫn icon** (Icon Path) | Đường dẫn tuyệt đối của file .ico (tùy chọn nhưng nên có) | `D:\project\icon.ico` |
+| **Địa chỉ website** (URL) | Tùy chọn, dùng cho liên kết trong Control Panel | `https://example.com` |
 
-**询问模板：**
-> "请提供以下打包参数，我需要您逐一确认：
-> 1. 软件名称：
-> 2. 版本号：
-> 3. 发布者/公司名：
-> 4. 主程序文件名（如 xxx.exe）：
-> 5. 源路径（Nuitka dist 文件夹）：
-> 6. 输出路径（安装包保存位置）：
-> 7. 图标路径（.ico 文件，可留空）：
-> 8. 官网地址（可留空）：
+**Mẫu câu hỏi:**
+> "Vui lòng cung cấp các tham số đóng gói sau, tôi cần bạn xác nhận lần lượt:
+> 1. Tên phần mềm:
+> 2. Số phiên bản:
+> 3. Publisher/Tên công ty:
+> 4. Tên file chương trình chính (ví dụ xxx.exe):
+> 5. Đường dẫn nguồn (thư mục Nuitka dist):
+> 6. Đường dẫn đầu ra (nơi lưu installer):
+> 7. Đường dẫn icon (file .ico, có thể để trống):
+> 8. Địa chỉ website (có thể để trống):
 >
-> 请逐一填写，或回复"跳过"表示使用空值。"
+> Vui lòng điền lần lượt, hoặc trả lời "bỏ qua" để dùng giá trị rỗng."
 
-**步骤 2：源文件质量与编译检查（关键）**
-在生成代码之前，必须向用户发出以下**关键确认**（因为 Inno Setup 只是打包工具，无法改变程序本身的运行属性）：
+**Bước 2: Kiểm tra chất lượng file nguồn và biên dịch (then chốt)**
+Trước khi sinh code, PHẢI đưa ra **xác nhận then chốt** sau cho người dùng (vì Inno Setup chỉ là công cụ đóng gói, không thể thay đổi thuộc tính chạy của chính chương trình):
 
-> "WARNING: **编译参数检查**：
-> 1. **去黑窗**：请确认您的 dist 文件夹是使用 `nuitka --windows-console-mode=disable` 编译的。（否则安装后依然会有黑框）
-> 2. **高性能**：请确认是否使用了 `--lto=yes`。（否则启动速度可能不理想）
-> 3. **运行库**：请确保 dist 文件夹内已包含必要的 VC++ 运行库，防止在纯净系统上无法运行。
+> "WARNING: **Kiểm tra tham số biên dịch**:
+> 1. **Bỏ cửa sổ đen**: Vui lòng xác nhận thư mục dist của bạn được biên dịch bằng `nuitka --windows-console-mode=disable`. (Nếu không, sau khi cài đặt vẫn sẽ có khung đen)
+> 2. **Hiệu năng cao**: Vui lòng xác nhận đã dùng `--lto=yes` hay chưa. (Nếu không, tốc độ khởi động có thể không như mong muốn)
+> 3. **Runtime library**: Vui lòng đảm bảo thư mục dist đã bao gồm các VC++ runtime cần thiết, để tránh không chạy được trên hệ thống sạch.
 >
-> **确认源文件已准备好请回复"确认"，否则请先重新编译。**"
+> **Nếu file nguồn đã sẵn sàng, hãy trả lời "xác nhận", nếu không hãy biên dịch lại trước.**"
 
-**步骤 3：生成代码**
-用户确认后，输出包含 **完整元数据** 和 **卸载图标修复** 的代码。
+**Bước 3: Sinh code**
+Sau khi người dùng xác nhận, xuất ra code bao gồm **metadata đầy đủ** và **sửa lỗi icon gỡ cài đặt**.
 
 ---
 
-## Nuitka 极限优化编译（基于 参考项目经验）
+## Biên dịch tối ưu cực hạn với Nuitka (dựa trên kinh nghiệm từ project tham chiếu)
 
-### 一、32 位 vs 64 位选择策略
+### 1. Chiến lược chọn 32-bit hay 64-bit
 
-**参考项目使用 32 位 Python 的原因**：
+**Lý do project tham chiếu dùng Python 32-bit**:
 
-| 组件 | 64位体积 | 32位体积 | 节省 |
+| Thành phần | Dung lượng 64-bit | Dung lượng 32-bit | Tiết kiệm |
 |------|---------|---------|------|
 | python3x.dll | ~4.5 MB | ~3.8 MB | 15% |
 | Qt5Core.dll | ~8 MB | ~5 MB | 37% |
 | numpy | ~30 MB | ~20 MB | 33% |
-| **总体** | 基准 | **-20~30%** | - |
+| **Tổng thể** | Chuẩn | **-20~30%** | - |
 
-**推荐使用 32 位条件**：
-- PASS: 程序内存占用 < 2GB
-- PASS: 不处理超大文件（< 2GB）
-- PASS: 目标用户是普通办公电脑
+**Điều kiện nên dùng 32-bit**:
+- PASS: Chương trình dùng bộ nhớ < 2GB
+- PASS: Không xử lý file siêu lớn (< 2GB)
+- PASS: Người dùng mục tiêu dùng máy tính văn phòng thông thường
 
-**32 位编译方法**：
+**Cách biên dịch 32-bit**:
 ```bash
-# 1. 安装 32 位 Python（和 64 位可以共存）
-# 下载地址：https://www.python.org/downloads/windows/
+# 1. Cài Python 32-bit (có thể cùng tồn tại với 64-bit)
+# Địa chỉ tải: https://www.python.org/downloads/windows/
 
-# 2. 用 32 位 Python 安装依赖
+# 2. Cài dependency bằng Python 32-bit
 py -3.12-32 -m pip install -r requirements.txt
 
-# 3. 用 32 位 Python 编译
+# 3. Biên dịch bằng Python 32-bit
 py -3.12-32 -m nuitka --standalone ...你的参数
 ```
 
-### 二、模块排除清单（参考项目验证过的）
+### 2. Danh sách loại trừ module (đã được project tham chiếu kiểm chứng)
 
-**安全排除列表**（运行时不需要）：
+**Danh sách loại trừ an toàn** (không cần lúc runtime):
 ```
 unittest,test,pytest,_pytest,doctest,pdb,pdbpp,
 setuptools,pip,distutils,pkg_resources,
 email.mime,http.server,xmlrpc,pydoc
 ```
 
-**预期效果**：节省 **30-50 MB**
+**Hiệu quả kỳ vọng**: tiết kiệm **30-50 MB**
 
-### 三、GUI 框架专用优化
+### 3. Tối ưu riêng cho từng GUI framework
 
-#### Tkinter 极限优化（推荐，最轻量）
+#### Tối ưu cực hạn cho Tkinter (khuyến nghị, nhẹ nhất)
 ```bash
 nuitka --standalone --windows-console-mode=disable ^
     --lto=yes ^
@@ -185,9 +185,9 @@ nuitka --standalone --windows-console-mode=disable ^
     main.py
 ```
 
-**预期体积**：80-120 MB（优化后）
+**Dung lượng kỳ vọng**: 80-120 MB (sau tối ưu)
 
-#### PyQt5 / PySide2 优化
+#### Tối ưu PyQt5 / PySide2
 ```bash
 nuitka --standalone --windows-console-mode=disable ^
     --lto=yes ^
@@ -208,11 +208,11 @@ nuitka --standalone --windows-console-mode=disable ^
     main.py
 ```
 
-**预期体积**：120-250 MB（优化后）
+**Dung lượng kỳ vọng**: 120-250 MB (sau tối ưu)
 
-### 四、一键编译脚本模板
+### 4. Mẫu script biên dịch một lệnh
 
-**保存为 `build_optimized.bat`（项目根目录）**：
+**Lưu thành `build_optimized.bat` (thư mục gốc project)**:
 
 ```batch
 @echo off
@@ -290,9 +290,9 @@ echo ========================================
 pause
 ```
 
-### 五、dist 瘦身脚本（参考项目级别清理）
+### 5. Script làm gọn dist (dọn dẹp ở mức project tham chiếu)
 
-**保存为 `slim_dist.ps1`（和 build_optimized.bat 同目录）**：
+**Lưu thành `slim_dist.ps1` (cùng thư mục với build_optimized.bat)**:
 
 ```powershell
 param(
@@ -310,14 +310,14 @@ if (-not (Test-Path $DistPath)) {
     exit 1
 }
 
-# 统计初始体积
+# Thống kê dung lượng ban đầu
 $InitialSize = (Get-ChildItem -Path $DistPath -Recurse -File | Measure-Object -Property Length -Sum).Sum / 1MB
 Write-Host "`n初始体积: $([math]::Round($InitialSize, 2)) MB" -ForegroundColor Yellow
 
-# 参考项目特征：没有 .pdb, .pyi, __pycache__, test 等
+# Đặc điểm của project tham chiếu: không có .pdb, .pyi, __pycache__, test, v.v.
 Write-Host "`n[应用 参考项目的清理策略...]" -ForegroundColor Green
 
-# 1. 删除调试符号
+# 1. Xóa debug symbol
 Write-Host "`n[1/7] 删除 .pdb 调试符号..." -ForegroundColor Green
 $pdbFiles = Get-ChildItem -Path $DistPath -Recurse -Include *.pdb -File
 $pdbSize = ($pdbFiles | Measure-Object -Property Length -Sum).Sum / 1MB
@@ -328,7 +328,7 @@ if ($pdbFiles.Count -gt 0) {
     Write-Host "  未发现 .pdb 文件（已优化）" -ForegroundColor Gray
 }
 
-# 2. 删除类型提示
+# 2. Xóa type hint
 Write-Host "`n[2/7] 删除 .pyi 类型提示..." -ForegroundColor Green
 $pyiFiles = Get-ChildItem -Path $DistPath -Recurse -Include *.pyi -File
 $pyiSize = ($pyiFiles | Measure-Object -Property Length -Sum).Sum / 1MB
@@ -339,7 +339,7 @@ if ($pyiFiles.Count -gt 0) {
     Write-Host "  未发现 .pyi 文件（已优化）" -ForegroundColor Gray
 }
 
-# 3. 删除 __pycache__
+# 3. Xóa __pycache__
 Write-Host "`n[3/7] 删除 __pycache__ 缓存..." -ForegroundColor Green
 $pycacheDirs = Get-ChildItem -Path $DistPath -Recurse -Directory -Filter "__pycache__"
 $pycacheSize = 0
@@ -354,7 +354,7 @@ if ($pycacheDirs.Count -gt 0) {
     Write-Host "  未发现 __pycache__（已优化）" -ForegroundColor Gray
 }
 
-# 4. 删除测试目录
+# 4. Xóa thư mục test
 Write-Host "`n[4/7] 删除 test/tests 测试目录..." -ForegroundColor Green
 $testDirs = Get-ChildItem -Path $DistPath -Recurse -Directory | Where-Object { $_.Name -match '^tests?$' }
 $testSize = 0
@@ -369,7 +369,7 @@ if ($testDirs.Count -gt 0) {
     Write-Host "  未发现测试目录（已优化）" -ForegroundColor Gray
 }
 
-# 5. 删除文档和示例
+# 5. Xóa tài liệu và ví dụ
 Write-Host "`n[5/7] 删除 docs/examples 文档目录..." -ForegroundColor Green
 $docDirs = Get-ChildItem -Path $DistPath -Recurse -Directory | Where-Object { $_.Name -match '^(docs|examples|samples|demo)$' }
 $docSize = 0
@@ -384,7 +384,7 @@ if ($docDirs.Count -gt 0) {
     Write-Host "  未发现文档目录（已优化）" -ForegroundColor Gray
 }
 
-# 6. 删除 .pyc 文件
+# 6. Xóa file .pyc
 Write-Host "`n[6/7] 删除 .pyc 字节码..." -ForegroundColor Green
 $pycFiles = Get-ChildItem -Path $DistPath -Recurse -Include *.pyc -File
 $pycSize = ($pycFiles | Measure-Object -Property Length -Sum).Sum / 1MB
@@ -395,13 +395,13 @@ if ($pycFiles.Count -gt 0) {
     Write-Host "  未发现 .pyc 文件（已优化）" -ForegroundColor Gray
 }
 
-# 7. 精简 .dist-info 元数据
+# 7. Làm gọn metadata .dist-info
 Write-Host "`n[7/7] 精简 .dist-info 元数据..." -ForegroundColor Green
 $distInfoDirs = Get-ChildItem -Path $DistPath -Recurse -Directory -Filter "*.dist-info"
 $removedCount = 0
 $removedSize = 0
 foreach ($infoDir in $distInfoDirs) {
-    # 仅删安装期记账文件；保留 METADATA 与 entry_points.txt（运行期被 importlib.metadata 读取，删除会破坏插件发现）
+    # Chỉ xóa các file ghi sổ lúc cài đặt; giữ METADATA và entry_points.txt (được importlib.metadata đọc lúc runtime, xóa sẽ làm hỏng việc phát hiện plugin)
     $filesToRemove = @("RECORD", "INSTALLER", "direct_url.json")
     foreach ($fileName in $filesToRemove) {
         $file = Join-Path $infoDir.FullName $fileName
@@ -419,7 +419,7 @@ if ($removedCount -gt 0) {
     Write-Host "  未发现可清理的元数据（已优化）" -ForegroundColor Gray
 }
 
-# 统计最终体积
+# Thống kê dung lượng cuối cùng
 $FinalSize = (Get-ChildItem -Path $DistPath -Recurse -File | Measure-Object -Property Length -Sum).Sum / 1MB
 $SavedSize = $InitialSize - $FinalSize
 $SavedPercent = if ($InitialSize -gt 0) { ($SavedSize / $InitialSize) * 100 } else { 0 }
@@ -432,17 +432,17 @@ Write-Host "最终体积: $([math]::Round($FinalSize, 2)) MB" -ForegroundColor G
 Write-Host "节省空间: $([math]::Round($SavedSize, 2)) MB ($([math]::Round($SavedPercent, 1))%)" -ForegroundColor Cyan
 Write-Host "========================================`n" -ForegroundColor Cyan
 
-# 对比 参考项目
+# So sánh với project tham chiếu
 Write-Host "[对比参考]" -ForegroundColor Yellow
 Write-Host "参考项目总体积: 323 MB (包含 PyQt, OpenCV, Playwright 等重量级库)" -ForegroundColor Gray
 Write-Host "如果你的项目是纯 Tkinter + 标准库，目标应该在 80-150 MB" -ForegroundColor Gray
 ```
 
-**预期效果**：节省 **15-30%** 体积
+**Hiệu quả kỳ vọng**: tiết kiệm **15-30%** dung lượng
 
-### 六、DLL 依赖分析工具
+### 6. Công cụ phân tích dependency DLL
 
-**保存为 `analyze_dlls.py`（用于找出体积大户）**：
+**Lưu thành `analyze_dlls.py` (dùng để tìm các file chiếm dung lượng lớn)**:
 
 ```python
 """
@@ -464,14 +464,14 @@ def analyze_dlls(dist_path: str):
     print("DLL 依赖分析（参考 参考项目策略）")
     print("=" * 70)
 
-    # 收集所有 DLL
+    # Thu thập tất cả DLL
     dll_files = list(dist_dir.rglob("*.dll"))
 
     if not dll_files:
         print("\n未发现 DLL 文件")
         return
 
-    # 按大小排序
+    # Sắp xếp theo kích thước
     dll_data = [(dll, dll.stat().st_size) for dll in dll_files]
     dll_data.sort(key=lambda x: x[1], reverse=True)
 
@@ -480,13 +480,13 @@ def analyze_dlls(dist_path: str):
     print(f"\n总 DLL 数量: {len(dll_files)}")
     print(f"总 DLL 体积: {total_size / 1024 / 1024:.2f} MB\n")
 
-    # 参考项目对比
+    # So sánh với project tham chiếu
     print("[对比参考] 参考项目的 DLL 情况:")
     print("  - 总数量: 71 个")
     print("  - 总体积: 93.23 MB")
     print("  - 最大的: libopenblas (26.85 MB), opengl32sw (15.25 MB)\n")
 
-    # 分析大于 3MB 的 DLL
+    # Phân tích các DLL lớn hơn 3MB
     large_dlls = [(dll, size) for dll, size in dll_data if size > 3 * 1024 * 1024]
 
     if large_dlls:
@@ -502,18 +502,18 @@ def analyze_dlls(dist_path: str):
             print(f"\n{size_mb:8.2f} MB  {dll.name}")
             print(f"           位置: {relative_path.parent}")
 
-            # 优化建议
+            # Gợi ý tối ưu
             suggestions = get_optimization_suggestion(name_lower)
             if suggestions:
                 for suggestion in suggestions:
                     print(f"            {suggestion}")
 
-    # 检查冗余 DLL
+    # Kiểm tra DLL dư thừa
     print("\n" + "=" * 70)
     print(" 冗余检查")
     print("=" * 70)
 
-    # 检查调试版本
+    # Kiểm tra bản debug
     debug_dlls = [dll for dll, _ in dll_data if dll.stem.endswith('d')]
     if debug_dlls:
         print(f"\nWARNING:  发现 {len(debug_dlls)} 个调试版本 DLL（可以删除）:")
@@ -531,7 +531,7 @@ def analyze_dlls(dist_path: str):
             print(f"  - {dll.name} ({size_mb:.2f} MB)")
         print("   这些是必需的，参考项目也包含了这些文件")
 
-    # 全部 DLL 列表
+    # Danh sách đầy đủ DLL
     print("\n" + "=" * 70)
     print(" 完整 DLL 列表（按体积排序，前 20）")
     print("=" * 70)
@@ -587,18 +587,18 @@ if __name__ == "__main__":
     analyze_dlls(sys.argv[1])
 ```
 
-**使用方法**：
+**Cách dùng**:
 ```bash
 python analyze_dlls.py dist/你的软件名.dist
 ```
 
 ---
 
-## 完整优化工作流
+## Workflow tối ưu hoàn chỉnh
 
-### 步骤 1：修改编译脚本配置
+### Bước 1: Sửa cấu hình script biên dịch
 
-编辑 `build_optimized.bat`，修改这 3 行：
+Sửa `build_optimized.bat`, thay đổi 3 dòng này:
 
 ```batch
 set APP_NAME=你的软件名      REM 改成实际名称
@@ -606,50 +606,50 @@ set MAIN_FILE=main.py        REM 你的主程序文件
 set ICON_FILE=icon.ico       REM 你的图标文件
 ```
 
-### 步骤 2：一键编译+瘦身
+### Bước 2: Biên dịch + làm gọn một lệnh
 
 ```bash
-# 在项目根目录执行
+# Chạy ở thư mục gốc project
 build_optimized.bat
 ```
 
-### 步骤 3：分析 DLL 依赖
+### Bước 3: Phân tích dependency DLL
 
 ```bash
 python analyze_dlls.py dist/你的软件名.dist
 ```
 
-### 步骤 4：根据分析结果优化
+### Bước 4: Tối ưu theo kết quả phân tích
 
-**如果用了 OpenCV** → 改用无头版
+**Nếu dùng OpenCV** → chuyển sang bản headless
 ```bash
 pip uninstall opencv-python
 pip install opencv-python-headless
 ```
 
-**如果用了 Qt** → 排除不需要的模块
+**Nếu dùng Qt** → loại trừ các module không cần
 ```batch
-# 在编译命令中添加
+# Thêm vào lệnh biên dịch
 --nofollow-import-to=PyQt5.QtWebEngine,PyQt5.Qt3D,PyQt5.QtCharts
 ```
 
-**删除软件渲染器**（如果不需要）
+**Xóa software renderer** (nếu không cần)
 ```powershell
-# 在 dist 目录执行
+# Chạy trong thư mục dist
 Remove-Item "opengl32sw.dll" -Force
 ```
 
 ---
 
-## VC++ 运行库处理方案
+## Giải pháp xử lý VC++ runtime
 
-### 方案一：静态链接（推荐）
+### Phương án 1: Static linking (khuyến nghị)
 ```bash
 nuitka --static-libpython=yes ...
 ```
 
-### 方案二：捆绑运行库安装（商业发布推荐）
-在 Inno Setup 脚本中添加：
+### Phương án 2: Gói kèm cài đặt runtime (khuyến nghị cho phát hành thương mại)
+Thêm vào script Inno Setup:
 
 ```iss
 ; WARNING: VC++ 运行库架构必须与 Python/Nuitka 构建架构一致。
@@ -662,11 +662,11 @@ Source: "{#MySourceDir}\..\vc_redist.x86.exe"; DestDir: "{tmp}"; Flags: deleteaf
 Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet /norestart"; StatusMsg: "正在安装运行库..."; Flags: waituntilterminated
 ```
 
-> 下载地址：[Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)
+> Địa chỉ tải: [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)
 
 ---
 
-## Inno Setup 脚本模板（商业终极版）
+## Mẫu script Inno Setup (Phiên bản thương mại tối thượng)
 
 ```iss
 ; =====================================================================
@@ -747,74 +747,74 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}
 
 ---
 
-## 占位符说明
+## Giải thích placeholder
 
-| 占位符 | 说明 | 示例值 |
+| Placeholder | Mô tả | Giá trị ví dụ |
 |--------|------|--------|
-| `{{APP_NAME}}` | 软件显示名称 | `红墨批注` |
-| `{{APP_VERSION}}` | 版本号 | `1.0.0` |
-| `{{PUBLISHER}}` | 发布者/公司名 | `MyCompany` |
-| `{{APP_URL}}` | 官网地址 | `https://example.com` |
-| `{{EXE_NAME}}` | 主程序文件名 | `RedInk.exe` |
-| `{{SOURCE_DIR}}` | Nuitka dist 文件夹路径 | `D:\project\dist\RedInk.dist` |
-| `{{OUTPUT_DIR}}` | 安装包输出路径 | `D:\project\output` |
-| `{{ICON_PATH}}` | 图标文件路径 | `D:\project\icon.ico` |
-| `{{GENERATE_RANDOM_GUID}}` | **需生成唯一GUID** | 使用 Inno Setup "Tools > Generate GUID" |
+| `{{APP_NAME}}` | Tên hiển thị của phần mềm | `红墨批注` |
+| `{{APP_VERSION}}` | Số phiên bản | `1.0.0` |
+| `{{PUBLISHER}}` | Publisher/Tên công ty | `MyCompany` |
+| `{{APP_URL}}` | Địa chỉ website | `https://example.com` |
+| `{{EXE_NAME}}` | Tên file chương trình chính | `RedInk.exe` |
+| `{{SOURCE_DIR}}` | Đường dẫn thư mục Nuitka dist | `D:\project\dist\RedInk.dist` |
+| `{{OUTPUT_DIR}}` | Đường dẫn đầu ra của installer | `D:\project\output` |
+| `{{ICON_PATH}}` | Đường dẫn file icon | `D:\project\icon.ico` |
+| `{{GENERATE_RANDOM_GUID}}` | **Cần sinh GUID duy nhất** | Dùng Inno Setup "Tools > Generate GUID" |
 
 ---
 
-## 常见问题 (FAQ)
+## Câu hỏi thường gặp (FAQ)
 
-### Q1: 安装后双击程序无反应？
-1. 打开 CMD，手动运行 exe 查看错误信息
-2. 检查是否缺少 VC++ 运行库
-3. 检查 Nuitka 编译是否成功
+### Q1: Cài xong nhấp đúp chương trình không phản ứng?
+1. Mở CMD, chạy thủ công file exe để xem thông báo lỗi
+2. Kiểm tra xem có thiếu VC++ runtime không
+3. Kiểm tra xem biên dịch Nuitka có thành công không
 
-### Q2: 安装包体积过大？
-**优化方法**：
-1. 使用 32 位 Python 编译（节省 20-30%）
-2. 应用 参考项目的模块排除清单
-3. 启用 Anti-Bloat 插件
-4. 执行 dist 文件夹瘦身脚本
-5. 分析 DLL，移除不必要的大文件
+### Q2: Installer quá lớn?
+**Cách tối ưu**:
+1. Biên dịch bằng Python 32-bit (tiết kiệm 20-30%)
+2. Áp dụng danh sách loại trừ module của project tham chiếu
+3. Bật plugin Anti-Bloat
+4. Chạy script làm gọn thư mục dist
+5. Phân tích DLL, loại bỏ các file lớn không cần thiết
 
-### Q3: 杀毒软件误报？
-**解决方案**：
-- 提交到主流杀毒厂商进行白名单申请
-- 购买代码签名证书（推荐：Sectigo, DigiCert）
-- 避免使用 UPX 压缩
+### Q3: Phần mềm diệt virus báo nhầm?
+**Giải pháp**:
+- Gửi tới các hãng diệt virus lớn để xin đưa vào whitelist
+- Mua chứng chỉ code signing (khuyến nghị: Sectigo, DigiCert)
+- Tránh dùng nén UPX
 
-### Q4: 安装时提示 Windows 已保护你的电脑？
-- 购买 EV 代码签名证书（可立即获得信任）
-- 普通代码签名证书需要积累安装量后逐渐获得信任
-
----
-
-## 实战问题处理记录（更新 2026-02-07）
-
-- **安装后提示缺少 python3xx.dll**：必须使用 Nuitka `--standalone`；确认 dist 内存在该 dll；不要打单文件版。
-- **安装后点击无反应**：GUI 启动期可能被重依赖阻塞；将重依赖延迟到"开始导出"再 import；添加日志排查。
-- **Nuitka + MinGW 在非 ASCII 路径报错**：把源码复制到 ASCII 目录再编译；设置 `PYTHONIOENCODING=utf-8`。
-- **Inno Setup 警告 `x64` 已弃用（仅 64 位构建需要 64 位安装模式时）**：改为 `ArchitecturesInstallIn64BitMode=x64compatible`；32 位构建无需此项。
-- **`--disable-console` 已废弃**：改用 `--windows-console-mode=disable`。
-- **dist 出现 `_nuitka_temp.exe`**：在 [Files] 中排除它。
+### Q4: Khi cài đặt hiện thông báo Windows đã bảo vệ PC của bạn?
+- Mua chứng chỉ EV code signing (được tin cậy ngay lập tức)
+- Chứng chỉ code signing thông thường cần tích lũy lượng cài đặt để dần được tin cậy
 
 ---
 
-## 优化效果预期
+## Ghi chép xử lý sự cố thực chiến (cập nhật 2026-02-07)
 
-| 优化组合 | 体积减少 | 启动提升 | 风险等级 |
+- **Cài xong báo thiếu python3xx.dll**: PHẢI dùng Nuitka `--standalone`; xác nhận dll này có trong dist; không build bản single-file.
+- **Cài xong nhấp vào không phản ứng**: GUI có thể bị dependency nặng chặn trong giai đoạn khởi động; hoãn các dependency nặng đến khi "bắt đầu export" mới import; thêm log để điều tra.
+- **Nuitka + MinGW báo lỗi với đường dẫn non-ASCII**: sao chép source sang thư mục ASCII rồi biên dịch; đặt `PYTHONIOENCODING=utf-8`.
+- **Inno Setup cảnh báo `x64` đã bị deprecated (chỉ khi build 64-bit cần chế độ cài đặt 64-bit)**: đổi thành `ArchitecturesInstallIn64BitMode=x64compatible`; build 32-bit không cần mục này.
+- **`--disable-console` đã bị deprecated**: dùng `--windows-console-mode=disable` thay thế.
+- **dist xuất hiện `_nuitka_temp.exe`**: loại trừ nó trong [Files].
+
+---
+
+## Hiệu quả tối ưu kỳ vọng
+
+| Tổ hợp tối ưu | Giảm dung lượng | Cải thiện khởi động | Mức rủi ro |
 |----------|----------|----------|----------|
-| 基础编译 | 基准 | 基准 | 无 |
-| + `--lto=yes` | 5-10% | 10-20% | PASS: 无 |
-| + anti-bloat | 15-25% | - | PASS: 无 |
-| + 模块排除 | 20-35% | 5% | PASS: 无 |
-| + dist 瘦身 | 25-40% | - | PASS: 无 |
-| + 32 位编译 | 40-60% | - | PASS: 无 |
-| **全部组合** | **45-65%** | **15-25%** | PASS: **无风险** |
+| Biên dịch cơ bản | Chuẩn | Chuẩn | Không |
+| + `--lto=yes` | 5-10% | 10-20% | PASS: Không |
+| + anti-bloat | 15-25% | - | PASS: Không |
+| + Loại trừ module | 20-35% | 5% | PASS: Không |
+| + Làm gọn dist | 25-40% | - | PASS: Không |
+| + Biên dịch 32-bit | 40-60% | - | PASS: Không |
+| **Tất cả kết hợp** | **45-65%** | **15-25%** | PASS: **Không có rủi ro** |
 
-> WARNING: **不建议使用 UPX 压缩**，虽然能进一步减小体积，但极易触发杀毒软件误报。
+> WARNING: **Không khuyến nghị dùng nén UPX**, tuy có thể giảm dung lượng thêm nhưng rất dễ kích hoạt báo nhầm của phần mềm diệt virus.
 
 ---
 
-**基于 参考项目实战经验优化，助你打造商业级安装包！**
+**Được tối ưu dựa trên kinh nghiệm thực chiến của project tham chiếu, giúp bạn tạo installer cấp thương mại!**

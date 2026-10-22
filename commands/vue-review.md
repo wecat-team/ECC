@@ -1,83 +1,83 @@
 ---
-description: Comprehensive Vue.js code review for Composition API correctness, reactivity, composable patterns, template security, accessibility, and Vue-specific performance. Invokes the vue-reviewer agent (and typescript-reviewer alongside on .vue/.ts changes).
+description: Code review Vue.js toàn diện về tính đúng đắn của Composition API, reactivity, pattern composable, bảo mật template, accessibility và hiệu năng đặc thù Vue. Gọi agent vue-reviewer (và typescript-reviewer song song với các thay đổi .vue/.ts).
 ---
 
 # Vue Code Review
 
-This command invokes the **vue-reviewer** agent for Vue-specific code review. For pull requests touching `.vue` files or Vue-containing `.ts`/`.js` files, both `vue-reviewer` and `typescript-reviewer` should run — each owns a distinct lane.
+Lệnh này gọi agent **vue-reviewer** để thực hiện code review đặc thù cho Vue. Với pull request chạm vào file `.vue` hoặc file `.ts`/`.js` có chứa Vue, cả `vue-reviewer` và `typescript-reviewer` đều nên chạy — mỗi agent phụ trách một mảng riêng.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Identify Vue Changes**: Find modified `.vue` files and Vue-related `.ts`/`.js` files via `git diff`
-2. **Run Lint**: Execute `eslint` with `eslint-plugin-vue`
-3. **Typecheck**: Run `vue-tsc --noEmit` or the project's canonical typecheck command
-4. **Review Vue Lanes Only**: Reactivity, composables, template security, accessibility, Vue-specific performance
-5. **Generate Report**: Categorize issues by severity (CRITICAL / HIGH / MEDIUM)
+1. **Xác định thay đổi Vue**: Tìm các file `.vue` đã sửa và các file `.ts`/`.js` liên quan đến Vue qua `git diff`
+2. **Chạy lint**: Thực thi `eslint` với `eslint-plugin-vue`
+3. **Typecheck**: Chạy `vue-tsc --noEmit` hoặc lệnh typecheck chuẩn của project
+4. **Chỉ review các mảng Vue**: Reactivity, composable, bảo mật template, accessibility, hiệu năng đặc thù Vue
+5. **Tạo báo cáo**: Phân loại vấn đề theo mức độ nghiêm trọng (CRITICAL / HIGH / MEDIUM)
 
-## When to Use
+## Khi nào dùng
 
-Use `/vue-review` when:
+Dùng `/vue-review` khi:
 
-- A PR or commit touches `.vue` files
-- After writing or modifying Vue components, composables, or Pinia stores
-- Before merging Vue code
-- Auditing template security (`v-html`, URL bindings)
-- Reviewing a new composable for correctness
-- Auditing Vue Router guards and navigation
-- Reviewing Nuxt server routes or SSR-specific code
+- Một PR hoặc commit chạm vào file `.vue`
+- Sau khi viết hoặc sửa component Vue, composable hoặc Pinia store
+- Trước khi merge code Vue
+- Audit bảo mật template (`v-html`, URL binding)
+- Review một composable mới về tính đúng đắn
+- Audit guard và điều hướng của Vue Router
+- Review các server route của Nuxt hoặc code đặc thù SSR
 
-For pure `.ts`/`.js` changes with no Vue imports, use `/code-review` (general) or invoke `typescript-reviewer` directly.
+Với thay đổi `.ts`/`.js` thuần không import Vue, dùng `/code-review` (chung) hoặc gọi trực tiếp `typescript-reviewer`.
 
-## Scope vs `/code-review` and TypeScript Review
+## Phạm vi so với `/code-review` và TypeScript Review
 
-| Tool | Scope |
+| Công cụ | Phạm vi |
 |---|---|
-| `vue-reviewer` (this command) | Reactivity, composables, template security, a11y, Vue performance, Pinia/Router |
-| `typescript-reviewer` | Generic TS/JS — `any` abuse, async correctness, Node security |
-| `security-reviewer` | Project-wide security audit |
-| `/code-review` | Generic uncommitted-changes or PR review |
+| `vue-reviewer` (lệnh này) | Reactivity, composable, bảo mật template, a11y, hiệu năng Vue, Pinia/Router |
+| `typescript-reviewer` | TS/JS chung — lạm dụng `any`, tính đúng đắn của async, bảo mật Node |
+| `security-reviewer` | Audit bảo mật toàn project |
+| `/code-review` | Review chung các thay đổi chưa commit hoặc PR |
 
-On a `.vue` / Vue-related PR, invoke both `vue-reviewer` and `typescript-reviewer`. Findings from each are non-overlapping by design.
+Với PR `.vue` / liên quan đến Vue, hãy gọi cả `vue-reviewer` và `typescript-reviewer`. Các phát hiện của mỗi bên được thiết kế để không chồng lấn nhau.
 
-## Review Categories
+## Các nhóm review
 
-### CRITICAL (Must Fix)
+### CRITICAL (Phải sửa)
 
-- `v-html` with unsanitized input
-- `:href`/`:src` with unvalidated user URLs (`javascript:`, `data:`)
-- Secret in client bundle (`VITE_*`, Nuxt `public` runtimeConfig)
-- Server endpoint without input validation (Nuxt Nitro)
-- `localStorage`/`sessionStorage` for session tokens
-- Destructuring reactive props in Vue < 3.5 (breaks reactivity)
-- `reactive()` object replacement (breaks watchers)
-- Watcher source tracking a ref object instead of `.value`
+- `v-html` với đầu vào chưa được sanitize
+- `:href`/`:src` với URL người dùng chưa được kiểm tra (`javascript:`, `data:`)
+- Secret trong client bundle (`VITE_*`, `public` runtimeConfig của Nuxt)
+- Server endpoint không có kiểm tra đầu vào (Nuxt Nitro)
+- Dùng `localStorage`/`sessionStorage` cho session token
+- Destructure reactive props trong Vue < 3.5 (làm mất reactivity)
+- Thay thế object `reactive()` (làm hỏng watcher)
+- Nguồn của watcher theo dõi một ref object thay vì `.value`
 
-### HIGH (Should Fix)
+### HIGH (Nên sửa)
 
-- Composable with module-scope side effects
-- Missing cleanup in composable (watcher, interval, listener)
-- `v-for` without `:key` or with `key={index}`
-- `v-if` + `v-for` on same element
-- Props mutation
-- Missing prop validation
-- Route guard returning false without redirect
-- `useRoute().params` destructured at top-level (snapshot)
-- `v-model` bound to computed without setter
-- Accessibility violations (missing labels, non-semantic interactive elements)
-- Direct store property mutation outside actions
+- Composable có side effect ở module scope
+- Thiếu cleanup trong composable (watcher, interval, listener)
+- `v-for` không có `:key` hoặc dùng `key={index}`
+- `v-if` + `v-for` trên cùng một phần tử
+- Thay đổi props (props mutation)
+- Thiếu kiểm tra prop (prop validation)
+- Route guard trả về false mà không redirect
+- `useRoute().params` bị destructure ở top-level (snapshot)
+- `v-model` bind vào computed không có setter
+- Vi phạm accessibility (thiếu label, phần tử tương tác không semantic)
+- Thay đổi trực tiếp thuộc tính của store bên ngoài action
 
-### MEDIUM (Consider)
+### MEDIUM (Cân nhắc)
 
-- Options API in new Vue 3 code
-- Component over 300 lines
-- `v-show` where `v-if` is more appropriate (or vice versa)
-- Missing `:max` on `<KeepAlive>`
-- Missing `shallowRef` for large replaced data
-- Custom validation instead of vetted form library
-- `defineExpose` exposing more than necessary
-- `inheritAttrs` not disabled when using `v-bind="$attrs"`
+- Options API trong code Vue 3 mới
+- Component dài hơn 300 dòng
+- Dùng `v-show` khi `v-if` phù hợp hơn (hoặc ngược lại)
+- Thiếu `:max` trên `<KeepAlive>`
+- Thiếu `shallowRef` cho dữ liệu lớn bị thay thế
+- Tự viết validation thay vì dùng thư viện form đã được kiểm chứng
+- `defineExpose` expose nhiều hơn mức cần thiết
+- Không tắt `inheritAttrs` khi dùng `v-bind="$attrs"`
 
-## Automated Checks Run
+## Các kiểm tra tự động được chạy
 
 ```bash
 # Lint (required)
@@ -94,9 +94,9 @@ npx eslint . --rule 'vue/no-v-html: warn' \
 npm audit
 ```
 
-If `eslint-plugin-vue` or `vue-tsc` is not configured, the review will flag the gap as a HIGH config issue and continue.
+Nếu `eslint-plugin-vue` hoặc `vue-tsc` chưa được cấu hình, review sẽ đánh dấu khoảng trống đó là vấn đề cấu hình HIGH và tiếp tục.
 
-## Example Usage
+## Ví dụ sử dụng
 
 ````text
 User: /vue-review
@@ -151,24 +151,24 @@ watch(userId, async (newId, _old, onCleanup) => {
 Recommendation: FAIL: Block merge until CRITICAL issue is fixed
 ````
 
-## Approval Criteria
+## Tiêu chí phê duyệt
 
-| Status | Condition |
+| Trạng thái | Điều kiện |
 |---|---|
-| PASS: Approve | No CRITICAL or HIGH issues |
-| WARNING: Warning | Only MEDIUM issues (merge with caution) |
-| FAIL: Block | CRITICAL or HIGH issues found |
+| PASS: Approve | Không có vấn đề CRITICAL hoặc HIGH |
+| WARNING: Warning | Chỉ có vấn đề MEDIUM (merge cần thận trọng) |
+| FAIL: Block | Phát hiện vấn đề CRITICAL hoặc HIGH |
 
-## Integration with Other Commands
+## Tích hợp với các lệnh khác
 
-- Run your project's build command first if the build is broken
-- Run tests to ensure component tests pass
-- Run `/vue-review` before merging Vue code
-- Use `/code-review` for non-Vue-specific concerns on the same PR
+- Chạy lệnh build của project trước nếu build đang hỏng
+- Chạy test để đảm bảo test của component pass
+- Chạy `/vue-review` trước khi merge code Vue
+- Dùng `/code-review` cho các mối quan tâm không đặc thù Vue trên cùng PR
 
-## Related
+## Liên quan
 
 - Agent: `agents/vue-reviewer.md`
-- Companion agent: `agents/typescript-reviewer.md` (run alongside for Vue-related TS/JS)
+- Agent đồng hành: `agents/typescript-reviewer.md` (chạy song song cho TS/JS liên quan đến Vue)
 - Skills: `skills/vue-patterns/`
 - Rules: `rules/vue/`

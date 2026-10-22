@@ -1,96 +1,96 @@
 ---
 name: council
-description: Convene a four-voice council for ambiguous decisions, tradeoffs, and go/no-go calls. Use when multiple valid paths exist and you need structured disagreement before choosing.
+description: Triệu tập một council bốn tiếng nói cho các quyết định mơ hồ, đánh đổi (tradeoff) và go/no-go. Dùng khi tồn tại nhiều con đường hợp lệ và bạn cần sự bất đồng có cấu trúc trước khi chọn.
 metadata:
   origin: ECC
 ---
 
 # Council
 
-Convene four advisors for ambiguous decisions:
-- the in-context Claude voice
-- a Skeptic subagent
-- a Pragmatist subagent
-- a Critic subagent
+Triệu tập bốn cố vấn cho các quyết định mơ hồ:
+- tiếng nói Claude trong context hiện tại
+- một subagent Skeptic
+- một subagent Pragmatist
+- một subagent Critic
 
-This is for **decision-making under ambiguity**, not code review, implementation planning, or architecture design.
+Skill này dành cho **ra quyết định trong điều kiện mơ hồ**, không phải code review, lập kế hoạch triển khai hay thiết kế kiến trúc.
 
-## When to Use
+## Khi nào dùng
 
-Use council when:
-- a decision has multiple credible paths and no obvious winner
-- you need explicit tradeoff surfacing
-- the user asks for second opinions, dissent, or multiple perspectives
-- conversational anchoring is a real risk
-- a go / no-go call would benefit from adversarial challenge
+Dùng council khi:
+- một quyết định có nhiều con đường đáng tin và không có người thắng hiển nhiên
+- bạn cần làm lộ rõ các tradeoff
+- người dùng yêu cầu ý kiến thứ hai, phản biện hoặc nhiều góc nhìn
+- việc bị neo bởi cuộc hội thoại (conversational anchoring) là rủi ro thực sự
+- một quyết định go / no-go sẽ được lợi từ sự thách thức mang tính đối kháng
 
-Examples:
+Ví dụ:
 - monorepo vs polyrepo
-- ship now vs hold for polish
-- feature flag vs full rollout
-- simplify scope vs keep strategic breadth
+- ship ngay vs chờ trau chuốt thêm
+- feature flag vs rollout đầy đủ
+- đơn giản hóa phạm vi vs giữ bề rộng chiến lược
 
-## When NOT to Use
+## Khi nào KHÔNG dùng
 
-| Instead of council | Use |
+| Thay vì council | Dùng |
 | --- | --- |
-| Verifying whether output is correct | `santa-method` |
-| Breaking a feature into implementation steps | `planner` |
-| Designing system architecture | `architect` |
-| Reviewing code for bugs or security | `code-reviewer` or `santa-method` |
-| Straight factual questions | just answer directly |
-| Obvious execution tasks | just do the task |
+| Xác minh output có đúng không | `santa-method` |
+| Chia nhỏ một tính năng thành các bước triển khai | `planner` |
+| Thiết kế kiến trúc hệ thống | `architect` |
+| Review code về bug hoặc bảo mật | `code-reviewer` hoặc `santa-method` |
+| Câu hỏi thực tế đơn giản | cứ trả lời trực tiếp |
+| Tác vụ thực thi hiển nhiên | cứ làm tác vụ đó |
 
-## Roles
+## Vai trò
 
-| Voice | Lens |
+| Tiếng nói | Góc nhìn |
 | --- | --- |
-| Architect | correctness, maintainability, long-term implications |
-| Skeptic | premise challenge, simplification, assumption breaking |
-| Pragmatist | shipping speed, user impact, operational reality |
-| Critic | edge cases, downside risk, failure modes |
+| Architect | tính đúng đắn, khả năng bảo trì, hệ quả dài hạn |
+| Skeptic | thách thức tiền đề, đơn giản hóa, phá vỡ giả định |
+| Pragmatist | tốc độ ship, tác động đến người dùng, thực tế vận hành |
+| Critic | edge case, rủi ro tiêu cực, các failure mode |
 
-The three external voices should be launched as fresh subagents with **only the question and relevant context**, not the full ongoing conversation. That is the anti-anchoring mechanism.
+Ba tiếng nói bên ngoài nên được khởi chạy dưới dạng subagent mới với **chỉ câu hỏi và context liên quan**, không phải toàn bộ cuộc hội thoại đang diễn ra. Đó là cơ chế chống neo (anti-anchoring).
 
 ## Workflow
 
-### 1. Extract the real question
+### 1. Rút ra câu hỏi thực sự
 
-Reduce the decision to one explicit prompt:
-- what are we deciding?
-- what constraints matter?
-- what counts as success?
+Rút gọn quyết định thành một prompt tường minh:
+- chúng ta đang quyết định điều gì?
+- ràng buộc nào quan trọng?
+- thế nào được coi là thành công?
 
-If the question is vague, ask one clarifying question before convening the council.
+Nếu câu hỏi mơ hồ, hãy hỏi một câu làm rõ trước khi triệu tập council.
 
-### 2. Gather only the necessary context
+### 2. Chỉ thu thập context cần thiết
 
-If the decision is codebase-specific:
-- collect the relevant files, snippets, issue text, or metrics
-- keep it compact
-- include only the context needed to make the decision
+Nếu quyết định gắn với codebase cụ thể:
+- thu thập các file, snippet, nội dung issue hoặc metric liên quan
+- giữ nó gọn
+- chỉ đưa vào context cần để ra quyết định
 
-If the decision is strategic/general:
-- skip repo snippets unless they materially change the answer
+Nếu quyết định mang tính chiến lược/tổng quát:
+- bỏ qua các snippet repo trừ khi chúng thay đổi đáng kể câu trả lời
 
-### 3. Form the Architect position first
+### 3. Hình thành lập trường Architect trước
 
-Before reading other voices, write down:
-- your initial position
-- the three strongest reasons for it
-- the main risk in your preferred path
+Trước khi đọc các tiếng nói khác, hãy viết ra:
+- lập trường ban đầu của bạn
+- ba lý do mạnh nhất cho nó
+- rủi ro chính trong con đường bạn ưu tiên
 
-Do this first so the synthesis does not simply mirror the external voices.
+Làm việc này trước để bản tổng hợp không đơn thuần phản chiếu các tiếng nói bên ngoài.
 
-### 4. Launch three independent voices in parallel
+### 4. Khởi chạy ba tiếng nói độc lập song song
 
-Each subagent gets:
-- the decision question
-- compact context if needed
-- a strict role
-- no unnecessary conversation history
+Mỗi subagent nhận được:
+- câu hỏi quyết định
+- context gọn nếu cần
+- một vai trò nghiêm ngặt
+- không có lịch sử hội thoại không cần thiết
 
-Prompt shape:
+Dạng prompt:
 
 ```text
 You are the [ROLE] on a four-voice decision council.
@@ -110,23 +110,23 @@ Respond with:
 Be direct. No hedging. Keep it under 300 words.
 ```
 
-Role emphasis:
-- Skeptic: challenge framing, question assumptions, propose the simplest credible alternative
-- Pragmatist: optimize for speed, simplicity, and real-world execution
-- Critic: surface downside risk, edge cases, and reasons the plan could fail
+Điểm nhấn của từng vai trò:
+- Skeptic: thách thức cách đặt vấn đề, đặt câu hỏi về giả định, đề xuất phương án thay thế đáng tin đơn giản nhất
+- Pragmatist: tối ưu cho tốc độ, sự đơn giản và thực thi trong thế giới thực
+- Critic: làm lộ rủi ro tiêu cực, edge case và những lý do khiến kế hoạch có thể thất bại
 
-### 5. Synthesize with bias guardrails
+### 5. Tổng hợp với các rào chắn chống thiên kiến
 
-You are both a participant and the synthesizer, so use these rules:
-- do not dismiss an external view without explaining why
-- if an external voice changed your recommendation, say so explicitly
-- always include the strongest dissent, even if you reject it
-- if two voices align against your initial position, treat that as a real signal
-- keep the raw positions visible before the verdict
+Bạn vừa là người tham gia vừa là người tổng hợp, vì vậy hãy dùng các quy tắc sau:
+- không bác bỏ một quan điểm bên ngoài mà không giải thích vì sao
+- nếu một tiếng nói bên ngoài đã thay đổi khuyến nghị của bạn, hãy nói rõ điều đó
+- luôn đưa vào phản biện mạnh nhất, ngay cả khi bạn bác bỏ nó
+- nếu hai tiếng nói cùng chống lại lập trường ban đầu của bạn, hãy coi đó là một tín hiệu thực sự
+- giữ các lập trường thô hiển thị trước phần kết luận
 
-### 6. Present a compact verdict
+### 6. Trình bày một kết luận gọn
 
-Use this output shape:
+Dùng dạng output này:
 
 ```markdown
 ## Council: [short decision title]
@@ -150,55 +150,55 @@ Use this output shape:
 - **Recommendation:** [the synthesized path]
 ```
 
-Keep it scannable on a phone screen.
+Giữ cho nó dễ quét trên màn hình điện thoại.
 
-## Persistence Rule
+## Quy tắc lưu trữ (Persistence)
 
-Do **not** write ad-hoc notes to `~/.claude/notes` or other shadow paths from this skill.
+KHÔNG ghi ghi chú ad-hoc vào `~/.claude/notes` hay các đường dẫn bóng (shadow path) khác từ skill này.
 
-If the council materially changes the recommendation:
-- use `knowledge-ops` to store the lesson in the right durable location
-- or use `/save-session` if the outcome belongs in session memory
-- or update the relevant GitHub / Linear issue directly if the decision changes active execution truth
+Nếu council thay đổi đáng kể khuyến nghị:
+- dùng `knowledge-ops` để lưu bài học vào đúng nơi bền vững
+- hoặc dùng `/save-session` nếu kết quả thuộc về bộ nhớ session
+- hoặc cập nhật trực tiếp issue GitHub / Linear liên quan nếu quyết định thay đổi sự thật thực thi đang hoạt động
 
-Only persist a decision when it changes something real.
+Chỉ lưu một quyết định khi nó thay đổi điều gì đó có thật.
 
-## Multi-Round Follow-up
+## Theo dõi nhiều vòng (Multi-Round Follow-up)
 
-Default is one round.
+Mặc định là một vòng.
 
-If the user wants another round:
-- keep the new question focused
-- include the previous verdict only if it is necessary
-- keep the Skeptic as clean as possible to preserve anti-anchoring value
+Nếu người dùng muốn thêm một vòng nữa:
+- giữ câu hỏi mới tập trung
+- chỉ đưa kết luận trước đó vào nếu thật sự cần thiết
+- giữ Skeptic càng "sạch" càng tốt để bảo toàn giá trị chống neo
 
-## Anti-Patterns
+## Anti-Pattern
 
-- using council for code review
-- using council when the task is just implementation work
-- feeding the subagents the entire conversation transcript
-- hiding disagreement in the final verdict
-- persisting every decision as a note regardless of importance
+- dùng council cho code review
+- dùng council khi tác vụ chỉ là công việc triển khai
+- đưa cho các subagent toàn bộ transcript hội thoại
+- che giấu bất đồng trong kết luận cuối cùng
+- lưu mọi quyết định thành ghi chú bất kể mức độ quan trọng
 
-## Related Skills
+## Skill liên quan
 
-- `santa-method` — adversarial verification
-- `knowledge-ops` — persist durable decision deltas correctly
-- `search-first` — gather external reference material before the council if needed
-- `architecture-decision-records` — formalize the outcome when the decision becomes long-lived system policy
+- `santa-method` — xác minh mang tính đối kháng
+- `knowledge-ops` — lưu đúng các delta quyết định bền vững
+- `search-first` — thu thập tài liệu tham khảo bên ngoài trước council nếu cần
+- `architecture-decision-records` — chính thức hóa kết quả khi quyết định trở thành chính sách hệ thống dài hạn
 
-## Example
+## Ví dụ
 
-Question:
+Câu hỏi:
 
 ```text
 Should we ship ECC 2.0 as alpha now, or hold until the control-plane UI is more complete?
 ```
 
-Likely council shape:
-- Architect pushes for structural integrity and avoiding a confused surface
-- Skeptic questions whether the UI is actually the gating factor
-- Pragmatist asks what can be shipped now without harming trust
-- Critic focuses on support burden, expectation debt, and rollout confusion
+Dạng council có khả năng xảy ra:
+- Architect đẩy mạnh tính toàn vẹn cấu trúc và tránh một bề mặt gây nhầm lẫn
+- Skeptic đặt câu hỏi liệu UI có thực sự là yếu tố chặn hay không
+- Pragmatist hỏi cái gì có thể ship ngay mà không làm tổn hại niềm tin
+- Critic tập trung vào gánh nặng hỗ trợ, nợ kỳ vọng và sự nhầm lẫn khi rollout
 
-The value is not unanimity. The value is making the disagreement legible before choosing.
+Giá trị không nằm ở sự đồng thuận tuyệt đối. Giá trị nằm ở việc làm cho sự bất đồng trở nên rõ ràng trước khi chọn.

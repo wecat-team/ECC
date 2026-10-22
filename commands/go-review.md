@@ -1,55 +1,55 @@
 ---
-description: Comprehensive Go code review for idiomatic patterns, concurrency safety, error handling, and security. Invokes the go-reviewer agent.
+description: Code review toàn diện cho Go về pattern idiomatic, an toàn đồng thời (concurrency), xử lý lỗi và bảo mật. Gọi agent go-reviewer.
 ---
 
 # Go Code Review
 
-This command invokes the **go-reviewer** agent for comprehensive Go-specific code review.
+Command này gọi agent **go-reviewer** để code review toàn diện dành riêng cho Go.
 
-## What This Command Does
+## Command này làm gì
 
-1. **Identify Go Changes**: Find modified `.go` files via `git diff`
-2. **Run Static Analysis**: Execute `go vet`, `staticcheck`, and `golangci-lint`
-3. **Security Scan**: Check for SQL injection, command injection, race conditions
-4. **Concurrency Review**: Analyze goroutine safety, channel usage, mutex patterns
-5. **Idiomatic Go Check**: Verify code follows Go conventions and best practices
-6. **Generate Report**: Categorize issues by severity
+1. **Xác định thay đổi Go**: Tìm các file `.go` đã sửa qua `git diff`
+2. **Chạy phân tích tĩnh**: Thực thi `go vet`, `staticcheck` và `golangci-lint`
+3. **Quét bảo mật**: Kiểm tra SQL injection, command injection, race condition
+4. **Review concurrency**: Phân tích độ an toàn của goroutine, cách dùng channel, pattern mutex
+5. **Kiểm tra Go idiomatic**: Xác minh code tuân theo quy ước và best practice của Go
+6. **Tạo báo cáo**: Phân loại vấn đề theo mức độ nghiêm trọng
 
-## When to Use
+## Khi nào dùng
 
-Use `/go-review` when:
-- After writing or modifying Go code
-- Before committing Go changes
-- Reviewing pull requests with Go code
-- Onboarding to a new Go codebase
-- Learning idiomatic Go patterns
+Dùng `/go-review` khi:
+- Sau khi viết hoặc sửa code Go
+- Trước khi commit các thay đổi Go
+- Review pull request có code Go
+- Làm quen với một codebase Go mới
+- Học các pattern Go idiomatic
 
-## Review Categories
+## Các nhóm review
 
-### CRITICAL (Must Fix)
-- SQL/Command injection vulnerabilities
-- Race conditions without synchronization
-- Goroutine leaks
-- Hardcoded credentials
-- Unsafe pointer usage
-- Ignored errors in critical paths
+### CRITICAL (PHẢI sửa)
+- Lỗ hổng SQL/Command injection
+- Race condition không có đồng bộ hóa
+- Rò rỉ goroutine
+- Credential bị hardcode
+- Dùng unsafe pointer
+- Bỏ qua lỗi ở các đường dẫn quan trọng
 
-### HIGH (Should Fix)
-- Missing error wrapping with context
-- Panic instead of error returns
-- Context not propagated
-- Unbuffered channels causing deadlocks
-- Interface not satisfied errors
-- Missing mutex protection
+### HIGH (Nên sửa)
+- Thiếu error wrapping kèm context
+- Dùng panic thay vì trả về error
+- Context không được truyền đi
+- Unbuffered channel gây deadlock
+- Lỗi interface không được thỏa mãn
+- Thiếu bảo vệ bằng mutex
 
-### MEDIUM (Consider)
-- Non-idiomatic code patterns
-- Missing godoc comments on exports
-- Inefficient string concatenation
-- Slice not preallocated
-- Table-driven tests not used
+### MEDIUM (Cân nhắc)
+- Pattern code không idiomatic
+- Thiếu godoc comment cho các thành phần export
+- Nối chuỗi kém hiệu quả
+- Slice không được cấp phát trước
+- Không dùng table-driven test
 
-## Automated Checks Run
+## Các kiểm tra tự động được chạy
 
 ```bash
 # Static analysis
@@ -66,7 +66,7 @@ go build -race ./...
 govulncheck ./...
 ```
 
-## Example Usage
+## Ví dụ sử dụng
 
 ```text
 User: /go-review
@@ -127,22 +127,22 @@ return fmt.Errorf("get user %s: %w", userID, err)
 Recommendation: FAIL: Block merge until CRITICAL issue is fixed
 ```
 
-## Approval Criteria
+## Tiêu chí phê duyệt
 
-| Status | Condition |
+| Trạng thái | Điều kiện |
 |--------|-----------|
-| PASS: Approve | No CRITICAL or HIGH issues |
-| WARNING: Warning | Only MEDIUM issues (merge with caution) |
-| FAIL: Block | CRITICAL or HIGH issues found |
+| PASS: Approve | Không có vấn đề CRITICAL hoặc HIGH |
+| WARNING: Warning | Chỉ có vấn đề MEDIUM (merge cần thận trọng) |
+| FAIL: Block | Phát hiện vấn đề CRITICAL hoặc HIGH |
 
-## Integration with Other Commands
+## Tích hợp với các command khác
 
-- Use `/go-test` first to ensure tests pass
-- Use `/go-build` if build errors occur
-- Use `/go-review` before committing
-- Use `/code-review` for non-Go specific concerns
+- Dùng `/go-test` trước để đảm bảo test thành công
+- Dùng `/go-build` nếu có lỗi build
+- Dùng `/go-review` trước khi commit
+- Dùng `/code-review` cho các mối quan tâm không đặc thù của Go
 
-## Related
+## Liên quan
 
 - Agent: `agents/go-reviewer.md`
 - Skills: `skills/golang-patterns/`, `skills/golang-testing/`

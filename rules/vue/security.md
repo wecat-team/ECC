@@ -3,35 +3,35 @@ paths:
   - "**/*.vue"
 ---
 
-# Vue Security
+# Bảo mật Vue
 
-> This file extends [common/security.md](../common/security.md) with Vue specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung riêng cho Vue.
 
-## What Vue Escapes Automatically
+## Những gì Vue tự động escape
 
-- Text interpolation `{{ }}` and dynamic attribute bindings (`:title`) are auto-escaped. The vectors below are NOT protected.
+- Nội suy văn bản `{{ }}` và binding thuộc tính động (`:title`) được tự động escape. Các vector bên dưới KHÔNG được bảo vệ.
 
-## Rule No.1: Templates from Trusted Sources Only
+## Quy tắc số 1: Chỉ dùng template từ nguồn tin cậy
 
-- Never use non-trusted content as a component template. No runtime template compilation from user input.
-- No user-controlled `:is` that resolves a component from an arbitrary string.
+- Không bao giờ dùng nội dung không đáng tin làm template của component. Không biên dịch template lúc runtime từ đầu vào của người dùng.
+- Không dùng `:is` do người dùng kiểm soát để phân giải component từ một chuỗi tùy ý.
 
-## v-html and Render Functions
+## v-html và Render Function
 
-- `v-html` bypasses escaping and is a direct XSS vector. Avoid it on user content.
-- If unavoidable, sanitize with DOMPurify (allowlist config) before binding, or render in a sandboxed iframe. Vue itself recommends sanitizing on the backend before persisting.
-- Render-function and scoped-slot output carry the same risk. Passing user HTML through `h()` with `innerHTML` is `v-html` by another name. Sanitize first.
+- `v-html` bỏ qua việc escape và là vector XSS trực tiếp. Tránh dùng nó trên nội dung của người dùng.
+- Nếu không tránh được, hãy sanitize bằng DOMPurify (cấu hình allowlist) trước khi bind, hoặc render trong iframe sandbox. Chính Vue khuyến nghị sanitize ở backend trước khi lưu.
+- Output của render function và scoped slot mang cùng rủi ro. Truyền HTML của người dùng qua `h()` với `innerHTML` chính là `v-html` dưới một tên khác. Hãy sanitize trước.
 
-## URL, Style, and Event Injection
+## Injection qua URL, Style và Event
 
-- `:href` and `:src` are not escaped. `javascript:` URLs execute. Validate the scheme, allow `http` / `https` / `mailto` only. Vue docs reference `@braintree/sanitize-url`, but sanitize on the backend before persisting.
-- `:style` with user input is unsafe (CSS exfiltration). Use object syntax with whitelisted properties, never a raw user string.
-- Never bind user input to `onclick`, `onfocus`, or any event attribute.
+- `:href` và `:src` không được escape. URL `javascript:` sẽ thực thi. Hãy validate scheme, chỉ cho phép `http` / `https` / `mailto`. Tài liệu Vue tham chiếu `@braintree/sanitize-url`, nhưng hãy sanitize ở backend trước khi lưu.
+- `:style` với đầu vào của người dùng là không an toàn (CSS exfiltration). Dùng cú pháp object với các thuộc tính trong whitelist, không bao giờ dùng chuỗi thô từ người dùng.
+- Không bao giờ bind đầu vào của người dùng vào `onclick`, `onfocus` hay bất kỳ thuộc tính event nào.
 
-## Client Bundle Secrets
+## Secret trong Client Bundle
 
-- Anything in `import.meta.env.VITE_*` ships to the browser. Keep API keys and tokens server-side.
-- Use httpOnly cookies for session tokens. Never bundle credentials into the client.
+- Mọi thứ trong `import.meta.env.VITE_*` đều được gửi tới trình duyệt. Hãy giữ API key và token ở phía server.
+- Dùng cookie httpOnly cho session token. Không bao giờ đóng gói credential vào client.
 
 ```vue
 <!-- unsafe -->
@@ -40,7 +40,7 @@ paths:
 <div v-html="sanitize(userBio)" />
 ```
 
-## Reference
+## Tham chiếu
 
-- ECC skills: `frontend-patterns`, `vite-patterns`.
-- Docs: <https://vuejs.org/guide/best-practices/security.html> · <https://github.com/cure53/DOMPurify> · <https://github.com/braintree/sanitize-url>
+- Skill ECC: `frontend-patterns`, `vite-patterns`.
+- Tài liệu: <https://vuejs.org/guide/best-practices/security.html> · <https://github.com/cure53/DOMPurify> · <https://github.com/braintree/sanitize-url>

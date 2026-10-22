@@ -4,30 +4,30 @@ paths:
   - "**/pubspec.yaml"
   - "**/analysis_options.yaml"
 ---
-# Dart/Flutter Testing
+# Kiểm thử Dart/Flutter
 
-> This file extends [common/testing.md](../common/testing.md) with Dart and Flutter-specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung dành riêng cho Dart và Flutter.
 
 ## Test Framework
 
-- **flutter_test** / **dart:test** — built-in test runner
-- **mockito** (with `@GenerateMocks`) or **mocktail** (no codegen) for mocking
-- **bloc_test** for BLoC/Cubit unit tests
-- **fake_async** for controlling time in unit tests
-- **integration_test** for end-to-end device tests
+- **flutter_test** / **dart:test** — test runner tích hợp sẵn
+- **mockito** (với `@GenerateMocks`) hoặc **mocktail** (không cần codegen) để mock
+- **bloc_test** cho unit test BLoC/Cubit
+- **fake_async** để điều khiển thời gian trong unit test
+- **integration_test** cho test end-to-end trên thiết bị
 
-## Test Types
+## Các loại Test
 
-| Type | Tool | Location | When to Write |
+| Loại | Công cụ | Vị trí | Khi nào viết |
 |------|------|----------|---------------|
-| Unit | `dart:test` | `test/unit/` | All domain logic, state managers, repositories |
-| Widget | `flutter_test` | `test/widget/` | All widgets with meaningful behavior |
-| Golden | `flutter_test` | `test/golden/` | Design-critical UI components |
-| Integration | `integration_test` | `integration_test/` | Critical user flows on real device/emulator |
+| Unit | `dart:test` | `test/unit/` | Toàn bộ domain logic, state manager, repository |
+| Widget | `flutter_test` | `test/widget/` | Mọi widget có hành vi đáng kể |
+| Golden | `flutter_test` | `test/golden/` | Các UI component quan trọng về thiết kế |
+| Integration | `integration_test` | `integration_test/` | Các luồng người dùng quan trọng trên thiết bị thật/emulator |
 
-## Unit Tests: State Managers
+## Unit Test: State Manager
 
-### BLoC with `bloc_test`
+### BLoC với `bloc_test`
 
 ```dart
 group('CartBloc', () {
@@ -58,7 +58,7 @@ group('CartBloc', () {
 });
 ```
 
-### Riverpod with `ProviderContainer`
+### Riverpod với `ProviderContainer`
 
 ```dart
 test('usersProvider loads users from repository', () async {
@@ -72,7 +72,7 @@ test('usersProvider loads users from repository', () async {
 });
 ```
 
-## Widget Tests
+## Widget Test
 
 ```dart
 testWidgets('CartPage shows item count badge', (tester) async {
@@ -103,9 +103,9 @@ testWidgets('shows empty state when cart is empty', (tester) async {
 });
 ```
 
-## Fakes Over Mocks
+## Ưu tiên Fake hơn Mock
 
-Prefer hand-written fakes for complex dependencies:
+Ưu tiên fake viết tay cho các dependency phức tạp:
 
 ```dart
 class FakeUserRepository implements UserRepository {
@@ -141,7 +141,7 @@ class FakeUserRepository implements UserRepository {
 }
 ```
 
-## Async Testing
+## Kiểm thử bất đồng bộ
 
 ```dart
 // Use fake_async for controlling timers and Futures
@@ -159,7 +159,7 @@ test('debounce triggers after 300ms', () {
 });
 ```
 
-## Golden Tests
+## Golden Test
 
 ```dart
 testWidgets('UserCard golden test', (tester) async {
@@ -174,11 +174,11 @@ testWidgets('UserCard golden test', (tester) async {
 });
 ```
 
-Run `flutter test --update-goldens` when intentional visual changes are made.
+Chạy `flutter test --update-goldens` khi có chủ ý thay đổi giao diện.
 
-## Test Naming
+## Đặt tên Test
 
-Use descriptive, behavior-focused names:
+Dùng tên mô tả, tập trung vào hành vi:
 
 ```dart
 test('returns null when user does not exist', () { ... });
@@ -186,7 +186,7 @@ test('throws NotFoundException when id is empty string', () { ... });
 testWidgets('disables submit button while form is invalid', (tester) async { ... });
 ```
 
-## Test Organization
+## Tổ chức Test
 
 ```
 test/
@@ -209,7 +209,7 @@ integration_test/
 
 ## Coverage
 
-- Target 80%+ line coverage for business logic (domain + state managers)
-- All state transitions must have tests: loading → success, loading → error, retry
-- Run `flutter test --coverage` and inspect `lcov.info` with a coverage reporter
-- Coverage failures should block CI when below threshold
+- Mục tiêu line coverage 80%+ cho business logic (domain + state manager)
+- Mọi chuyển đổi state đều phải có test: loading → success, loading → error, retry
+- Chạy `flutter test --coverage` và kiểm tra `lcov.info` bằng một coverage reporter
+- Coverage thấp hơn ngưỡng nên chặn CI

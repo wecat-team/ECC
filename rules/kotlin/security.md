@@ -3,16 +3,16 @@ paths:
   - "**/*.kt"
   - "**/*.kts"
 ---
-# Kotlin Security
+# Bảo mật Kotlin
 
-> This file extends [common/security.md](../common/security.md) with Kotlin and Android/KMP-specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho Kotlin và Android/KMP.
 
-## Secrets Management
+## Quản lý Secret
 
-- Never hardcode API keys, tokens, or credentials in source code
-- Use `local.properties` (git-ignored) for local development secrets
-- Use `BuildConfig` fields generated from CI secrets for release builds
-- Use `EncryptedSharedPreferences` (Android) or Keychain (iOS) for runtime secret storage
+- KHÔNG BAO GIỜ hardcode API key, token hoặc credential trong source code
+- Dùng `local.properties` (được git-ignore) cho secret phát triển cục bộ
+- Dùng các field `BuildConfig` được sinh từ secret của CI cho bản build release
+- Dùng `EncryptedSharedPreferences` (Android) hoặc Keychain (iOS) để lưu secret lúc runtime
 
 ```kotlin
 // BAD
@@ -25,12 +25,12 @@ val apiKey = BuildConfig.API_KEY
 val token = secureStorage.get("auth_token")
 ```
 
-## Network Security
+## Bảo mật mạng
 
-- Use HTTPS exclusively — configure `network_security_config.xml` to block cleartext
-- Pin certificates for sensitive endpoints using OkHttp `CertificatePinner` or Ktor equivalent
-- Set timeouts on all HTTP clients — never leave defaults (which may be infinite)
-- Validate and sanitize all server responses before use
+- Chỉ dùng HTTPS — cấu hình `network_security_config.xml` để chặn cleartext
+- Pin certificate cho các endpoint nhạy cảm bằng OkHttp `CertificatePinner` hoặc tương đương của Ktor
+- Đặt timeout trên mọi HTTP client — không bao giờ để mặc định (có thể là vô hạn)
+- Validate và sanitize mọi response từ server trước khi dùng
 
 ```xml
 <!-- res/xml/network_security_config.xml -->
@@ -39,11 +39,11 @@ val token = secureStorage.get("auth_token")
 </network-security-config>
 ```
 
-## Input Validation
+## Kiểm tra đầu vào (Input Validation)
 
-- Validate all user input before processing or sending to API
-- Use parameterized queries for Room/SQLDelight — never concatenate user input into SQL
-- Sanitize file paths from user input to prevent path traversal
+- Validate mọi input của người dùng trước khi xử lý hoặc gửi tới API
+- Dùng truy vấn tham số hóa cho Room/SQLDelight — KHÔNG BAO GIỜ nối input của người dùng vào SQL
+- Sanitize đường dẫn file từ input của người dùng để ngăn path traversal
 
 ```kotlin
 // BAD — SQL injection
@@ -54,29 +54,29 @@ val token = secureStorage.get("auth_token")
 fun findByName(input: String): List<ItemEntity>
 ```
 
-## Data Protection
+## Bảo vệ dữ liệu
 
-- Use `EncryptedSharedPreferences` for sensitive key-value data on Android
-- Use `@Serializable` with explicit field names — don't leak internal property names
-- Clear sensitive data from memory when no longer needed
-- Use `@Keep` or ProGuard rules for serialized classes to prevent name mangling
+- Dùng `EncryptedSharedPreferences` cho dữ liệu key-value nhạy cảm trên Android
+- Dùng `@Serializable` với tên field tường minh — không làm lộ tên property nội bộ
+- Xóa dữ liệu nhạy cảm khỏi bộ nhớ khi không còn cần
+- Dùng `@Keep` hoặc rule ProGuard cho các class được serialize để tránh bị đổi tên
 
 ## Authentication
 
-- Store tokens in secure storage, not in plain SharedPreferences
-- Implement token refresh with proper 401/403 handling
-- Clear all auth state on logout (tokens, cached user data, cookies)
-- Use biometric authentication (`BiometricPrompt`) for sensitive operations
+- Lưu token trong secure storage, không lưu trong SharedPreferences thường
+- Triển khai refresh token với xử lý 401/403 đúng cách
+- Xóa toàn bộ trạng thái xác thực khi logout (token, dữ liệu người dùng được cache, cookie)
+- Dùng xác thực sinh trắc học (`BiometricPrompt`) cho các thao tác nhạy cảm
 
 ## ProGuard / R8
 
-- Keep rules for all serialized models (`@Serializable`, Gson, Moshi)
-- Keep rules for reflection-based libraries (Koin, Retrofit)
-- Test release builds — obfuscation can break serialization silently
+- Giữ rule (keep rule) cho mọi model được serialize (`@Serializable`, Gson, Moshi)
+- Giữ rule cho các thư viện dựa trên reflection (Koin, Retrofit)
+- Test bản build release — obfuscation có thể làm hỏng serialization một cách âm thầm
 
-## WebView Security
+## Bảo mật WebView
 
-- Disable JavaScript unless explicitly needed: `settings.javaScriptEnabled = false`
-- Validate URLs before loading in WebView
-- Never expose `@JavascriptInterface` methods that access sensitive data
-- Use `WebViewClient.shouldOverrideUrlLoading()` to control navigation
+- Tắt JavaScript trừ khi thực sự cần: `settings.javaScriptEnabled = false`
+- Validate URL trước khi tải trong WebView
+- KHÔNG BAO GIỜ expose các method `@JavascriptInterface` truy cập dữ liệu nhạy cảm
+- Dùng `WebViewClient.shouldOverrideUrlLoading()` để kiểm soát điều hướng

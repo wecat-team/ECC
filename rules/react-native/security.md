@@ -3,41 +3,41 @@ paths:
   - "**/*.ts"
   - "**/*.tsx"
 ---
-# React Native / Expo Security
+# Bảo mật React Native / Expo
 
-> This file extends [common/security.md](../common/security.md) with React Native / Expo specific content.
-> The mandatory pre-commit checklist and Security Response Protocol from common/security.md still apply.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung riêng cho React Native / Expo.
+> Checklist bắt buộc trước khi commit và Security Response Protocol trong common/security.md vẫn được áp dụng.
 
-## The Bundle Is Public
+## Bundle là công khai
 
-Treat everything shipped in the app as readable by an attacker. A mobile binary can be unpacked.
+Hãy coi mọi thứ được đóng gói trong app là kẻ tấn công có thể đọc được. Một binary di động có thể bị giải nén.
 
-- NEVER ship real secrets (private API keys, service-role keys, signing secrets) in the JS bundle or `app.config`.
-- Public/anon keys (e.g. Supabase anon key, Firebase config) are acceptable ONLY when protected by server-side rules (RLS, security rules). Enforce authorization on the backend, never in the client.
-- Keep privileged operations behind your own server / edge functions.
+- KHÔNG BAO GIỜ đưa secret thật (API key riêng tư, service-role key, signing secret) vào JS bundle hoặc `app.config`.
+- Public/anon key (ví dụ Supabase anon key, cấu hình Firebase) chỉ chấp nhận được KHI được bảo vệ bằng rule phía server (RLS, security rule). Thực thi phân quyền (authorization) ở backend, không bao giờ ở client.
+- Giữ các thao tác đặc quyền phía sau server / edge function của riêng bạn.
 
-## Secret & Token Storage
+## Lưu trữ secret và token
 
-- Store auth tokens and sensitive values in `expo-secure-store` (Keychain / Keystore) — never in `AsyncStorage` or plain MMKV.
-- Do not persist secrets in Redux/Zustand state that may be serialized to disk.
+- Lưu auth token và các giá trị nhạy cảm trong `expo-secure-store` (Keychain / Keystore) — không bao giờ lưu trong `AsyncStorage` hay MMKV thuần.
+- Không lưu secret bền vững trong state Redux/Zustand có thể bị serialize xuống đĩa.
 
-## Configuration
+## Cấu hình
 
-- Read environment via `expo-constants` / `app.config.ts` `extra`, and `EXPO_PUBLIC_*` only for genuinely public values.
-- Keep build secrets in EAS secrets, not in the repo.
+- Đọc biến môi trường qua `expo-constants` / `extra` của `app.config.ts`, và chỉ dùng `EXPO_PUBLIC_*` cho các giá trị thực sự công khai.
+- Giữ build secret trong EAS secrets, không để trong repo.
 
-## Network & Data
+## Mạng và dữ liệu
 
-- HTTPS only; reject cleartext. Consider certificate pinning for high-risk apps.
-- Validate ALL external data (API responses, deep-link params, push payloads) with Zod before use.
-- Validate and sanitize deep links and universal links — never route or grant access based on unvalidated params.
+- Chỉ dùng HTTPS; từ chối cleartext. Cân nhắc certificate pinning cho các app rủi ro cao.
+- Kiểm tra (validate) TOÀN BỘ dữ liệu bên ngoài (API response, tham số deep link, push payload) bằng Zod trước khi dùng.
+- Kiểm tra và làm sạch (sanitize) deep link và universal link — không bao giờ điều hướng hay cấp quyền truy cập dựa trên tham số chưa được kiểm tra.
 
-## Permissions & Privacy
+## Quyền và quyền riêng tư
 
-- Request the minimum device permissions, at the moment they are needed, with clear rationale.
-- Declare data collection accurately for App Store / Play Store privacy disclosures.
+- Chỉ yêu cầu quyền thiết bị tối thiểu, vào đúng thời điểm cần, kèm lý do rõ ràng.
+- Khai báo việc thu thập dữ liệu chính xác cho phần công bố quyền riêng tư trên App Store / Play Store.
 
-## Dependencies
+## Dependency
 
-- Run `expo-doctor` and `npm audit` regularly; keep the Expo SDK and native deps current.
-- Use `/security-scan` (AgentShield) on the agent configuration itself.
+- Chạy `expo-doctor` và `npm audit` thường xuyên; giữ Expo SDK và các dependency native luôn cập nhật.
+- Dùng `/security-scan` (AgentShield) trên chính cấu hình agent.

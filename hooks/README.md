@@ -1,34 +1,34 @@
 # Hooks
 
-Hooks are event-driven automations that fire before or after Claude Code tool executions. They enforce code quality, catch mistakes early, and automate repetitive checks.
+Hook là các tự động hóa hướng sự kiện, kích hoạt trước hoặc sau khi Claude Code thực thi tool. Chúng thực thi chất lượng code, bắt lỗi sớm và tự động hóa các kiểm tra lặp đi lặp lại.
 
-## How Hooks Work
+## Hook hoạt động như thế nào
 
 ```
 User request → Claude picks a tool → PreToolUse hook runs → Tool executes → PostToolUse hook runs
 ```
 
-- **PreToolUse** hooks run before the tool executes. They can **block** (exit code 2) or **warn** (stderr without blocking).
-- **PostToolUse** hooks run after the tool completes. They can analyze output and return feedback before Claude continues.
-- **UserPromptSubmit** hooks run before Claude processes a user prompt.
-- **Stop** hooks run after each Claude response.
-- **SessionStart/SessionEnd** hooks run at session lifecycle boundaries.
-- **PreCompact** hooks run before context compaction, useful for saving state.
+- Hook **PreToolUse** chạy trước khi tool thực thi. Chúng có thể **chặn** (exit code 2) hoặc **cảnh báo** (stderr mà không chặn).
+- Hook **PostToolUse** chạy sau khi tool hoàn tất. Chúng có thể phân tích đầu ra và trả về phản hồi trước khi Claude tiếp tục.
+- Hook **UserPromptSubmit** chạy trước khi Claude xử lý prompt của người dùng.
+- Hook **Stop** chạy sau mỗi phản hồi của Claude.
+- Hook **SessionStart/SessionEnd** chạy tại các ranh giới vòng đời của session.
+- Hook **PreCompact** chạy trước khi nén context (context compaction), hữu ích để lưu trạng thái.
 
-## Hooks in This Plugin
+## Hook trong Plugin này
 
-Memory persistence lifecycle definitions live in `hooks/memory-persistence/`.
-The executable hook graph remains `hooks/hooks.json`; the memory persistence directory is the stable contract for SessionStart, PreCompact, observation, activity tracking, and SessionEnd behavior.
+Các định nghĩa lifecycle của memory persistence nằm trong `hooks/memory-persistence/`.
+Hook graph thực thi vẫn là `hooks/hooks.json`; thư mục memory persistence là hợp đồng ổn định cho hành vi SessionStart, PreCompact, observation, activity tracking và SessionEnd.
 
-Stable hook IDs and descriptions live in `hooks/hooks.metadata.json`, aligned by event and index with `hooks/hooks.json`. Claude Code validates a plugin's `hooks.json` against its own schema and reports any other key (`$schema`, `id`, `description`) as unknown at load time, so `hooks.json` carries only what the harness accepts. ECC's installer, validator, and dashboard merge the sidecar back in through `scripts/lib/hooks-config.js`; `node scripts/ci/validate-hooks.js` fails if the two files drift apart, and `node scripts/ci/check-hooks-schema-keys.js` fails if `hooks.json` or `hooks/codex-hooks.json` carry any key outside their loader's documented set.
+Các ID và mô tả hook ổn định nằm trong `hooks/hooks.metadata.json`, được căn theo event và chỉ số với `hooks/hooks.json`. Claude Code kiểm tra `hooks.json` của plugin theo schema của chính nó và báo mọi key khác (`$schema`, `id`, `description`) là không xác định lúc load, vì vậy `hooks.json` chỉ chứa những gì harness chấp nhận. Trình cài đặt, validator và dashboard của ECC gộp sidecar trở lại thông qua `scripts/lib/hooks-config.js`; `node scripts/ci/validate-hooks.js` thất bại nếu hai file lệch nhau, và `node scripts/ci/check-hooks-schema-keys.js` thất bại nếu `hooks.json` hoặc `hooks/codex-hooks.json` mang bất kỳ key nào ngoài tập đã được tài liệu hóa của loader tương ứng.
 
-Each sidecar entry also carries a `fingerprint` of the matcher entry it describes (matcher plus hook commands), so reordering `hooks.json` without reordering the sidecar, or editing a command without updating the sidecar, is caught rather than silently swapping IDs. When reordering hooks, move the matching sidecar entries first. Then run `node scripts/ci/validate-hooks.js --update-fingerprints` to refresh changed commands and commit both files. The updater rejects known fingerprints at different positions and writes only after validation succeeds.
+Mỗi mục sidecar cũng mang một `fingerprint` của mục matcher mà nó mô tả (matcher cộng với các hook command), vì vậy việc sắp xếp lại `hooks.json` mà không sắp xếp lại sidecar, hoặc sửa một command mà không cập nhật sidecar, sẽ bị phát hiện thay vì âm thầm hoán đổi ID. Khi sắp xếp lại hook, hãy di chuyển các mục sidecar tương ứng trước. Sau đó chạy `node scripts/ci/validate-hooks.js --update-fingerprints` để làm mới các command đã thay đổi và commit cả hai file. Trình cập nhật từ chối các fingerprint đã biết ở vị trí khác và chỉ ghi sau khi validation thành công.
 
-## Installing These Hooks Manually
+## Cài đặt các Hook này thủ công
 
-For Claude Code manual installs, do not paste the raw repo `hooks.json` into `~/.claude/settings.json` or copy it directly into `~/.claude/hooks/hooks.json`. The checked-in file is plugin/repo-oriented and is meant to be installed through the ECC installer or loaded as a plugin.
+Với bản cài thủ công Claude Code, KHÔNG dán nguyên `hooks.json` thô của repo vào `~/.claude/settings.json` hoặc sao chép trực tiếp vào `~/.claude/hooks/hooks.json`. File được check in hướng tới plugin/repo và được thiết kế để cài qua trình cài đặt ECC hoặc load như một plugin.
 
-Use the installer instead so hook commands are rewritten against your actual Claude root:
+Hãy dùng trình cài đặt để các hook command được viết lại theo Claude root thực tế của bạn:
 
 ```bash
 bash ./install.sh --target claude --modules hooks-runtime --enable-hooks
@@ -38,58 +38,58 @@ bash ./install.sh --target claude --modules hooks-runtime --enable-hooks
 pwsh -File .\install.ps1 --target claude --modules hooks-runtime --enable-hooks
 ```
 
-That installs the hook scripts under `~/.claude/` and registers the resolved
-hook entries in `~/.claude/settings.json`. Existing user settings and hook
-entries are preserved, while ECC-owned entries are tracked by stable ID for
-idempotent updates and safe uninstall. On Windows, the Claude config root is
+Việc này cài các hook script dưới `~/.claude/` và đăng ký các hook entry đã được resolve
+trong `~/.claude/settings.json`. Cài đặt và hook entry hiện có của người dùng được giữ nguyên,
+trong khi các entry do ECC sở hữu được theo dõi bằng ID ổn định để cập nhật
+idempotent và gỡ cài đặt an toàn. Trên Windows, Claude config root là
 `%USERPROFILE%\.claude`.
 
-### PreToolUse Hooks
+### Hook PreToolUse
 
-| Hook | Matcher | Behavior | Exit Code |
+| Hook | Matcher | Hành vi | Exit Code |
 |------|---------|----------|-----------|
-| **Dev server blocker** | `Bash` | Blocks `npm run dev` etc. outside tmux — ensures log access | 2 (blocks) |
-| **Tmux reminder** | `Bash` | Suggests tmux for long-running commands (npm test, cargo build, docker) | 0 (warns) |
-| **Git push reminder** | `Bash` | Reminds to review changes before `git push` | 0 (warns) |
-| **Pre-commit quality check** | `Bash` | Runs quality checks before `git commit`: lints staged files, validates commit message format when provided via `-m/--message`, detects console.log/debugger/secrets | 2 (blocks critical) / 0 (warns) |
-| **Doc file warning** | `Write` | Warns about non-standard `.md`/`.txt` files (allows README, CLAUDE, CONTRIBUTING, CHANGELOG, LICENSE, SKILL, docs/, skills/); cross-platform path handling | 0 (warns) |
-| **Strategic compact** | `Edit\|Write` | Suggests manual `/compact` at logical intervals (every ~50 tool calls) | 0 (warns) |
-| **Hookify runtime** | `.*` | Evaluates enabled project-local Hookify rules before shell and file tools | 0 (structured warn/block decision) |
+| **Dev server blocker** | `Bash` | Chặn `npm run dev` v.v. bên ngoài tmux — đảm bảo truy cập được log | 2 (chặn) |
+| **Tmux reminder** | `Bash` | Gợi ý dùng tmux cho các lệnh chạy lâu (npm test, cargo build, docker) | 0 (cảnh báo) |
+| **Git push reminder** | `Bash` | Nhắc review thay đổi trước `git push` | 0 (cảnh báo) |
+| **Pre-commit quality check** | `Bash` | Chạy kiểm tra chất lượng trước `git commit`: lint các file đã stage, kiểm tra định dạng commit message khi được truyền qua `-m/--message`, phát hiện console.log/debugger/secret | 2 (chặn lỗi critical) / 0 (cảnh báo) |
+| **Doc file warning** | `Write` | Cảnh báo về các file `.md`/`.txt` không chuẩn (cho phép README, CLAUDE, CONTRIBUTING, CHANGELOG, LICENSE, SKILL, docs/, skills/); xử lý đường dẫn đa nền tảng | 0 (cảnh báo) |
+| **Strategic compact** | `Edit\|Write` | Gợi ý `/compact` thủ công tại các khoảng hợp lý (khoảng mỗi ~50 lần gọi tool) | 0 (cảnh báo) |
+| **Hookify runtime** | `.*` | Đánh giá các rule Hookify cục bộ của project đã bật trước các tool shell và file | 0 (quyết định warn/block có cấu trúc) |
 
-### PostToolUse Hooks
+### Hook PostToolUse
 
-| Hook | Matcher | What It Does |
+| Hook | Matcher | Nó làm gì |
 |------|---------|-------------|
-| **PR logger** | `Bash` | Logs PR URL and review command after `gh pr create` |
-| **Build analysis** | `Bash` | Background analysis after build commands (async, non-blocking) |
-| **Quality gate** | `Edit\|Write\|MultiEdit` | Runs fast quality checks after edits |
-| **Design quality check** | `Edit\|Write\|MultiEdit` | Warns when frontend edits drift toward generic template-looking UI |
-| **Prettier format** | `Edit` | Auto-formats JS/TS files with Prettier after edits |
-| **TypeScript check** | `Edit` | Runs `tsc --noEmit` after editing `.ts`/`.tsx` files |
-| **console.log warning** | `Edit` | Warns about `console.log` statements in edited files |
-| **Hookify runtime** | `.*` | Evaluates project-local Hookify rules against completed shell and file tools |
+| **PR logger** | `Bash` | Ghi log URL của PR và lệnh review sau `gh pr create` |
+| **Build analysis** | `Bash` | Phân tích nền sau các lệnh build (async, không chặn) |
+| **Quality gate** | `Edit\|Write\|MultiEdit` | Chạy các kiểm tra chất lượng nhanh sau khi chỉnh sửa |
+| **Design quality check** | `Edit\|Write\|MultiEdit` | Cảnh báo khi các chỉnh sửa frontend trôi về UI giống template chung chung |
+| **Prettier format** | `Edit` | Tự động format file JS/TS bằng Prettier sau khi chỉnh sửa |
+| **TypeScript check** | `Edit` | Chạy `tsc --noEmit` sau khi sửa file `.ts`/`.tsx` |
+| **console.log warning** | `Edit` | Cảnh báo về các câu lệnh `console.log` trong file đã sửa |
+| **Hookify runtime** | `.*` | Đánh giá các rule Hookify cục bộ của project trên các tool shell và file đã hoàn tất |
 
-### Lifecycle Hooks
+### Hook Lifecycle
 
-| Hook | Event | What It Does |
+| Hook | Event | Nó làm gì |
 |------|-------|-------------|
-| **Session start** | `SessionStart` | Loads previous context and detects package manager |
-| **Hookify prompt rules** | `UserPromptSubmit` | Evaluates prompt rules before the user prompt reaches Claude |
-| **Plan Canvas sessions** | `SessionStart` | Surfaces open Plan Canvas browser reviews so a fresh session can resume the loop |
-| **Pre-compact** | `PreCompact` | Saves state before context compaction |
-| **Hookify completion rules** | `Stop` | Warns or requests another turn when an enabled completion rule matches |
-| **Console.log audit** | `Stop` | Checks all modified files for `console.log` after each response |
-| **Session summary** | `Stop` | Persists session state when transcript path is available |
-| **Pattern extraction** | `Stop` | Evaluates session for extractable patterns (continuous learning) |
-| **Cost tracker** | `Stop` | Emits lightweight run-cost telemetry markers |
-| **Desktop notify** | `Stop` | Sends macOS desktop notification with task summary (standard+) |
-| **Session end marker** | `SessionEnd` | Lifecycle marker and cleanup log |
+| **Session start** | `SessionStart` | Tải context trước đó và phát hiện package manager |
+| **Hookify prompt rules** | `UserPromptSubmit` | Đánh giá các prompt rule trước khi prompt của người dùng đến Claude |
+| **Plan Canvas sessions** | `SessionStart` | Hiển thị các review Plan Canvas đang mở trên trình duyệt để session mới có thể tiếp tục vòng lặp |
+| **Pre-compact** | `PreCompact` | Lưu trạng thái trước khi nén context |
+| **Hookify completion rules** | `Stop` | Cảnh báo hoặc yêu cầu thêm một lượt khi một completion rule đã bật khớp |
+| **Console.log audit** | `Stop` | Kiểm tra tất cả file đã sửa về `console.log` sau mỗi phản hồi |
+| **Session summary** | `Stop` | Lưu trạng thái session khi có đường dẫn transcript |
+| **Pattern extraction** | `Stop` | Đánh giá session để tìm các pattern có thể trích xuất (continuous learning) |
+| **Cost tracker** | `Stop` | Phát ra các marker telemetry chi phí chạy gọn nhẹ |
+| **Desktop notify** | `Stop` | Gửi thông báo desktop macOS kèm tóm tắt task (standard+) |
+| **Session end marker** | `SessionEnd` | Marker lifecycle và log dọn dẹp |
 
-## Customizing Hooks
+## Tùy chỉnh Hook
 
-### Disabling a Hook
+### Tắt một Hook
 
-Remove or comment out the hook entry in `hooks.json`. If installed as a plugin, override in your `~/.claude/settings.json`:
+Xóa hoặc comment out hook entry trong `hooks.json`. Nếu cài dưới dạng plugin, hãy ghi đè trong `~/.claude/settings.json` của bạn:
 
 ```json
 {
@@ -105,9 +105,9 @@ Remove or comment out the hook entry in `hooks.json`. If installed as a plugin, 
 }
 ```
 
-### Runtime Hook Controls (Recommended)
+### Điều khiển Hook lúc runtime (Khuyến nghị)
 
-Use environment variables to control hook behavior without editing `hooks.json`:
+Dùng biến môi trường để điều khiển hành vi hook mà không cần sửa `hooks.json`:
 
 ```bash
 # Master switch. Explicit environment values override plugin preferences.
@@ -150,46 +150,46 @@ Windows PowerShell:
 [Environment]::SetEnvironmentVariable('ECC_CONTEXT_MONITOR_COST_WARNINGS', 'off', 'User')
 ```
 
-Claude setup-only value:
-- `off` — disables local ECC hook work through `ecc setup`; it is not a runtime hook profile.
+Giá trị chỉ dùng cho thiết lập Claude:
+- `off` — tắt công việc hook ECC cục bộ thông qua `ecc setup`; nó không phải là một runtime hook profile.
 
-Runtime hook profiles:
-- `minimal` — keep essential lifecycle and safety hooks only.
-- `standard` — default; balanced quality + safety checks.
-- `strict` — enables additional reminders and stricter guardrails.
+Các runtime hook profile:
+- `minimal` — chỉ giữ các hook lifecycle và an toàn thiết yếu.
+- `standard` — mặc định; cân bằng giữa các kiểm tra chất lượng + an toàn.
+- `strict` — bật thêm các lời nhắc bổ sung và guardrail chặt chẽ hơn.
 
-The Claude plugin exposes the same choices as the personal `hooks_enabled` and
-`hook_profile` settings. Run `ecc setup --mode claude-plugin` to install or
-update the plugin and change those preferences.
+Plugin Claude cung cấp các lựa chọn tương tự dưới dạng cài đặt cá nhân `hooks_enabled` và
+`hook_profile`. Chạy `ecc setup --mode claude-plugin` để cài đặt hoặc
+cập nhật plugin và thay đổi các tùy chọn đó.
 
-### Hookify Rule Runtime
+### Runtime Hookify Rule
 
-ECC loads enabled `.claude/hookify.*.local.md` files directly; no separate
-Hookify plugin or Python runtime is required. Rules support `bash`, `file`,
-`prompt`, `stop`, and `all` events, plus either a simple regex `pattern` or an
-AND-combined `conditions` list. `warn` adds visible context for Claude while
-allowing the action. `block` denies a matching `PreToolUse` call and uses the
-event's blocking decision contract for prompt, post-tool, and stop events.
+ECC load trực tiếp các file `.claude/hookify.*.local.md` đã bật; không cần
+plugin Hookify riêng hay Python runtime. Rule hỗ trợ các event `bash`, `file`,
+`prompt`, `stop` và `all`, cùng với một `pattern` regex đơn giản hoặc một danh sách
+`conditions` kết hợp bằng AND. `warn` thêm context hiển thị cho Claude trong khi
+vẫn cho phép hành động. `block` từ chối một lệnh gọi `PreToolUse` khớp và dùng
+hợp đồng quyết định chặn của event cho các event prompt, post-tool và stop.
 
-Rule loading is project-scoped and bounded. Symlinked, oversized, malformed,
-or unsafe-regex rule files are skipped with a diagnostic instead of breaking
-the entire hook chain. Every regex evaluation also has a 25 ms hard timeout.
-Stop rules ignore `stop_hook_active: true` to avoid continuation loops.
+Việc load rule bị giới hạn theo project và có biên. Các file rule là symlink, quá lớn, sai định dạng
+hoặc có regex không an toàn sẽ bị bỏ qua kèm chẩn đoán thay vì làm hỏng
+toàn bộ chuỗi hook. Mỗi lần đánh giá regex cũng có timeout cứng 25 ms.
+Các stop rule bỏ qua `stop_hook_active: true` để tránh vòng lặp tiếp diễn.
 
-Files tracked by Git are disabled by default because opening a repository must
-not activate repository-authored instructions. Locally created, gitignored
-rules continue to work automatically. To review and explicitly trust tracked
-rules, set `ECC_HOOKIFY_ALLOW_TRACKED=1`; messages are still labeled as
-untrusted local rule data when passed to Claude.
+Các file được Git theo dõi bị tắt theo mặc định vì việc mở một repository không
+được kích hoạt các chỉ dẫn do repository tác giả viết. Các rule được tạo cục bộ, bị gitignore
+vẫn tiếp tục hoạt động tự động. Để review và tin cậy tường minh các rule được theo dõi,
+đặt `ECC_HOOKIFY_ALLOW_TRACKED=1`; các message vẫn được gắn nhãn là
+dữ liệu rule cục bộ không tin cậy khi được truyền cho Claude.
 
-### Writing Your Own Hook
+### Viết Hook của riêng bạn
 
-Hooks are shell commands that receive tool input as JSON on stdin. A hook with
-no decision or context to return should leave stdout empty. Only explicit hook
-output, such as a deny decision or `additionalContext`, should be written to
-stdout; the input payload must not be echoed as a no-op response.
+Hook là các shell command nhận đầu vào của tool dưới dạng JSON trên stdin. Một hook
+không có quyết định hay context nào để trả về thì nên để stdout rỗng. Chỉ đầu ra hook tường minh,
+như quyết định deny hoặc `additionalContext`, mới được ghi ra
+stdout; payload đầu vào KHÔNG ĐƯỢC echo lại như một phản hồi no-op.
 
-**Basic structure:**
+**Cấu trúc cơ bản:**
 
 ```javascript
 // my-hook.js
@@ -213,12 +213,12 @@ process.stdin.on('end', () => {
 });
 ```
 
-**Exit codes:**
-- `0` — Success (continue execution)
-- `2` — Block the tool call (PreToolUse only)
-- Other non-zero — Error (logged but does not block)
+**Exit code:**
+- `0` — Thành công (tiếp tục thực thi)
+- `2` — Chặn lệnh gọi tool (chỉ PreToolUse)
+- Các giá trị khác không phải 0 — Lỗi (được log nhưng không chặn)
 
-### Hook Input Schema
+### Schema đầu vào của Hook
 
 ```typescript
 interface HookInput {
@@ -236,9 +236,9 @@ interface HookInput {
 }
 ```
 
-### Async Hooks
+### Hook bất đồng bộ
 
-For hooks that should not block the main flow (e.g., background analysis):
+Với các hook không nên chặn luồng chính (ví dụ: phân tích nền):
 
 ```json
 {
@@ -249,11 +249,11 @@ For hooks that should not block the main flow (e.g., background analysis):
 }
 ```
 
-Async hooks run in the background. They cannot block tool execution.
+Hook bất đồng bộ chạy ở nền. Chúng không thể chặn việc thực thi tool.
 
-## Common Hook Recipes
+## Các công thức Hook phổ biến
 
-### Warn about TODO comments
+### Cảnh báo về comment TODO
 
 ```json
 {
@@ -266,7 +266,7 @@ Async hooks run in the background. They cannot block tool execution.
 }
 ```
 
-### Block large file creation
+### Chặn việc tạo file lớn
 
 ```json
 {
@@ -279,7 +279,7 @@ Async hooks run in the background. They cannot block tool execution.
 }
 ```
 
-### Auto-format Python files with ruff
+### Tự động format file Python bằng ruff
 
 ```json
 {
@@ -292,7 +292,7 @@ Async hooks run in the background. They cannot block tool execution.
 }
 ```
 
-### Require test files alongside new source files
+### Yêu cầu file test đi kèm các file source mới
 
 ```json
 {
@@ -305,12 +305,12 @@ Async hooks run in the background. They cannot block tool execution.
 }
 ```
 
-## Cross-Platform Notes
+## Ghi chú đa nền tảng
 
-Hook logic is implemented in Node.js scripts for cross-platform behavior on Windows, macOS, and Linux. The continuous-learning observer is exposed as a Node-mode hook and delegates to its existing `observe.sh` implementation through a profile-gated runner with Windows-safe fallback behavior.
+Logic hook được triển khai trong các script Node.js để hoạt động đa nền tảng trên Windows, macOS và Linux. Observer của continuous-learning được cung cấp dưới dạng hook chế độ Node và ủy quyền cho triển khai `observe.sh` hiện có thông qua một runner được kiểm soát theo profile với hành vi fallback an toàn cho Windows.
 
-## Related
+## Liên quan
 
-- [rules/common/hooks.md](../rules/common/hooks.md) — Hook architecture guidelines
-- [skills/strategic-compact/](../skills/strategic-compact/) — Strategic compaction skill
-- [scripts/hooks/](../scripts/hooks/) — Hook script implementations
+- [rules/common/hooks.md](../rules/common/hooks.md) — Hướng dẫn kiến trúc hook
+- [skills/strategic-compact/](../skills/strategic-compact/) — Skill strategic compaction
+- [scripts/hooks/](../scripts/hooks/) — Các triển khai hook script

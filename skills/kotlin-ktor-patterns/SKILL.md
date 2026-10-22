@@ -1,26 +1,26 @@
 ---
 name: kotlin-ktor-patterns
-description: Ktor server patterns including routing DSL, plugins, authentication, Koin DI, kotlinx.serialization, WebSockets, and testApplication testing. Use when building a Ktor server — routing, plugins, auth, DI, serialization, or tests.
+description: "Các pattern Ktor server bao gồm routing DSL, plugin, authentication, Koin DI, kotlinx.serialization, WebSockets và testing với testApplication. Dùng khi xây dựng Ktor server — routing, plugin, auth, DI, serialization hoặc test."
 metadata:
   origin: ECC
 ---
 
-# Ktor Server Patterns
+# Các pattern Ktor Server
 
-Comprehensive Ktor patterns for building robust, maintainable HTTP servers with Kotlin coroutines.
+Các pattern Ktor toàn diện để xây dựng HTTP server vững chắc, dễ bảo trì với Kotlin coroutines.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Building Ktor HTTP servers
-- Configuring Ktor plugins (Auth, CORS, ContentNegotiation, StatusPages)
-- Implementing REST APIs with Ktor
-- Setting up dependency injection with Koin
-- Writing Ktor integration tests with testApplication
-- Working with WebSockets in Ktor
+- Xây dựng Ktor HTTP server
+- Cấu hình các plugin Ktor (Auth, CORS, ContentNegotiation, StatusPages)
+- Triển khai REST API với Ktor
+- Thiết lập dependency injection với Koin
+- Viết integration test cho Ktor với testApplication
+- Làm việc với WebSockets trong Ktor
 
-## Application Structure
+## Cấu trúc ứng dụng
 
-### Standard Ktor Project Layout
+### Bố cục dự án Ktor tiêu chuẩn
 
 ```text
 src/main/kotlin/
@@ -55,7 +55,7 @@ src/test/kotlin/
 │       └── UserServiceTest.kt
 ```
 
-### Application Entry Point
+### Điểm vào của ứng dụng (Entry Point)
 
 ```kotlin
 // Application.kt
@@ -75,7 +75,7 @@ fun Application.module() {
 
 ## Routing DSL
 
-### Basic Routes
+### Route cơ bản
 
 ```kotlin
 // plugins/Routing.kt
@@ -131,7 +131,7 @@ fun Route.userRoutes() {
 }
 ```
 
-### Route Organization with Authenticated Routes
+### Tổ chức Route với Authenticated Route
 
 ```kotlin
 fun Route.userRoutes() {
@@ -152,7 +152,7 @@ fun Route.userRoutes() {
 
 ## Content Negotiation & Serialization
 
-### kotlinx.serialization Setup
+### Thiết lập kotlinx.serialization
 
 ```kotlin
 // plugins/Serialization.kt
@@ -169,7 +169,7 @@ fun Application.configureSerialization() {
 }
 ```
 
-### Serializable Models
+### Model có thể Serialize
 
 ```kotlin
 @Serializable
@@ -210,7 +210,7 @@ data class PaginatedResponse<T>(
 )
 ```
 
-### Custom Serializers
+### Serializer tùy chỉnh
 
 ```kotlin
 object InstantSerializer : KSerializer<Instant> {
@@ -266,7 +266,7 @@ fun ApplicationCall.userId(): String =
         ?: throw AuthenticationException("No userId in token")
 ```
 
-### Auth Routes
+### Auth Route
 
 ```kotlin
 fun Route.authRoutes() {
@@ -300,7 +300,7 @@ fun Route.authRoutes() {
 }
 ```
 
-## Status Pages (Error Handling)
+## Status Pages (Xử lý lỗi)
 
 ```kotlin
 // plugins/StatusPages.kt
@@ -356,7 +356,7 @@ fun Application.configureStatusPages() {
 }
 ```
 
-## CORS Configuration
+## Cấu hình CORS
 
 ```kotlin
 // plugins/CORS.kt
@@ -377,7 +377,7 @@ fun Application.configureCORS() {
 
 ## Koin Dependency Injection
 
-### Module Definition
+### Định nghĩa Module
 
 ```kotlin
 // di/AppModule.kt
@@ -403,7 +403,7 @@ fun Application.configureDI() {
 }
 ```
 
-### Using Koin in Routes
+### Dùng Koin trong Route
 
 ```kotlin
 fun Route.userRoutes() {
@@ -418,7 +418,7 @@ fun Route.userRoutes() {
 }
 ```
 
-### Koin for Testing
+### Koin cho Testing
 
 ```kotlin
 class UserServiceTest : FunSpec(), KoinTest {
@@ -519,9 +519,9 @@ data class Connection(val session: DefaultWebSocketSession) {
 }
 ```
 
-## testApplication Testing
+## Testing với testApplication
 
-### Basic Route Testing
+### Test Route cơ bản
 
 ```kotlin
 class UserRoutesTest : FunSpec({
@@ -583,7 +583,7 @@ class UserRoutesTest : FunSpec({
 })
 ```
 
-### Testing Authenticated Routes
+### Test Authenticated Route
 
 ```kotlin
 class AuthenticatedRoutesTest : FunSpec({
@@ -632,7 +632,7 @@ class AuthenticatedRoutesTest : FunSpec({
 })
 ```
 
-## Configuration
+## Cấu hình (Configuration)
 
 ### application.yaml
 
@@ -656,7 +656,7 @@ database:
   maxPoolSize: 10
 ```
 
-### Reading Config
+### Đọc Config
 
 ```kotlin
 fun Application.configureDI() {
@@ -673,18 +673,18 @@ fun Application.configureDI() {
 }
 ```
 
-## Quick Reference: Ktor Patterns
+## Tham khảo nhanh: Các pattern Ktor
 
-| Pattern | Description |
+| Pattern | Mô tả |
 |---------|-------------|
-| `route("/path") { get { } }` | Route grouping with DSL |
+| `route("/path") { get { } }` | Nhóm route bằng DSL |
 | `call.receive<T>()` | Deserialize request body |
-| `call.respond(status, body)` | Send response with status |
-| `call.parameters["id"]` | Read path parameters |
-| `call.request.queryParameters["q"]` | Read query parameters |
-| `install(Plugin) { }` | Install and configure plugin |
-| `authenticate("name") { }` | Protect routes with auth |
+| `call.respond(status, body)` | Gửi response kèm status |
+| `call.parameters["id"]` | Đọc path parameter |
+| `call.request.queryParameters["q"]` | Đọc query parameter |
+| `install(Plugin) { }` | Cài đặt và cấu hình plugin |
+| `authenticate("name") { }` | Bảo vệ route bằng auth |
 | `by inject<T>()` | Koin dependency injection |
-| `testApplication { }` | Integration testing |
+| `testApplication { }` | Integration test |
 
-**Remember**: Ktor is designed around Kotlin coroutines and DSLs. Keep routes thin, push logic to services, and use Koin for dependency injection. Test with `testApplication` for full integration coverage.
+**Hãy nhớ**: Ktor được thiết kế xoay quanh Kotlin coroutines và DSL. Giữ route mỏng, đẩy logic vào service, và dùng Koin cho dependency injection. Test bằng `testApplication` để bao phủ integration đầy đủ.

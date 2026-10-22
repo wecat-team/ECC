@@ -1,30 +1,30 @@
 ---
-description: Create a multi-model (Codex + Antigravity) implementation plan without modifying production code. Requires the external ccg-workflow runtime, not part of the base ECC install (see Prerequisite below). Use when the user explicitly wants dual-model plan drafts; for a single-model plan with no extra runtime use /plan.
+description: Tạo kế hoạch triển khai đa model (Codex + Antigravity) mà không sửa code production. Yêu cầu runtime ccg-workflow bên ngoài, không nằm trong bản cài ECC cơ bản (xem Điều kiện tiên quyết bên dưới). Dùng khi người dùng tường minh muốn có bản nháp kế hoạch từ hai model; với kế hoạch đơn model không cần runtime bổ sung hãy dùng /plan.
 ---
 
-# Plan - Multi-Model Collaborative Planning
+# Plan - Lập kế hoạch cộng tác đa model
 
-Multi-model collaborative planning - Context retrieval + Dual-model analysis → Generate step-by-step implementation plan.
+Lập kế hoạch cộng tác đa model - Truy xuất context + Phân tích hai model → Sinh kế hoạch triển khai từng bước.
 
-> **Prerequisite:** Requires the external `ccg-workflow` runtime, which is **not** part of the base ECC install. Initialize it with `npx ccg-workflow` to provision `~/.claude/bin/codeagent-wrapper` and the `~/.claude/.ccg/prompts/*` role files this command depends on. Without that runtime, this command will not run correctly.
+> **Điều kiện tiên quyết:** Yêu cầu runtime `ccg-workflow` bên ngoài, runtime này **không** nằm trong bản cài ECC cơ bản. Khởi tạo nó bằng `npx ccg-workflow` để cấp phát `~/.claude/bin/codeagent-wrapper` và các file vai trò `~/.claude/.ccg/prompts/*` mà command này phụ thuộc. Nếu không có runtime đó, command này sẽ không chạy đúng.
 
 $ARGUMENTS
 
 ---
 
-## Core Protocols
+## Giao thức cốt lõi
 
-- **Language Protocol**: Use **English** when interacting with tools/models, communicate with user in their language
-- **Mandatory Parallel**: Codex/Antigravity calls MUST use `run_in_background: true` (including single model calls, to avoid blocking main thread)
-- **Code Sovereignty**: External models have **zero filesystem write access**, all modifications by Claude
-- **Stop-Loss Mechanism**: Do not proceed to next phase until current phase output is validated
-- **Planning Only**: This command allows reading context and writing to `.claude/plan/*` plan files, but **NEVER modify production code**
+- **Giao thức ngôn ngữ**: Dùng **tiếng Anh** khi tương tác với tool/model, giao tiếp với người dùng bằng ngôn ngữ của họ
+- **Song song bắt buộc**: Các lời gọi Codex/Antigravity PHẢI dùng `run_in_background: true` (kể cả lời gọi đơn model, để tránh chặn main thread)
+- **Chủ quyền code (Code Sovereignty)**: Các model bên ngoài **không có quyền ghi filesystem**, mọi thay đổi do Claude thực hiện
+- **Cơ chế cắt lỗ (Stop-Loss)**: Không chuyển sang giai đoạn tiếp theo cho đến khi output của giai đoạn hiện tại được xác thực
+- **Chỉ lập kế hoạch**: Command này cho phép đọc context và ghi vào các file kế hoạch `.claude/plan/*`, nhưng **KHÔNG BAO GIỜ sửa code production**
 
 ---
 
-## Multi-Model Call Specification
+## Đặc tả gọi đa model
 
-**Call Syntax** (parallel: use `run_in_background: true`):
+**Cú pháp gọi** (song song: dùng `run_in_background: true`):
 
 ```
 Bash({
@@ -42,42 +42,42 @@ EOF",
 })
 ```
 
-**Model Parameter Notes**:
-- No extra model flag is needed for `--backend antigravity` or `--backend codex`; `codeagent-wrapper` picks each backend's default model.
+**Ghi chú về tham số model**:
+- Không cần thêm flag model cho `--backend antigravity` hoặc `--backend codex`; `codeagent-wrapper` tự chọn model mặc định của từng backend.
 
-**Role Prompts**:
+**Role Prompt**:
 
-| Phase | Codex | Antigravity |
+| Giai đoạn | Codex | Antigravity |
 |-------|-------|--------|
-| Analysis | `~/.claude/.ccg/prompts/codex/analyzer.md` | `~/.claude/.ccg/prompts/antigravity/analyzer.md` |
-| Planning | `~/.claude/.ccg/prompts/codex/architect.md` | `~/.claude/.ccg/prompts/antigravity/architect.md` |
+| Phân tích | `~/.claude/.ccg/prompts/codex/analyzer.md` | `~/.claude/.ccg/prompts/antigravity/analyzer.md` |
+| Lập kế hoạch | `~/.claude/.ccg/prompts/codex/architect.md` | `~/.claude/.ccg/prompts/antigravity/architect.md` |
 
-**Session Reuse**: Each call returns `SESSION_ID: xxx` (typically output by wrapper), **MUST save** for subsequent `/ccg:execute` use.
+**Tái sử dụng session**: Mỗi lần gọi trả về `SESSION_ID: xxx` (thường do wrapper xuất ra), **PHẢI lưu lại** để dùng cho `/ccg:execute` sau đó.
 
-**Wait for Background Tasks** (max timeout 600000ms = 10 minutes):
+**Chờ các tác vụ nền** (timeout tối đa 600000ms = 10 phút):
 
 ```
 TaskOutput({ task_id: "<task_id>", block: true, timeout: 600000 })
 ```
 
-**IMPORTANT**:
-- Must specify `timeout: 600000`, otherwise default 30 seconds will cause premature timeout
-- If still incomplete after 10 minutes, continue polling with `TaskOutput`, **NEVER kill the process**
-- If waiting is skipped due to timeout, **MUST call `AskUserQuestion` to ask user whether to continue waiting or kill task**
+**QUAN TRỌNG**:
+- PHẢI chỉ định `timeout: 600000`, nếu không mặc định 30 giây sẽ gây timeout sớm
+- Nếu sau 10 phút vẫn chưa xong, tiếp tục polling bằng `TaskOutput`, **KHÔNG BAO GIỜ kill process**
+- Nếu bỏ qua việc chờ do timeout, **PHẢI gọi `AskUserQuestion` để hỏi người dùng muốn tiếp tục chờ hay kill tác vụ**
 
 ---
 
-## Execution Workflow
+## Workflow thực thi
 
-**Planning Task**: $ARGUMENTS
+**Tác vụ lập kế hoạch**: $ARGUMENTS
 
-### Phase 1: Full Context Retrieval
+### Giai đoạn 1: Truy xuất toàn bộ context
 
 `[Mode: Research]`
 
-#### 1.1 Prompt Enhancement (MUST execute first)
+#### 1.1 Cải thiện prompt (PHẢI thực hiện đầu tiên)
 
-**If ace-tool MCP is available**, call `mcp__ace-tool__enhance_prompt` tool:
+**Nếu ace-tool MCP khả dụng**, gọi tool `mcp__ace-tool__enhance_prompt`:
 
 ```
 mcp__ace-tool__enhance_prompt({
@@ -87,13 +87,13 @@ mcp__ace-tool__enhance_prompt({
 })
 ```
 
-Wait for enhanced prompt, **replace original $ARGUMENTS with enhanced result** for all subsequent phases.
+Chờ prompt đã được cải thiện, **thay $ARGUMENTS gốc bằng kết quả đã cải thiện** cho mọi giai đoạn sau.
 
-**If ace-tool MCP is NOT available**: Skip this step and use the original `$ARGUMENTS` as-is for all subsequent phases.
+**Nếu ace-tool MCP KHÔNG khả dụng**: Bỏ qua bước này và dùng nguyên `$ARGUMENTS` gốc cho mọi giai đoạn sau.
 
-#### 1.2 Context Retrieval
+#### 1.2 Truy xuất context
 
-**If ace-tool MCP is available**, call `mcp__ace-tool__search_context` tool:
+**Nếu ace-tool MCP khả dụng**, gọi tool `mcp__ace-tool__search_context`:
 
 ```
 mcp__ace-tool__search_context({
@@ -102,74 +102,74 @@ mcp__ace-tool__search_context({
 })
 ```
 
-- Build semantic query using natural language (Where/What/How)
-- **NEVER answer based on assumptions**
+- Xây dựng truy vấn ngữ nghĩa bằng ngôn ngữ tự nhiên (Where/What/How)
+- **KHÔNG BAO GIỜ trả lời dựa trên giả định**
 
-**If ace-tool MCP is NOT available**, use Claude Code built-in tools as fallback:
-1. **Glob**: Find relevant files by pattern (e.g., `Glob("**/*.ts")`, `Glob("src/**/*.py")`)
-2. **Grep**: Search for key symbols, function names, class definitions (e.g., `Grep("className|functionName")`)
-3. **Read**: Read the discovered files to gather complete context
-4. **Task (Explore agent)**: For deeper exploration, use `Task` with `subagent_type: "Explore"` to search across the codebase
+**Nếu ace-tool MCP KHÔNG khả dụng**, dùng các tool có sẵn của Claude Code làm phương án dự phòng:
+1. **Glob**: Tìm các file liên quan theo pattern (ví dụ `Glob("**/*.ts")`, `Glob("src/**/*.py")`)
+2. **Grep**: Tìm các symbol quan trọng, tên hàm, định nghĩa class (ví dụ `Grep("className|functionName")`)
+3. **Read**: Đọc các file đã tìm thấy để thu thập context đầy đủ
+4. **Task (Explore agent)**: Để khám phá sâu hơn, dùng `Task` với `subagent_type: "Explore"` để tìm trong toàn codebase
 
-#### 1.3 Completeness Check
+#### 1.3 Kiểm tra tính đầy đủ
 
-- Must obtain **complete definitions and signatures** for relevant classes, functions, variables
-- If context insufficient, trigger **recursive retrieval**
-- Prioritize output: entry file + line number + key symbol name; add minimal code snippets only when necessary to resolve ambiguity
+- PHẢI lấy được **định nghĩa và chữ ký đầy đủ** của các class, hàm, biến liên quan
+- Nếu context chưa đủ, kích hoạt **truy xuất đệ quy**
+- Ưu tiên output: file đầu vào + số dòng + tên symbol quan trọng; chỉ thêm các đoạn code tối thiểu khi cần thiết để giải quyết sự mơ hồ
 
-#### 1.4 Requirement Alignment
+#### 1.4 Thống nhất yêu cầu
 
-- If requirements still have ambiguity, **MUST** output guiding questions for user
-- Until requirement boundaries are clear (no omissions, no redundancy)
+- Nếu yêu cầu vẫn còn mơ hồ, **PHẢI** đưa ra các câu hỏi dẫn dắt cho người dùng
+- Cho đến khi ranh giới yêu cầu rõ ràng (không thiếu sót, không dư thừa)
 
-### Phase 2: Multi-Model Collaborative Analysis
+### Giai đoạn 2: Phân tích cộng tác đa model
 
 `[Mode: Analysis]`
 
-#### 2.1 Distribute Inputs
+#### 2.1 Phân phối input
 
-**Parallel call** Codex and Antigravity (`run_in_background: true`):
+**Gọi song song** Codex và Antigravity (`run_in_background: true`):
 
-Distribute **original requirement** (without preset opinions) to both models:
+Phân phối **yêu cầu gốc** (không kèm ý kiến định sẵn) cho cả hai model:
 
-1. **Codex Backend Analysis**:
+1. **Phân tích Backend của Codex**:
    - ROLE_FILE: `~/.claude/.ccg/prompts/codex/analyzer.md`
-   - Focus: Technical feasibility, architecture impact, performance considerations, potential risks
-   - OUTPUT: Multi-perspective solutions + pros/cons analysis
+   - Trọng tâm: Tính khả thi kỹ thuật, tác động kiến trúc, cân nhắc hiệu năng, rủi ro tiềm ẩn
+   - OUTPUT: Các giải pháp đa góc nhìn + phân tích ưu/nhược điểm
 
-2. **Antigravity Frontend Analysis**:
+2. **Phân tích Frontend của Antigravity**:
    - ROLE_FILE: `~/.claude/.ccg/prompts/antigravity/analyzer.md`
-   - Focus: UI/UX impact, user experience, visual design
-   - OUTPUT: Multi-perspective solutions + pros/cons analysis
+   - Trọng tâm: Tác động UI/UX, trải nghiệm người dùng, thiết kế trực quan
+   - OUTPUT: Các giải pháp đa góc nhìn + phân tích ưu/nhược điểm
 
-Wait for both models' complete results with `TaskOutput`. **Save SESSION_ID** (`CODEX_SESSION` and `ANTIGRAVITY_SESSION`).
+Chờ kết quả đầy đủ của cả hai model bằng `TaskOutput`. **Lưu SESSION_ID** (`CODEX_SESSION` và `ANTIGRAVITY_SESSION`).
 
-#### 2.2 Cross-Validation
+#### 2.2 Kiểm chứng chéo
 
-Integrate perspectives and iterate for optimization:
+Tích hợp các góc nhìn và lặp để tối ưu:
 
-1. **Identify consensus** (strong signal)
-2. **Identify divergence** (needs weighing)
-3. **Complementary strengths**: Backend logic follows Codex, Frontend design follows Antigravity
-4. **Logical reasoning**: Eliminate logical gaps in solutions
+1. **Xác định điểm đồng thuận** (tín hiệu mạnh)
+2. **Xác định điểm bất đồng** (cần cân nhắc)
+3. **Điểm mạnh bổ trợ nhau**: Backend logic theo Codex, thiết kế Frontend theo Antigravity
+4. **Suy luận logic**: Loại bỏ các lỗ hổng logic trong giải pháp
 
-#### 2.3 (Optional but Recommended) Dual-Model Plan Draft
+#### 2.3 (Tùy chọn nhưng khuyến nghị) Bản nháp kế hoạch từ hai model
 
-To reduce risk of omissions in Claude's synthesized plan, can parallel have both models output "plan drafts" (still **NOT allowed** to modify files):
+Để giảm rủi ro thiếu sót trong kế hoạch tổng hợp của Claude, có thể cho cả hai model song song xuất "bản nháp kế hoạch" (vẫn **KHÔNG được phép** sửa file):
 
-1. **Codex Plan Draft** (Backend authority):
+1. **Bản nháp kế hoạch của Codex** (thẩm quyền Backend):
    - ROLE_FILE: `~/.claude/.ccg/prompts/codex/architect.md`
-   - OUTPUT: Step-by-step plan + pseudo-code (focus: data flow/edge cases/error handling/test strategy)
+   - OUTPUT: Kế hoạch từng bước + pseudo-code (trọng tâm: luồng dữ liệu/edge case/xử lý lỗi/chiến lược test)
 
-2. **Antigravity Plan Draft** (Frontend authority):
+2. **Bản nháp kế hoạch của Antigravity** (thẩm quyền Frontend):
    - ROLE_FILE: `~/.claude/.ccg/prompts/antigravity/architect.md`
-   - OUTPUT: Step-by-step plan + pseudo-code (focus: information architecture/interaction/accessibility/visual consistency)
+   - OUTPUT: Kế hoạch từng bước + pseudo-code (trọng tâm: kiến trúc thông tin/tương tác/accessibility/nhất quán trực quan)
 
-Wait for both models' complete results with `TaskOutput`, record key differences in their suggestions.
+Chờ kết quả đầy đủ của cả hai model bằng `TaskOutput`, ghi lại các khác biệt chính trong đề xuất của họ.
 
-#### 2.4 Generate Implementation Plan (Claude Final Version)
+#### 2.4 Sinh kế hoạch triển khai (Bản cuối của Claude)
 
-Synthesize both analyses, generate **Step-by-step Implementation Plan**:
+Tổng hợp cả hai bản phân tích, sinh **Kế hoạch triển khai từng bước**:
 
 ```markdown
 ## Implementation Plan: <Task Name>
@@ -201,63 +201,63 @@ Synthesize both analyses, generate **Step-by-step Implementation Plan**:
 - ANTIGRAVITY_SESSION: <session_id>
 ```
 
-### Phase 2 End: Plan Delivery (Not Execution)
+### Kết thúc Giai đoạn 2: Bàn giao kế hoạch (Không thực thi)
 
-**`/ccg:plan` responsibilities end here, MUST execute the following actions**:
+**Trách nhiệm của `/ccg:plan` kết thúc tại đây, PHẢI thực hiện các hành động sau**:
 
-1. Present complete implementation plan to user (including pseudo-code)
-2. Save plan to `.claude/plan/<feature-name>.md` (extract feature name from requirement, e.g., `user-auth`, `payment-module`)
-3. Output prompt in **bold text** (MUST use actual saved file path):
+1. Trình bày kế hoạch triển khai hoàn chỉnh cho người dùng (bao gồm pseudo-code)
+2. Lưu kế hoạch vào `.claude/plan/<feature-name>.md` (trích tên tính năng từ yêu cầu, ví dụ `user-auth`, `payment-module`)
+3. Xuất thông báo bằng **chữ in đậm** (PHẢI dùng đường dẫn file thực tế đã lưu):
 
 ---
-**Plan generated and saved to `.claude/plan/actual-feature-name.md`**
+**Kế hoạch đã được tạo và lưu tại `.claude/plan/actual-feature-name.md`**
 
-**Please review the plan above. You can:**
-- **Modify plan**: Tell me what needs adjustment, I'll update the plan
-- **Execute plan**: Copy the following command to a new session
+**Vui lòng review kế hoạch ở trên. Bạn có thể:**
+- **Sửa kế hoạch**: Cho tôi biết cần điều chỉnh gì, tôi sẽ cập nhật kế hoạch
+- **Thực thi kế hoạch**: Sao chép lệnh sau vào một phiên mới
 
 ```
 /ccg:execute .claude/plan/actual-feature-name.md
 ```
 ---
 
-**NOTE**: The `actual-feature-name.md` above MUST be replaced with the actual saved filename!
+**LƯU Ý**: `actual-feature-name.md` ở trên PHẢI được thay bằng tên file thực tế đã lưu!
 
-4. **Immediately terminate current response** (Stop here. No more tool calls.)
+4. **Kết thúc ngay phản hồi hiện tại** (Dừng tại đây. Không gọi tool nào nữa.)
 
-**ABSOLUTELY FORBIDDEN**:
-- Ask user "Y/N" then auto-execute (execution is `/ccg:execute`'s responsibility)
-- Any write operations to production code
-- Automatically call `/ccg:execute` or any implementation actions
-- Continue triggering model calls when user hasn't explicitly requested modifications
-
----
-
-## Plan Saving
-
-After planning completes, save plan to:
-
-- **First planning**: `.claude/plan/<feature-name>.md`
-- **Iteration versions**: `.claude/plan/<feature-name>-v2.md`, `.claude/plan/<feature-name>-v3.md`...
-
-Plan file write should complete before presenting plan to user.
+**TUYỆT ĐỐI CẤM**:
+- Hỏi người dùng "Y/N" rồi tự động thực thi (việc thực thi là trách nhiệm của `/ccg:execute`)
+- Bất kỳ thao tác ghi nào vào code production
+- Tự động gọi `/ccg:execute` hoặc bất kỳ hành động triển khai nào
+- Tiếp tục kích hoạt các lời gọi model khi người dùng chưa yêu cầu tường minh việc sửa đổi
 
 ---
 
-## Plan Modification Flow
+## Lưu kế hoạch
 
-If user requests plan modifications:
+Sau khi lập kế hoạch xong, lưu kế hoạch vào:
 
-1. Adjust plan content based on user feedback
-2. Update `.claude/plan/<feature-name>.md` file
-3. Re-present modified plan
-4. Prompt user to review or execute again
+- **Lần lập kế hoạch đầu tiên**: `.claude/plan/<feature-name>.md`
+- **Các phiên bản lặp**: `.claude/plan/<feature-name>-v2.md`, `.claude/plan/<feature-name>-v3.md`...
+
+Việc ghi file kế hoạch phải hoàn tất trước khi trình bày kế hoạch cho người dùng.
 
 ---
 
-## Next Steps
+## Luồng sửa kế hoạch
 
-After user approves, **manually** execute:
+Nếu người dùng yêu cầu sửa kế hoạch:
+
+1. Điều chỉnh nội dung kế hoạch dựa trên phản hồi của người dùng
+2. Cập nhật file `.claude/plan/<feature-name>.md`
+3. Trình bày lại kế hoạch đã sửa
+4. Nhắc người dùng review hoặc thực thi lại
+
+---
+
+## Các bước tiếp theo
+
+Sau khi người dùng phê duyệt, **thủ công** thực thi:
 
 ```bash
 /ccg:execute .claude/plan/<feature-name>.md
@@ -265,10 +265,10 @@ After user approves, **manually** execute:
 
 ---
 
-## Key Rules
+## Quy tắc chính
 
-1. **Plan only, no implementation** – This command does not execute any code changes
-2. **No Y/N prompts** – Only present plan, let user decide next steps
-3. **Trust Rules** – Backend follows Codex, Frontend follows Antigravity
-4. External models have **zero filesystem write access**
-5. **SESSION_ID Handoff** – Plan must include `CODEX_SESSION` / `ANTIGRAVITY_SESSION` at end (for `/ccg:execute resume <SESSION_ID>` use)
+1. **Chỉ lập kế hoạch, không triển khai** – Command này không thực hiện bất kỳ thay đổi code nào
+2. **Không hỏi Y/N** – Chỉ trình bày kế hoạch, để người dùng quyết định bước tiếp theo
+3. **Quy tắc tin cậy** – Backend theo Codex, Frontend theo Antigravity
+4. Các model bên ngoài **không có quyền ghi filesystem**
+5. **Bàn giao SESSION_ID** – Kế hoạch PHẢI bao gồm `CODEX_SESSION` / `ANTIGRAVITY_SESSION` ở cuối (để dùng cho `/ccg:execute resume <SESSION_ID>`)

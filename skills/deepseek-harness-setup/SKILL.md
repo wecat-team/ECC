@@ -1,47 +1,47 @@
 ---
 name: deepseek-harness-setup
-description: "Install and operate Everything Claude Code (ECC) on the DeepSeek Harness (DSH): native skill roots (~/.dsh/skills, .agents/skills), the @deepseek-ai/dsh-hooks-claude-code bridge for command hooks, bare-insert patch mounting, generator usage, event-support limits, and update workflow. Use when setting up ECC on DeepSeek Harness, wiring ECC hooks into a DSH profile, or debugging why ECC skills or hooks do not appear in a DSH session."
+description: "Cài đặt và vận hành Everything Claude Code (ECC) trên DeepSeek Harness (DSH): các skill root gốc (~/.dsh/skills, .agents/skills), cầu nối @deepseek-ai/dsh-hooks-claude-code cho command hook, gắn patch bằng bare-insert, cách dùng generator, giới hạn hỗ trợ event và quy trình cập nhật. Dùng khi thiết lập ECC trên DeepSeek Harness, nối ECC hook vào profile DSH, hoặc debug vì sao ECC skill hay hook không xuất hiện trong phiên DSH."
 metadata:
   origin: community
 ---
 
-# DeepSeek Harness Setup
+# Thiết lập DeepSeek Harness
 
-Run ECC on the DeepSeek Harness. Full guide: `docs/DEEPSEEK-HARNESS-GUIDE.md`.
+Chạy ECC trên DeepSeek Harness. Hướng dẫn đầy đủ: `docs/DEEPSEEK-HARNESS-GUIDE.md`.
 
-## When to Use
+## Khi nào dùng
 
-- Installing ECC skills or hooks on a DeepSeek Harness install.
-- Deciding which ECC surfaces work on DSH and which do not.
-- Debugging a DSH session that does not show ECC skills or does not fire ECC hooks.
+- Cài ECC skill hoặc hook lên bản cài đặt DeepSeek Harness.
+- Quyết định bề mặt (surface) nào của ECC chạy được trên DSH và bề mặt nào không.
+- Debug phiên DSH không hiển thị ECC skill hoặc không kích hoạt ECC hook.
 
-## How It Works
+## Cách hoạt động
 
-1. **Skills need no conversion.** DSH reads `SKILL.md` frontmatter
-   (name/description) from native skill roots. Link the ECC catalog once:
+1. **Skill không cần chuyển đổi.** DSH đọc frontmatter `SKILL.md`
+   (name/description) từ các skill root gốc. Liên kết catalog ECC một lần:
 
    ```bash
    ln -s /path/to/ECC/skills/<skill-name> ~/.dsh/skills/<skill-name>
    ```
 
-   Root priority (project `.dsh` and `.agents` roots beat `~/.dsh`): skip
-   linking skills whose names already exist in a higher-priority root.
-   Substitute real skill names for the placeholders; the angle brackets are
-   not shell syntax.
+   Thứ tự ưu tiên root (root `.dsh` và `.agents` của project thắng `~/.dsh`): bỏ qua
+   việc liên kết những skill đã có tên trong root ưu tiên cao hơn.
+   Thay các placeholder bằng tên skill thật; dấu ngoặc nhọn không phải
+   cú pháp shell.
 
-2. **Hooks go through the first-party bridge.** Generate a DSH-format config
-   from the canonical ECC hooks file:
+2. **Hook đi qua cầu nối first-party.** Sinh cấu hình định dạng DSH
+   từ file hook ECC chuẩn:
 
    ```bash
    node scripts/dsh/generate-hooks-config.js --ecc-root /path/to/ECC --out ~/.dsh/ecc/hooks-dsh.json
    ```
 
-   The generator lower-cases tool-name matchers, prefixes
-   `CLAUDE_PLUGIN_ROOT`/`ECC_PLUGIN_ROOT` inline (the bridge does not export
-   the plugin root), preserves timeouts, and skips events DSH cannot bridge:
+   Generator chuyển matcher tên tool sang chữ thường, gắn trực tiếp tiền tố
+   `CLAUDE_PLUGIN_ROOT`/`ECC_PLUGIN_ROOT` (cầu nối không export
+   plugin root), giữ nguyên timeout và bỏ qua các event DSH không bridge được:
    `PreCompact`, `PostToolUseFailure`, `SessionEnd`.
 
-3. **Mount with a bare insert** in `~/.dsh/profiles/<profile>/cordis.patch.yml`:
+3. **Gắn bằng bare insert** trong `~/.dsh/profiles/<profile>/cordis.patch.yml`:
 
    ```yaml
    - insert:
@@ -51,39 +51,39 @@ Run ECC on the DeepSeek Harness. Full guide: `docs/DEEPSEEK-HARNESS-GUIDE.md`.
            configPath: /absolute/path/to/hooks-dsh.json
    ```
 
-   Loader rules that cost debugging time when learned the hard way:
-   a plain `- id:` top-level entry is silently dropped; `insert` under an
-   existing non-group id is rejected as "not a group"; first-party plugin
-   packages need no profile `package.json` entry.
+   Các quy tắc của loader từng tốn nhiều thời gian debug mới rút ra được:
+   một entry cấp cao nhất dạng `- id:` thuần sẽ bị bỏ qua âm thầm;
+   `insert` dưới một id không phải group sẽ bị từ chối với lỗi "not a group"; các
+   package plugin first-party không cần entry trong `package.json` của profile.
 
-4. **Validate by composing, then verify live.**
+4. **Xác thực bằng cách compose, rồi kiểm tra trực tiếp.**
 
    ```bash
    cd ~/.dsh && dsh --profile web --dump-config > /tmp/dump.yml
    grep ecc-hooks /tmp/dump.yml
    ```
 
-   Compose exit status stays 0 even when the loader drops or rejects an
-   entry — those problems are only reported on stderr. Confirm the entry id
-   appears in the dump and stderr is empty. A live GateGuard denial on the
-   session's first edit/write/bash is the visible signal the bridge is
-   active.
+   Exit status của compose vẫn là 0 ngay cả khi loader bỏ qua hoặc từ chối
+   một entry — các vấn đề đó chỉ được báo trên stderr. Hãy xác nhận id của entry
+   xuất hiện trong bản dump và stderr trống. Việc GateGuard từ chối ngay lần
+   edit/write/bash đầu tiên của phiên là dấu hiệu nhìn thấy được cho thấy cầu nối
+   đang hoạt động.
 
-## Updating
+## Cập nhật
 
-`git pull` reflects into linked skills immediately; regenerate the hooks
-config with the same generator command. If the ECC checkout moves, regenerate
-(the path is embedded in every hook command) and relink skills.
+`git pull` phản ánh ngay vào các skill đã liên kết; hãy sinh lại cấu hình hook
+bằng cùng lệnh generator. Nếu thư mục checkout ECC bị di chuyển, hãy sinh lại
+(đường dẫn được nhúng trong mọi lệnh hook) và liên kết lại skill.
 
-## Limits
+## Giới hạn
 
-| Surface | Status on DSH |
+| Bề mặt | Trạng thái trên DSH |
 |---------|---------------|
-| Skills | Native discovery; workflows may require host adaptation |
-| Hooks | 23 command hooks on 5 of 7 bridge events |
-| Slash commands | Not available (Claude Code mechanism); workflows covered by skills |
-| Agents | Native dispatch unverified; use canonical prompt guidance only after review |
+| Skills | Khám phá gốc (native); workflow có thể cần điều chỉnh theo host |
+| Hooks | 23 command hook trên 5 trong 7 bridge event |
+| Slash commands | Không có (cơ chế của Claude Code); workflow được các skill thay thế |
+| Agents | Chưa xác minh native dispatch; chỉ dùng hướng dẫn prompt chuẩn sau khi review |
 
-The validated setup here targets the CLI/web profile. Desktop profiles have a separate
-installation-owned runtime and skill discovery must be verified there independently.
-Generate hooks only from a reviewed ECC checkout; the linked checkout supplies their runtime.
+Thiết lập đã được xác thực ở đây nhắm tới profile CLI/web. Profile Desktop có
+runtime riêng do bản cài đặt sở hữu, và việc khám phá skill phải được xác minh độc lập ở đó.
+Chỉ sinh hook từ bản checkout ECC đã được review; bản checkout được liên kết cung cấp runtime cho chúng.

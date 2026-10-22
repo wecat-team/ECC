@@ -1,29 +1,29 @@
-# Security Guidelines
+# Hướng dẫn bảo mật
 
-## Mandatory Security Checks
+## Các kiểm tra bảo mật bắt buộc
 
-Before ANY commit:
-- [ ] No hardcoded secrets (API keys, passwords, tokens)
-- [ ] All user inputs validated
-- [ ] SQL injection prevention (parameterized queries)
-- [ ] XSS prevention (sanitized HTML)
-- [ ] CSRF protection enabled
-- [ ] Authentication/authorization verified
-- [ ] Rate limiting on all endpoints
-- [ ] Error messages don't leak sensitive data
+Trước BẤT KỲ commit nào:
+- [ ] Không hardcode secret (API key, mật khẩu, token)
+- [ ] Mọi input của người dùng đã được validate
+- [ ] Ngăn SQL injection (truy vấn tham số hóa)
+- [ ] Ngăn XSS (HTML đã được sanitize)
+- [ ] Bật bảo vệ CSRF
+- [ ] Đã xác minh authentication/authorization
+- [ ] Rate limiting trên mọi endpoint
+- [ ] Thông báo lỗi không làm rò rỉ dữ liệu nhạy cảm
 
-## Secret Management
+## Quản lý Secret
 
-- NEVER hardcode secrets in source code
-- ALWAYS use environment variables or a secret manager
-- Validate that required secrets are present at startup
-- Rotate any secrets that may have been exposed
+- KHÔNG BAO GIỜ hardcode secret trong source code
+- LUÔN LUÔN dùng biến môi trường hoặc secret manager
+- Kiểm tra các secret bắt buộc đã có mặt khi khởi động
+- Xoay vòng (rotate) mọi secret có thể đã bị lộ
 
-## Security Response Protocol
+## Quy trình phản ứng bảo mật
 
-If security issue found:
-1. STOP immediately
-2. Use **security-reviewer** agent
-3. Fix CRITICAL issues before continuing
-4. Rotate any exposed secrets
-5. Review entire codebase for similar issues
+Nếu phát hiện vấn đề bảo mật:
+1. DỪNG ngay lập tức
+2. Dùng agent **security-reviewer**
+3. Sửa các vấn đề CRITICAL trước khi tiếp tục
+4. Rotate mọi secret đã bị lộ
+5. Review toàn bộ codebase để tìm các vấn đề tương tự

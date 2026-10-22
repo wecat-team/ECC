@@ -1,22 +1,22 @@
 ---
-description: Sweep blocked epic issues and reopen anything whose dependencies are closed.
+description: Quét các epic issue đang bị chặn và mở lại bất kỳ epic nào có dependency đã đóng.
 ---
 
 # /epic-unblock
 
-Sweep blocked epics whose declared dependencies are complete.
+Quét các epic đang bị chặn mà các dependency đã khai báo đều đã hoàn thành.
 
 ```bash
 node scripts/github-coordination.js unblock --repo <owner/repo>
 ```
 
-What this does:
+Việc này làm gì:
 
-1. Scans epic issues in the repository.
-2. Checks each blocked epic's dependency list.
-3. Moves fully unblocked epics to ready.
-4. Updates labels, comments, and local snapshots.
+1. Quét các epic issue trong repo.
+2. Kiểm tra danh sách dependency của từng epic đang bị chặn.
+3. Chuyển các epic đã hoàn toàn hết bị chặn sang trạng thái ready.
+4. Cập nhật label, comment và snapshot cục bộ.
 
-Compatibility aliases:
+Alias tương thích:
 
 - `/loop-status`

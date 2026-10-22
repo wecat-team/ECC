@@ -1,48 +1,48 @@
 ---
 name: java-coding-standards
-description: "Java coding standards for Spring Boot and Quarkus services: naming, immutability, Optional usage, streams, exceptions, generics, CDI, reactive patterns, and project layout. Automatically applies framework-specific conventions. Use when writing or reviewing Java in a Spring Boot or Quarkus service."
+description: "Chuẩn coding Java cho các service Spring Boot và Quarkus: đặt tên, immutability, dùng Optional, stream, exception, generics, CDI, reactive pattern và bố cục dự án. Tự động áp dụng các convention riêng của framework. Dùng khi viết hoặc review Java trong một service Spring Boot hoặc Quarkus."
 metadata:
   origin: ECC
 ---
 
-# Java Coding Standards
+# Chuẩn coding Java
 
-Standards for readable, maintainable Java (17+) code in Spring Boot and Quarkus services.
+Các chuẩn cho code Java (17+) dễ đọc, dễ bảo trì trong các service Spring Boot và Quarkus.
 
-## When to Use
+## Khi nào dùng
 
-- Writing or reviewing Java code in Spring Boot or Quarkus projects
-- Enforcing naming, immutability, or exception handling conventions
-- Working with records, sealed classes, or pattern matching (Java 17+)
-- Reviewing use of Optional, streams, or generics
-- Structuring packages and project layout
-- **[QUARKUS]**: Working with CDI scopes, Panache entities, or reactive pipelines
+- Viết hoặc review code Java trong các dự án Spring Boot hoặc Quarkus
+- Thực thi các convention về đặt tên, bất biến (immutable) hoặc xử lý exception
+- Làm việc với record, sealed class hoặc pattern matching (Java 17+)
+- Review việc dùng Optional, stream hoặc generics
+- Cấu trúc package và bố cục dự án
+- **[QUARKUS]**: Làm việc với CDI scope, Panache entity hoặc reactive pipeline
 
-## How It Works
+## Cách hoạt động
 
-### Framework Detection
+### Phát hiện framework
 
-Before applying standards, determine the framework from the build file:
+Trước khi áp dụng các chuẩn, xác định framework từ file build:
 
-- Build file contains `quarkus` → apply **[QUARKUS]** conventions
-- Build file contains `spring-boot` → apply **[SPRING]** conventions
-- Neither detected → apply shared conventions only
+- File build chứa `quarkus` → áp dụng convention **[QUARKUS]**
+- File build chứa `spring-boot` → áp dụng convention **[SPRING]**
+- Không phát hiện được cái nào → chỉ áp dụng các convention dùng chung
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
-- Prefer clarity over cleverness
-- Immutable by default; minimize shared mutable state
-- Fail fast with meaningful exceptions
-- Consistent naming and package structure
-- **[QUARKUS]**: Favor build-time over runtime processing; avoid runtime reflection where possible
+- Ưu tiên sự rõ ràng hơn sự khôn khéo
+- Bất biến (immutable) theo mặc định; giảm thiểu shared mutable state
+- Fail fast với các exception có ý nghĩa
+- Đặt tên và cấu trúc package nhất quán
+- **[QUARKUS]**: Ưu tiên xử lý lúc build hơn lúc runtime; tránh runtime reflection khi có thể
 
-## Examples
+## Ví dụ
 
-The sections below show concrete Spring Boot, Quarkus, and shared Java examples
-for naming, immutability, dependency injection, reactive code, exceptions,
-project layout, logging, configuration, and tests.
+Các phần bên dưới trình bày các ví dụ cụ thể cho Spring Boot, Quarkus và Java dùng chung
+về đặt tên, immutability, dependency injection, code reactive, exception,
+bố cục dự án, logging, cấu hình (configuration) và test.
 
-## Naming
+## Đặt tên
 
 ```java
 // PASS: Classes/Records: PascalCase
@@ -91,7 +91,7 @@ public class Market extends PanacheMongoEntity {
 }
 ```
 
-## Optional Usage
+## Dùng Optional
 
 ```java
 // PASS: Return Optional from find* methods
@@ -107,7 +107,7 @@ return market
     .orElseThrow(() -> new EntityNotFoundException("Market not found"));
 ```
 
-## Streams Best Practices
+## Best Practice cho Stream
 
 ```java
 // PASS: Use streams for transformations, keep pipelines short
@@ -159,7 +159,7 @@ private MarketRepository marketRepository; // use constructor injection
 public class MarketService {}
 ```
 
-## Reactive Patterns [QUARKUS]
+## Reactive Pattern [QUARKUS]
 
 ```java
 // PASS: Return Uni/Multi from reactive endpoints
@@ -190,17 +190,17 @@ shared.subscribe().with(m -> log(m));
 shared.subscribe().with(m -> cache(m)); // double subscribe — use Uni.memoize()
 ```
 
-## Exceptions
+## Exception
 
-- Use unchecked exceptions for domain errors; wrap technical exceptions with context
-- Create domain-specific exceptions (e.g., `MarketNotFoundException`)
-- Avoid broad `catch (Exception ex)` unless rethrowing/logging centrally
+- Dùng unchecked exception cho lỗi domain; bọc các exception kỹ thuật kèm context
+- Tạo các exception riêng cho domain (ví dụ: `MarketNotFoundException`)
+- Tránh `catch (Exception ex)` quá rộng trừ khi rethrow/log tập trung
 
 ```java
 throw new MarketNotFoundException(slug);
 ```
 
-### Centralised Exception Handling
+### Xử lý exception tập trung
 
 ```java
 // [SPRING]
@@ -228,16 +228,16 @@ public RestResponse<ErrorResponse> handle(MarketNotFoundException ex) {
 }
 ```
 
-## Generics and Type Safety
+## Generics và an toàn kiểu (Type Safety)
 
-- Avoid raw types; declare generic parameters
-- Prefer bounded generics for reusable utilities
+- Tránh raw type; khai báo tham số generic
+- Ưu tiên bounded generics cho các utility tái sử dụng
 
 ```java
 public <T extends Identifiable> Map<Long, T> indexById(Collection<T> items) { ... }
 ```
 
-## Project Structure
+## Cấu trúc dự án
 
 ### [SPRING] Maven/Gradle
 
@@ -273,23 +273,23 @@ src/main/resources/
 src/test/java/... (mirrors main)
 ```
 
-## Formatting and Style
+## Định dạng và style
 
-- Use 2 or 4 spaces consistently (project standard)
-- One public top-level type per file
-- Keep methods short and focused; extract helpers
-- Order members: constants, fields, constructors, public methods, protected, private
+- Dùng 2 hoặc 4 dấu cách nhất quán (theo chuẩn của dự án)
+- Mỗi file một top-level type public
+- Giữ method ngắn và tập trung; tách các helper
+- Thứ tự thành viên: hằng số, field, constructor, method public, protected, private
 
-## Code Smells to Avoid
+## Code Smell cần tránh
 
-- Long parameter lists → use DTO/builders
-- Deep nesting → early returns
-- Magic numbers → named constants
-- Static mutable state → prefer dependency injection
-- Silent catch blocks → log and act or rethrow
-- **[QUARKUS]**: `@Singleton` where `@ApplicationScoped` is intended — breaks proxying and interception
-- **[QUARKUS]**: Mixing `quarkus-resteasy-reactive` and `quarkus-resteasy` (classic) — pick one stack
-- **[QUARKUS]**: Panache active-record + repository pattern in the same bounded context — pick one
+- Danh sách tham số dài → dùng DTO/builder
+- Lồng sâu → dùng early return
+- Magic number → hằng số có tên
+- Static mutable state → ưu tiên dependency injection
+- Khối catch im lặng → log và xử lý hoặc rethrow
+- **[QUARKUS]**: `@Singleton` ở chỗ định dùng `@ApplicationScoped` — làm hỏng proxy và interception
+- **[QUARKUS]**: Trộn lẫn `quarkus-resteasy-reactive` và `quarkus-resteasy` (classic) — chọn một stack
+- **[QUARKUS]**: Panache active-record + repository pattern trong cùng một bounded context — chọn một
 
 ## Logging
 
@@ -309,13 +309,13 @@ log.errorf(ex, "failed_fetch_market slug=%s", slug);
 Logger log; // CDI-injected, scoped to declaring class
 ```
 
-## Null Handling
+## Xử lý Null
 
-- Accept `@Nullable` only when unavoidable; otherwise use `@NonNull`
-- Use Bean Validation (`@NotNull`, `@NotBlank`) on inputs
-- **[QUARKUS]**: Apply `@Valid` on `@BeanParam`, `@RestForm`, and request body parameters
+- Chỉ chấp nhận `@Nullable` khi không thể tránh; còn lại dùng `@NonNull`
+- Dùng Bean Validation (`@NotNull`, `@NotBlank`) trên đầu vào
+- **[QUARKUS]**: Áp dụng `@Valid` trên `@BeanParam`, `@RestForm` và các tham số request body
 
-## Configuration
+## Cấu hình (Configuration)
 
 ```java
 // [SPRING] @ConfigurationProperties
@@ -334,24 +334,24 @@ public interface MarketConfig {
 int maxPageSize;
 ```
 
-## Testing Expectations
+## Kỳ vọng về Testing
 
-### Shared
-- JUnit 5 + AssertJ for fluent assertions
-- Mockito for mocking; avoid partial mocks where possible
-- Favor deterministic tests; no hidden sleeps
+### Dùng chung
+- JUnit 5 + AssertJ cho fluent assertion
+- Mockito để mock; tránh partial mock khi có thể
+- Ưu tiên test có tính xác định (deterministic); không sleep ẩn
 
 ### [SPRING]
-- `@WebMvcTest` for controller slices, `@DataJpaTest` for repository slices
-- `@SpringBootTest` reserved for full integration tests
-- `@MockBean` for replacing beans in Spring context
+- `@WebMvcTest` cho controller slice, `@DataJpaTest` cho repository slice
+- `@SpringBootTest` dành riêng cho integration test đầy đủ
+- `@MockBean` để thay thế bean trong Spring context
 
 ### [QUARKUS]
-- Plain JUnit 5 + Mockito for unit tests (no `@QuarkusTest`)
-- `@QuarkusTest` reserved for CDI integration tests
-- `@InjectMock` for replacing CDI beans in integration tests
-- Dev Services for database/Kafka/Redis — avoid manual Testcontainers setup when Dev Services suffice
-- `@QuarkusTestResource` for custom external service lifecycle
+- JUnit 5 + Mockito thuần cho unit test (không dùng `@QuarkusTest`)
+- `@QuarkusTest` dành riêng cho CDI integration test
+- `@InjectMock` để thay thế CDI bean trong integration test
+- Dev Services cho database/Kafka/Redis — tránh thiết lập Testcontainers thủ công khi Dev Services đã đủ
+- `@QuarkusTestResource` cho vòng đời dịch vụ bên ngoài tùy chỉnh
 
 ```java
 // [SPRING] Controller test
@@ -381,4 +381,4 @@ class MarketServiceTest {
 }
 ```
 
-**Remember**: Keep code intentional, typed, and observable. Optimize for maintainability over micro-optimizations unless proven necessary.
+**Hãy nhớ**: Giữ code có chủ đích, có kiểu rõ ràng và quan sát được (observable). Tối ưu cho khả năng bảo trì hơn là micro-optimization trừ khi được chứng minh là cần thiết.

@@ -5,11 +5,11 @@ paths:
   - "**/*.js"
   - "**/*.jsx"
 ---
-# TypeScript/JavaScript Patterns
+# Pattern TypeScript/JavaScript
 
-> This file extends [common/patterns.md](../common/patterns.md) with TypeScript/JavaScript specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung riêng cho TypeScript/JavaScript.
 
-## API Response Format
+## Định dạng API Response
 
 ```typescript
 interface ApiResponse<T> {
@@ -24,7 +24,7 @@ interface ApiResponse<T> {
 }
 ```
 
-## Custom Hooks Pattern
+## Pattern Custom Hook
 
 ```typescript
 export function useDebounce<T>(value: T, delay: number): T {

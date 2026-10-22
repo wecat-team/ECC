@@ -1,31 +1,31 @@
 ---
 name: perl-patterns
-description: Modern Perl 5.36+ idioms, best practices, and conventions for building robust, maintainable Perl applications. Use when writing or reviewing modern Perl 5.36+ code.
+description: Các idiom, best practice và quy ước Perl 5.36+ hiện đại để xây dựng ứng dụng Perl vững chắc, dễ bảo trì. Dùng khi viết hoặc review code Perl 5.36+ hiện đại.
 metadata:
   origin: ECC
 ---
 
-# Modern Perl Development Patterns
+# Pattern phát triển Perl hiện đại
 
-Idiomatic Perl 5.36+ patterns and best practices for building robust, maintainable applications.
+Các pattern và best practice Perl 5.36+ theo đúng idiom để xây dựng ứng dụng vững chắc, dễ bảo trì.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new Perl code or modules
-- Reviewing Perl code for idiom compliance
-- Refactoring legacy Perl to modern standards
-- Designing Perl module architecture
-- Migrating pre-5.36 code to modern Perl
+- Viết code hoặc module Perl mới
+- Review code Perl về mức độ tuân thủ idiom
+- Refactor Perl legacy lên chuẩn hiện đại
+- Thiết kế kiến trúc module Perl
+- Migrate code trước 5.36 sang Perl hiện đại
 
-## How It Works
+## Cách hoạt động
 
-Apply these patterns as a bias toward modern Perl 5.36+ defaults: signatures, explicit modules, focused error handling, and testable boundaries. The examples below are meant to be copied as starting points, then tightened for the actual app, dependency stack, and deployment model in front of you.
+Áp dụng các pattern này như một thiên hướng về mặc định của Perl 5.36+ hiện đại: signature, module tường minh, xử lý lỗi tập trung và ranh giới dễ test. Các ví dụ bên dưới nhằm được sao chép làm điểm khởi đầu, sau đó siết lại cho phù hợp với ứng dụng, dependency stack và mô hình deploy thực tế của bạn.
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
-### 1. Use `v5.36` Pragma
+### 1. Dùng pragma `v5.36`
 
-A single `use v5.36` replaces the old boilerplate and enables strict, warnings, and subroutine signatures.
+Một dòng `use v5.36` thay thế đoạn boilerplate cũ và bật strict, warnings và subroutine signature.
 
 ```perl
 # Good: Modern preamble
@@ -47,9 +47,9 @@ sub greet {
 }
 ```
 
-### 2. Subroutine Signatures
+### 2. Subroutine Signature
 
-Use signatures for clarity and automatic arity checking.
+Dùng signature để rõ ràng và có kiểm tra arity tự động.
 
 ```perl
 use v5.36;
@@ -77,9 +77,9 @@ sub connect_db {
 }
 ```
 
-### 3. Context Sensitivity
+### 3. Tính nhạy cảm theo ngữ cảnh (Context Sensitivity)
 
-Understand scalar vs list context — a core Perl concept.
+Hiểu ngữ cảnh scalar so với list — một khái niệm cốt lõi của Perl.
 
 ```perl
 use v5.36;
@@ -93,7 +93,7 @@ say "Items: " . scalar @items; # Force scalar context
 
 ### 4. Postfix Dereferencing
 
-Use postfix dereference syntax for readability with nested structures.
+Dùng cú pháp postfix dereference để dễ đọc với cấu trúc lồng nhau.
 
 ```perl
 use v5.36;
@@ -115,18 +115,18 @@ my @users = @{ $data->{users} };
 my @roles = @{ $data->{users}[0]{roles} };
 ```
 
-### 5. The `isa` Operator (5.32+)
+### 5. Toán tử `isa` (5.32+)
 
-Infix type-check — replaces `blessed($o) && $o->isa('X')`.
+Kiểm tra kiểu dạng infix — thay cho `blessed($o) && $o->isa('X')`.
 
 ```perl
 use v5.36;
 if ($obj isa 'My::Class') { $obj->do_something }
 ```
 
-## Error Handling
+## Xử lý lỗi
 
-### eval/die Pattern
+### Pattern eval/die
 
 ```perl
 use v5.36;
@@ -138,7 +138,7 @@ sub parse_config($path) {
 }
 ```
 
-### Try::Tiny (Reliable Exception Handling)
+### Try::Tiny (xử lý exception đáng tin cậy)
 
 ```perl
 use v5.36;
@@ -157,7 +157,7 @@ sub fetch_user($id) {
 }
 ```
 
-### Native try/catch (5.40+)
+### try/catch gốc (5.40+)
 
 ```perl
 use v5.40;
@@ -174,9 +174,9 @@ sub divide($x, $y) {
 }
 ```
 
-## Modern OO with Moo
+## OO hiện đại với Moo
 
-Prefer Moo for lightweight, modern OO. Use Moose only when its metaprotocol is needed.
+Ưu tiên Moo cho OO nhẹ và hiện đại. Chỉ dùng Moose khi cần metaprotocol của nó.
 
 ```perl
 # Good: Moo class
@@ -217,7 +217,7 @@ sub name { return $_[0]->{name} }
 1;
 ```
 
-### Moo Roles
+### Moo Role
 
 ```perl
 package Role::Serializable;
@@ -236,7 +236,7 @@ sub TO_HASH($self) { { name => $self->name, email => $self->email } }
 1;
 ```
 
-### Native `class` Keyword (5.38+, Corinna)
+### Từ khóa `class` gốc (5.38+, Corinna)
 
 ```perl
 use v5.38;
@@ -253,9 +253,9 @@ my $p = Point->new(x => 3, y => 4);
 say $p->magnitude;  # 5
 ```
 
-## Regular Expressions
+## Biểu thức chính quy (Regular Expression)
 
-### Named Captures and `/x` Flag
+### Named Capture và cờ `/x`
 
 ```perl
 use v5.36;
@@ -278,7 +278,7 @@ if ($line =~ /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+\[(\w+)\]\s+(.+)$/) {
 }
 ```
 
-### Precompiled Patterns
+### Pattern biên dịch sẵn
 
 ```perl
 use v5.36;
@@ -291,9 +291,9 @@ sub validate_emails(@emails) {
 }
 ```
 
-## Data Structures
+## Cấu trúc dữ liệu
 
-### References and Safe Deep Access
+### Reference và truy cập sâu an toàn
 
 ```perl
 use v5.36;
@@ -328,7 +328,7 @@ for my ($key, $val) (%$config) {
 
 ## File I/O
 
-### Three-Argument Open
+### Open ba đối số
 
 ```perl
 use v5.36;
@@ -349,7 +349,7 @@ open FH, $path;            # NEVER do this
 open FH, "< $path";        # Still bad — user data in mode string
 ```
 
-### Path::Tiny for File Operations
+### Path::Tiny cho thao tác file
 
 ```perl
 use v5.36;
@@ -365,9 +365,9 @@ for my $child (path('src')->children(qr/\.pl$/)) {
 }
 ```
 
-## Module Organization
+## Tổ chức Module
 
-### Standard Project Layout
+### Bố cục dự án chuẩn
 
 ```text
 MyApp/
@@ -388,7 +388,7 @@ MyApp/
 └── .perlcriticrc            # Linting config
 ```
 
-### Exporter Patterns
+### Pattern Exporter
 
 ```perl
 package MyApp::Util;
@@ -405,7 +405,7 @@ sub trim($str) { $str =~ s/^\s+|\s+$//gr }
 
 ## Tooling
 
-### perltidy Configuration (.perltidyrc)
+### Cấu hình perltidy (.perltidyrc)
 
 ```text
 -i=4        # 4-space indent
@@ -416,7 +416,7 @@ sub trim($str) { $str =~ s/^\s+|\s+$//gr }
 -nolq       # don't outdent long quoted strings
 ```
 
-### perlcritic Configuration (.perlcriticrc)
+### Cấu hình perlcritic (.perlcriticrc)
 
 ```ini
 severity = 3
@@ -433,7 +433,7 @@ severity = 4
 allowed_values = 0 1 2 -1
 ```
 
-### Dependency Management (cpanfile + carton)
+### Quản lý dependency (cpanfile + carton)
 
 ```bash
 cpanm App::cpanminus Carton   # Install tools
@@ -454,24 +454,24 @@ on test => sub {
 };
 ```
 
-## Quick Reference: Modern Perl Idioms
+## Tham chiếu nhanh: Idiom Perl hiện đại
 
-| Legacy Pattern | Modern Replacement |
+| Pattern legacy | Thay thế hiện đại |
 |---|---|
 | `use strict; use warnings;` | `use v5.36;` |
 | `my ($x, $y) = @_;` | `sub foo($x, $y) { ... }` |
 | `@{ $ref }` | `$ref->@*` |
 | `%{ $ref }` | `$ref->%*` |
 | `open FH, "< $file"` | `open my $fh, '<:encoding(UTF-8)', $file` |
-| `blessed hashref` | `Moo` class with types |
-| `$1, $2, $3` | `$+{name}` (named captures) |
-| `eval { }; if ($@)` | `Try::Tiny` or native `try/catch` (5.40+) |
+| `blessed hashref` | Class `Moo` có kiểu |
+| `$1, $2, $3` | `$+{name}` (named capture) |
+| `eval { }; if ($@)` | `Try::Tiny` hoặc `try/catch` gốc (5.40+) |
 | `BEGIN { require Exporter; }` | `use Exporter 'import';` |
-| Manual file ops | `Path::Tiny` |
+| Thao tác file thủ công | `Path::Tiny` |
 | `blessed($o) && $o->isa('X')` | `$o isa 'X'` (5.32+) |
 | `builtin::true / false` | `use builtin 'true', 'false';` (5.36+, experimental) |
 
-## Anti-Patterns
+## Anti-Pattern
 
 ```perl
 # 1. Two-arg open (security risk)
@@ -502,4 +502,4 @@ use Module::Runtime 'require_module';    # Good: safe module loading
 require_module($module);
 ```
 
-**Remember**: Modern Perl is clean, readable, and safe. Let `use v5.36` handle the boilerplate, use Moo for objects, and prefer CPAN's battle-tested modules over hand-rolled solutions.
+**Hãy nhớ**: Perl hiện đại thì sạch, dễ đọc và an toàn. Hãy để `use v5.36` lo phần boilerplate, dùng Moo cho object, và ưu tiên các module đã được kiểm chứng của CPAN hơn là giải pháp tự viết.

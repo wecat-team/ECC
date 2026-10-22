@@ -1,29 +1,29 @@
 ---
-description: Fix Kotlin/Gradle build errors, compiler warnings, and dependency issues incrementally. Invokes the kotlin-build-resolver agent for minimal, surgical fixes.
+description: Sửa từng bước các lỗi build Kotlin/Gradle, warning của compiler và vấn đề dependency. Gọi agent kotlin-build-resolver để sửa tối thiểu, chính xác.
 ---
 
-# Kotlin Build and Fix
+# Kotlin Build và Fix
 
-This command invokes the **kotlin-build-resolver** agent to incrementally fix Kotlin build errors with minimal changes.
+Command này gọi agent **kotlin-build-resolver** để sửa từng bước các lỗi build Kotlin với thay đổi tối thiểu.
 
-## What This Command Does
+## Command này làm gì
 
-1. **Run Diagnostics**: Execute `./gradlew build`, `detekt`, `ktlintCheck`
-2. **Parse Errors**: Group by file and sort by severity
-3. **Fix Incrementally**: One error at a time
-4. **Verify Each Fix**: Re-run build after each change
-5. **Report Summary**: Show what was fixed and what remains
+1. **Chạy chẩn đoán**: Thực thi `./gradlew build`, `detekt`, `ktlintCheck`
+2. **Phân tích lỗi**: Nhóm theo file và sắp xếp theo mức độ nghiêm trọng
+3. **Sửa từng bước**: Mỗi lần một lỗi
+4. **Xác minh từng bản sửa**: Chạy lại build sau mỗi thay đổi
+5. **Báo cáo tóm tắt**: Hiển thị những gì đã sửa và những gì còn lại
 
-## When to Use
+## Khi nào dùng
 
-Use `/kotlin-build` when:
-- `./gradlew build` fails with errors
-- Kotlin compiler reports errors
-- `./gradlew detekt` reports violations
-- Gradle dependency resolution fails
-- After pulling changes that break the build
+Dùng `/kotlin-build` khi:
+- `./gradlew build` thất bại với lỗi
+- Kotlin compiler báo lỗi
+- `./gradlew detekt` báo vi phạm
+- Việc phân giải dependency của Gradle thất bại
+- Sau khi pull các thay đổi làm hỏng build
 
-## Diagnostic Commands Run
+## Các lệnh chẩn đoán được chạy
 
 ```bash
 # Primary build check
@@ -40,7 +40,7 @@ Use `/kotlin-build` when:
 ./gradlew build --refresh-dependencies
 ```
 
-## Example Session
+## Phiên làm việc ví dụ
 
 ````text
 User: /kotlin-build
@@ -134,41 +134,41 @@ $ ./gradlew test
 Build Status: PASS: SUCCESS
 ````
 
-## Common Errors Fixed
+## Các lỗi thường gặp đã sửa
 
-| Error | Typical Fix |
+| Lỗi | Cách sửa điển hình |
 |-------|-------------|
-| `Unresolved reference: X` | Add import or dependency |
-| `Type mismatch` | Fix type conversion or assignment |
-| `'when' must be exhaustive` | Add missing sealed class branches |
-| `Suspend function can only be called from coroutine` | Add `suspend` modifier |
-| `Smart cast impossible` | Use local `val` or `let` |
-| `None of the following candidates is applicable` | Fix argument types |
-| `Could not resolve dependency` | Fix version or add repository |
+| `Unresolved reference: X` | Thêm import hoặc dependency |
+| `Type mismatch` | Sửa việc chuyển đổi kiểu hoặc phép gán |
+| `'when' must be exhaustive` | Thêm các nhánh sealed class còn thiếu |
+| `Suspend function can only be called from coroutine` | Thêm modifier `suspend` |
+| `Smart cast impossible` | Dùng `val` cục bộ hoặc `let` |
+| `None of the following candidates is applicable` | Sửa kiểu của đối số |
+| `Could not resolve dependency` | Sửa phiên bản hoặc thêm repository |
 
-## Fix Strategy
+## Chiến lược sửa lỗi
 
-1. **Build errors first** - Code must compile
-2. **Detekt violations second** - Fix code quality issues
-3. **ktlint warnings third** - Fix formatting
-4. **One fix at a time** - Verify each change
-5. **Minimal changes** - Don't refactor, just fix
+1. **Lỗi build trước** - Code phải compile được
+2. **Vi phạm Detekt thứ hai** - Sửa các vấn đề chất lượng code
+3. **Warning của ktlint thứ ba** - Sửa định dạng
+4. **Mỗi lần một bản sửa** - Xác minh từng thay đổi
+5. **Thay đổi tối thiểu** - Không refactor, chỉ sửa
 
-## Stop Conditions
+## Điều kiện dừng
 
-The agent will stop and report if:
-- Same error persists after 3 attempts
-- Fix introduces more errors
-- Requires architectural changes
-- Missing external dependencies
+Agent sẽ dừng và báo cáo nếu:
+- Cùng một lỗi vẫn còn sau 3 lần thử
+- Bản sửa gây thêm lỗi
+- Cần thay đổi kiến trúc
+- Thiếu dependency bên ngoài
 
-## Related Commands
+## Các command liên quan
 
-- `/kotlin-test` - Run tests after build succeeds
-- `/kotlin-review` - Review code quality
-- `verification-loop` skill - Full verification loop
+- `/kotlin-test` - Chạy test sau khi build thành công
+- `/kotlin-review` - Review chất lượng code
+- skill `verification-loop` - Vòng lặp xác minh đầy đủ
 
-## Related
+## Liên quan
 
 - Agent: `agents/kotlin-build-resolver.md`
 - Skill: `skills/kotlin-patterns/`

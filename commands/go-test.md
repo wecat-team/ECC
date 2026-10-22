@@ -1,30 +1,30 @@
 ---
-description: Enforce TDD workflow for Go. Write table-driven tests first, then implement. Verify 80%+ coverage with go test -cover.
+description: Áp dụng quy trình TDD cho Go. Viết table-driven test trước, rồi mới triển khai. Xác minh coverage 80%+ bằng go test -cover.
 ---
 
-# Go TDD Command
+# Lệnh Go TDD
 
-This command enforces test-driven development methodology for Go code using idiomatic Go testing patterns.
+Command này áp dụng phương pháp phát triển hướng kiểm thử (TDD) cho code Go, sử dụng các pattern testing idiomatic của Go.
 
-## What This Command Does
+## Command này làm gì
 
-1. **Define Types/Interfaces**: Scaffold function signatures first
-2. **Write Table-Driven Tests**: Create comprehensive test cases (RED)
-3. **Run Tests**: Verify tests fail for the right reason
-4. **Implement Code**: Write minimal code to pass (GREEN)
-5. **Refactor**: Improve while keeping tests green
-6. **Check Coverage**: Ensure 80%+ coverage
+1. **Định nghĩa Type/Interface**: Dựng sườn chữ ký hàm trước
+2. **Viết Table-Driven Test**: Tạo các test case toàn diện (RED)
+3. **Chạy test**: Xác minh test thất bại đúng lý do
+4. **Triển khai code**: Viết code tối thiểu để pass (GREEN)
+5. **Refactor**: Cải thiện trong khi giữ test xanh
+6. **Kiểm tra coverage**: Đảm bảo coverage từ 80% trở lên
 
-## When to Use
+## Khi nào dùng
 
-Use `/go-test` when:
-- Implementing new Go functions
-- Adding test coverage to existing code
-- Fixing bugs (write failing test first)
-- Building critical business logic
-- Learning TDD workflow in Go
+Dùng `/go-test` khi:
+- Triển khai các hàm Go mới
+- Bổ sung test coverage cho code hiện có
+- Sửa bug (viết test thất bại trước)
+- Xây dựng business logic quan trọng
+- Học quy trình TDD trong Go
 
-## TDD Cycle
+## Chu trình TDD
 
 ```
 RED     → Write failing table-driven test
@@ -33,7 +33,7 @@ REFACTOR → Improve code, tests stay green
 REPEAT  → Next test case
 ```
 
-## Example Session
+## Phiên làm việc ví dụ
 
 ````
 User: /go-test I need a function to validate email addresses
@@ -169,9 +169,9 @@ ok      project/validator    0.003s
 ## TDD Complete!
 ````
 
-## Test Patterns
+## Các pattern test
 
-### Table-Driven Tests
+### Table-Driven Test
 ```go
 tests := []struct {
     name     string
@@ -191,7 +191,7 @@ for _, tt := range tests {
 }
 ```
 
-### Parallel Tests
+### Parallel Test
 ```go
 for _, tt := range tests {
     tt := tt // Capture
@@ -202,7 +202,7 @@ for _, tt := range tests {
 }
 ```
 
-### Test Helpers
+### Test Helper
 ```go
 func setupTestDB(t *testing.T) *sql.DB {
     t.Helper()
@@ -212,7 +212,7 @@ func setupTestDB(t *testing.T) *sql.DB {
 }
 ```
 
-## Coverage Commands
+## Các lệnh coverage
 
 ```bash
 # Basic coverage
@@ -231,38 +231,38 @@ go tool cover -func=coverage.out
 go test -race -cover ./...
 ```
 
-## Coverage Targets
+## Mục tiêu coverage
 
-| Code Type | Target |
+| Loại code | Mục tiêu |
 |-----------|--------|
-| Critical business logic | 100% |
-| Public APIs | 90%+ |
-| General code | 80%+ |
-| Generated code | Exclude |
+| Business logic quan trọng | 100% |
+| API công khai | 90%+ |
+| Code thông thường | 80%+ |
+| Code được sinh tự động | Loại trừ |
 
-## TDD Best Practices
+## Best practice của TDD
 
-**DO:**
-- Write test FIRST, before any implementation
-- Run tests after each change
-- Use table-driven tests for comprehensive coverage
-- Test behavior, not implementation details
-- Include edge cases (empty, nil, max values)
+**NÊN:**
+- Viết test TRƯỚC, trước bất kỳ phần triển khai nào
+- Chạy test sau mỗi thay đổi
+- Dùng table-driven test để có coverage toàn diện
+- Test hành vi, không test chi tiết triển khai
+- Bao gồm các edge case (rỗng, nil, giá trị tối đa)
 
-**DON'T:**
-- Write implementation before tests
-- Skip the RED phase
-- Test private functions directly
-- Use `time.Sleep` in tests
-- Ignore flaky tests
+**KHÔNG NÊN:**
+- Viết phần triển khai trước test
+- Bỏ qua pha RED
+- Test trực tiếp các hàm private
+- Dùng `time.Sleep` trong test
+- Bỏ qua các flaky test
 
-## Related Commands
+## Các command liên quan
 
-- `/go-build` - Fix build errors
-- `/go-review` - Review code after implementation
-- `verification-loop` skill - Run full verification loop
+- `/go-build` - Sửa lỗi build
+- `/go-review` - Review code sau khi triển khai
+- skill `verification-loop` - Chạy vòng lặp xác minh đầy đủ
 
-## Related
+## Liên quan
 
 - Skill: `skills/golang-testing/`
 - Skill: `skills/tdd-workflow/`

@@ -1,38 +1,38 @@
 ---
-description: Create hooks to prevent unwanted behaviors from conversation analysis or explicit instructions. Use to generate a new hook rule file from conversation analysis or a described behavior; the hookify-rules skill covers hookify rule syntax and patterns for authoring or editing rules directly.
+description: Tạo hook để ngăn các hành vi không mong muốn từ việc phân tích hội thoại hoặc chỉ dẫn tường minh. Dùng để sinh một file rule hook mới từ phân tích hội thoại hoặc một hành vi được mô tả; skill hookify-rules bao quát cú pháp và pattern của rule hookify để viết hoặc chỉnh sửa rule trực tiếp.
 ---
 
-Create hook rules to prevent unwanted Claude Code behaviors by analyzing conversation patterns or explicit user instructions.
+Tạo các rule hook để ngăn những hành vi không mong muốn của Claude Code bằng cách phân tích các pattern trong hội thoại hoặc chỉ dẫn tường minh của người dùng.
 
-## Usage
+## Cách dùng
 
 `/hookify [description of behavior to prevent]`
 
-If no arguments are provided, analyze the current conversation to find behaviors worth preventing.
+Nếu không có đối số, hãy phân tích hội thoại hiện tại để tìm các hành vi đáng ngăn chặn.
 
 ## Workflow
 
-### Step 1: Gather Behavior Info
+### Bước 1: Thu thập thông tin hành vi
 
-- With arguments: parse the user's description of the unwanted behavior
-- Without arguments: use the `conversation-analyzer` agent to find:
-  - explicit corrections
-  - frustrated reactions to repeated mistakes
-  - reverted changes
-  - repeated similar issues
+- Có đối số: parse mô tả của người dùng về hành vi không mong muốn
+- Không có đối số: dùng agent `conversation-analyzer` để tìm:
+  - các lần chỉnh sửa tường minh
+  - phản ứng bực bội trước các lỗi lặp lại
+  - các thay đổi bị hoàn tác
+  - các vấn đề tương tự lặp lại
 
-### Step 2: Present Findings
+### Bước 2: Trình bày phát hiện
 
-Show the user:
+Hiển thị cho người dùng:
 
-- behavior description
-- proposed event type
-- proposed pattern or matcher
-- proposed action
+- mô tả hành vi
+- loại event đề xuất
+- pattern hoặc matcher đề xuất
+- action đề xuất
 
-### Step 3: Generate Rule Files
+### Bước 3: Sinh file rule
 
-For each approved rule, create a file at `.claude/hookify.{name}.local.md`:
+Với mỗi rule được duyệt, tạo một file tại `.claude/hookify.{name}.local.md`:
 
 ```yaml
 ---
@@ -45,8 +45,8 @@ pattern: "regex pattern"
 Message shown when rule triggers.
 ```
 
-### Step 4: Confirm
+### Bước 4: Xác nhận
 
-Report created rules and how to manage them with `/hookify-list` and `/hookify-configure`.
-ECC's built-in hook runtime enforces enabled rules automatically; no separate
-Hookify plugin or Python runtime is required.
+Báo cáo các rule đã tạo và cách quản lý chúng bằng `/hookify-list` và `/hookify-configure`.
+Runtime hook tích hợp sẵn của ECC tự động thực thi các rule đang bật; không cần
+plugin Hookify riêng hay Python runtime.

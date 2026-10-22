@@ -1,35 +1,35 @@
 ---
 name: agent-self-evaluation
-description: Use after completing any non-trivial task. The agent self-rates its output on 5 axes — accuracy, completeness, clarity, actionability, conciseness — with concrete evidence per criterion. Produces a structured 1-5 scorecard with specific improvement suggestions.
+description: Dùng sau khi hoàn thành bất kỳ tác vụ không tầm thường nào. Agent tự chấm output của mình trên 5 trục — accuracy, completeness, clarity, actionability, conciseness — kèm bằng chứng cụ thể cho từng tiêu chí. Tạo scorecard có cấu trúc thang 1-5 cùng các gợi ý cải thiện cụ thể.
 origin: ECC
 ---
 
 # Agent Self-Evaluation
 
-After completing a complex task, the agent pauses to rate its own output against a structured 5-axis rubric. This is NOT a pass/fail gate — it's a deliberate reflection step that catches omissions, flags overconfidence, and surface areas for improvement before the user has to.
+Sau khi hoàn thành một tác vụ phức tạp, agent dừng lại để chấm output của chính mình theo một rubric 5 trục có cấu trúc. Đây KHÔNG phải cổng pass/fail — đó là một bước phản tỉnh có chủ đích, giúp bắt các thiếu sót, chỉ ra sự tự tin thái quá, và làm lộ ra các điểm cần cải thiện trước khi người dùng phải làm việc đó.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- After writing code that spans 3+ files or 50+ lines
-- After completing a multi-step workflow (implement → test → review)
-- After a debugging session that involved 3+ attempts
-- After producing a design document, architecture decision, or written analysis
-- When the user asks "how good was that?" or "rate yourself"
-- At the end of any session Stop hook (if configured — see `references/hook-integration.md`)
+- Sau khi viết code trải rộng 3+ file hoặc 50+ dòng
+- Sau khi hoàn thành một workflow nhiều bước (implement → test → review)
+- Sau một phiên debug đã trải qua 3+ lần thử
+- Sau khi tạo tài liệu thiết kế, quyết định kiến trúc hoặc bản phân tích bằng văn bản
+- Khi người dùng hỏi "how good was that?" hoặc "rate yourself"
+- Ở cuối mọi session thông qua Stop hook (nếu được cấu hình — xem `references/hook-integration.md`)
 
-## Core Concepts
+## Khái niệm cốt lõi
 
-### The 5 Evaluation Axes
+### 5 trục đánh giá
 
-| Axis | Question | What it catches |
+| Trục | Câu hỏi | Bắt được gì |
 |---|---|---|
-| **Accuracy** | Are the facts, claims, and outputs correct? | Hallucinations, wrong API names, incorrect syntax, false statements |
-| **Completeness** | Did it cover everything the user asked for? | Missed edge cases, unhandled error paths, forgotten requirements, skipped subtasks |
-| **Clarity** | Is the explanation understandable and well-structured? | Confusing explanations, jargon without definition, missing context, rambling |
-| **Actionability** | Can the user act on the output immediately? | Vague suggestions, missing steps, "you should X" without showing how, no verification path |
-| **Conciseness** | Did it use the minimum words/tokens needed? | Redundancy, over-explanation, repeating the user's question verbatim, filler content |
+| **Accuracy** | Các sự kiện, khẳng định và output có đúng không? | Hallucination, tên API sai, cú pháp sai, phát biểu sai sự thật |
+| **Completeness** | Có bao phủ mọi thứ người dùng yêu cầu không? | Edge case bị bỏ sót, đường dẫn lỗi không được xử lý, yêu cầu bị quên, subtask bị bỏ qua |
+| **Clarity** | Lời giải thích có dễ hiểu và có cấu trúc tốt không? | Giải thích gây khó hiểu, thuật ngữ không định nghĩa, thiếu ngữ cảnh, lan man |
+| **Actionability** | Người dùng có thể hành động ngay trên output không? | Gợi ý mơ hồ, thiếu bước, "you should X" mà không chỉ cách làm, không có đường xác minh |
+| **Conciseness** | Có dùng số từ/token tối thiểu cần thiết không? | Dư thừa, giải thích quá mức, lặp nguyên văn câu hỏi của người dùng, nội dung độn |
 
-### Scoring Scale
+### Thang điểm
 
 ```
 5 — Exceptional: no reasonable improvement possible
@@ -39,15 +39,15 @@ After completing a complex task, the agent pauses to rate its own output against
 1 — Poor: fundamentally misses the request or contains significant errors
 ```
 
-### The Evidence Rule
+### Quy tắc bằng chứng (Evidence Rule)
 
-Every score below 5 MUST cite specific evidence. A score of 3 cannot just say "could be better" — it must say exactly what is missing or wrong. The mantra: **"Show the gap, don't just name it."**
+Mọi điểm dưới 5 PHẢI trích dẫn bằng chứng cụ thể. Điểm 3 không thể chỉ nói "could be better" — nó phải nói chính xác điều gì còn thiếu hoặc sai. Phương châm: **"Show the gap, don't just name it."** (Chỉ ra khoảng thiếu, đừng chỉ gọi tên nó.)
 
-## Workflow
+## Quy trình
 
-### Step 1: Collect the Raw Material
+### Bước 1: Thu thập nguyên liệu thô
 
-Gather what you'll evaluate:
+Gom những thứ bạn sẽ đánh giá:
 
 ```
 - The original user request (read back from conversation)
@@ -56,20 +56,20 @@ Gather what you'll evaluate:
 - Any user feedback received during the task (corrections, "try again", "that's not right")
 ```
 
-### Step 2: Score Each Axis Independently
+### Bước 2: Chấm từng trục một cách độc lập
 
-Work through the 5 axes one at a time. For each:
+Lần lượt đi qua 5 trục, từng trục một. Với mỗi trục:
 
-1. Read the axis question
-2. Find evidence (or lack of evidence) in the output
-3. Assign a score 1-5
-4. If score < 5, write a one-sentence improvement note citing the gap
+1. Đọc câu hỏi của trục
+2. Tìm bằng chứng (hoặc việc thiếu bằng chứng) trong output
+3. Gán điểm 1-5
+4. Nếu điểm < 5, viết một ghi chú cải thiện một câu, trích dẫn khoảng thiếu
 
-Do NOT average the scores in your head first and then work backwards. Score each axis fresh.
+KHÔNG nhẩm trước điểm trung bình trong đầu rồi suy ngược lại. Hãy chấm mỗi trục từ đầu.
 
-### Step 3: Produce the Evaluation Report
+### Bước 3: Tạo báo cáo đánh giá
 
-Use the template from `templates/evaluation-report.md`. The report must include:
+Dùng template từ `templates/evaluation-report.md`. Báo cáo phải bao gồm:
 
 ```
 - One-line summary
@@ -79,17 +79,17 @@ Use the template from `templates/evaluation-report.md`. The report must include:
 - Self-check: "Would the user agree with this assessment?"
 ```
 
-### Step 4: Apply the Improvement
+### Bước 4: Áp dụng cải thiện
 
-If any axis scored 3 or below:
+Nếu bất kỳ trục nào đạt 3 điểm trở xuống:
 
-1. State what you would do differently
-2. If the gap is fixable in < 30 seconds (missing link, unclear phrasing), fix it now
-3. If the gap requires rework, flag it explicitly: "This axis scored [reason] because [evidence]. Re-running with [specific fix] would likely raise it to [score]."
+1. Nêu những gì bạn sẽ làm khác đi
+2. Nếu khoảng thiếu có thể sửa trong < 30 giây (thiếu link, cách diễn đạt chưa rõ), hãy sửa ngay
+3. Nếu khoảng thiếu đòi hỏi làm lại, hãy đánh dấu tường minh: "This axis scored [reason] because [evidence]. Re-running with [specific fix] would likely raise it to [score]."
 
-## Code Examples
+## Ví dụ code
 
-### Example: Good Evaluation (Score 4+)
+### Ví dụ: Đánh giá tốt (điểm 4+)
 
 ```
 Task: Add retry logic to HTTP client
@@ -108,7 +108,7 @@ Scorecard:
 Overall: 4.6 — One gap (timeout handling). Fix before merging.
 ```
 
-### Example: Weak Evaluation (Score 2-3)
+### Ví dụ: Đánh giá yếu (điểm 2-3)
 
 ```
 Task: Add retry logic to HTTP client
@@ -129,7 +129,7 @@ Overall: 2.8 — Wrong library used. Needs httpx rewrite.
   HTTP methods, then consolidate config.
 ```
 
-## Anti-Patterns
+## Anti-Pattern
 
 ### "Everything is a 5"
 
@@ -139,44 +139,44 @@ FAIL: Accuracy:    5 — All good.
    Clarity:      5 — Clear.
 ```
 
-No evidence cited. This is self-congratulation, not evaluation. A real 5 requires proving there's nothing to improve.
+Không trích dẫn bằng chứng. Đây là tự khen, không phải đánh giá. Một điểm 5 thực sự đòi hỏi chứng minh rằng không còn gì để cải thiện.
 
-### Over-penalizing for scope creep
+### Trừ điểm quá mức vì scope creep
 
 ```
 FAIL: Completeness: 2 — Didn't handle WebSocket connections or
    gRPC streaming (user didn't ask for these)
 ```
 
-Only evaluate against what the user actually requested, not what you could have additionally built.
+Chỉ đánh giá dựa trên những gì người dùng thực sự yêu cầu, không phải những gì bạn có thể đã xây thêm.
 
-### Using the evaluation to re-litigate
+### Dùng đánh giá để tranh cãi lại
 
 ```
 FAIL: "As I said earlier, this approach is wrong. Score: 1"
 ```
 
-The evaluation is about the delivered output, not about re-arguing design decisions that were already made. If the approach was wrong, that should have been caught before delivery.
+Đánh giá là về output đã giao, không phải để tranh luận lại các quyết định thiết kế đã được đưa ra. Nếu cách tiếp cận sai, lẽ ra điều đó phải được phát hiện trước khi giao.
 
-### Mixing personal preference with objective gaps
+### Trộn sở thích cá nhân với khoảng thiếu khách quan
 
 ```
 FAIL: "Score: 3. I don't like Python decorators."
 ```
 
-"Don't like" is not evidence. Cite a concrete readability, testability, or correctness concern, or leave the score at 4+.
+"Don't like" không phải là bằng chứng. Hãy trích dẫn một mối lo cụ thể về độ dễ đọc, khả năng test hoặc tính đúng đắn, hoặc giữ điểm ở mức 4+.
 
-## Best Practices
+## Thực hành tốt
 
-- **Evaluate the output, not the process.** The user cares about what you delivered, not how many iterations you took.
-- **One improvement per weak axis.** Don't list 5 things for one axis — pick the highest-impact gap.
-- **Tie improvements to user impact.** "Missing error handling means the user's API call will crash silently" beats "add error handling."
-- **Be specific about what 'fixed' looks like.** "Re-run with httpx transport configured for retries" beats "fix the library issue."
-- **Use tool outputs as evidence.** If tests passed, cite them. If lint is clean, cite it. Don't guess — grep for the proof.
-- **If you can't find any gaps, try harder.** A perfect score across all 5 axes is rare. Ask: "If I were the user, what would annoy me about this output?"
+- **Đánh giá output, không đánh giá quá trình.** Người dùng quan tâm bạn đã giao gì, không phải bạn mất bao nhiêu lần lặp.
+- **Một cải thiện cho mỗi trục yếu.** Đừng liệt kê 5 điều cho một trục — hãy chọn khoảng thiếu có tác động lớn nhất.
+- **Gắn cải thiện với tác động lên người dùng.** "Missing error handling means the user's API call will crash silently" tốt hơn "add error handling."
+- **Nêu cụ thể 'đã sửa' trông như thế nào.** "Re-run with httpx transport configured for retries" tốt hơn "fix the library issue."
+- **Dùng output của tool làm bằng chứng.** Nếu test pass, hãy trích dẫn. Nếu lint sạch, hãy trích dẫn. Đừng đoán — hãy grep để tìm bằng chứng.
+- **Nếu bạn không tìm thấy khoảng thiếu nào, hãy cố gắng hơn.** Điểm tuyệt đối ở cả 5 trục rất hiếm. Hãy tự hỏi: "Nếu tôi là người dùng, điều gì ở output này sẽ làm tôi khó chịu?"
 
-## Related Skills
+## Skill liên quan
 
-- `agent-eval` — Head-to-head comparison of different coding agents on benchmark tasks
-- `verification-loop` — Systematic verification of outputs against expected results
-- `security-review` — Security-focused code review checklist
+- `agent-eval` — So sánh đối đầu giữa các coding agent khác nhau trên các tác vụ benchmark
+- `verification-loop` — Xác minh có hệ thống các output so với kết quả kỳ vọng
+- `security-review` — Checklist code review tập trung vào bảo mật

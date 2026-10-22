@@ -3,11 +3,11 @@ paths:
   - "**/*.py"
   - "**/*.pyi"
 ---
-# Python Security
+# Bảo mật Python
 
-> This file extends [common/security.md](../common/security.md) with Python specific content.
+> File này mở rộng [common/security.md](../common/security.md) với nội dung dành riêng cho Python.
 
-## Secret Management
+## Quản lý Secret
 
 ```python
 import os
@@ -18,13 +18,13 @@ load_dotenv()
 api_key = os.environ["OPENAI_API_KEY"]  # Raises KeyError if missing
 ```
 
-## Security Scanning
+## Quét bảo mật
 
-- Use **bandit** for static security analysis:
+- Dùng **bandit** để phân tích bảo mật tĩnh:
   ```bash
   bandit -r src/
   ```
 
-## Reference
+## Tham chiếu
 
-See skill: `django-security` for Django-specific security guidelines (if applicable).
+Xem skill: `django-security` để có hướng dẫn bảo mật riêng cho Django (nếu áp dụng).

@@ -1,25 +1,25 @@
 ---
-description: Claim an epic issue, stamp coordination state, and sync local ownership.
+description: Nhận (claim) một epic issue, đóng dấu trạng thái điều phối và đồng bộ quyền sở hữu cục bộ.
 ---
 
 # /epic-claim
 
-Claim one epic issue as the source of truth for a unit of work.
+Nhận một epic issue làm nguồn sự thật (source of truth) cho một đơn vị công việc.
 
-Use the coordination script:
+Dùng script điều phối:
 
 ```bash
 node scripts/github-coordination.js claim <issue-number> --repo <owner/repo> --actor <login>
 ```
 
-What this does:
+Việc này làm gì:
 
-1. Loads the issue body and coordination block.
-2. Marks the epic as claimed in GitHub issue state.
-3. Updates labels and the local SQLite cache.
-4. Appends an audit comment for the claim.
+1. Tải nội dung issue và khối điều phối (coordination block).
+2. Đánh dấu epic là đã được claim trong trạng thái issue trên GitHub.
+3. Cập nhật label và cache SQLite cục bộ.
+4. Thêm một comment kiểm toán (audit) cho việc claim.
 
-Compatibility aliases:
+Alias tương thích:
 
 - `/orch-add-feature`
 - `/orch-change-feature`

@@ -3,16 +3,16 @@ paths:
   - "**/*.ts"
   - "**/*.tsx"
 ---
-# React Native / Expo Coding Style
+# Phong cách code React Native / Expo
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with React Native / Expo specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho React Native / Expo.
 
-## Components
+## Component
 
-- Define props with a named `interface` or `type`; do not use `React.FC`.
-- Keep screens thin: a screen composes hooks + presentational components, it does not hold heavy logic.
-- One component per file for anything reusable; co-locate small private subcomponents.
-- Prefer function components and hooks. No class components.
+- Định nghĩa props bằng `interface` hoặc `type` có tên; không dùng `React.FC`.
+- Giữ screen mỏng: một screen kết hợp hook + các presentational component, không chứa logic nặng.
+- Mỗi file một component cho mọi thứ có thể tái sử dụng; đặt cùng chỗ các subcomponent private nhỏ.
+- Ưu tiên function component và hook. Không dùng class component.
 
 ```tsx
 interface AvatarProps {
@@ -32,11 +32,11 @@ export function Avatar({ uri, size = 40, onPress }: AvatarProps) {
 
 ## Styling
 
-Pick ONE styling system per project and stay consistent. `StyleSheet.create()` is the framework-native option; utility-class libraries (e.g. NativeWind) are a common alternative. This rule is library-agnostic — what matters is consistency and avoiding inline allocations.
+Chọn MỘT hệ thống styling cho mỗi dự án và giữ nhất quán. `StyleSheet.create()` là lựa chọn gốc của framework; các thư viện utility-class (ví dụ NativeWind) là một lựa chọn thay thế phổ biến. Rule này không phụ thuộc thư viện — điều quan trọng là sự nhất quán và tránh cấp phát inline.
 
-- StyleSheet: define styles with `StyleSheet.create()` at module scope — never build style objects inline inside `render`/JSX on hot paths (it allocates on every render).
-- Utility-class approach: extract repeated class strings into shared constants or a variant helper.
-- Never hardcode raw colors, spacing, or font sizes scattered across files. Centralize design tokens (theme file or config).
+- StyleSheet: định nghĩa style bằng `StyleSheet.create()` ở phạm vi module — KHÔNG BAO GIỜ dựng style object inline bên trong `render`/JSX ở các đường nóng (nó cấp phát lại mỗi lần render).
+- Cách tiếp cận utility-class: tách các chuỗi class lặp lại thành hằng số dùng chung hoặc một variant helper.
+- KHÔNG BAO GIỜ hardcode màu, spacing hay cỡ chữ thô rải rác trong nhiều file. Tập trung hóa design token (file theme hoặc config).
 
 ```tsx
 // WRONG: inline style object recreated every render
@@ -50,22 +50,22 @@ const styles = StyleSheet.create({ card: { padding: 16, backgroundColor: '#fff' 
 <View className="p-4 bg-white" />
 ```
 
-## Platform Differences
+## Khác biệt giữa các nền tảng
 
-- Use platform-specific files (`Component.ios.tsx`, `Component.android.tsx`) for substantial divergence.
-- Use `Platform.select()` / `Platform.OS` for small differences only.
-- Account for safe areas with `react-native-safe-area-context`; do not hardcode status bar / notch offsets.
+- Dùng file riêng theo nền tảng (`Component.ios.tsx`, `Component.android.tsx`) khi có sự khác biệt đáng kể.
+- Chỉ dùng `Platform.select()` / `Platform.OS` cho các khác biệt nhỏ.
+- Xử lý safe area bằng `react-native-safe-area-context`; không hardcode offset của status bar / notch.
 
-## Imports & Project Layout
+## Import & Bố cục dự án
 
-- Use the Expo/TS path alias (e.g. `@/components/...`) instead of long relative chains.
-- Organize by feature/domain, not by type. Keep files focused (200-400 lines typical, 800 max).
+- Dùng path alias của Expo/TS (ví dụ `@/components/...`) thay vì chuỗi đường dẫn tương đối dài.
+- Tổ chức theo feature/domain, không theo loại. Giữ file tập trung (thông thường 200-400 dòng, tối đa 800).
 
 ## Logging
 
-- No `console.log` in shipped code. Use a logger and strip logs in production builds.
-- Surface user-facing errors through UI state, not console.
+- Không có `console.log` trong code phát hành. Dùng logger và loại bỏ log trong bản build production.
+- Hiển thị lỗi cho người dùng qua state của UI, không qua console.
 
 ## TypeScript
 
-All TypeScript rules from `rules/typescript/` apply (explicit types on public APIs, avoid `any`, Zod for validation, immutable updates). This file only adds RN-specific guidance on top.
+Mọi rule TypeScript trong `rules/typescript/` đều áp dụng (type tường minh trên API public, tránh `any`, dùng Zod để validate, cập nhật bất biến). File này chỉ bổ sung hướng dẫn riêng cho RN ở bên trên.

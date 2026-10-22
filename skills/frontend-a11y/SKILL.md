@@ -1,63 +1,63 @@
 ---
 name: frontend-a11y
-description: Accessibility patterns for React and Next.js — semantic HTML, ARIA attributes, form labeling, keyboard navigation, focus management, and screen reader support. Use when building or reviewing forms, modals, dropdowns, tooltips, or tabs, fixing a11y lint or code-review findings, or wiring up keyboard navigation and focus management.
+description: Pattern accessibility (a11y) cho React và Next.js — HTML ngữ nghĩa (semantic HTML), thuộc tính ARIA, gắn nhãn form, điều hướng bằng bàn phím, quản lý focus và hỗ trợ screen reader. Dùng khi xây dựng hoặc review form, modal, dropdown, tooltip hoặc tab, sửa phát hiện từ a11y lint hoặc code review, hoặc triển khai điều hướng bàn phím và quản lý focus.
 metadata:
   origin: community
 ---
 
-# Frontend Accessibility Patterns
+# Pattern Accessibility cho Frontend
 
-Practical accessibility patterns for React and Next.js. Covers the issues most commonly flagged in code review: missing form labels, incorrect ARIA usage, non-semantic interactive elements, and broken keyboard navigation.
+Các pattern accessibility thực dụng cho React và Next.js. Bao gồm những vấn đề thường bị đánh dấu nhất trong code review: thiếu nhãn form, dùng ARIA sai, phần tử tương tác không ngữ nghĩa và điều hướng bàn phím bị hỏng.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Building or reviewing form components (`<input>`, `<select>`, `<textarea>`)
-- Creating interactive elements (modals, dropdowns, tooltips, tabs)
-- Using `<div>` or `<span>` with `onClick`
-- Adding `aria-*` attributes to any element
-- Implementing keyboard navigation or focus management
-- Receiving accessibility feedback from code review tools (CodeRabbit, ESLint a11y)
-- Building components that must support screen readers
+- Xây dựng hoặc review các component form (`<input>`, `<select>`, `<textarea>`)
+- Tạo các phần tử tương tác (modal, dropdown, tooltip, tab)
+- Dùng `<div>` hoặc `<span>` với `onClick`
+- Thêm thuộc tính `aria-*` vào bất kỳ phần tử nào
+- Triển khai điều hướng bàn phím hoặc quản lý focus
+- Nhận phản hồi accessibility từ công cụ code review (CodeRabbit, ESLint a11y)
+- Xây dựng component phải hỗ trợ screen reader
 
-## Form Accessibility
+## Accessibility cho Form
 
-Missing `htmlFor` / `id` pairing and disconnected error messages are the most common issues flagged in code review.
+Thiếu cặp `htmlFor` / `id` và thông báo lỗi không được liên kết là những vấn đề phổ biến nhất bị đánh dấu trong code review.
 
-### Label Connection
+### Kết nối Label
 
 ```tsx
-// BAD: label has no connection to input — screen readers cannot associate them
+// BAD: label không có kết nối với input — screen reader không thể liên kết chúng
 <label>Email</label>
 <input type="email" />
 
-// GOOD: htmlFor matches input id
+// GOOD: htmlFor khớp với id của input
 <label htmlFor="email">Email</label>
 <input id="email" type="email" />
 ```
 
-### Required Fields
+### Trường bắt buộc
 
 ```tsx
-// BAD: visual-only asterisk conveys nothing to screen readers
+// BAD: dấu sao chỉ có tác dụng thị giác, không truyền đạt gì cho screen reader
 <label htmlFor="email">Email *</label>
 <input id="email" type="email" />
 
-// GOOD: required enables native browser validation; aria-required signals it to screen readers
+// GOOD: required bật validation gốc của trình duyệt; aria-required báo hiệu cho screen reader
 <label htmlFor="email">
   Email <span aria-hidden="true">*</span>
 </label>
 <input id="email" type="email" required aria-required="true" />
 ```
 
-### Error Messages
+### Thông báo lỗi
 
 ```tsx
-// BAD: error text exists visually but is not linked to the input
+// BAD: văn bản lỗi hiển thị trực quan nhưng không được liên kết với input
 <input id="email" type="email" />
 <span className="error">Invalid email address</span>
 
-// GOOD: aria-describedby connects input to its error message
-// aria-invalid signals the invalid state to screen readers
+// GOOD: aria-describedby kết nối input với thông báo lỗi của nó
+// aria-invalid báo trạng thái không hợp lệ cho screen reader
 <input
   id="email"
   type="email"
@@ -71,7 +71,7 @@ Missing `htmlFor` / `id` pairing and disconnected error messages are the most co
 )}
 ```
 
-### Complete Accessible Form
+### Form Accessible hoàn chỉnh
 
 ```tsx
 interface LoginFormProps {
@@ -145,49 +145,49 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
 }
 ```
 
-## Semantic HTML
+## HTML ngữ nghĩa (Semantic HTML)
 
-Use the element that matches the intent. Screen readers and keyboard users depend on native semantics.
+Hãy dùng phần tử khớp với ý định. Screen reader và người dùng bàn phím phụ thuộc vào ngữ nghĩa gốc.
 
 ```tsx
-// BAD: div has no role, no keyboard support, no accessible name
+// BAD: div không có role, không hỗ trợ bàn phím, không có tên accessible
 <div onClick={handleClick}>Submit</div>
 
-// GOOD: button is focusable, activates on Enter/Space, announces as "button"
+// GOOD: button focus được, kích hoạt bằng Enter/Space, được đọc là "button"
 <button type="button" onClick={handleClick}>Submit</button>
 ```
 
 ```tsx
-// BAD: non-semantic navigation
+// BAD: điều hướng không ngữ nghĩa
 <div onClick={() => navigate('/home')}>Home</div>
 
-// GOOD: anchor supports right-click, middle-click, and keyboard navigation
+// GOOD: anchor hỗ trợ chuột phải, chuột giữa và điều hướng bàn phím
 <a href="/home">Home</a>
 ```
 
 ```tsx
-// BAD: heading hierarchy skipped (h1 to h4)
+// BAD: bỏ qua cấp heading (h1 sang h4)
 <h1>Dashboard</h1>
 <h4>Recent Activity</h4>
 
-// GOOD: sequential heading levels
+// GOOD: các cấp heading liên tiếp
 <h1>Dashboard</h1>
 <h2>Recent Activity</h2>
 ```
 
-## ARIA Attributes
+## Thuộc tính ARIA
 
-Use ARIA only when native HTML semantics are insufficient. Wrong ARIA is worse than no ARIA.
+Chỉ dùng ARIA khi ngữ nghĩa HTML gốc không đủ. ARIA sai còn tệ hơn không có ARIA.
 
-### aria-label vs aria-labelledby
+### aria-label so với aria-labelledby
 
 ```tsx
-// aria-label: inline string label — use when no visible label text exists
+// aria-label: nhãn chuỗi inline — dùng khi không có văn bản nhãn hiển thị
 <button aria-label="Close modal">
   <XIcon />
 </button>
 
-// aria-labelledby: references another element's text — use when a visible label exists
+// aria-labelledby: tham chiếu văn bản của phần tử khác — dùng khi có nhãn hiển thị
 <section aria-labelledby="section-title">
   <h2 id="section-title">Recent Orders</h2>
   {/* content */}
@@ -197,7 +197,7 @@ Use ARIA only when native HTML semantics are insufficient. Wrong ARIA is worse t
 ### aria-describedby
 
 ```tsx
-// Provides supplementary description beyond the label
+// Cung cấp mô tả bổ sung ngoài nhãn
 <button
   aria-describedby="delete-warning"
   onClick={handleDelete}
@@ -206,12 +206,12 @@ Use ARIA only when native HTML semantics are insufficient. Wrong ARIA is worse t
 <p id="delete-warning">This action cannot be undone.</p>
 ```
 
-### aria-live for Dynamic Content
+### aria-live cho nội dung động
 
 ```tsx
-// Use aria-live to announce content that updates without a page reload
-// polite: waits for user to finish current action before announcing
-// assertive: interrupts immediately — use only for urgent errors
+// Dùng aria-live để thông báo nội dung cập nhật mà không tải lại trang
+// polite: chờ người dùng hoàn tất thao tác hiện tại rồi mới thông báo
+// assertive: ngắt ngay lập tức — chỉ dùng cho lỗi khẩn cấp
 
 export function StatusMessage({ message, isError }: { message: string; isError?: boolean }) {
   return (
@@ -222,7 +222,7 @@ export function StatusMessage({ message, isError }: { message: string; isError?:
 }
 ```
 
-### aria-expanded and aria-controls
+### aria-expanded và aria-controls
 
 ```tsx
 export function Accordion({ title, children }: { title: string; children: React.ReactNode }) {
@@ -242,11 +242,11 @@ export function Accordion({ title, children }: { title: string; children: React.
 }
 ```
 
-## Keyboard Navigation
+## Điều hướng bằng bàn phím
 
-Every interactive element must be reachable and operable by keyboard alone.
+Mọi phần tử tương tác phải truy cập và thao tác được chỉ bằng bàn phím.
 
-### Custom Dropdown
+### Dropdown tùy chỉnh
 
 ```tsx
 export function Dropdown({ options, onSelect }: { options: string[]; onSelect: (value: string) => void }) {
@@ -311,13 +311,13 @@ export function Dropdown({ options, onSelect }: { options: string[]; onSelect: (
 }
 ```
 
-## Focus Management
+## Quản lý Focus
 
-Focus must move logically when UI state changes — especially for modals and route transitions.
+Focus phải di chuyển hợp lý khi trạng thái UI thay đổi — đặc biệt với modal và chuyển route.
 
-### Modal Focus Restoration
+### Khôi phục Focus của Modal
 
-> This example covers initial focus and restoration. For a full focus trap (Tab/Shift+Tab cycling within the modal), use a library like [`focus-trap-react`](https://github.com/focus-trap/focus-trap-react) which handles edge cases like dynamic content and nested portals.
+> Ví dụ này bao gồm focus ban đầu và việc khôi phục. Để có focus trap đầy đủ (Tab/Shift+Tab xoay vòng trong modal), hãy dùng thư viện như [`focus-trap-react`](https://github.com/focus-trap/focus-trap-react), thư viện này xử lý các edge case như nội dung động và portal lồng nhau.
 
 ```tsx
 export function Modal({ isOpen, onClose, title, children }: { isOpen: boolean; onClose: () => void; title: string; children: React.ReactNode }) {
@@ -326,11 +326,11 @@ export function Modal({ isOpen, onClose, title, children }: { isOpen: boolean; o
 
   useEffect(() => {
     if (isOpen) {
-      // Save currently focused element and move focus into modal
+      // Lưu phần tử đang focus và chuyển focus vào modal
       previousFocusRef.current = document.activeElement as HTMLElement;
       modalRef.current?.focus();
     } else {
-      // Restore focus to the element that opened the modal
+      // Khôi phục focus về phần tử đã mở modal
       previousFocusRef.current?.focus();
     }
   }, [isOpen]);
@@ -347,27 +347,27 @@ export function Modal({ isOpen, onClose, title, children }: { isOpen: boolean; o
 }
 ```
 
-## Images and Icons
+## Ảnh và Icon
 
 ```tsx
-// BAD: decorative icon announced as unlabeled image
+// BAD: icon trang trí bị đọc là ảnh không có nhãn
 <img src="/icon.svg" />
 
-// GOOD: decorative image hidden from screen readers
+// GOOD: ảnh trang trí được ẩn khỏi screen reader
 <img src="/decoration.png" alt="" aria-hidden="true" />
 
-// GOOD: meaningful image with descriptive alt text
+// GOOD: ảnh có ý nghĩa với alt text mô tả
 <img src="/chart.png" alt="Monthly revenue increased 23% from January to March" />
 
-// GOOD: icon button with accessible label
+// GOOD: nút icon có nhãn accessible
 <button aria-label="Delete item">
   <TrashIcon aria-hidden="true" />
 </button>
 ```
 
-## Reduced Motion
+## Giảm chuyển động (Reduced Motion)
 
-Respect users who have requested reduced motion in their OS settings.
+Hãy tôn trọng người dùng đã yêu cầu giảm chuyển động trong thiết lập OS.
 
 ```tsx
 export function useReducedMotion(): boolean {
@@ -384,7 +384,7 @@ export function useReducedMotion(): boolean {
   return prefersReduced;
 }
 
-// Usage
+// Cách dùng
 export function AnimatedCard({ children }: { children: React.ReactNode }) {
   const reduceMotion = useReducedMotion();
 
@@ -403,41 +403,41 @@ export function AnimatedCard({ children }: { children: React.ReactNode }) {
 ## Anti-Patterns
 
 ```tsx
-// BAD: onClick on non-interactive element with no keyboard support
+// BAD: onClick trên phần tử không tương tác và không hỗ trợ bàn phím
 <div onClick={handleClick}>Click me</div>
 
-// BAD: aria-label on a div that has no role
+// BAD: aria-label trên div không có role
 <div aria-label="Navigation">...</div>
 
-// BAD: placeholder used as a substitute for label
+// BAD: dùng placeholder thay cho label
 <input placeholder="Enter your email" />
 
-// BAD: positive tabIndex creates unpredictable tab order
+// BAD: tabIndex dương tạo thứ tự tab khó đoán
 <button tabIndex={3}>Submit</button>
 
-// BAD: aria-hidden on a focusable element — keyboard users get trapped
+// BAD: aria-hidden trên phần tử focus được — người dùng bàn phím bị kẹt
 <button aria-hidden="true">Open</button>
 
-// BAD: role="button" on div without keyboard handler
+// BAD: role="button" trên div không có keyboard handler
 <div role="button" onClick={handleClick}>Submit</div>
-// Missing: tabIndex={0}, onKeyDown for Enter/Space
+// Thiếu: tabIndex={0}, onKeyDown cho Enter/Space
 ```
 
 ## Checklist
 
-Before submitting any interactive component for review:
+Trước khi gửi bất kỳ component tương tác nào đi review:
 
-- [ ] Every `<input>`, `<select>`, and `<textarea>` has a connected `<label>` via `htmlFor`/`id`
-- [ ] Error messages are linked with `aria-describedby` and marked `role="alert"`
-- [ ] No `onClick` on `<div>` or `<span>` without `role`, `tabIndex`, and `onKeyDown`
-- [ ] Icon-only buttons have `aria-label`
-- [ ] Decorative images use `alt=""` and `aria-hidden="true"`
-- [ ] Modals restore focus on close (for full focus trapping with Tab/Shift+Tab cycling, use a library like `focus-trap-react`)
-- [ ] Dynamic content updates use `aria-live`
-- [ ] `prefers-reduced-motion` is respected for animations
+- [ ] Mọi `<input>`, `<select>` và `<textarea>` đều có `<label>` được kết nối qua `htmlFor`/`id`
+- [ ] Thông báo lỗi được liên kết bằng `aria-describedby` và đánh dấu `role="alert"`
+- [ ] Không có `onClick` trên `<div>` hoặc `<span>` mà thiếu `role`, `tabIndex` và `onKeyDown`
+- [ ] Nút chỉ có icon có `aria-label`
+- [ ] Ảnh trang trí dùng `alt=""` và `aria-hidden="true"`
+- [ ] Modal khôi phục focus khi đóng (để có focus trap đầy đủ với Tab/Shift+Tab xoay vòng, hãy dùng thư viện như `focus-trap-react`)
+- [ ] Cập nhật nội dung động dùng `aria-live`
+- [ ] `prefers-reduced-motion` được tôn trọng cho animation
 
-## Related Skills
+## Skill liên quan
 
-- `frontend-patterns` — general React component and state patterns
-- `design-system` — design token and component consistency
-- `motion-foundations` and `motion-patterns`: animation patterns with accessibility considerations
+- `frontend-patterns` — pattern component và state chung cho React
+- `design-system` — tính nhất quán của design token và component
+- `motion-foundations` và `motion-patterns`: pattern animation có xét đến accessibility

@@ -1,31 +1,31 @@
 ---
-description: Run the orch-review native Workflow over a diff (local changes or a GitHub PR) and report blocking vs advisory findings. Surface for the orch-review workflow. Use for a native-Workflow, adversarially-verified multi-dimension review with fan-out and dedup; for the step-by-step checklist pass use /code-review, and for the multi-agent pass use /review-pr.
-argument-hint: "[pr-number | pr-url | blank for local uncommitted changes]"
+description: Chạy Workflow native orch-review trên một diff (thay đổi cục bộ hoặc một GitHub PR) và báo cáo các phát hiện blocking so với advisory. Là bề mặt (surface) cho workflow orch-review. Dùng cho một lượt review đa chiều bằng native Workflow, được kiểm chứng đối kháng (adversarial) với fan-out và dedup; với lượt review theo checklist từng bước hãy dùng /code-review, và với lượt review đa agent hãy dùng /review-pr.
+argument-hint: "[pr-number | pr-url | để trống cho các thay đổi cục bộ chưa commit]"
 ---
 
 # /orch-review
 
-Surface for `workflows/orch-review.workflow.js` — the native Workflow port of
-orch-pipeline Phase 5 (Review). This command computes a diff, hands it to the
-workflow, and presents the result. The workflow owns the fan-out (one reviewer
-per dimension, dedup, adversarial verify); this command owns input and output.
+Bề mặt cho `workflows/orch-review.workflow.js` — bản port Workflow native của
+Phase 5 (Review) trong orch-pipeline. Command này tính toán một diff, đưa nó cho
+workflow, và trình bày kết quả. Workflow sở hữu phần fan-out (một reviewer
+cho mỗi chiều, dedup, adversarial verify); command này sở hữu input và output.
 
 **Input**: $ARGUMENTS
 
 ---
 
-## Mode Selection
+## Chọn chế độ
 
-| Input | Mode |
+| Input | Chế độ |
 |---|---|
-| Blank | **Local Mode** — review uncommitted changes |
-| Number (e.g. `42`) or PR URL | **PR Mode** — review a GitHub PR |
+| Để trống | **Local Mode** — review các thay đổi chưa commit |
+| Số (ví dụ `42`) hoặc URL của PR | **PR Mode** — review một GitHub PR |
 
 ---
 
 ## Phase 1 — GATHER
 
-Build the unified diff and the metadata the workflow needs.
+Dựng unified diff và metadata mà workflow cần.
 
 **Local Mode:**
 
@@ -34,15 +34,15 @@ git diff --name-only HEAD          # changedFiles
 git diff HEAD                      # diff text
 ```
 
-If the diff is empty, stop: "Nothing to review."
+Nếu diff rỗng, hãy dừng lại: "Nothing to review."
 
 **PR Mode:**
 
-First derive a **safe numeric PR id** from `$ARGUMENTS` — never pass the raw
-argument to the shell. Accept either a bare integer, or the trailing number of a
-`https://github.com/<owner>/<repo>/pull/<N>` URL. Reject anything else (extra
-text, shell metacharacters, a non-PR URL) and stop with an error. Use only the
-extracted integer `<NUMBER>` below:
+Trước hết hãy suy ra một **PR id dạng số an toàn** từ `$ARGUMENTS` — KHÔNG BAO GIỜ truyền đối số
+thô vào shell. Chấp nhận một số nguyên trần, hoặc số ở cuối của một URL
+`https://github.com/<owner>/<repo>/pull/<N>`. Từ chối mọi thứ khác (văn bản thừa,
+ký tự đặc biệt của shell, URL không phải PR) và dừng lại với một lỗi. Chỉ dùng
+số nguyên đã trích xuất `<NUMBER>` bên dưới:
 
 ```bash
 gh pr diff <NUMBER>                       # diff text
@@ -50,17 +50,17 @@ gh pr view <NUMBER> --json files \
   --jq '.files[].path'                    # changedFiles
 ```
 
-If the PR is not found, stop with an error.
+Nếu không tìm thấy PR, hãy dừng lại với một lỗi.
 
-Then derive `language` from the dominant changed-file extension (for example
-`.ts`/`.tsx` to `typescript`, `.py` to `python`, `.go` to `go`). Leave it unset
-when the change is mixed or non-code — the workflow simply skips the
-language-specific reviewer.
+Sau đó suy ra `language` từ phần mở rộng file thay đổi chiếm ưu thế (ví dụ
+`.ts`/`.tsx` thành `typescript`, `.py` thành `python`, `.go` thành `go`). Để trống
+khi thay đổi hỗn hợp hoặc không phải code — workflow sẽ đơn giản bỏ qua reviewer
+theo ngôn ngữ cụ thể.
 
 ## Phase 2 — INVOKE
 
-Call the Workflow tool. The workflow validates its own input and fails closed on
-a missing or empty diff, so always pass a non-empty `diff`.
+Gọi tool Workflow. Workflow tự validate input của nó và fail closed khi
+diff thiếu hoặc rỗng, vì vậy luôn truyền một `diff` không rỗng.
 
 ```jsonc
 Workflow({
@@ -73,9 +73,9 @@ Workflow({
 })
 ```
 
-The workflow fans out reviewers in parallel, dedups findings on the normalized
-evidence snippet, and runs an adversarial verifier on every unique CRITICAL/HIGH
-finding. It returns:
+Workflow fan-out các reviewer song song, dedup các phát hiện dựa trên đoạn
+bằng chứng đã chuẩn hóa, và chạy một adversarial verifier trên mọi phát hiện
+CRITICAL/HIGH duy nhất. Nó trả về:
 
 ```jsonc
 {
@@ -90,30 +90,30 @@ finding. It returns:
 
 ## Phase 3 — REPORT
 
-Present the result to the user (this is the human review gate; the workflow does
-not commit anything):
+Trình bày kết quả cho người dùng (đây là cổng review của con người; workflow không
+commit bất cứ thứ gì):
 
-- Lead with `verdict` and the `stats` line (dimensions, raw to unique collapse).
-- List every `blocking` finding with file, severity, and evidence — these must
-  clear before a commit. Findings tagged "could not be verified" stay in
-  `blocking` by design; call them out as needing manual confirmation.
-- List `advisory` findings briefly (MEDIUM/LOW and verifier-refuted items).
-- If `incomplete` is true, state which dimensions in `failedDimensions` did not
-  run and that the verdict is therefore not a clean approval.
+- Mở đầu bằng `verdict` và dòng `stats` (số chiều, mức thu gọn từ raw xuống unique).
+- Liệt kê mọi phát hiện `blocking` kèm file, mức độ nghiêm trọng và bằng chứng — những phát hiện này phải
+  được giải quyết trước khi commit. Các phát hiện được gắn thẻ "could not be verified" vẫn ở lại trong
+  `blocking` theo thiết kế; hãy chỉ rõ chúng cần được xác nhận thủ công.
+- Liệt kê ngắn gọn các phát hiện `advisory` (MEDIUM/LOW và các mục bị verifier bác bỏ).
+- Nếu `incomplete` là true, hãy nêu những chiều nào trong `failedDimensions` đã không
+  chạy và do đó verdict không phải là một sự phê duyệt hoàn chỉnh.
 
-## Fail-Closed Contract
+## Hợp đồng Fail-Closed
 
-This command must never present a clean APPROVE when the review could not fully
-run. If the Workflow tool itself errors, report the failure — do not fall back to
-a hand-rolled review and do not imply the diff was approved.
+Command này KHÔNG BAO GIỜ được trình bày một APPROVE sạch khi lượt review không thể chạy đầy đủ.
+Nếu bản thân tool Workflow bị lỗi, hãy báo cáo lỗi — không quay lại một lượt review
+tự làm thủ công và không ám chỉ rằng diff đã được duyệt.
 
 ---
 
-## Edge Cases
+## Edge Case
 
-- **No `gh` CLI (PR Mode)**: stop and tell the user PR Mode needs `gh`; suggest
-  Local Mode against a checked-out branch instead.
-- **Large diff**: the workflow caps reviewer concurrency automatically, so a
-  large diff is slower but safe; warn the user it may take longer.
-- **Binary or generated files**: drop them from `changedFiles` before invoking —
-  they add noise to the security trigger without reviewable content.
+- **Không có `gh` CLI (PR Mode)**: dừng lại và báo người dùng rằng PR Mode cần `gh`; đề xuất
+  dùng Local Mode trên một branch đã checkout thay thế.
+- **Diff lớn**: workflow tự động giới hạn mức đồng thời của reviewer, nên một
+  diff lớn sẽ chậm hơn nhưng an toàn; hãy cảnh báo người dùng rằng có thể mất nhiều thời gian hơn.
+- **File binary hoặc được sinh tự động**: loại chúng khỏi `changedFiles` trước khi gọi —
+  chúng chỉ thêm nhiễu cho security trigger mà không có nội dung để review.

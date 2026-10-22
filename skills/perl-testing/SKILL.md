@@ -1,26 +1,26 @@
 ---
 name: perl-testing
-description: Perl testing patterns using Test2::V0, Test::More, prove runner, mocking, coverage with Devel::Cover, and TDD methodology. Use when writing Perl tests with Test2::V0 or Test::More, or measuring coverage.
+description: Các pattern kiểm thử Perl dùng Test2::V0, Test::More, prove runner, mocking, coverage với Devel::Cover và phương pháp TDD. Dùng khi viết test Perl bằng Test2::V0 hoặc Test::More, hoặc đo coverage.
 metadata:
   origin: ECC
 ---
 
-# Perl Testing Patterns
+# Pattern kiểm thử Perl
 
-Comprehensive testing strategies for Perl applications using Test2::V0, Test::More, prove, and TDD methodology.
+Chiến lược kiểm thử toàn diện cho ứng dụng Perl dùng Test2::V0, Test::More, prove và phương pháp TDD.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new Perl code (follow TDD: red, green, refactor)
-- Designing test suites for Perl modules or applications
-- Reviewing Perl test coverage
-- Setting up Perl testing infrastructure
-- Migrating tests from Test::More to Test2::V0
-- Debugging failing Perl tests
+- Viết code Perl mới (theo TDD: red, green, refactor)
+- Thiết kế test suite cho module hoặc ứng dụng Perl
+- Review test coverage của Perl
+- Thiết lập hạ tầng kiểm thử Perl
+- Migrate test từ Test::More sang Test2::V0
+- Debug các test Perl bị fail
 
-## TDD Workflow
+## Quy trình TDD
 
-Always follow the RED-GREEN-REFACTOR cycle.
+Luôn tuân theo chu trình RED-GREEN-REFACTOR.
 
 ```perl
 # Step 1: RED — Write a failing test
@@ -55,11 +55,11 @@ sub add($self, $a, $b) {
 # Run: prove -lv t/unit/calculator.t
 ```
 
-## Test::More Fundamentals
+## Nền tảng Test::More
 
-The standard Perl testing module — widely used, ships with core.
+Module kiểm thử chuẩn của Perl — được dùng rộng rãi, đi kèm core.
 
-### Basic Assertions
+### Assertion cơ bản
 
 ```perl
 use v5.36;
@@ -94,7 +94,7 @@ can_ok($obj, 'save', 'delete');
 done_testing;
 ```
 
-### SKIP and TODO
+### SKIP và TODO
 
 ```perl
 use v5.36;
@@ -118,19 +118,19 @@ TODO: {
 done_testing;
 ```
 
-## Test2::V0 Modern Framework
+## Framework hiện đại Test2::V0
 
-Test2::V0 is the modern replacement for Test::More — richer assertions, better diagnostics, and extensible.
+Test2::V0 là sự thay thế hiện đại cho Test::More — assertion phong phú hơn, chẩn đoán tốt hơn và có thể mở rộng.
 
-### Why Test2?
+### Tại sao chọn Test2?
 
-- Superior deep comparison with hash/array builders
-- Better diagnostic output on failures
-- Subtests with cleaner scoping
-- Extensible via Test2::Tools::* plugins
-- Backward-compatible with Test::More tests
+- So sánh sâu (deep comparison) vượt trội với hash/array builder
+- Output chẩn đoán tốt hơn khi fail
+- Subtest với phạm vi (scoping) gọn gàng hơn
+- Mở rộng được qua các plugin Test2::Tools::*
+- Tương thích ngược với test Test::More
 
-### Deep Comparison with Builders
+### So sánh sâu với Builder
 
 ```perl
 use v5.36;
@@ -172,7 +172,7 @@ is(
 );
 ```
 
-### Subtests
+### Subtest
 
 ```perl
 use v5.36;
@@ -195,7 +195,7 @@ subtest 'User validation' => sub {
 done_testing;
 ```
 
-### Exception Testing with Test2
+### Kiểm thử Exception với Test2
 
 ```perl
 use v5.36;
@@ -224,9 +224,9 @@ subtest 'error handling' => sub {
 done_testing;
 ```
 
-## Test Organization and prove
+## Tổ chức test và prove
 
-### Directory Structure
+### Cấu trúc thư mục
 
 ```text
 t/
@@ -246,7 +246,7 @@ t/
     └── users.csv
 ```
 
-### prove Commands
+### Lệnh prove
 
 ```bash
 # Run all tests
@@ -274,7 +274,7 @@ prove -l --color --timer t/
 prove -l --formatter TAP::Formatter::JUnit t/ > results.xml
 ```
 
-### .proverc Configuration
+### Cấu hình .proverc
 
 ```text
 -l
@@ -285,9 +285,9 @@ prove -l --formatter TAP::Formatter::JUnit t/ > results.xml
 --state=save
 ```
 
-## Fixtures and Setup/Teardown
+## Fixture và Setup/Teardown
 
-### Subtest Isolation
+### Cô lập bằng Subtest
 
 ```perl
 use v5.36;
@@ -309,9 +309,9 @@ subtest 'file processing' => sub {
 };
 ```
 
-### Shared Test Helpers
+### Test Helper dùng chung
 
-Place reusable helpers in `t/lib/TestHelper.pm` and load with `use lib 't/lib'`. Export factory functions like `create_test_db()`, `create_temp_dir()`, and `fixture_path()` via `Exporter`.
+Đặt các helper tái sử dụng trong `t/lib/TestHelper.pm` và nạp bằng `use lib 't/lib'`. Export các factory function như `create_test_db()`, `create_temp_dir()` và `fixture_path()` qua `Exporter`.
 
 ## Mocking
 
@@ -348,11 +348,11 @@ subtest 'mock external API' => sub {
 # *MyApp::API::fetch_user = sub { ... };  # NEVER — leaks across tests
 ```
 
-For lightweight mock objects, use `Test::MockObject` to create injectable test doubles with `->mock()` and verify calls with `->called_ok()`.
+Với mock object nhẹ, dùng `Test::MockObject` để tạo các test double có thể inject với `->mock()` và verify các lời gọi bằng `->called_ok()`.
 
-## Coverage with Devel::Cover
+## Coverage với Devel::Cover
 
-### Running Coverage
+### Chạy Coverage
 
 ```bash
 # Basic coverage report
@@ -376,7 +376,7 @@ cover -test && cover -report text -select '^lib/' \
 
 ### Integration Testing
 
-Use in-memory SQLite for database tests, mock HTTP::Tiny for API tests.
+Dùng SQLite in-memory cho test database, mock HTTP::Tiny cho test API.
 
 ```perl
 use v5.36;
@@ -397,50 +397,50 @@ subtest 'database integration' => sub {
 done_testing;
 ```
 
-## Best Practices
+## Best Practice
 
-### DO
+### NÊN
 
-- **Follow TDD**: Write tests before implementation (red-green-refactor)
-- **Use Test2::V0**: Modern assertions, better diagnostics
-- **Use subtests**: Group related assertions, isolate state
-- **Mock external dependencies**: Network, database, file system
-- **Use `prove -l`**: Always include lib/ in `@INC`
-- **Name tests clearly**: `'user login with invalid password fails'`
-- **Test edge cases**: Empty strings, undef, zero, boundary values
-- **Aim for 80%+ coverage**: Focus on business logic paths
-- **Keep tests fast**: Mock I/O, use in-memory databases
+- **Tuân theo TDD**: Viết test trước phần triển khai (red-green-refactor)
+- **Dùng Test2::V0**: Assertion hiện đại, chẩn đoán tốt hơn
+- **Dùng subtest**: Nhóm các assertion liên quan, cô lập state
+- **Mock các dependency bên ngoài**: Mạng, database, file system
+- **Dùng `prove -l`**: Luôn đưa lib/ vào `@INC`
+- **Đặt tên test rõ ràng**: `'user login with invalid password fails'`
+- **Test edge case**: Chuỗi rỗng, undef, zero, giá trị biên
+- **Hướng tới coverage 80%+**: Tập trung vào các đường business logic
+- **Giữ test nhanh**: Mock I/O, dùng database in-memory
 
-### DON'T
+### KHÔNG NÊN
 
-- **Don't test implementation**: Test behavior and output, not internals
-- **Don't share state between subtests**: Each subtest should be independent
-- **Don't skip `done_testing`**: Ensures all planned tests ran
-- **Don't over-mock**: Mock boundaries only, not the code under test
-- **Don't use `Test::More` for new projects**: Prefer Test2::V0
-- **Don't ignore test failures**: All tests must pass before merge
-- **Don't test CPAN modules**: Trust libraries to work correctly
-- **Don't write brittle tests**: Avoid over-specific string matching
+- **Không test phần triển khai**: Hãy test hành vi và output, không phải phần nội bộ
+- **Không chia sẻ state giữa các subtest**: Mỗi subtest phải độc lập
+- **Không bỏ qua `done_testing`**: Đảm bảo mọi test đã lên kế hoạch đều chạy
+- **Không mock quá mức**: Chỉ mock ở ranh giới, không mock code đang được test
+- **Không dùng `Test::More` cho dự án mới**: Ưu tiên Test2::V0
+- **Không bỏ qua test fail**: Mọi test phải pass trước khi merge
+- **Không test module CPAN**: Hãy tin các thư viện hoạt động đúng
+- **Không viết test dễ vỡ**: Tránh so khớp chuỗi quá cụ thể
 
-## Quick Reference
+## Tham chiếu nhanh
 
-| Task | Command / Pattern |
+| Tác vụ | Lệnh / Pattern |
 |---|---|
-| Run all tests | `prove -lr t/` |
-| Run one test verbose | `prove -lv t/unit/user.t` |
-| Parallel test run | `prove -lr -j8 t/` |
-| Coverage report | `cover -test && cover -report html` |
-| Test equality | `is($got, $expected, 'label')` |
-| Deep comparison | `is($got, hash { field k => 'v'; etc() }, 'label')` |
+| Chạy mọi test | `prove -lr t/` |
+| Chạy một test ở chế độ verbose | `prove -lv t/unit/user.t` |
+| Chạy test song song | `prove -lr -j8 t/` |
+| Báo cáo coverage | `cover -test && cover -report html` |
+| Test bằng nhau | `is($got, $expected, 'label')` |
+| So sánh sâu | `is($got, hash { field k => 'v'; etc() }, 'label')` |
 | Test exception | `like(dies { ... }, qr/msg/, 'label')` |
-| Test no exception | `ok(lives { ... }, 'label')` |
-| Mock a method | `Test::MockModule->new('Pkg')->mock(m => sub { ... })` |
-| Skip tests | `SKIP: { skip 'reason', $count unless $cond; ... }` |
-| TODO tests | `TODO: { local $TODO = 'reason'; ... }` |
+| Test không có exception | `ok(lives { ... }, 'label')` |
+| Mock một method | `Test::MockModule->new('Pkg')->mock(m => sub { ... })` |
+| Bỏ qua test | `SKIP: { skip 'reason', $count unless $cond; ... }` |
+| Test TODO | `TODO: { local $TODO = 'reason'; ... }` |
 
-## Common Pitfalls
+## Cạm bẫy thường gặp
 
-### Forgetting `done_testing`
+### Quên `done_testing`
 
 ```perl
 # Bad: Test file runs but doesn't verify all tests executed
@@ -454,7 +454,7 @@ is(1, 1, 'works');
 done_testing;
 ```
 
-### Missing `-l` Flag
+### Thiếu cờ `-l`
 
 ```bash
 # Bad: Modules in lib/ not found
@@ -465,12 +465,12 @@ prove t/unit/user.t
 prove -l t/unit/user.t
 ```
 
-### Over-Mocking
+### Mock quá mức
 
-Mock the *dependency*, not the code under test. If your test only verifies that a mock returns what you told it to, it tests nothing.
+Hãy mock *dependency*, không mock code đang được test. Nếu test của bạn chỉ verify rằng một mock trả về đúng thứ bạn bảo nó trả về, thì nó chẳng test gì cả.
 
-### Test Pollution
+### Ô nhiễm test (Test Pollution)
 
-Use `my` variables inside subtests — never `our` — to prevent state leaking between tests.
+Dùng biến `my` bên trong subtest — không bao giờ dùng `our` — để ngăn state rò rỉ giữa các test.
 
-**Remember**: Tests are your safety net. Keep them fast, focused, and independent. Use Test2::V0 for new projects, prove for running, and Devel::Cover for accountability.
+**Hãy nhớ**: Test là lưới an toàn của bạn. Giữ chúng nhanh, tập trung và độc lập. Dùng Test2::V0 cho dự án mới, prove để chạy và Devel::Cover để chịu trách nhiệm về coverage.

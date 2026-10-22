@@ -1,139 +1,139 @@
 ---
-description: Execute an implementation plan with rigorous validation loops
+description: Thực thi một kế hoạch triển khai với các vòng lặp validation nghiêm ngặt
 argument-hint: <path/to/plan.md>
 ---
 
-> Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
+> Phỏng theo PRPs-agentic-eng của Wirasm. Thuộc chuỗi workflow PRP.
 
 # PRP Implement
 
-Execute a plan file step-by-step with continuous validation. Every change is verified immediately — never accumulate broken state.
+Thực thi file plan từng bước với validation liên tục. Mọi thay đổi đều được xác minh ngay lập tức — không bao giờ để dồn trạng thái hỏng.
 
-**Core Philosophy**: Validation loops catch mistakes early. Run checks after every change. Fix issues immediately.
+**Triết lý cốt lõi**: Các vòng lặp validation bắt lỗi sớm. Chạy kiểm tra sau mỗi thay đổi. Sửa vấn đề ngay lập tức.
 
-**Golden Rule**: If a validation fails, fix it before moving on. Never accumulate broken state.
+**Quy tắc vàng**: Nếu một validation thất bại, hãy sửa trước khi đi tiếp. Không bao giờ để dồn trạng thái hỏng.
 
 ---
 
-## Phase 0 — DETECT
+## Giai đoạn 0 — DETECT
 
-### Package Manager Detection
+### Phát hiện Package Manager
 
-| File Exists | Package Manager | Runner |
+| File tồn tại | Package Manager | Runner |
 |---|---|---|
 | `bun.lockb` | bun | `bun run` |
 | `pnpm-lock.yaml` | pnpm | `pnpm run` |
 | `yarn.lock` | yarn | `yarn` |
 | `package-lock.json` | npm | `npm run` |
-| `pyproject.toml` or `requirements.txt` | uv / pip | `uv run` or `python -m` |
+| `pyproject.toml` hoặc `requirements.txt` | uv / pip | `uv run` hoặc `python -m` |
 | `Cargo.toml` | cargo | `cargo` |
 | `go.mod` | go | `go` |
 
-### Validation Scripts
+### Các script validation
 
-Check `package.json` (or equivalent) for available scripts:
+Kiểm tra `package.json` (hoặc tương đương) để biết các script có sẵn:
 
 ```bash
 # For Node.js projects
 cat package.json | grep -A 20 '"scripts"'
 ```
 
-Note available commands for: type-check, lint, test, build.
+Ghi lại các lệnh có sẵn cho: type-check, lint, test, build.
 
 ---
 
-## Phase 1 — LOAD
+## Giai đoạn 1 — LOAD
 
-Read the plan file:
+Đọc file plan:
 
 ```bash
 cat "$ARGUMENTS"
 ```
 
-Extract these sections from the plan:
-- **Summary** — What is being built
-- **Patterns to Mirror** — Code conventions to follow
-- **Files to Change** — What to create or modify
-- **Step-by-Step Tasks** — Implementation sequence
-- **Validation Commands** — How to verify correctness
-- **Acceptance Criteria** — Definition of done
+Trích xuất các section sau từ plan:
+- **Summary** — Đang xây dựng cái gì
+- **Patterns to Mirror** — Quy ước code cần tuân theo
+- **Files to Change** — Cần tạo hoặc sửa những gì
+- **Step-by-Step Tasks** — Trình tự triển khai
+- **Validation Commands** — Cách xác minh tính đúng đắn
+- **Acceptance Criteria** — Định nghĩa hoàn thành (definition of done)
 
-If the file doesn't exist or isn't a valid plan:
+Nếu file không tồn tại hoặc không phải plan hợp lệ:
 ```
 Error: Plan file not found or invalid.
 Run /prp-plan <feature-description> to create a plan first.
 ```
 
-**CHECKPOINT**: Plan loaded. All sections identified. Tasks extracted.
+**CHECKPOINT**: Đã load plan. Đã xác định tất cả section. Đã trích xuất các task.
 
 ---
 
-## Phase 2 — PREPARE
+## Giai đoạn 2 — PREPARE
 
-### Git State
+### Trạng thái Git
 
 ```bash
 git branch --show-current
 git status --porcelain
 ```
 
-### Branch Decision
+### Quyết định về Branch
 
-| Current State | Action |
+| Trạng thái hiện tại | Hành động |
 |---|---|
-| On feature branch | Use current branch |
-| On main, clean working tree | Create feature branch: `git checkout -b feat/{plan-name}` |
-| On main, dirty working tree | **STOP** — Ask user to stash or commit first |
-| In a git worktree for this feature | Use the worktree |
+| Đang ở feature branch | Dùng branch hiện tại |
+| Ở main, working tree sạch | Tạo feature branch: `git checkout -b feat/{plan-name}` |
+| Ở main, working tree bẩn | **DỪNG** — Yêu cầu người dùng stash hoặc commit trước |
+| Trong một git worktree dành cho tính năng này | Dùng worktree đó |
 
-### Sync Remote
+### Đồng bộ Remote
 
 ```bash
 git pull --rebase origin $(git branch --show-current) 2>/dev/null || true
 ```
 
-**CHECKPOINT**: On correct branch. Working tree ready. Remote synced.
+**CHECKPOINT**: Đang ở đúng branch. Working tree sẵn sàng. Remote đã đồng bộ.
 
 ---
 
-## Phase 3 — EXECUTE
+## Giai đoạn 3 — EXECUTE
 
-Process each task from the plan sequentially.
+Xử lý tuần tự từng task trong plan.
 
-### Per-Task Loop
+### Vòng lặp cho từng Task
 
-For each task in **Step-by-Step Tasks**:
+Với mỗi task trong **Step-by-Step Tasks**:
 
-1. **Read MIRROR reference** — Open the pattern file referenced in the task's MIRROR field. Understand the convention before writing code.
+1. **Đọc tham chiếu MIRROR** — Mở file pattern được tham chiếu trong trường MIRROR của task. Hiểu quy ước trước khi viết code.
 
-2. **Implement** — Write the code following the pattern exactly. Apply GOTCHA warnings. Use specified IMPORTS.
+2. **Triển khai** — Viết code theo đúng pattern. Áp dụng các cảnh báo GOTCHA. Dùng đúng IMPORTS đã chỉ định.
 
-3. **Validate immediately** — After EVERY file change:
+3. **Validate ngay lập tức** — Sau MỖI thay đổi file:
    ```bash
    # Run type-check (adjust command per project)
    [type-check command from Phase 0]
    ```
-   If type-check fails → fix the error before moving to the next file.
+   Nếu type-check thất bại → sửa lỗi trước khi chuyển sang file tiếp theo.
 
-4. **Track progress** — Log: `[done] Task N: [task name] — complete`
+4. **Theo dõi tiến độ** — Ghi log: `[done] Task N: [task name] — complete`
 
-### Handling Deviations
+### Xử lý các sai lệch
 
-If implementation must deviate from the plan:
-- Note **WHAT** changed
-- Note **WHY** it changed
-- Continue with the corrected approach
-- These deviations will be captured in the report
+Nếu việc triển khai buộc phải lệch khỏi plan:
+- Ghi chú **CÁI GÌ** đã thay đổi
+- Ghi chú **TẠI SAO** nó thay đổi
+- Tiếp tục với hướng tiếp cận đã được điều chỉnh
+- Các sai lệch này sẽ được ghi lại trong báo cáo
 
-**CHECKPOINT**: All tasks executed. Deviations logged.
+**CHECKPOINT**: Đã thực thi tất cả task. Đã ghi log các sai lệch.
 
 ---
 
-## Phase 4 — VALIDATE
+## Giai đoạn 4 — VALIDATE
 
-Run all validation levels from the plan. Fix issues at each level before proceeding.
+Chạy tất cả các mức validation từ plan. Sửa vấn đề ở từng mức trước khi đi tiếp.
 
-### Level 1: Static Analysis
+### Mức 1: Phân tích tĩnh (Static Analysis)
 
 ```bash
 # Type checking — zero errors required
@@ -144,29 +144,29 @@ Run all validation levels from the plan. Fix issues at each level before proceed
 [project lint-fix command]
 ```
 
-If lint errors remain after auto-fix, fix manually.
+Nếu vẫn còn lỗi lint sau khi auto-fix, hãy sửa thủ công.
 
-### Level 2: Unit Tests
+### Mức 2: Unit Test
 
-Write tests for every new function (as specified in the plan's Testing Strategy).
+Viết test cho mọi function mới (theo chỉ định trong Testing Strategy của plan).
 
 ```bash
 [project test command for affected area]
 ```
 
-- Every function needs at least one test
-- Cover edge cases listed in the plan
-- If a test fails → fix the implementation (not the test, unless the test is wrong)
+- Mỗi function cần ít nhất một test
+- Bao phủ các edge case được liệt kê trong plan
+- Nếu một test thất bại → sửa phần triển khai (không sửa test, trừ khi test sai)
 
-### Level 3: Build Check
+### Mức 3: Kiểm tra Build
 
 ```bash
 [project build command]
 ```
 
-Build must succeed with zero errors.
+Build phải thành công với zero lỗi.
 
-### Level 4: Integration Testing (if applicable)
+### Mức 4: Integration Testing (nếu áp dụng)
 
 ```bash
 # Start server, run tests, stop server
@@ -198,23 +198,23 @@ wait "$SERVER_PID" 2>/dev/null || true
 exit "$TEST_EXIT"
 ```
 
-### Level 5: Edge Case Testing
+### Mức 5: Kiểm thử Edge Case
 
-Run through edge cases from the plan's Testing Strategy checklist.
+Chạy qua các edge case trong checklist Testing Strategy của plan.
 
-**CHECKPOINT**: All 5 validation levels pass. Zero errors.
+**CHECKPOINT**: Cả 5 mức validation đều pass. Zero lỗi.
 
 ---
 
-## Phase 5 — REPORT
+## Giai đoạn 5 — REPORT
 
-### Create Implementation Report
+### Tạo báo cáo triển khai
 
 ```bash
 mkdir -p .claude/PRPs/reports
 ```
 
-Write report to `.claude/PRPs/reports/{plan-name}-report.md`:
+Ghi báo cáo vào `.claude/PRPs/reports/{plan-name}-report.md`:
 
 ```markdown
 # Implementation Report: [Feature Name]
@@ -271,26 +271,26 @@ Write report to `.claude/PRPs/reports/{plan-name}-report.md`:
 - [ ] Create PR via `/prp-pr`
 ```
 
-### Update PRD (if applicable)
+### Cập nhật PRD (nếu áp dụng)
 
-If this implementation was for a PRD phase:
-1. Update the phase status from `in-progress` to `complete`
-2. Add report path as reference
+Nếu lần triển khai này dành cho một phase của PRD:
+1. Cập nhật trạng thái phase từ `in-progress` sang `complete`
+2. Thêm đường dẫn báo cáo làm tham chiếu
 
-### Archive Plan
+### Lưu trữ Plan
 
 ```bash
 mkdir -p .claude/PRPs/plans/completed
 mv "$ARGUMENTS" .claude/PRPs/plans/completed/
 ```
 
-**CHECKPOINT**: Report created. PRD updated. Plan archived.
+**CHECKPOINT**: Đã tạo báo cáo. Đã cập nhật PRD. Đã lưu trữ plan.
 
 ---
 
-## Phase 6 — OUTPUT
+## Giai đoạn 6 — OUTPUT
 
-Report to user:
+Báo cáo cho người dùng:
 
 ```
 ## Implementation Complete
@@ -331,55 +331,55 @@ Report to user:
 
 ---
 
-## Handling Failures
+## Xử lý khi thất bại
 
-### Type Check Fails
-1. Read the error message carefully
-2. Fix the type error in the source file
-3. Re-run type-check
-4. Continue only when clean
+### Type Check thất bại
+1. Đọc kỹ thông báo lỗi
+2. Sửa lỗi type trong file nguồn
+3. Chạy lại type-check
+4. Chỉ tiếp tục khi sạch lỗi
 
-### Tests Fail
-1. Identify whether the bug is in the implementation or the test
-2. Fix the root cause (usually the implementation)
-3. Re-run tests
-4. Continue only when green
+### Test thất bại
+1. Xác định lỗi nằm ở phần triển khai hay ở test
+2. Sửa nguyên nhân gốc (thường là phần triển khai)
+3. Chạy lại test
+4. Chỉ tiếp tục khi tất cả xanh
 
-### Lint Fails
-1. Run auto-fix first
-2. If errors remain, fix manually
-3. Re-run lint
-4. Continue only when clean
+### Lint thất bại
+1. Chạy auto-fix trước
+2. Nếu vẫn còn lỗi, sửa thủ công
+3. Chạy lại lint
+4. Chỉ tiếp tục khi sạch lỗi
 
-### Build Fails
-1. Usually a type or import issue — check error message
-2. Fix the offending file
-3. Re-run build
-4. Continue only when successful
+### Build thất bại
+1. Thường là vấn đề type hoặc import — kiểm tra thông báo lỗi
+2. Sửa file gây lỗi
+3. Chạy lại build
+4. Chỉ tiếp tục khi thành công
 
-### Integration Test Fails
-1. Check server started correctly
-2. Verify endpoint/route exists
-3. Check request format matches expected
-4. Fix and re-run
-
----
-
-## Success Criteria
-
-- **TASKS_COMPLETE**: All tasks from the plan executed
-- **TYPES_PASS**: Zero type errors
-- **LINT_PASS**: Zero lint errors
-- **TESTS_PASS**: All tests green, new tests written
-- **BUILD_PASS**: Build succeeds
-- **REPORT_CREATED**: Implementation report saved
-- **PLAN_ARCHIVED**: Plan moved to `completed/`
+### Integration Test thất bại
+1. Kiểm tra server đã khởi động đúng chưa
+2. Xác minh endpoint/route tồn tại
+3. Kiểm tra định dạng request khớp với kỳ vọng
+4. Sửa và chạy lại
 
 ---
 
-## Next Steps
+## Tiêu chí thành công
 
-- Run `/code-review` to review changes before committing
-- Run `/prp-commit` to commit with a descriptive message
-- Run `/prp-pr` to create a pull request
-- Run `/prp-plan <next-phase>` if the PRD has more phases
+- **TASKS_COMPLETE**: Tất cả task trong plan đã được thực thi
+- **TYPES_PASS**: Zero lỗi type
+- **LINT_PASS**: Zero lỗi lint
+- **TESTS_PASS**: Tất cả test xanh, đã viết test mới
+- **BUILD_PASS**: Build thành công
+- **REPORT_CREATED**: Đã lưu báo cáo triển khai
+- **PLAN_ARCHIVED**: Plan đã được chuyển vào `completed/`
+
+---
+
+## Các bước tiếp theo
+
+- Chạy `/code-review` để review thay đổi trước khi commit
+- Chạy `/prp-commit` để commit với một message mô tả
+- Chạy `/prp-pr` để tạo pull request
+- Chạy `/prp-plan <next-phase>` nếu PRD còn nhiều phase

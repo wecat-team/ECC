@@ -1,15 +1,15 @@
 ---
-description: Render a token-usage stat card from local agent session logs and commit it to the repo. Invokes the token-card skill.
+description: Render một thẻ thống kê token-usage từ log session của agent cục bộ và commit vào repo. Gọi skill token-card.
 argument-hint: "[--out PATH] [--theme auto|light|dark] [--dry-run]"
 ---
 
 # Token Card
 
-Thin compatibility shim. The workflow lives in the **token-card** skill
-(`skills/token-card/SKILL.md`), which is the canonical surface; this command exists so the
-slash-command harnesses can reach it.
+Lớp tương thích mỏng. Workflow nằm trong skill **token-card**
+(`skills/token-card/SKILL.md`), vốn là bề mặt chuẩn; lệnh này tồn tại để các
+harness slash-command có thể truy cập nó.
 
-## Usage
+## Cách dùng
 
 ```
 /token-card                       # write the configured output (./tokenchit.svg by default)
@@ -18,11 +18,11 @@ slash-command harnesses can reach it.
 /token-card --dry-run             # report what would be written, write nothing
 ```
 
-## What it does
+## Nó làm gì
 
-Renders an SVG card of this machine's AI coding agent usage — tokens, equivalent cost,
-streak, per-agent split — from local Claude Code, Codex, Gemini CLI and OpenCode session logs, and writes
-it into the working tree as a file the README can reference.
+Render một thẻ SVG về mức sử dụng AI coding agent của máy này — token, chi phí tương đương,
+streak, phân chia theo từng agent — từ log session cục bộ của Claude Code, Codex, Gemini CLI và OpenCode, và ghi
+nó vào working tree dưới dạng một file mà README có thể tham chiếu.
 
-Follow the skill for the full workflow, including the confirmation required before the first
-registry download, the pinned CLI version, and the dry-run rules.
+Hãy làm theo skill để biết workflow đầy đủ, bao gồm bước xác nhận bắt buộc trước lần tải
+registry đầu tiên, phiên bản CLI được pin, và các quy tắc dry-run.

@@ -1,35 +1,35 @@
 ---
 name: quarkus-tdd
-description: Test-driven development for Quarkus 3.x LTS using JUnit 5, Mockito, REST Assured, Camel testing, and JaCoCo. Use when adding features, fixing bugs, or refactoring event-driven services.
+description: Test-driven development (TDD) cho Quarkus 3.x LTS dùng JUnit 5, Mockito, REST Assured, Camel testing và JaCoCo. Dùng khi thêm tính năng, sửa bug hoặc refactor các service event-driven.
 metadata:
   origin: ECC
 ---
 
-# Quarkus TDD Workflow
+# Quy trình TDD cho Quarkus
 
-TDD guidance for Quarkus 3.x services with 80%+ coverage (unit + integration). Optimized for event-driven architectures with Apache Camel.
+Hướng dẫn TDD cho các service Quarkus 3.x với coverage từ 80% trở lên (unit + integration). Được tối ưu cho kiến trúc event-driven với Apache Camel.
 
-## When to Use
+## Khi nào dùng
 
-- New features or REST endpoints
-- Bug fixes or refactors
-- Adding data access logic, security rules, or reactive streams
-- Testing Apache Camel routes and event handlers
-- Testing event-driven services with RabbitMQ
-- Testing conditional flow logic
-- Validating CompletableFuture async operations
-- Testing LogContext propagation
+- Tính năng mới hoặc REST endpoint
+- Sửa bug hoặc refactor
+- Thêm logic data access, quy tắc bảo mật hoặc reactive stream
+- Test các route và event handler của Apache Camel
+- Test các service event-driven với RabbitMQ
+- Test logic conditional flow
+- Kiểm chứng các thao tác async với CompletableFuture
+- Test việc truyền LogContext
 
-## Workflow
+## Quy trình
 
-1. Write tests first (they should fail)
-2. Implement minimal code to pass
-3. Refactor with tests green
-4. Enforce coverage with JaCoCo (80%+ target)
+1. Viết test trước (test phải thất bại)
+2. Triển khai code tối thiểu để test pass
+3. Refactor trong khi giữ test xanh
+4. Áp đặt coverage bằng JaCoCo (mục tiêu 80% trở lên)
 
-## Unit Tests with @Nested Organization
+## Unit Test tổ chức bằng @Nested
 
-Follow this structured approach for comprehensive, readable tests:
+Hãy theo cách tiếp cận có cấu trúc này để viết test toàn diện và dễ đọc:
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -133,20 +133,20 @@ class OrderServiceTest {
 }
 ```
 
-### Key Testing Patterns
+### Các pattern testing chính
 
-1. **@Nested Classes**: Group tests by method being tested
-2. **@DisplayName**: Provide readable test descriptions for test reports
-3. **Naming Convention**: `givenX_whenY_thenZ` for clarity
-4. **AAA Pattern**: Explicit `// ARRANGE`, `// ACT`, `// ASSERT` comments
-5. **@BeforeEach**: Setup common test data to reduce duplication
-6. **assertDoesNotThrow**: Test success scenarios without catching exceptions
-7. **assertThrows**: Test exception scenarios with message validation using AssertJ
-8. **Comprehensive Coverage**: Test happy paths, null inputs, edge cases, exceptions
-9. **Verify Interactions**: Use Mockito `verify()` to ensure methods are called correctly
-10. **Never Verify**: Use `never()` to ensure methods are NOT called in error scenarios
+1. **@Nested Classes**: Nhóm test theo method đang được test
+2. **@DisplayName**: Cung cấp mô tả test dễ đọc cho báo cáo test
+3. **Quy ước đặt tên**: `givenX_whenY_thenZ` để rõ ràng
+4. **AAA Pattern**: Comment tường minh `// ARRANGE`, `// ACT`, `// ASSERT`
+5. **@BeforeEach**: Thiết lập dữ liệu test chung để giảm trùng lặp
+6. **assertDoesNotThrow**: Test kịch bản thành công mà không cần bắt exception
+7. **assertThrows**: Test kịch bản exception kèm kiểm tra message bằng AssertJ
+8. **Coverage toàn diện**: Test happy path, input null, edge case, exception
+9. **Verify Interactions**: Dùng `verify()` của Mockito để đảm bảo các method được gọi đúng
+10. **Never Verify**: Dùng `never()` để đảm bảo các method KHÔNG được gọi trong kịch bản lỗi
 
-## Testing Camel Routes
+## Test Camel Route
 
 ```java
 @QuarkusTest
@@ -287,7 +287,7 @@ class BusinessRulesRouteTest {
 }
 ```
 
-## Testing Event Services
+## Test Event Service
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -392,7 +392,7 @@ class EventServiceTest {
 }
 ```
 
-## Testing CompletableFuture
+## Test CompletableFuture
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -499,7 +499,7 @@ class FileStorageServiceTest {
 }
 ```
 
-## Resource Layer Tests (REST Assured)
+## Test Resource Layer (REST Assured)
 
 ```java
 @QuarkusTest
@@ -587,7 +587,7 @@ class DocumentResourceTest {
 }
 ```
 
-## Integration Tests with Real Database
+## Integration Test với Database thật
 
 ```java
 @QuarkusTest
@@ -625,9 +625,9 @@ class DocumentIntegrationTest {
 }
 ```
 
-## Coverage with JaCoCo
+## Coverage với JaCoCo
 
-### Maven Configuration (Complete)
+### Cấu hình Maven (đầy đủ)
 
 ```xml
 <plugin>
@@ -682,7 +682,7 @@ class DocumentIntegrationTest {
 </plugin>
 ```
 
-Run tests with coverage:
+Chạy test kèm coverage:
 ```bash
 mvn clean test
 mvn jacoco:report
@@ -691,7 +691,7 @@ mvn jacoco:check
 # Report at: target/site/jacoco/index.html
 ```
 
-## Test Dependencies
+## Dependency cho Test
 
 ```xml
 <dependencies>
@@ -740,73 +740,73 @@ mvn jacoco:check
 
 ## Best Practices
 
-### Test Organization
-- Use `@Nested` classes to group tests by method being tested
-- Use `@DisplayName` for readable test descriptions visible in reports
-- Follow `givenX_whenY_thenZ` naming convention for test methods
-- Use `@BeforeEach` for common test data setup to reduce duplication
+### Tổ chức test
+- Dùng class `@Nested` để nhóm test theo method đang được test
+- Dùng `@DisplayName` để có mô tả test dễ đọc hiển thị trong báo cáo
+- Theo quy ước đặt tên `givenX_whenY_thenZ` cho các method test
+- Dùng `@BeforeEach` để thiết lập dữ liệu test chung nhằm giảm trùng lặp
 
-### Test Structure
-- Follow AAA pattern with explicit comments (`// ARRANGE`, `// ACT`, `// ASSERT`)
-- Use `assertDoesNotThrow` for success scenarios
-- Use `assertThrows` for exception scenarios with message validation
-- Verify exception messages match expected values using AssertJ `contains()` or `isEqualTo()`
+### Cấu trúc test
+- Theo AAA pattern với comment tường minh (`// ARRANGE`, `// ACT`, `// ASSERT`)
+- Dùng `assertDoesNotThrow` cho kịch bản thành công
+- Dùng `assertThrows` cho kịch bản exception kèm kiểm tra message
+- Xác minh message của exception khớp với giá trị kỳ vọng bằng `contains()` hoặc `isEqualTo()` của AssertJ
 
 ### Test Coverage
-- Test happy paths for all public methods
-- Test null input handling
-- Test edge cases (empty collections, boundary values, negative IDs, blank strings)
-- Test exception scenarios comprehensively
-- Mock all external dependencies (repositories, services, Camel endpoints)
-- Aim for 80%+ line coverage, 70%+ branch coverage
+- Test happy path cho mọi method public
+- Test việc xử lý input null
+- Test các edge case (collection rỗng, giá trị biên, ID âm, chuỗi trống)
+- Test kịch bản exception một cách toàn diện
+- Mock mọi dependency bên ngoài (repository, service, Camel endpoint)
+- Hướng tới line coverage từ 80% và branch coverage từ 70% trở lên
 
-### Assertions
-- **Prefer AssertJ** (`assertThat`) over JUnit assertions for value checks
-- Use fluent AssertJ API for readability: `assertThat(list).hasSize(3).contains(item)`
-- For exceptions: use JUnit `assertThrows` to capture, then AssertJ to validate the message
-- For non-throwing success paths: use JUnit `assertDoesNotThrow`
-- For collections: `extracting()`, `filteredOn()`, `containsExactly()`
+### Assertion
+- **Ưu tiên AssertJ** (`assertThat`) hơn assertion của JUnit khi kiểm tra giá trị
+- Dùng fluent API của AssertJ cho dễ đọc: `assertThat(list).hasSize(3).contains(item)`
+- Với exception: dùng `assertThrows` của JUnit để bắt, sau đó dùng AssertJ để kiểm tra message
+- Với đường thành công không ném exception: dùng `assertDoesNotThrow` của JUnit
+- Với collection: `extracting()`, `filteredOn()`, `containsExactly()`
 
-### Testing Integration
-- Use `@QuarkusTest` for integration tests
-- Use `@InjectMock` to mock dependencies in Quarkus tests
-- Prefer REST Assured for API testing
-- Use `@TestProfile` for test-specific configuration
+### Integration Testing
+- Dùng `@QuarkusTest` cho integration test
+- Dùng `@InjectMock` để mock dependency trong test Quarkus
+- Ưu tiên REST Assured để test API
+- Dùng `@TestProfile` cho cấu hình riêng của test
 
-### Event-Driven Testing
-- Test Camel routes with `AdviceWith` and `MockEndpoint`
-- Use `@CamelQuarkusTest` annotation (if using standalone Camel tests)
-- Verify message content, headers, and routing logic
-- Test error handling routes separately
-- Mock external systems (RabbitMQ, S3, databases) in unit tests
+### Test Event-Driven
+- Test Camel route bằng `AdviceWith` và `MockEndpoint`
+- Dùng annotation `@CamelQuarkusTest` (nếu dùng test Camel độc lập)
+- Xác minh nội dung message, header và logic routing
+- Test các route xử lý lỗi một cách riêng biệt
+- Mock các hệ thống bên ngoài (RabbitMQ, S3, database) trong unit test
 
-### Camel Route Testing
-- Use `MockEndpoint` for asserting message flow
-- Use `AdviceWith` to modify routes for testing (replace endpoints with mocks)
-- Test message transformation and marshalling
-- Test exception handling and dead letter queues
+### Test Camel Route
+- Dùng `MockEndpoint` để assert luồng message
+- Dùng `AdviceWith` để sửa route phục vụ test (thay endpoint bằng mock)
+- Test việc biến đổi message và marshalling
+- Test xử lý exception và dead letter queue
 
-### Testing Async Operations
-- Test CompletableFuture success and failure scenarios
-- Use `.join()` in tests to wait for async completion
-- Test exception propagation from CompletableFuture
-- Verify LogContext propagation to async operations
+### Test thao tác Async
+- Test kịch bản thành công và thất bại của CompletableFuture
+- Dùng `.join()` trong test để chờ hoàn tất async
+- Test việc lan truyền exception từ CompletableFuture
+- Xác minh LogContext được truyền vào các thao tác async
 
-### Performance
-- Keep tests fast and isolated
-- Run tests in continuous mode: `mvn quarkus:test`
-- Use parameterized tests (`@ParameterizedTest`) for input variations
-- Build reusable test data builders or factory methods
+### Hiệu năng
+- Giữ test nhanh và cô lập
+- Chạy test ở chế độ liên tục: `mvn quarkus:test`
+- Dùng parameterized test (`@ParameterizedTest`) cho các biến thể input
+- Xây dựng test data builder hoặc factory method dùng lại được
 
-### Quarkus-Specific
-- Stay on latest LTS version (Quarkus 3.x)
-- Test native compilation compatibility periodically
-- Use Quarkus test profiles for different scenarios
-- Leverage Quarkus dev services for local testing
-- Use `@InjectMock` instead of `@MockBean` (Quarkus-specific)
+### Đặc thù Quarkus
+- Luôn dùng phiên bản LTS mới nhất (Quarkus 3.x)
+- Định kỳ test khả năng tương thích với native compilation
+- Dùng Quarkus test profile cho các kịch bản khác nhau
+- Tận dụng Quarkus dev services cho test cục bộ
+- Dùng `@InjectMock` thay cho `@MockBean` (đặc thù của Quarkus)
 
-### Verification Best Practices
-- Always verify interactions on mocked dependencies
-- Use `verify(mock, never())` to ensure methods are NOT called in error scenarios
-- Use `argThat()` for complex argument matching
-- Verify the order of calls when it matters: `InOrder` from Mockito
+### Best Practice khi Verify
+- LUÔN LUÔN verify các tương tác trên dependency đã mock
+- Dùng `verify(mock, never())` để đảm bảo các method KHÔNG được gọi trong kịch bản lỗi
+- Dùng `argThat()` để so khớp tham số phức tạp
+- Verify thứ tự các lời gọi khi thứ tự quan trọng: `InOrder` của Mockito

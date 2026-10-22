@@ -1,35 +1,35 @@
 ---
 name: rust-testing
-description: Rust testing patterns including unit tests, integration tests, async testing, property-based testing, mocking, and coverage. Follows TDD methodology. Use when writing Rust tests — unit, integration, async, property-based, or coverage.
+description: "Các pattern kiểm thử Rust gồm unit test, integration test, async testing, property-based testing, mocking và coverage. Tuân theo phương pháp TDD. Dùng khi viết test Rust — unit, integration, async, property-based hoặc coverage."
 metadata:
   origin: ECC
 ---
 
-# Rust Testing Patterns
+# Pattern kiểm thử Rust
 
-Comprehensive Rust testing patterns for writing reliable, maintainable tests following TDD methodology.
+Các pattern kiểm thử Rust toàn diện để viết test đáng tin cậy, dễ bảo trì theo phương pháp TDD.
 
-## When to Use
+## Khi nào dùng
 
-- Writing new Rust functions, methods, or traits
-- Adding test coverage to existing code
-- Creating benchmarks for performance-critical code
-- Implementing property-based tests for input validation
-- Following TDD workflow in Rust projects
+- Viết function, method hoặc trait Rust mới
+- Bổ sung coverage cho code hiện có
+- Tạo benchmark cho code quan trọng về hiệu năng
+- Triển khai property-based test cho việc kiểm tra đầu vào (input validation)
+- Tuân theo workflow TDD trong các dự án Rust
 
-## How It Works
+## Cách hoạt động
 
-1. **Identify target code** — Find the function, trait, or module to test
-2. **Write a test** — Use `#[test]` in a `#[cfg(test)]` module, rstest for parameterized tests, or proptest for property-based tests
-3. **Mock dependencies** — Use mockall to isolate the unit under test
-4. **Run tests (RED)** — Verify the test fails with the expected error
-5. **Implement (GREEN)** — Write minimal code to pass
-6. **Refactor** — Improve while keeping tests green
-7. **Check coverage** — Use cargo-llvm-cov, target 80%+
+1. **Xác định code cần test** — Tìm function, trait hoặc module cần test
+2. **Viết test** — Dùng `#[test]` trong module `#[cfg(test)]`, rstest cho parameterized test, hoặc proptest cho property-based test
+3. **Mock dependency** — Dùng mockall để cô lập đơn vị đang được test
+4. **Chạy test (RED)** — Xác nhận test fail với đúng lỗi mong đợi
+5. **Triển khai (GREEN)** — Viết code tối thiểu để pass
+6. **Refactor** — Cải thiện code trong khi giữ test xanh
+7. **Kiểm tra coverage** — Dùng cargo-llvm-cov, mục tiêu 80%+
 
-## TDD Workflow for Rust
+## Workflow TDD cho Rust
 
-### The RED-GREEN-REFACTOR Cycle
+### Chu trình RED-GREEN-REFACTOR
 
 ```
 RED     → Write a failing test first
@@ -38,7 +38,7 @@ REFACTOR → Improve code while keeping tests green
 REPEAT  → Continue with next requirement
 ```
 
-### Step-by-Step TDD in Rust
+### TDD từng bước trong Rust
 
 ```rust
 // RED: Write test first, use todo!() as placeholder
@@ -59,9 +59,9 @@ pub fn add(a: i32, b: i32) -> i32 { a + b }
 // cargo test → PASS, then REFACTOR while keeping tests green
 ```
 
-## Unit Tests
+## Unit Test
 
-### Module-Level Test Organization
+### Tổ chức test ở cấp module
 
 ```rust
 // src/user.rs
@@ -104,7 +104,7 @@ mod tests {
 }
 ```
 
-### Assertion Macros
+### Macro assertion
 
 ```rust
 assert_eq!(2 + 2, 4);                                    // Equality
@@ -114,9 +114,9 @@ assert_eq!(value, 42, "expected 42 but got {value}");    // Custom message
 assert!((0.1_f64 + 0.2 - 0.3).abs() < f64::EPSILON);   // Float comparison
 ```
 
-## Error and Panic Testing
+## Test lỗi và panic
 
-### Testing `Result` Returns
+### Test giá trị trả về `Result`
 
 ```rust
 #[test]
@@ -137,7 +137,7 @@ fn parse_succeeds_for_valid_input() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-### Testing Panics
+### Test panic
 
 ```rust
 #[test]
@@ -154,9 +154,9 @@ fn panics_with_specific_message() {
 }
 ```
 
-## Integration Tests
+## Integration Test
 
-### File Structure
+### Cấu trúc file
 
 ```text
 my_crate/
@@ -169,7 +169,7 @@ my_crate/
 │       └── mod.rs
 ```
 
-### Writing Integration Tests
+### Viết Integration Test
 
 ```rust
 // tests/api_test.rs
@@ -186,9 +186,9 @@ fn full_request_lifecycle() {
 }
 ```
 
-## Async Tests
+## Async Test
 
-### With Tokio
+### Với Tokio
 
 ```rust
 #[tokio::test]
@@ -211,9 +211,9 @@ async fn handles_timeout() {
 }
 ```
 
-## Test Organization Patterns
+## Pattern tổ chức test
 
-### Parameterized Tests with `rstest`
+### Parameterized Test với `rstest`
 
 ```rust
 use rstest::{rstest, fixture};
@@ -239,7 +239,7 @@ fn test_insert(test_db: TestDb) {
 }
 ```
 
-### Test Helpers
+### Test Helper
 
 ```rust
 #[cfg(test)]
@@ -259,9 +259,9 @@ mod tests {
 }
 ```
 
-## Property-Based Testing with `proptest`
+## Property-Based Testing với `proptest`
 
-### Basic Property Tests
+### Property Test cơ bản
 
 ```rust
 use proptest::prelude::*;
@@ -291,7 +291,7 @@ proptest! {
 }
 ```
 
-### Custom Strategies
+### Strategy tùy chỉnh
 
 ```rust
 use proptest::prelude::*;
@@ -309,9 +309,9 @@ proptest! {
 }
 ```
 
-## Mocking with `mockall`
+## Mocking với `mockall`
 
-### Trait-Based Mocking
+### Mocking dựa trên Trait
 
 ```rust
 use mockall::{automock, predicate::eq};
@@ -346,9 +346,9 @@ fn service_returns_none_when_not_found() {
 }
 ```
 
-## Doc Tests
+## Doc Test
 
-### Executable Documentation
+### Tài liệu có thể thực thi
 
 ```rust
 /// Adds two numbers together.
@@ -388,7 +388,7 @@ pub fn parse_config(input: &str) -> Result<Config, ParseError> {
 }
 ```
 
-## Benchmarking with Criterion
+## Benchmark với Criterion
 
 ```toml
 # Cargo.toml
@@ -419,9 +419,9 @@ criterion_group!(benches, bench_fibonacci);
 criterion_main!(benches);
 ```
 
-## Test Coverage
+## Coverage của test
 
-### Running Coverage
+### Chạy Coverage
 
 ```bash
 # Install: cargo install cargo-llvm-cov (or use taiki-e/install-action in CI)
@@ -431,16 +431,16 @@ cargo llvm-cov --lcov > lcov.info # LCOV format for CI
 cargo llvm-cov --fail-under-lines 80  # Fail if below threshold
 ```
 
-### Coverage Targets
+### Mục tiêu Coverage
 
-| Code Type | Target |
+| Loại code | Mục tiêu |
 |-----------|--------|
-| Critical business logic | 100% |
-| Public API | 90%+ |
-| General code | 80%+ |
-| Generated / FFI bindings | Exclude |
+| Business logic quan trọng | 100% |
+| API công khai | 90%+ |
+| Code thông thường | 80%+ |
+| Code sinh tự động / FFI binding | Loại trừ |
 
-## Testing Commands
+## Lệnh test
 
 ```bash
 cargo test                        # Run all tests
@@ -453,25 +453,25 @@ cargo test --no-fail-fast         # Don't stop on first failure
 cargo test -- --ignored           # Run ignored tests
 ```
 
-## Best Practices
+## Best Practice
 
-**DO:**
-- Write tests FIRST (TDD)
-- Use `#[cfg(test)]` modules for unit tests
-- Test behavior, not implementation
-- Use descriptive test names that explain the scenario
-- Prefer `assert_eq!` over `assert!` for better error messages
-- Use `?` in tests that return `Result` for cleaner error output
-- Keep tests independent — no shared mutable state
+**NÊN:**
+- Viết test TRƯỚC (TDD)
+- Dùng module `#[cfg(test)]` cho unit test
+- Test hành vi, không test chi tiết triển khai
+- Dùng tên test mang tính mô tả, giải thích rõ kịch bản
+- Ưu tiên `assert_eq!` hơn `assert!` để có thông báo lỗi tốt hơn
+- Dùng `?` trong test trả về `Result` để đầu ra lỗi gọn hơn
+- Giữ các test độc lập — không dùng mutable state chung
 
-**DON'T:**
-- Use `#[should_panic]` when you can test `Result::is_err()` instead
-- Mock everything — prefer integration tests when feasible
-- Ignore flaky tests — fix or quarantine them
-- Use `sleep()` in tests — use channels, barriers, or `tokio::time::pause()`
-- Skip error path testing
+**KHÔNG NÊN:**
+- Dùng `#[should_panic]` khi có thể test `Result::is_err()` thay thế
+- Mock mọi thứ — ưu tiên integration test khi khả thi
+- Bỏ qua flaky test — hãy sửa hoặc cách ly (quarantine) chúng
+- Dùng `sleep()` trong test — hãy dùng channel, barrier hoặc `tokio::time::pause()`
+- Bỏ qua việc test nhánh lỗi
 
-## CI Integration
+## Tích hợp CI
 
 ```yaml
 # GitHub Actions
@@ -498,4 +498,4 @@ test:
       run: cargo llvm-cov --fail-under-lines 80
 ```
 
-**Remember**: Tests are documentation. They show how your code is meant to be used. Write them clearly and keep them up to date.
+**Hãy nhớ**: Test chính là tài liệu. Chúng cho thấy code của bạn được dùng như thế nào. Hãy viết test rõ ràng và luôn cập nhật.

@@ -1,36 +1,36 @@
 ---
-description: Orchestrate building a brand-new feature end to end — research, plan, TDD, review, gated commit. Wrapper that kicks off the orch-add-feature skill.
+description: Điều phối việc xây dựng một tính năng hoàn toàn mới từ đầu đến cuối — nghiên cứu, lập kế hoạch, TDD, review, commit có cổng kiểm soát. Wrapper khởi chạy skill orch-add-feature.
 ---
 
 # /orch-add-feature
 
-Manually launch the **orch-add-feature** orchestrator: a gated
-Research → Plan → TDD → Review → Commit pipeline for net-new capability.
+Khởi chạy thủ công orchestrator **orch-add-feature**: một pipeline có cổng kiểm soát
+Research → Plan → TDD → Review → Commit cho năng lực hoàn toàn mới.
 
-## Usage
+## Cách dùng
 
 ```
 /orch-add-feature <what to add>
 ```
 
-Examples:
+Ví dụ:
 
 ```
 /orch-add-feature add OAuth2 login to nws-poller
 /orch-add-feature support CSV export in the dashboard
 ```
 
-## What It Does
+## Nó làm gì
 
-Invoke the `orch-add-feature` skill with `$ARGUMENTS` as the request. The skill
-(via the shared `orch-pipeline` engine) will:
+Gọi skill `orch-add-feature` với `$ARGUMENTS` làm yêu cầu. Skill
+(thông qua engine dùng chung `orch-pipeline`) sẽ:
 
-1. Classify size and state the tier in one line.
-2. Research existing libraries/patterns, then plan a `task_list`. → **GATE 1** (approve plan).
-3. TDD each task (new failing tests → green), then `code-reviewer`
-   (+ `security-reviewer` if a security trigger is touched).
-4. Commit as conventional `feat:` commits. → **GATE 2** (confirm before commit).
+1. Phân loại quy mô và nêu rõ tier trong một dòng.
+2. Nghiên cứu các thư viện/pattern hiện có, rồi lập `task_list`. → **GATE 1** (duyệt kế hoạch).
+3. TDD từng task (test mới thất bại → xanh), sau đó `code-reviewer`
+   (+ `security-reviewer` nếu chạm vào một trigger bảo mật).
+4. Commit dưới dạng các commit `feat:` theo conventional commit. → **GATE 2** (xác nhận trước khi commit).
 
-Honor both gates — do not write implementation before Gate 1, do not commit before Gate 2.
+Tuân thủ cả hai gate — không viết phần triển khai trước Gate 1, không commit trước Gate 2.
 
-If `$ARGUMENTS` is empty, ask the user what capability to add.
+Nếu `$ARGUMENTS` trống, hãy hỏi người dùng cần thêm năng lực gì.

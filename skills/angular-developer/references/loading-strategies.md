@@ -1,25 +1,25 @@
-# Route Loading Strategies
+# Chiến lược Loading Route
 
-Angular supports two main strategies for loading routes and components to balance initial load time and navigation responsiveness.
+Angular hỗ trợ hai chiến lược chính để load route và component nhằm cân bằng thời gian tải ban đầu và độ phản hồi khi điều hướng.
 
 ## Eager Loading
 
-Components are bundled into the initial JavaScript payload and are available immediately.
+Component được đóng gói vào payload JavaScript ban đầu và khả dụng ngay lập tức.
 
 ```ts
 { path: 'home', component: Home }
 ```
 
-- **Pros**: Seamless transitions.
-- **Cons**: Increases initial bundle size.
+- **Ưu điểm**: Chuyển trang mượt mà.
+- **Nhược điểm**: Làm tăng kích thước bundle ban đầu.
 
 ## Lazy Loading
 
-Components or routes are loaded only when the user navigates to them. This creates separate JavaScript "chunks".
+Component hoặc route chỉ được load khi người dùng điều hướng tới chúng. Cách này tạo ra các "chunk" JavaScript riêng biệt.
 
-### Lazy Loading Components
+### Lazy Loading Component
 
-Use `loadComponent` to fetch the component on demand.
+Dùng `loadComponent` để lấy component theo yêu cầu.
 
 ```ts
 {
@@ -28,9 +28,9 @@ Use `loadComponent` to fetch the component on demand.
 }
 ```
 
-### Lazy Loading Child Routes
+### Lazy Loading Route con
 
-Use `loadChildren` to fetch a set of routes.
+Dùng `loadChildren` để lấy một tập route.
 
 ```ts
 {
@@ -39,9 +39,9 @@ Use `loadChildren` to fetch a set of routes.
 }
 ```
 
-## Injection Context and Lazy Loading
+## Injection Context và Lazy Loading
 
-Loader functions run within the **injection context** of the current route. This allows you to call `inject()` to make context-aware loading decisions.
+Các loader function chạy trong **injection context** của route hiện tại. Điều này cho phép bạn gọi `inject()` để đưa ra quyết định load dựa trên context.
 
 ```ts
 {
@@ -55,7 +55,7 @@ Loader functions run within the **injection context** of the current route. This
 }
 ```
 
-## Recommendation
+## Khuyến nghị
 
-- Use **Eager Loading** for the primary landing pages.
-- Use **Lazy Loading** for all other feature areas to keep the initial bundle small.
+- Dùng **Eager Loading** cho các trang landing chính.
+- Dùng **Lazy Loading** cho tất cả các khu vực tính năng còn lại để giữ bundle ban đầu nhỏ.

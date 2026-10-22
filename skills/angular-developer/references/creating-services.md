@@ -1,16 +1,16 @@
-# Creating and Using Services
+# Tạo và sử dụng Service
 
-Services in Angular are reusable pieces of code that handle data fetching, business logic, or state management that multiple components or other services need to access.
+Service trong Angular là các đoạn code tái sử dụng, xử lý việc lấy dữ liệu, business logic hoặc quản lý state mà nhiều component hoặc service khác cần truy cập.
 
-## Creating a Service
+## Tạo một Service
 
-You can generate a service using the Angular CLI:
+Bạn có thể sinh một service bằng Angular CLI:
 
 ```bash
 ng generate service my-data
 ```
 
-Or you can manually create a TypeScript class and decorate it with `@Injectable()`.
+Hoặc bạn có thể tạo thủ công một class TypeScript và gắn decorator `@Injectable()`.
 
 ```ts
 import {Injectable} from '@angular/core';
@@ -31,19 +31,19 @@ export class BasicDataStore {
 }
 ```
 
-### The `providedIn: 'root'` Option
+### Tùy chọn `providedIn: 'root'`
 
-Using `providedIn: 'root'` is the recommended approach for most services. It tells Angular to:
+Dùng `providedIn: 'root'` là cách được khuyến nghị cho hầu hết service. Nó yêu cầu Angular:
 
-- **Create a single instance (singleton)** for the entire application.
-- **Make it available everywhere** automatically, without needing to list it in any `providers` array.
-- **Enable tree-shaking**, meaning the service is only included in the final JavaScript bundle if it is actually injected somewhere.
+- **Tạo một instance duy nhất (singleton)** cho toàn bộ ứng dụng.
+- **Cho phép dùng ở mọi nơi** một cách tự động, không cần liệt kê trong bất kỳ mảng `providers` nào.
+- **Bật tree-shaking**, nghĩa là service chỉ được đưa vào JavaScript bundle cuối cùng nếu nó thực sự được inject ở đâu đó.
 
-## Injecting a Service
+## Inject một Service
 
-Once a service is created, you can inject it into components, directives, or other services using the `inject()` function.
+Khi service đã được tạo, bạn có thể inject nó vào component, directive hoặc service khác bằng hàm `inject()`.
 
-### Injecting into a Component
+### Inject vào Component
 
 ```ts
 import {Component, inject} from '@angular/core';
@@ -64,9 +64,9 @@ export class Example {
 }
 ```
 
-### Injecting into Another Service
+### Inject vào Service khác
 
-Services can inject other services in the exact same way.
+Service có thể inject các service khác theo đúng cách tương tự.
 
 ```ts
 import {Injectable, inject} from '@angular/core';
@@ -88,10 +88,10 @@ export class BasicDataStore {
 }
 ```
 
-## Advanced Service Patterns
+## Các pattern Service nâng cao
 
-While `providedIn: 'root'` covers most scenarios, you may sometimes need:
+Dù `providedIn: 'root'` bao phủ hầu hết các tình huống, đôi khi bạn có thể cần:
 
-- **Component-specific instances**: If a component needs its own isolated instance of a service, provide it directly in the component's `@Component({ providers: [MyService] })` array.
-- **Factory providers**: For dynamic creation.
-- **Value providers**: For injecting configuration objects.
+- **Instance riêng cho component**: Nếu một component cần instance cô lập của một service, hãy cung cấp nó trực tiếp trong mảng `@Component({ providers: [MyService] })` của component.
+- **Factory provider**: Dùng để tạo động.
+- **Value provider**: Dùng để inject các object cấu hình.

@@ -1,32 +1,32 @@
 ---
-description: Run a deterministic repository harness audit and return a prioritized scorecard. Use for a deterministic overall repo-readiness scorecard; for a security-specific audit use the security-scan command.
+description: Chạy audit harness của repo một cách xác định (deterministic) và trả về scorecard có ưu tiên. Dùng để có scorecard tổng thể xác định về mức độ sẵn sàng của repo; với audit chuyên về bảo mật hãy dùng command security-scan.
 ---
 
-# Harness Audit Command
+# Lệnh Harness Audit
 
-Run a deterministic repository harness audit and return a prioritized scorecard.
+Chạy audit harness của repo một cách xác định và trả về scorecard có ưu tiên.
 
-## Usage
+## Cách dùng
 
 `/harness-audit [scope] [--format text|json] [--root path]`
 
-- `scope` (optional): `repo` (default), `hooks`, `skills`, `commands`, `agents`
-- `--format`: output style (`text` default, `json` for automation)
-- `--root`: audit a specific path instead of the current working directory
+- `scope` (tùy chọn): `repo` (mặc định), `hooks`, `skills`, `commands`, `agents`
+- `--format`: kiểu output (`text` mặc định, `json` cho tự động hóa)
+- `--root`: audit một đường dẫn cụ thể thay vì thư mục làm việc hiện tại
 
-## Deterministic Engine
+## Engine xác định
 
-Always run:
+Luôn chạy:
 
 ```bash
 node scripts/harness-audit.js <scope> --format <text|json> [--root <path>]
 ```
 
-This script is the source of truth for scoring and checks. Do not invent additional dimensions or ad-hoc points.
+Script này là nguồn sự thật cho việc chấm điểm và kiểm tra. Không bịa thêm tiêu chí hay điểm ad-hoc.
 
-Rubric version: `2026-05-19`.
+Phiên bản rubric: `2026-05-19`.
 
-The script computes up to 12 fixed categories (`0-10` normalized each). The first seven are always applicable; GitHub Integration is always applicable; deploy-target categories are applicable only when a matching marker is detected.
+Script tính tối đa 12 nhóm cố định (mỗi nhóm chuẩn hóa `0-10`). Bảy nhóm đầu luôn áp dụng; GitHub Integration luôn áp dụng; các nhóm theo deploy target chỉ áp dụng khi phát hiện marker tương ứng.
 
 1. Tool Coverage
 2. Context Efficiency
@@ -36,33 +36,33 @@ The script computes up to 12 fixed categories (`0-10` normalized each). The firs
 6. Security Guardrails
 7. Cost Efficiency
 8. GitHub Integration
-9. Vercel Integration *(when `vercel.json` or `.vercel/` is present)*
-10. Netlify Integration *(when `netlify.toml` or `.netlify/` is present)*
-11. Cloudflare Integration *(when `wrangler.toml` or `wrangler.jsonc` is present)*
-12. Fly Integration *(when `fly.toml` is present)*
+9. Vercel Integration *(khi có `vercel.json` hoặc `.vercel/`)*
+10. Netlify Integration *(khi có `netlify.toml` hoặc `.netlify/`)*
+11. Cloudflare Integration *(khi có `wrangler.toml` hoặc `wrangler.jsonc`)*
+12. Fly Integration *(khi có `fly.toml`)*
 
-Scores are derived from explicit file/rule checks and are reproducible for the same commit.
-The script audits the current working directory by default and auto-detects whether the target is the ECC repo itself or a consumer project using ECC.
+Điểm số được suy ra từ các kiểm tra file/rule tường minh và có thể tái lập cho cùng một commit.
+Script mặc định audit thư mục làm việc hiện tại và tự động phát hiện đích là chính repo ECC hay một dự án consumer đang dùng ECC.
 
-## Output Contract
+## Hợp đồng output
 
-Return:
+Trả về:
 
-1. `overall_score` out of `max_score`. `max_score` depends on which categories are applicable to the target; never assume a fixed total.
-2. `applicable_categories[]` and `category_count` describing which categories contributed.
-3. Category scores and concrete findings.
-4. Failed checks with exact file paths.
-5. Top 3 actions from the deterministic output (`top_actions`).
-6. Suggested ECC skills to apply next.
+1. `overall_score` trên `max_score`. `max_score` phụ thuộc vào các nhóm áp dụng cho đích; không bao giờ giả định một tổng cố định.
+2. `applicable_categories[]` và `category_count` mô tả những nhóm nào đã đóng góp.
+3. Điểm từng nhóm và các phát hiện cụ thể.
+4. Các kiểm tra thất bại kèm đường dẫn file chính xác.
+5. Top 3 hành động từ output xác định (`top_actions`).
+6. Các skill ECC đề xuất áp dụng tiếp theo.
 
 ## Checklist
 
-- Use script output directly; do not rescore manually.
-- If `--format json` is requested, return the script JSON unchanged.
-- If text is requested, summarize failing checks and top actions.
-- Include exact file paths from `checks[]` and `top_actions[]`.
+- Dùng trực tiếp output của script; không tự chấm lại thủ công.
+- Nếu yêu cầu `--format json`, trả về JSON của script không thay đổi.
+- Nếu yêu cầu text, tóm tắt các kiểm tra thất bại và top action.
+- Bao gồm đường dẫn file chính xác từ `checks[]` và `top_actions[]`.
 
-## Example Result
+## Kết quả ví dụ
 
 ```text
 Harness Audit (repo, repo): 71/80
@@ -77,8 +77,8 @@ Top 3 Actions:
 3) [Eval Coverage] Increase automated test coverage across scripts/hooks/lib. (tests/)
 ```
 
-## Arguments
+## Đối số
 
 $ARGUMENTS:
-- `repo|hooks|skills|commands|agents` (optional scope)
-- `--format text|json` (optional output format)
+- `repo|hooks|skills|commands|agents` (scope tùy chọn)
+- `--format text|json` (kiểu output tùy chọn)

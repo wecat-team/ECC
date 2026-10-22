@@ -1,94 +1,94 @@
 ---
 name: evolve
-description: Analyze instincts and suggest or generate evolved structures
+description: Phân tích instinct và đề xuất hoặc sinh ra các cấu trúc tiến hóa (evolved structures)
 command: true
 ---
 
-# Evolve Command
+# Lệnh Evolve
 
-## Implementation
+## Triển khai
 
-Run the instinct CLI using the plugin root path:
+Chạy instinct CLI bằng đường dẫn gốc của plugin:
 
 ```bash
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" evolve [--generate]
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
+Hoặc nếu `CLAUDE_PLUGIN_ROOT` chưa được đặt (cài đặt thủ công):
 
 ```bash
 python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py evolve [--generate]
 ```
 
-Analyzes instincts and clusters related ones into higher-level structures:
-- **Commands**: When instincts describe user-invoked actions
-- **Skills**: When instincts describe auto-triggered behaviors
-- **Agents**: When instincts describe complex, multi-step processes
+Phân tích các instinct và gom nhóm những instinct liên quan thành các cấu trúc cấp cao hơn:
+- **Commands**: Khi các instinct mô tả những hành động do người dùng gọi
+- **Skills**: Khi các instinct mô tả những hành vi được kích hoạt tự động
+- **Agents**: Khi các instinct mô tả những quy trình phức tạp, nhiều bước
 
-## Usage
+## Cách dùng
 
 ```
 /evolve                    # Analyze all instincts and suggest evolutions
 /evolve --generate         # Also generate files under evolved/{skills,commands,agents}
 ```
 
-## Evolution Rules
+## Quy tắc tiến hóa
 
-### → Command (User-Invoked)
-When instincts describe actions a user would explicitly request:
-- Multiple instincts about "when user asks to..."
-- Instincts with triggers like "when creating a new X"
-- Instincts that follow a repeatable sequence
+### → Command (do người dùng gọi)
+Khi các instinct mô tả những hành động mà người dùng sẽ yêu cầu một cách tường minh:
+- Nhiều instinct về "when user asks to..."
+- Các instinct có trigger kiểu "when creating a new X"
+- Các instinct theo một chuỗi có thể lặp lại
 
-Example:
+Ví dụ:
 - `new-table-step1`: "when adding a database table, create migration"
 - `new-table-step2`: "when adding a database table, update schema"
 - `new-table-step3`: "when adding a database table, regenerate types"
 
-→ Creates: **new-table** command
+→ Tạo ra: command **new-table**
 
-### → Skill (Auto-Triggered)
-When instincts describe behaviors that should happen automatically:
-- Pattern-matching triggers
-- Error handling responses
-- Code style enforcement
+### → Skill (kích hoạt tự động)
+Khi các instinct mô tả những hành vi cần xảy ra tự động:
+- Trigger khớp theo pattern
+- Phản hồi xử lý lỗi
+- Áp dụng code style
 
-Example:
+Ví dụ:
 - `prefer-functional`: "when writing functions, prefer functional style"
 - `use-immutable`: "when modifying state, use immutable patterns"
 - `avoid-classes`: "when designing modules, avoid class-based design"
 
-→ Creates: `functional-patterns` skill
+→ Tạo ra: skill `functional-patterns`
 
-### → Agent (Needs Depth/Isolation)
-When instincts describe complex, multi-step processes that benefit from isolation:
-- Debugging workflows
-- Refactoring sequences
-- Research tasks
+### → Agent (cần chiều sâu/cô lập)
+Khi các instinct mô tả những quy trình phức tạp, nhiều bước, được lợi từ việc cô lập:
+- Workflow debug
+- Chuỗi refactor
+- Tác vụ nghiên cứu
 
-Example:
+Ví dụ:
 - `debug-step1`: "when debugging, first check logs"
 - `debug-step2`: "when debugging, isolate the failing component"
 - `debug-step3`: "when debugging, create minimal reproduction"
 - `debug-step4`: "when debugging, verify fix with test"
 
-→ Creates: **debugger** agent
+→ Tạo ra: agent **debugger**
 
-## What to Do
+## Cần làm gì
 
-1. Detect current project context
-2. Read project + global instincts (project takes precedence on ID conflicts)
-3. Group instincts by trigger/domain patterns
-4. Identify:
-   - Skill candidates (trigger clusters with 2+ instincts)
-   - Command candidates (high-confidence workflow instincts)
-   - Agent candidates (larger, high-confidence clusters)
-5. Show promotion candidates (project -> global) when applicable
-6. If `--generate` is passed, write files to:
-   - Project scope: `~/.claude/homunculus/projects/<project-id>/evolved/`
-   - Global fallback: `~/.claude/homunculus/evolved/`
+1. Phát hiện context dự án hiện tại
+2. Đọc instinct của dự án + global (dự án được ưu tiên khi trùng ID)
+3. Nhóm các instinct theo pattern trigger/domain
+4. Xác định:
+   - Ứng viên skill (cụm trigger có từ 2 instinct trở lên)
+   - Ứng viên command (instinct workflow có độ tin cậy cao)
+   - Ứng viên agent (cụm lớn hơn, độ tin cậy cao)
+5. Hiển thị các ứng viên được nâng cấp (project -> global) khi phù hợp
+6. Nếu truyền `--generate`, ghi file vào:
+   - Phạm vi dự án: `~/.claude/homunculus/projects/<project-id>/evolved/`
+   - Global dự phòng: `~/.claude/homunculus/evolved/`
 
-## Output Format
+## Định dạng output
 
 ```
 ============================================================
@@ -117,11 +117,11 @@ High confidence instincts (>=80%): 5
     Avg confidence: 82%
 ```
 
-## Flags
+## Flag
 
-- `--generate`: Generate evolved files in addition to analysis output
+- `--generate`: Sinh thêm các file evolved ngoài output phân tích
 
-## Generated File Format
+## Định dạng file được sinh ra
 
 ### Command
 ```markdown

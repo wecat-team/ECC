@@ -2,29 +2,29 @@
 paths:
   - "**/*.rs"
 ---
-# Rust Coding Style
+# Coding Style Rust
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with Rust-specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung riêng cho Rust.
 
-## Formatting
+## Định dạng
 
-- **rustfmt** for enforcement — always run `cargo fmt` before committing
-- **clippy** for lints — `cargo clippy -- -D warnings` (treat warnings as errors)
-- 4-space indent (rustfmt default)
-- Max line width: 100 characters (rustfmt default)
+- **rustfmt** để thực thi — luôn chạy `cargo fmt` trước khi commit
+- **clippy** cho lint — `cargo clippy -- -D warnings` (coi cảnh báo là lỗi)
+- Thụt lề 4 dấu cách (mặc định của rustfmt)
+- Độ rộng dòng tối đa: 100 ký tự (mặc định của rustfmt)
 
-## Immutability
+## Bất biến (Immutability)
 
-Rust variables are immutable by default — embrace this:
+Biến trong Rust mặc định là bất biến (immutable) — hãy tận dụng điều này:
 
-- Use `let` by default; only use `let mut` when mutation is required
-- Prefer returning new values over mutating in place
-- Use `Cow<'_, T>` when a function may or may not need to allocate
+- Mặc định dùng `let`; chỉ dùng `let mut` khi cần thay đổi
+- Ưu tiên trả về giá trị mới hơn là thay đổi tại chỗ
+- Dùng `Cow<'_, T>` khi một hàm có thể cần hoặc không cần cấp phát
 
 ```rust
 use std::borrow::Cow;
 
-// GOOD — immutable by default, new value returned
+// GOOD — mặc định bất biến, trả về giá trị mới
 fn normalize(input: &str) -> Cow<'_, str> {
     if input.contains(' ') {
         Cow::Owned(input.replace(' ', "_"))
@@ -33,54 +33,54 @@ fn normalize(input: &str) -> Cow<'_, str> {
     }
 }
 
-// BAD — unnecessary mutation
+// BAD — thay đổi không cần thiết
 fn normalize_bad(input: &mut String) {
     *input = input.replace(' ', "_");
 }
 ```
 
-## Naming
+## Đặt tên
 
-Follow standard Rust conventions:
-- `snake_case` for functions, methods, variables, modules, crates
-- `PascalCase` (UpperCamelCase) for types, traits, enums, type parameters
-- `SCREAMING_SNAKE_CASE` for constants and statics
-- Lifetimes: short lowercase (`'a`, `'de`) — descriptive names for complex cases (`'input`)
+Tuân theo quy ước chuẩn của Rust:
+- `snake_case` cho hàm, method, biến, module, crate
+- `PascalCase` (UpperCamelCase) cho type, trait, enum, type parameter
+- `SCREAMING_SNAKE_CASE` cho hằng và static
+- Lifetime: chữ thường ngắn (`'a`, `'de`) — dùng tên mô tả cho các trường hợp phức tạp (`'input`)
 
-## Ownership and Borrowing
+## Ownership và Borrowing
 
-- Borrow (`&T`) by default; take ownership only when you need to store or consume
-- Never clone to satisfy the borrow checker without understanding the root cause
-- Accept `&str` over `String`, `&[T]` over `Vec<T>` in function parameters
-- Use `impl Into<String>` for constructors that need to own a `String`
+- Mặc định mượn (`&T`); chỉ lấy ownership khi cần lưu trữ hoặc tiêu thụ
+- Không bao giờ clone chỉ để thỏa mãn borrow checker mà không hiểu nguyên nhân gốc
+- Nhận `&str` thay vì `String`, `&[T]` thay vì `Vec<T>` trong tham số hàm
+- Dùng `impl Into<String>` cho constructor cần sở hữu một `String`
 
 ```rust
-// GOOD — borrows when ownership isn't needed
+// GOOD — mượn khi không cần ownership
 fn word_count(text: &str) -> usize {
     text.split_whitespace().count()
 }
 
-// GOOD — takes ownership in constructor via Into
+// GOOD — lấy ownership trong constructor qua Into
 fn new(name: impl Into<String>) -> Self {
     Self { name: name.into() }
 }
 
-// BAD — takes String when &str suffices
+// BAD — nhận String trong khi &str là đủ
 fn word_count_bad(text: String) -> usize {
     text.split_whitespace().count()
 }
 ```
 
-## Error Handling
+## Xử lý lỗi
 
-- Use `Result<T, E>` and `?` for propagation — never `unwrap()` in production code
-- **Libraries**: define typed errors with `thiserror`
-- **Applications**: use `anyhow` for flexible error context
-- Add context with `.with_context(|| format!("failed to ..."))?`
-- Reserve `unwrap()` / `expect()` for tests and truly unreachable states
+- Dùng `Result<T, E>` và `?` để lan truyền lỗi — không bao giờ `unwrap()` trong code production
+- **Thư viện (library)**: định nghĩa lỗi có type bằng `thiserror`
+- **Ứng dụng (application)**: dùng `anyhow` để có context lỗi linh hoạt
+- Thêm context bằng `.with_context(|| format!("failed to ..."))?`
+- Chỉ dành `unwrap()` / `expect()` cho test và các trạng thái thực sự không thể đạt tới
 
 ```rust
-// GOOD — library error with thiserror
+// GOOD — lỗi của library với thiserror
 #[derive(Debug, thiserror::Error)]
 pub enum ConfigError {
     #[error("failed to read config: {0}")]
@@ -89,7 +89,7 @@ pub enum ConfigError {
     Parse(String),
 }
 
-// GOOD — application error with anyhow
+// GOOD — lỗi của application với anyhow
 use anyhow::Context;
 
 fn load_config(path: &str) -> anyhow::Result<Config> {
@@ -100,18 +100,18 @@ fn load_config(path: &str) -> anyhow::Result<Config> {
 }
 ```
 
-## Iterators Over Loops
+## Iterator thay vì vòng lặp
 
-Prefer iterator chains for transformations; use loops for complex control flow:
+Ưu tiên chuỗi iterator cho các phép biến đổi; dùng vòng lặp cho luồng điều khiển phức tạp:
 
 ```rust
-// GOOD — declarative and composable
+// GOOD — khai báo (declarative) và dễ kết hợp
 let active_emails: Vec<&str> = users.iter()
     .filter(|u| u.is_active)
     .map(|u| u.email.as_str())
     .collect();
 
-// GOOD — loop for complex logic with early returns
+// GOOD — vòng lặp cho logic phức tạp có early return
 for user in &users {
     if let Some(verified) = verify_email(&user.email)? {
         send_welcome(&verified)?;
@@ -119,9 +119,9 @@ for user in &users {
 }
 ```
 
-## Module Organization
+## Tổ chức module
 
-Organize by domain, not by type:
+Tổ chức theo domain, không theo loại:
 
 ```text
 src/
@@ -140,12 +140,12 @@ src/
     └── pool.rs
 ```
 
-## Visibility
+## Khả năng hiển thị (Visibility)
 
-- Default to private; use `pub(crate)` for internal sharing
-- Only mark `pub` what is part of the crate's public API
-- Re-export public API from `lib.rs`
+- Mặc định là private; dùng `pub(crate)` để chia sẻ nội bộ
+- Chỉ đánh dấu `pub` những gì thuộc API công khai của crate
+- Re-export API công khai từ `lib.rs`
 
-## References
+## Tham chiếu
 
-See skill: `rust-patterns` for comprehensive Rust idioms and patterns.
+Xem skill: `rust-patterns` để biết đầy đủ idiom và pattern của Rust.

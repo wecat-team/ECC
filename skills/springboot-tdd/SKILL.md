@@ -1,28 +1,28 @@
 ---
 name: springboot-tdd
-description: Test-driven development for Spring Boot using JUnit 5, Mockito, MockMvc, Testcontainers, and JaCoCo. Use when adding features, fixing bugs, or refactoring.
+description: Phát triển hướng kiểm thử (TDD) cho Spring Boot với JUnit 5, Mockito, MockMvc, Testcontainers và JaCoCo. Dùng khi thêm tính năng, sửa bug hoặc refactor.
 metadata:
   origin: ECC
 ---
 
-# Spring Boot TDD Workflow
+# Workflow TDD cho Spring Boot
 
-TDD guidance for Spring Boot services with 80%+ coverage (unit + integration).
+Hướng dẫn TDD cho service Spring Boot với coverage 80%+ (unit + integration).
 
-## When to Use
+## Khi nào dùng
 
-- New features or endpoints
-- Bug fixes or refactors
-- Adding data access logic or security rules
+- Tính năng hoặc endpoint mới
+- Sửa bug hoặc refactor
+- Thêm logic data access hoặc quy tắc bảo mật
 
 ## Workflow
 
-1) Write tests first (they should fail)
-2) Implement minimal code to pass
-3) Refactor with tests green
-4) Enforce coverage (JaCoCo)
+1) Viết test trước (chúng phải fail)
+2) Triển khai code tối thiểu để pass
+3) Refactor khi test vẫn xanh
+4) Thực thi coverage (JaCoCo)
 
-## Unit Tests (JUnit 5 + Mockito)
+## Unit Test (JUnit 5 + Mockito)
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -43,12 +43,12 @@ class MarketServiceTest {
 }
 ```
 
-Patterns:
+Pattern:
 - Arrange-Act-Assert
-- Avoid partial mocks; prefer explicit stubbing
-- Use `@ParameterizedTest` for variants
+- Tránh partial mock; ưu tiên stubbing tường minh
+- Dùng `@ParameterizedTest` cho các biến thể
 
-## Web Layer Tests (MockMvc)
+## Test tầng Web (MockMvc)
 
 ```java
 @WebMvcTest(MarketController.class)
@@ -67,7 +67,7 @@ class MarketControllerTest {
 }
 ```
 
-## Integration Tests (SpringBootTest)
+## Integration Test (SpringBootTest)
 
 ```java
 @SpringBootTest
@@ -88,7 +88,7 @@ class MarketIntegrationTest {
 }
 ```
 
-## Persistence Tests (DataJpaTest)
+## Test tầng Persistence (DataJpaTest)
 
 ```java
 @DataJpaTest
@@ -111,12 +111,12 @@ class MarketRepositoryTest {
 
 ## Testcontainers
 
-- Use reusable containers for Postgres/Redis to mirror production
-- Wire via `@DynamicPropertySource` to inject JDBC URLs into Spring context
+- Dùng container có thể tái sử dụng cho Postgres/Redis để phản chiếu production
+- Kết nối qua `@DynamicPropertySource` để inject JDBC URL vào Spring context
 
 ## Coverage (JaCoCo)
 
-Maven snippet:
+Đoạn cấu hình Maven:
 ```xml
 <plugin>
   <groupId>org.jacoco</groupId>
@@ -135,13 +135,13 @@ Maven snippet:
 </plugin>
 ```
 
-## Assertions
+## Assertion
 
-- Prefer AssertJ (`assertThat`) for readability
-- For JSON responses, use `jsonPath`
-- For exceptions: `assertThatThrownBy(...)`
+- Ưu tiên AssertJ (`assertThat`) để dễ đọc
+- Với response JSON, dùng `jsonPath`
+- Với exception: `assertThatThrownBy(...)`
 
-## Test Data Builders
+## Test Data Builder
 
 ```java
 class MarketBuilder {
@@ -151,9 +151,9 @@ class MarketBuilder {
 }
 ```
 
-## CI Commands
+## Lệnh CI
 
 - Maven: `mvn -T 4 test` or `mvn verify`
 - Gradle: `./gradlew test jacocoTestReport`
 
-**Remember**: Keep tests fast, isolated, and deterministic. Test behavior, not implementation details.
+**Hãy nhớ**: Giữ test nhanh, cô lập và xác định (deterministic). Test hành vi, không test chi tiết triển khai.

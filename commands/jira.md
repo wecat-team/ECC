@@ -1,12 +1,12 @@
 ---
-description: Retrieve a Jira ticket, analyze requirements, update status, or add comments. Uses the jira-integration skill and MCP or REST API.
+description: Lấy một ticket Jira, phân tích yêu cầu, cập nhật trạng thái hoặc thêm comment. Dùng skill jira-integration và MCP hoặc REST API.
 ---
 
-# Jira Command
+# Lệnh Jira
 
-Interact with Jira tickets directly from your workflow — fetch tickets, analyze requirements, add comments, and transition status.
+Tương tác với ticket Jira trực tiếp từ workflow của bạn — lấy ticket, phân tích yêu cầu, thêm comment và chuyển trạng thái.
 
-## Usage
+## Cách dùng
 
 ```
 /jira get <TICKET-KEY>          # Fetch and analyze a ticket
@@ -15,21 +15,21 @@ Interact with Jira tickets directly from your workflow — fetch tickets, analyz
 /jira search <JQL>              # Search issues with JQL
 ```
 
-## What This Command Does
+## Command này làm gì
 
-1. **Get & Analyze** — Fetch a Jira ticket and extract requirements, acceptance criteria, test scenarios, and dependencies
-2. **Comment** — Add structured progress updates to a ticket
-3. **Transition** — Move a ticket through workflow states (To Do → In Progress → Done)
-4. **Search** — Find issues using JQL queries
+1. **Get & Analyze** — Lấy một ticket Jira và trích xuất yêu cầu, tiêu chí chấp nhận (acceptance criteria), kịch bản test và dependency
+2. **Comment** — Thêm các cập nhật tiến độ có cấu trúc vào ticket
+3. **Transition** — Chuyển ticket qua các trạng thái workflow (To Do → In Progress → Done)
+4. **Search** — Tìm issue bằng truy vấn JQL
 
-## How It Works
+## Cách hoạt động
 
 ### `/jira get <TICKET-KEY>`
 
-1. Fetch the ticket from Jira (via MCP `jira_get_issue` or REST API)
-2. Extract all fields: summary, description, acceptance criteria, priority, labels, linked issues
-3. Optionally fetch comments for additional context
-4. Produce a structured analysis:
+1. Lấy ticket từ Jira (qua MCP `jira_get_issue` hoặc REST API)
+2. Trích xuất mọi trường: summary, description, acceptance criteria, priority, label, linked issue
+3. Có thể lấy thêm comment để có thêm context
+4. Tạo bản phân tích có cấu trúc:
 
 ```
 Ticket: PROJ-1234
@@ -60,47 +60,47 @@ Recommended Next Steps:
 
 ### `/jira comment <TICKET-KEY>`
 
-1. Summarize current session progress (what was built, tested, committed)
-2. Format as a structured comment
-3. Post to the Jira ticket
+1. Tóm tắt tiến độ của phiên hiện tại (đã xây dựng, test, commit những gì)
+2. Định dạng thành comment có cấu trúc
+3. Đăng lên ticket Jira
 
 ### `/jira transition <TICKET-KEY>`
 
-1. Fetch available transitions for the ticket
-2. Show options to user
-3. Execute the selected transition
+1. Lấy các transition khả dụng cho ticket
+2. Hiển thị các lựa chọn cho người dùng
+3. Thực hiện transition đã chọn
 
 ### `/jira search <JQL>`
 
-1. Execute the JQL query against Jira
-2. Return a summary table of matching issues
+1. Thực thi truy vấn JQL trên Jira
+2. Trả về bảng tóm tắt các issue khớp
 
-## Prerequisites
+## Điều kiện tiên quyết
 
-This command requires Jira credentials. Choose one:
+Command này yêu cầu credential Jira. Chọn một:
 
-**Option A — MCP Server (recommended):**
-Add `jira` to your `mcpServers` config (see `mcp-configs/mcp-servers.json` for the template).
+**Lựa chọn A — MCP Server (khuyến nghị):**
+Thêm `jira` vào cấu hình `mcpServers` của bạn (xem `mcp-configs/mcp-servers.json` để lấy template).
 
-**Option B — Environment variables:**
+**Lựa chọn B — Biến môi trường:**
 ```bash
 export JIRA_URL="https://yourorg.atlassian.net"
 export JIRA_EMAIL="your.email@example.com"
 export JIRA_API_TOKEN="your-api-token"
 ```
 
-If credentials are missing, stop and direct the user to set them up.
+Nếu thiếu credential, hãy dừng lại và hướng dẫn người dùng thiết lập chúng.
 
-## Integration with Other Commands
+## Tích hợp với các command khác
 
-After analyzing a ticket:
-- Use `/plan` to create an implementation plan from the requirements
-- Use the `tdd-workflow` skill to implement with test-driven development
-- Use `/code-review` after implementation
-- Use `/jira comment` to post progress back to the ticket
-- Use `/jira transition` to move the ticket when work is complete
+Sau khi phân tích một ticket:
+- Dùng `/plan` để tạo kế hoạch triển khai từ các yêu cầu
+- Dùng skill `tdd-workflow` để triển khai theo hướng kiểm thử (TDD)
+- Dùng `/code-review` sau khi triển khai
+- Dùng `/jira comment` để đăng tiến độ trở lại ticket
+- Dùng `/jira transition` để chuyển ticket khi công việc hoàn tất
 
-## Related
+## Liên quan
 
 - **Skill:** `skills/jira-integration/`
 - **MCP config:** `mcp-configs/mcp-servers.json` → `jira`

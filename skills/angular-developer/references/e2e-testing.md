@@ -1,10 +1,10 @@
 # End-to-End (E2E) Testing
 
-Use E2E tests to cover critical user journeys in a real browser. Prefer the framework already configured in the Angular workspace, such as Cypress or Playwright.
+Dùng E2E test để bao phủ các hành trình người dùng quan trọng trong một trình duyệt thật. Ưu tiên framework đã được cấu hình sẵn trong Angular workspace, chẳng hạn Cypress hoặc Playwright.
 
-## Running E2E Tests
+## Chạy E2E Test
 
-Check `package.json` and `angular.json` for the project-specific command. Common patterns include:
+Kiểm tra `package.json` và `angular.json` để biết lệnh riêng của dự án. Các mẫu phổ biến gồm:
 
 ```shell
 npm run e2e
@@ -12,15 +12,15 @@ pnpm e2e
 ng e2e
 ```
 
-When the app must be built or served first, use the existing project scripts instead of inventing a parallel test entrypoint.
+Khi ứng dụng phải được build hoặc serve trước, hãy dùng các script có sẵn của dự án thay vì tự tạo một entrypoint test song song.
 
-## Test Structure
+## Cấu trúc Test
 
-- Keep E2E specs close to the configured test framework, such as `cypress/e2e/` or `e2e/`.
-- Put reusable login/setup helpers in the framework support directory.
-- Keep fixtures explicit and small enough that each test can explain the user state it depends on.
+- Giữ các E2E spec gần với framework test đã cấu hình, chẳng hạn `cypress/e2e/` hoặc `e2e/`.
+- Đặt các helper login/setup tái sử dụng trong thư mục support của framework.
+- Giữ fixture tường minh và đủ nhỏ để mỗi test có thể giải thích trạng thái người dùng mà nó phụ thuộc vào.
 
-### Cypress Example
+### Ví dụ Cypress
 
 ```typescript
 describe('Login flow', () => {
@@ -34,7 +34,7 @@ describe('Login flow', () => {
 });
 ```
 
-### Playwright Example
+### Ví dụ Playwright
 
 ```typescript
 import {expect, test} from '@playwright/test';
@@ -48,9 +48,9 @@ test('redirects to dashboard on valid credentials', async ({page}) => {
 });
 ```
 
-## Best Practices
+## Best Practice
 
-- Prefer accessible locators (`getByRole`, `getByLabel`) or stable `data-*` attributes.
-- Avoid selectors that depend on CSS classes, DOM depth, or incidental text.
-- Wait for specific UI states, routes, or network responses instead of arbitrary sleeps.
-- Keep smoke tests short and reserve full workflow coverage for the highest-value paths.
+- Ưu tiên các locator accessible (`getByRole`, `getByLabel`) hoặc các thuộc tính `data-*` ổn định.
+- Tránh các selector phụ thuộc vào CSS class, độ sâu DOM hoặc text ngẫu nhiên.
+- Chờ các trạng thái UI, route hoặc network response cụ thể thay vì sleep tùy ý.
+- Giữ smoke test ngắn gọn và dành phần bao phủ toàn bộ workflow cho các luồng có giá trị cao nhất.

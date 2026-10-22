@@ -3,22 +3,22 @@ paths:
   - "**/*.fs"
   - "**/*.fsx"
 ---
-# F# Coding Style
+# Phong cách code F#
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with F#-specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho F#.
 
-## Standards
+## Tiêu chuẩn
 
-- Follow standard F# conventions and leverage the type system for correctness
-- Prefer immutability by default; use `mutable` only when justified by performance
-- Keep modules focused and cohesive
+- Tuân theo các quy ước F# chuẩn và tận dụng hệ thống kiểu để đảm bảo tính đúng đắn
+- Mặc định ưu tiên bất biến (immutability); chỉ dùng `mutable` khi có lý do về hiệu năng
+- Giữ module tập trung và gắn kết
 
-## Types and Models
+## Type và Model
 
-- Prefer discriminated unions for domain modeling over class hierarchies
-- Use records for data with named fields
-- Use single-case unions for type-safe wrappers around primitives
-- Avoid classes unless interop or mutable state requires them
+- Ưu tiên discriminated union để mô hình hóa domain thay vì hệ phân cấp class
+- Dùng record cho dữ liệu có các field được đặt tên
+- Dùng single-case union làm wrapper an toàn kiểu quanh các kiểu nguyên thủy
+- Tránh class trừ khi interop hoặc mutable state đòi hỏi
 
 ```fsharp
 type EmailAddress = EmailAddress of string
@@ -36,23 +36,23 @@ type Order =
       Items: OrderItem list }
 ```
 
-## Immutability
+## Bất biến (Immutability)
 
-- Records are immutable by default; use `with` expressions for updates
-- Prefer `list`, `map`, `set` over mutable collections
-- Avoid `ref` cells and mutable fields in domain logic
+- Record mặc định là bất biến; dùng biểu thức `with` để cập nhật
+- Ưu tiên `list`, `map`, `set` hơn các collection khả biến
+- Tránh `ref` cell và field mutable trong domain logic
 
 ```fsharp
 let rename (profile: UserProfile) newName =
     { profile with Name = newName }
 ```
 
-## Function Style
+## Phong cách hàm
 
-- Prefer small, composable functions over large methods
-- Use the pipe operator `|>` to build readable data pipelines
-- Prefer pattern matching over if/else chains
-- Use `Option` instead of null; use `Result` for operations that can fail
+- Ưu tiên các hàm nhỏ, có thể kết hợp thay vì method lớn
+- Dùng pipe operator `|>` để xây dựng data pipeline dễ đọc
+- Ưu tiên pattern matching hơn chuỗi if/else
+- Dùng `Option` thay cho null; dùng `Result` cho các thao tác có thể thất bại
 
 ```fsharp
 let processOrder order =
@@ -63,12 +63,12 @@ let processOrder order =
     |> Result.mapError OrderError
 ```
 
-## Async and Error Handling
+## Async và xử lý lỗi
 
-- Use `task { }` for interop with .NET async APIs
-- Use `async { }` for F#-native async workflows
-- Propagate `CancellationToken` through public async APIs
-- Prefer `Result` and railway-oriented programming over exceptions for expected failures
+- Dùng `task { }` để interop với các API async của .NET
+- Dùng `async { }` cho các workflow async gốc của F#
+- Truyền `CancellationToken` qua các API async public
+- Ưu tiên `Result` và railway-oriented programming hơn exception cho các lỗi có thể dự đoán
 
 ```fsharp
 let loadOrderAsync (orderId: Guid) (ct: CancellationToken) =
@@ -81,20 +81,20 @@ let loadOrderAsync (orderId: Guid) (ct: CancellationToken) =
     }
 ```
 
-## Formatting
+## Định dạng
 
-- Use `fantomas` for automatic formatting
-- Prefer significant whitespace; avoid unnecessary parentheses
-- Remove unused `open` declarations
+- Dùng `fantomas` để format tự động
+- Ưu tiên significant whitespace; tránh dấu ngoặc không cần thiết
+- Xóa các khai báo `open` không dùng
 
-### Open Declaration Order
+### Thứ tự khai báo Open
 
-Group `open` statements into four sections separated by a blank line, each section sorted lexically within itself:
+Nhóm các câu lệnh `open` thành bốn phần cách nhau bằng một dòng trống, mỗi phần được sắp xếp theo thứ tự từ điển bên trong nó:
 
 1. `System.*`
 2. `Microsoft.*`
-3. Third-party namespaces
-4. First-party / project namespaces
+3. Namespace của bên thứ ba
+4. Namespace nội bộ / của dự án
 
 ```fsharp
 open System

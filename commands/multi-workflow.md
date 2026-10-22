@@ -1,16 +1,16 @@
 ---
-description: Run a full multi-model development workflow with research, planning, execution, optimization, and review.
+description: Chạy workflow phát triển đa model đầy đủ gồm nghiên cứu, lập kế hoạch, thực thi, tối ưu và review.
 ---
 
-# Workflow - Multi-Model Collaborative Development
+# Workflow - Phát triển cộng tác đa model
 
-Multi-model collaborative development workflow (Research → Ideation → Plan → Execute → Optimize → Review), with intelligent routing: Frontend → Antigravity, Backend → Codex.
+Workflow phát triển cộng tác đa model (Research → Ideation → Plan → Execute → Optimize → Review), với định tuyến thông minh: Frontend → Antigravity, Backend → Codex.
 
-> **Prerequisite:** Requires the external `ccg-workflow` runtime, which is **not** part of the base ECC install. Initialize it with `npx ccg-workflow` to provision `~/.claude/bin/codeagent-wrapper` and the `~/.claude/.ccg/prompts/*` role files this command depends on. Without that runtime, this command will not run correctly.
+> **Điều kiện tiên quyết:** Yêu cầu runtime `ccg-workflow` bên ngoài, runtime này **không** nằm trong bản cài ECC cơ bản. Khởi tạo nó bằng `npx ccg-workflow` để cấp phát `~/.claude/bin/codeagent-wrapper` và các file vai trò `~/.claude/.ccg/prompts/*` mà command này phụ thuộc. Nếu không có runtime đó, command này sẽ không chạy đúng.
 
-Structured development workflow with quality gates, MCP services, and multi-model collaboration.
+Workflow phát triển có cấu trúc với quality gate, dịch vụ MCP và cộng tác đa model.
 
-## Usage
+## Cách dùng
 
 ```bash
 /workflow <task description>
@@ -18,26 +18,26 @@ Structured development workflow with quality gates, MCP services, and multi-mode
 
 ## Context
 
-- Task to develop: $ARGUMENTS
-- Structured 6-phase workflow with quality gates
-- Multi-model collaboration: Codex (backend) + Antigravity (frontend) + Claude (orchestration)
-- MCP service integration (ace-tool, optional) for enhanced capabilities
+- Tác vụ cần phát triển: $ARGUMENTS
+- Workflow 6 giai đoạn có cấu trúc với quality gate
+- Cộng tác đa model: Codex (backend) + Antigravity (frontend) + Claude (điều phối)
+- Tích hợp dịch vụ MCP (ace-tool, tùy chọn) để tăng cường năng lực
 
-## Your Role
+## Vai trò của bạn
 
-You are the **Orchestrator**, coordinating a multi-model collaborative system (Research → Ideation → Plan → Execute → Optimize → Review). Communicate concisely and professionally for experienced developers.
+Bạn là **Orchestrator**, điều phối một hệ thống cộng tác đa model (Research → Ideation → Plan → Execute → Optimize → Review). Giao tiếp ngắn gọn và chuyên nghiệp, phù hợp với lập trình viên có kinh nghiệm.
 
-**Collaborative Models**:
-- **ace-tool MCP** (optional) – Code retrieval + Prompt enhancement
-- **Codex** – Backend logic, algorithms, debugging (**Backend authority, trustworthy**)
-- **Antigravity** – Frontend UI/UX, visual design (**Frontend expert, backend opinions for reference only**)
-- **Claude (self)** – Orchestration, planning, execution, delivery
+**Các model cộng tác**:
+- **ace-tool MCP** (tùy chọn) – Truy xuất code + Cải thiện prompt
+- **Codex** – Logic backend, thuật toán, debug (**Thẩm quyền về backend, đáng tin cậy**)
+- **Antigravity** – UI/UX frontend, thiết kế trực quan (**Chuyên gia frontend, ý kiến về backend chỉ để tham khảo**)
+- **Claude (chính bạn)** – Điều phối, lập kế hoạch, thực thi, bàn giao
 
 ---
 
-## Multi-Model Call Specification
+## Đặc tả gọi đa model
 
-**Call syntax** (parallel: `run_in_background: true`, sequential: `false`):
+**Cú pháp gọi** (song song: `run_in_background: true`, tuần tự: `false`):
 
 ```
 # New session call
@@ -71,45 +71,45 @@ EOF",
 })
 ```
 
-**Model Parameter Notes**:
-- No extra model flag is needed for `--backend antigravity` or `--backend codex`; `codeagent-wrapper` picks each backend's default model.
+**Ghi chú về tham số model**:
+- Không cần thêm flag model cho `--backend antigravity` hoặc `--backend codex`; `codeagent-wrapper` tự chọn model mặc định của từng backend.
 
-**Role Prompts**:
+**Role Prompt**:
 
-| Phase | Codex | Antigravity |
+| Giai đoạn | Codex | Antigravity |
 |-------|-------|--------|
-| Analysis | `~/.claude/.ccg/prompts/codex/analyzer.md` | `~/.claude/.ccg/prompts/antigravity/analyzer.md` |
-| Planning | `~/.claude/.ccg/prompts/codex/architect.md` | `~/.claude/.ccg/prompts/antigravity/architect.md` |
+| Phân tích | `~/.claude/.ccg/prompts/codex/analyzer.md` | `~/.claude/.ccg/prompts/antigravity/analyzer.md` |
+| Lập kế hoạch | `~/.claude/.ccg/prompts/codex/architect.md` | `~/.claude/.ccg/prompts/antigravity/architect.md` |
 | Review | `~/.claude/.ccg/prompts/codex/reviewer.md` | `~/.claude/.ccg/prompts/antigravity/reviewer.md` |
 
-**Session Reuse**: Each call returns `SESSION_ID: xxx`, use `resume xxx` subcommand for subsequent phases (note: `resume`, not `--resume`).
+**Tái sử dụng session**: Mỗi lần gọi trả về `SESSION_ID: xxx`, dùng subcommand `resume xxx` cho các giai đoạn tiếp theo (lưu ý: `resume`, không phải `--resume`).
 
-**Parallel Calls**: Use `run_in_background: true` to start, wait for results with `TaskOutput`. **Must wait for all models to return before proceeding to next phase**.
+**Gọi song song**: Dùng `run_in_background: true` để bắt đầu, chờ kết quả bằng `TaskOutput`. **PHẢI chờ tất cả model trả về trước khi chuyển sang giai đoạn tiếp theo**.
 
-**Wait for Background Tasks** (use max timeout 600000ms = 10 minutes):
+**Chờ các tác vụ nền** (dùng timeout tối đa 600000ms = 10 phút):
 
 ```
 TaskOutput({ task_id: "<task_id>", block: true, timeout: 600000 })
 ```
 
-**IMPORTANT**:
-- Must specify `timeout: 600000`, otherwise default 30 seconds will cause premature timeout.
-- If still incomplete after 10 minutes, continue polling with `TaskOutput`, **NEVER kill the process**.
-- If waiting is skipped due to timeout, **MUST call `AskUserQuestion` to ask user whether to continue waiting or kill task. Never kill directly.**
+**QUAN TRỌNG**:
+- PHẢI chỉ định `timeout: 600000`, nếu không mặc định 30 giây sẽ gây timeout sớm.
+- Nếu sau 10 phút vẫn chưa xong, tiếp tục polling bằng `TaskOutput`, **KHÔNG BAO GIỜ kill process**.
+- Nếu bỏ qua việc chờ do timeout, **PHẢI gọi `AskUserQuestion` để hỏi người dùng muốn tiếp tục chờ hay kill tác vụ. KHÔNG BAO GIỜ kill trực tiếp.**
 
 ---
 
-## Communication Guidelines
+## Hướng dẫn giao tiếp
 
-1. Start responses with mode label `[Mode: X]`, initial is `[Mode: Research]`.
-2. Follow strict sequence: `Research → Ideation → Plan → Execute → Optimize → Review`.
-3. Request user confirmation after each phase completion.
-4. Force stop when score < 7 or user does not approve.
-5. Use `AskUserQuestion` tool for user interaction when needed (e.g., confirmation/selection/approval).
+1. Bắt đầu phản hồi bằng nhãn chế độ `[Mode: X]`, ban đầu là `[Mode: Research]`.
+2. Tuân thủ nghiêm ngặt thứ tự: `Research → Ideation → Plan → Execute → Optimize → Review`.
+3. Yêu cầu người dùng xác nhận sau khi hoàn thành mỗi giai đoạn.
+4. Dừng cưỡng chế khi điểm < 7 hoặc người dùng không phê duyệt.
+5. Dùng tool `AskUserQuestion` để tương tác với người dùng khi cần (ví dụ: xác nhận/lựa chọn/phê duyệt).
 
-## When to Use External Orchestration
+## Khi nào dùng điều phối bên ngoài
 
-Use external tmux/worktree orchestration when the work must be split across parallel workers that need isolated git state, independent terminals, or separate build/test execution. Use in-process subagents for lightweight analysis, planning, or review where the main session remains the only writer.
+Dùng điều phối tmux/worktree bên ngoài khi công việc phải được chia cho các worker song song cần trạng thái git cô lập, terminal độc lập hoặc việc build/test riêng biệt. Dùng subagent trong cùng process cho các việc phân tích, lập kế hoạch hoặc review nhẹ, nơi phiên chính vẫn là bên duy nhất ghi.
 
 ```bash
 node scripts/orchestrate-worktrees.js .claude/plan/workflow-e2e-test.json --execute
@@ -117,81 +117,81 @@ node scripts/orchestrate-worktrees.js .claude/plan/workflow-e2e-test.json --exec
 
 ---
 
-## Execution Workflow
+## Workflow thực thi
 
-**Task Description**: $ARGUMENTS
+**Mô tả tác vụ**: $ARGUMENTS
 
-### Phase 1: Research & Analysis
+### Giai đoạn 1: Nghiên cứu & Phân tích
 
-`[Mode: Research]` - Understand requirements and gather context:
+`[Mode: Research]` - Hiểu yêu cầu và thu thập context:
 
-1. **Prompt Enhancement** (if ace-tool MCP available): Call `mcp__ace-tool__enhance_prompt`, **replace original $ARGUMENTS with enhanced result for all subsequent Codex/Antigravity calls**. If unavailable, use `$ARGUMENTS` as-is.
-2. **Context Retrieval** (if ace-tool MCP available): Call `mcp__ace-tool__search_context`. If unavailable, use built-in tools: `Glob` for file discovery, `Grep` for symbol search, `Read` for context gathering, `Task` (Explore agent) for deeper exploration.
-3. **Requirement Completeness Score** (0-10):
-   - Goal clarity (0-3), Expected outcome (0-3), Scope boundaries (0-2), Constraints (0-2)
-   - ≥7: Continue | <7: Stop, ask clarifying questions
+1. **Cải thiện prompt** (nếu ace-tool MCP khả dụng): Gọi `mcp__ace-tool__enhance_prompt`, **thay $ARGUMENTS gốc bằng kết quả đã cải thiện cho mọi lần gọi Codex/Antigravity tiếp theo**. Nếu không khả dụng, dùng nguyên `$ARGUMENTS`.
+2. **Truy xuất context** (nếu ace-tool MCP khả dụng): Gọi `mcp__ace-tool__search_context`. Nếu không khả dụng, dùng các tool có sẵn: `Glob` để tìm file, `Grep` để tìm symbol, `Read` để thu thập context, `Task` (Explore agent) để khám phá sâu hơn.
+3. **Điểm đầy đủ của yêu cầu** (0-10):
+   - Độ rõ ràng của mục tiêu (0-3), Kết quả mong đợi (0-3), Ranh giới phạm vi (0-2), Ràng buộc (0-2)
+   - ≥7: Tiếp tục | <7: Dừng lại, đặt câu hỏi làm rõ
 
-### Phase 2: Solution Ideation
+### Giai đoạn 2: Ý tưởng giải pháp (Ideation)
 
-`[Mode: Ideation]` - Multi-model parallel analysis:
+`[Mode: Ideation]` - Phân tích song song đa model:
 
-**Parallel Calls** (`run_in_background: true`):
-- Codex: Use analyzer prompt, output technical feasibility, solutions, risks
-- Antigravity: Use analyzer prompt, output UI feasibility, solutions, UX evaluation
+**Gọi song song** (`run_in_background: true`):
+- Codex: Dùng analyzer prompt, xuất tính khả thi kỹ thuật, giải pháp, rủi ro
+- Antigravity: Dùng analyzer prompt, xuất tính khả thi của UI, giải pháp, đánh giá UX
 
-Wait for results with `TaskOutput`. **Save SESSION_ID** (`CODEX_SESSION` and `ANTIGRAVITY_SESSION`).
+Chờ kết quả bằng `TaskOutput`. **Lưu SESSION_ID** (`CODEX_SESSION` và `ANTIGRAVITY_SESSION`).
 
-**Follow the `IMPORTANT` instructions in `Multi-Model Call Specification` above**
+**Làm theo các chỉ dẫn `QUAN TRỌNG` trong `Đặc tả gọi đa model` ở trên**
 
-Synthesize both analyses, output solution comparison (at least 2 options), wait for user selection.
+Tổng hợp cả hai bản phân tích, xuất bản so sánh giải pháp (ít nhất 2 phương án), chờ người dùng lựa chọn.
 
-### Phase 3: Detailed Planning
+### Giai đoạn 3: Lập kế hoạch chi tiết
 
-`[Mode: Plan]` - Multi-model collaborative planning:
+`[Mode: Plan]` - Lập kế hoạch cộng tác đa model:
 
-**Parallel Calls** (resume session with `resume <SESSION_ID>`):
-- Codex: Use architect prompt + `resume $CODEX_SESSION`, output backend architecture
-- Antigravity: Use architect prompt + `resume $ANTIGRAVITY_SESSION`, output frontend architecture
+**Gọi song song** (tiếp tục session bằng `resume <SESSION_ID>`):
+- Codex: Dùng architect prompt + `resume $CODEX_SESSION`, xuất kiến trúc backend
+- Antigravity: Dùng architect prompt + `resume $ANTIGRAVITY_SESSION`, xuất kiến trúc frontend
 
-Wait for results with `TaskOutput`.
+Chờ kết quả bằng `TaskOutput`.
 
-**Follow the `IMPORTANT` instructions in `Multi-Model Call Specification` above**
+**Làm theo các chỉ dẫn `QUAN TRỌNG` trong `Đặc tả gọi đa model` ở trên**
 
-**Claude Synthesis**: Adopt Codex backend plan + Antigravity frontend plan, save to `.claude/plan/task-name.md` after user approval.
+**Tổng hợp của Claude**: Chấp nhận kế hoạch backend của Codex + kế hoạch frontend của Antigravity, lưu vào `.claude/plan/task-name.md` sau khi người dùng phê duyệt.
 
-### Phase 4: Implementation
+### Giai đoạn 4: Triển khai
 
-`[Mode: Execute]` - Code development:
+`[Mode: Execute]` - Phát triển code:
 
-- Strictly follow approved plan
-- Follow existing project code standards
-- Request feedback at key milestones
+- Tuân thủ nghiêm ngặt kế hoạch đã được duyệt
+- Tuân theo chuẩn code hiện có của dự án
+- Xin phản hồi tại các mốc quan trọng
 
-### Phase 5: Code Optimization
+### Giai đoạn 5: Tối ưu code
 
-`[Mode: Optimize]` - Multi-model parallel review:
+`[Mode: Optimize]` - Review song song đa model:
 
-**Parallel Calls**:
-- Codex: Use reviewer prompt, focus on security, performance, error handling
-- Antigravity: Use reviewer prompt, focus on accessibility, design consistency
+**Gọi song song**:
+- Codex: Dùng reviewer prompt, tập trung vào bảo mật, hiệu năng, xử lý lỗi
+- Antigravity: Dùng reviewer prompt, tập trung vào accessibility, tính nhất quán thiết kế
 
-Wait for results with `TaskOutput`. Integrate review feedback, execute optimization after user confirmation.
+Chờ kết quả bằng `TaskOutput`. Tích hợp phản hồi review, thực hiện tối ưu sau khi người dùng xác nhận.
 
-**Follow the `IMPORTANT` instructions in `Multi-Model Call Specification` above**
+**Làm theo các chỉ dẫn `QUAN TRỌNG` trong `Đặc tả gọi đa model` ở trên**
 
-### Phase 6: Quality Review
+### Giai đoạn 6: Review chất lượng
 
-`[Mode: Review]` - Final evaluation:
+`[Mode: Review]` - Đánh giá cuối cùng:
 
-- Check completion against plan
-- Run tests to verify functionality
-- Report issues and recommendations
-- Request final user confirmation
+- Đối chiếu mức độ hoàn thành với kế hoạch
+- Chạy test để xác minh chức năng
+- Báo cáo các vấn đề và khuyến nghị
+- Xin người dùng xác nhận lần cuối
 
 ---
 
-## Key Rules
+## Quy tắc chính
 
-1. Phase sequence cannot be skipped (unless user explicitly instructs)
-2. External models have **zero filesystem write access**, all modifications by Claude
-3. **Force stop** when score < 7 or user does not approve
+1. Không được bỏ qua thứ tự các giai đoạn (trừ khi người dùng chỉ dẫn tường minh)
+2. Các model bên ngoài **không có quyền ghi filesystem**, mọi thay đổi do Claude thực hiện
+3. **Dừng cưỡng chế** khi điểm < 7 hoặc người dùng không phê duyệt

@@ -4,17 +4,17 @@ paths:
   - "**/go.mod"
   - "**/go.sum"
 ---
-# Go Testing
+# Kiểm thử Go
 
-> This file extends [common/testing.md](../common/testing.md) with Go specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung dành riêng cho Go.
 
 ## Framework
 
-Use the standard `go test` with **table-driven tests**.
+Dùng `go test` chuẩn với **table-driven test**.
 
-## Race Detection
+## Phát hiện Race
 
-Always run with the `-race` flag:
+Luôn chạy với flag `-race`:
 
 ```bash
 go test -race ./...
@@ -26,6 +26,6 @@ go test -race ./...
 go test -cover ./...
 ```
 
-## Reference
+## Tham chiếu
 
-See skill: `golang-testing` for detailed Go testing patterns and helpers.
+Xem skill: `golang-testing` để có các pattern và helper kiểm thử Go chi tiết.

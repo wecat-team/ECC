@@ -1,32 +1,32 @@
 ---
-description: Open a plan or HTML artifact in the browser Plan Canvas for annotate-and-approve review. This is a thin slash-command entrypoint over the plan-canvas skill, which covers the full workflow and rules.
+description: Mở một plan hoặc artifact HTML trong Plan Canvas trên trình duyệt để review kiểu annotate-and-approve. Đây là điểm vào slash command mỏng bên trên skill plan-canvas, skill này bao quát toàn bộ workflow và quy tắc.
 argument-hint: "[path/to/artifact.plan.md | path/to/artifact.html]"
 ---
 
-# Plan Canvas Command
+# Lệnh Plan Canvas
 
-Opens a local artifact in the Plan Canvas — ECC's browser review surface —
-where the user annotates elements, chats with you, and approves the plan or
-requests changes without leaving the page.
+Mở một artifact cục bộ trong Plan Canvas — bề mặt review trên trình duyệt của ECC —
+nơi người dùng chú thích các phần tử, trò chuyện với bạn, và phê duyệt kế hoạch hoặc
+yêu cầu thay đổi mà không cần rời khỏi trang.
 
-This command is a thin entry point over the `plan-canvas` skill. Follow that
-skill for the full workflow and rules.
+Command này là một điểm vào mỏng bên trên skill `plan-canvas`. Hãy làm theo skill đó
+để có toàn bộ workflow và quy tắc.
 
-## What This Command Does
+## Command này làm gì
 
-1. Resolve the artifact: the given path, else the most recently modified
-   `.claude/plans/*.plan.md`, else ask what to review.
-2. `ecc-plan-canvas open <artifact>` — opens the user's browser.
-3. `ecc-plan-canvas await <artifact>` — block until feedback,
-   verdict, or session end; leave it running.
-4. Apply feedback to the artifact file (the canvas live-reloads), answer with
-   `await <artifact> --reply "..."`, and repeat until the user approves or
-   ends the session.
+1. Xác định artifact: đường dẫn được cung cấp, nếu không thì
+   `.claude/plans/*.plan.md` được sửa gần nhất, nếu không nữa thì hỏi cần review gì.
+2. `ecc-plan-canvas open <artifact>` — mở trình duyệt của người dùng.
+3. `ecc-plan-canvas await <artifact>` — chặn cho đến khi có phản hồi,
+   verdict hoặc kết thúc phiên; để nó tiếp tục chạy.
+4. Áp dụng phản hồi vào file artifact (canvas tự reload trực tiếp), trả lời bằng
+   `await <artifact> --reply "..."`, và lặp lại cho đến khi người dùng phê duyệt hoặc
+   kết thúc phiên.
 
-An `approve` verdict counts as plan confirmation for `/plan`-style gates:
-stop polling, `end` the session, and begin implementation.
+Verdict `approve` được tính là xác nhận kế hoạch cho các cổng kiểu `/plan`:
+dừng polling, `end` phiên và bắt đầu triển khai.
 
-## Example
+## Ví dụ
 
 ```
 User: /plan-canvas .claude/plans/notifications.plan.md
@@ -38,8 +38,8 @@ Assistant: (edits the plan, replies in-canvas, awaits again)
 Assistant: Plan approved in the canvas — starting implementation.
 ```
 
-## Related
+## Liên quan
 
-- `plan-canvas` skill — full workflow, feedback JSON shapes, rules
-- `/plan` — produces the plan artifacts this reviews
-- Source: `scripts/plan-canvas.js`, `scripts/lib/plan-canvas/`
+- skill `plan-canvas` — workflow đầy đủ, hình dạng JSON của phản hồi, quy tắc
+- `/plan` — tạo ra các plan artifact mà command này review
+- Nguồn: `scripts/plan-canvas.js`, `scripts/lib/plan-canvas/`

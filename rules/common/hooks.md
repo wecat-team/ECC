@@ -1,30 +1,30 @@
-# Hooks System
+# Hệ thống Hook
 
-## Hook Types
+## Các loại Hook
 
-- **PreToolUse**: Before tool execution (validation, parameter modification)
-- **PostToolUse**: After tool execution (auto-format, checks)
-- **Stop**: When session ends (final verification)
+- **PreToolUse**: Trước khi thực thi tool (validation, sửa tham số)
+- **PostToolUse**: Sau khi thực thi tool (auto-format, kiểm tra)
+- **Stop**: Khi phiên kết thúc (xác minh cuối cùng)
 
 ## Auto-Accept Permissions
 
-Use with caution:
-- Enable for trusted, well-defined plans
-- Disable for exploratory work
-- Never use dangerously-skip-permissions flag
-- Configure `permissions.allow` rules in `~/.claude/settings.json` (or a project's `.claude/settings.json`) instead
+Dùng thận trọng:
+- Bật cho các kế hoạch đáng tin cậy, được định nghĩa rõ
+- Tắt khi làm việc mang tính khám phá
+- KHÔNG BAO GIỜ dùng flag dangerously-skip-permissions
+- Thay vào đó, hãy cấu hình các rule `permissions.allow` trong `~/.claude/settings.json` (hoặc `.claude/settings.json` của dự án)
 
-## TodoWrite Best Practices
+## Best Practice với TodoWrite
 
-Use TodoWrite tool to:
-- Track progress on multi-step tasks
-- Verify understanding of instructions
-- Enable real-time steering
-- Show granular implementation steps
+Dùng tool TodoWrite để:
+- Theo dõi tiến độ của các task nhiều bước
+- Xác minh việc hiểu đúng hướng dẫn
+- Cho phép điều hướng theo thời gian thực
+- Hiển thị các bước triển khai chi tiết
 
-Todo list reveals:
-- Out of order steps
-- Missing items
-- Extra unnecessary items
-- Wrong granularity
-- Misinterpreted requirements
+Danh sách todo cho thấy:
+- Các bước sai thứ tự
+- Các mục bị thiếu
+- Các mục thừa không cần thiết
+- Độ chi tiết sai
+- Yêu cầu bị hiểu sai

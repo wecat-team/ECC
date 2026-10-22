@@ -3,13 +3,13 @@ paths:
   - "**/*.fs"
   - "**/*.fsx"
 ---
-# F# Patterns
+# Pattern F#
 
-> This file extends [common/patterns.md](../common/patterns.md) with F#-specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho F#.
 
-## Result Type for Error Handling
+## Result Type cho xử lý lỗi
 
-Use `Result<'T, 'TError>` with railway-oriented programming instead of exceptions for expected failures.
+Dùng `Result<'T, 'TError>` với railway-oriented programming thay vì exception cho các lỗi có thể dự đoán.
 
 ```fsharp
 type OrderError =
@@ -26,9 +26,9 @@ let validateOrder (request: CreateOrderRequest) : Result<ValidatedOrder, OrderEr
         Ok { CustomerId = request.CustomerId; Items = request.Items }
 ```
 
-## Option for Missing Values
+## Option cho giá trị bị thiếu
 
-Prefer `Option<'T>` over null. Use `Option.map`, `Option.bind`, and `Option.defaultValue` to transform.
+Ưu tiên `Option<'T>` hơn null. Dùng `Option.map`, `Option.bind` và `Option.defaultValue` để biến đổi.
 
 ```fsharp
 let findUser (id: Guid) : User option =
@@ -40,9 +40,9 @@ let getUserEmail userId =
     |> Option.defaultValue "unknown@example.com"
 ```
 
-## Discriminated Unions for Domain Modeling
+## Discriminated Union để mô hình hóa Domain
 
-Model business states explicitly. The compiler enforces exhaustive handling.
+Mô hình hóa các trạng thái nghiệp vụ một cách tường minh. Compiler ép buộc xử lý đầy đủ mọi trường hợp.
 
 ```fsharp
 type PaymentState =
@@ -58,9 +58,9 @@ let describePayment = function
     | Failed error -> $"Payment failed: {error}"
 ```
 
-## Computation Expressions
+## Computation Expression
 
-Use computation expressions to simplify sequential operations that may fail.
+Dùng computation expression để đơn giản hóa các thao tác tuần tự có thể thất bại.
 
 ```fsharp
 let placeOrder request =
@@ -72,11 +72,11 @@ let placeOrder request =
     }
 ```
 
-## Module Organization
+## Tổ chức Module
 
-- Group related functions in modules rather than classes
-- Use `[<RequireQualifiedAccess>]` to prevent name collisions
-- Keep modules small and focused on a single responsibility
+- Nhóm các hàm liên quan trong module thay vì class
+- Dùng `[<RequireQualifiedAccess>]` để tránh xung đột tên
+- Giữ module nhỏ và tập trung vào một trách nhiệm duy nhất
 
 ```fsharp
 [<RequireQualifiedAccess>]
@@ -88,9 +88,9 @@ module Order =
 
 ## Dependency Injection
 
-- Define dependencies as function parameters or record-of-functions
-- Use interfaces sparingly, primarily at the boundary with .NET libraries
-- Prefer partial application for injecting dependencies into pipelines
+- Định nghĩa dependency dưới dạng tham số hàm hoặc record-of-functions
+- Dùng interface một cách hạn chế, chủ yếu ở ranh giới với các thư viện .NET
+- Ưu tiên partial application để inject dependency vào pipeline
 
 ```fsharp
 type OrderDeps =

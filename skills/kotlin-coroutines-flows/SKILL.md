@@ -1,25 +1,25 @@
 ---
 name: kotlin-coroutines-flows
-description: Kotlin Coroutines and Flow patterns for Android and KMP — structured concurrency, Flow operators, StateFlow, error handling, and testing. Use when writing coroutines or Flow code on Android or KMP, or debugging cancellation and concurrency.
+description: "Các pattern Kotlin Coroutines và Flow cho Android và KMP — structured concurrency, toán tử Flow, StateFlow, xử lý lỗi và testing. Dùng khi viết code coroutine hoặc Flow trên Android hoặc KMP, hoặc khi debug cancellation và concurrency."
 metadata:
   origin: ECC
 ---
 
 # Kotlin Coroutines & Flows
 
-Patterns for structured concurrency, Flow-based reactive streams, and coroutine testing in Android and Kotlin Multiplatform projects.
+Các pattern cho structured concurrency, reactive stream dựa trên Flow và testing coroutine trong các dự án Android và Kotlin Multiplatform.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing async code with Kotlin coroutines
-- Using Flow, StateFlow, or SharedFlow for reactive data
-- Handling concurrent operations (parallel loading, debounce, retry)
-- Testing coroutines and Flows
-- Managing coroutine scopes and cancellation
+- Viết code bất đồng bộ với Kotlin coroutines
+- Dùng Flow, StateFlow hoặc SharedFlow cho dữ liệu reactive
+- Xử lý các thao tác đồng thời (tải song song, debounce, retry)
+- Testing coroutine và Flow
+- Quản lý coroutine scope và cancellation
 
 ## Structured Concurrency
 
-### Scope Hierarchy
+### Phân cấp Scope
 
 ```
 Application
@@ -29,7 +29,7 @@ Application
               └── async { } (concurrent task)
 ```
 
-Always use structured concurrency — never `GlobalScope`:
+Luôn dùng structured concurrency — KHÔNG BAO GIỜ dùng `GlobalScope`:
 
 ```kotlin
 // BAD
@@ -42,9 +42,9 @@ viewModelScope.launch { fetchData() }
 LaunchedEffect(key) { fetchData() }
 ```
 
-### Parallel Decomposition
+### Phân rã song song (Parallel Decomposition)
 
-Use `coroutineScope` + `async` for parallel work:
+Dùng `coroutineScope` + `async` cho công việc song song:
 
 ```kotlin
 suspend fun loadDashboard(): Dashboard = coroutineScope {
@@ -61,7 +61,7 @@ suspend fun loadDashboard(): Dashboard = coroutineScope {
 
 ### SupervisorScope
 
-Use `supervisorScope` when child failures should not cancel siblings:
+Dùng `supervisorScope` khi lỗi của một child không được hủy các sibling:
 
 ```kotlin
 suspend fun syncAll() = supervisorScope {
@@ -71,9 +71,9 @@ suspend fun syncAll() = supervisorScope {
 }
 ```
 
-## Flow Patterns
+## Pattern Flow
 
-### Cold Flow — One-Shot to Stream Conversion
+### Cold Flow — Chuyển từ One-Shot sang Stream
 
 ```kotlin
 fun observeItems(): Flow<List<Item>> = flow {
@@ -84,7 +84,7 @@ fun observeItems(): Flow<List<Item>> = flow {
 }
 ```
 
-### StateFlow for UI State
+### StateFlow cho UI State
 
 ```kotlin
 class DashboardViewModel(
@@ -99,9 +99,9 @@ class DashboardViewModel(
 }
 ```
 
-`WhileSubscribed(5_000)` keeps the upstream active for 5 seconds after the last subscriber leaves — survives configuration changes without restarting.
+`WhileSubscribed(5_000)` giữ upstream hoạt động thêm 5 giây sau khi subscriber cuối cùng rời đi — sống sót qua các thay đổi cấu hình (configuration change) mà không phải khởi động lại.
 
-### Combining Multiple Flows
+### Kết hợp nhiều Flow
 
 ```kotlin
 val uiState: StateFlow<HomeState> = combine(
@@ -113,7 +113,7 @@ val uiState: StateFlow<HomeState> = combine(
 }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeState())
 ```
 
-### Flow Operators
+### Toán tử Flow
 
 ```kotlin
 // Debounce search input
@@ -136,7 +136,7 @@ fun fetchWithRetry(): Flow<Data> = flow { emit(api.fetch()) }
     }
 ```
 
-### SharedFlow for One-Time Events
+### SharedFlow cho sự kiện một lần (One-Time Events)
 
 ```kotlin
 class ItemListViewModel : ViewModel() {
@@ -167,7 +167,7 @@ LaunchedEffect(Unit) {
 }
 ```
 
-## Dispatchers
+## Dispatcher
 
 ```kotlin
 // CPU-intensive work
@@ -180,13 +180,13 @@ withContext(Dispatchers.IO) { database.query() }
 withContext(Dispatchers.Main) { updateUi() }
 ```
 
-In KMP, use `Dispatchers.Default` and `Dispatchers.Main` (available on all platforms). `Dispatchers.IO` is JVM/Android only — use `Dispatchers.Default` on other platforms or provide via DI.
+Trong KMP, dùng `Dispatchers.Default` và `Dispatchers.Main` (có sẵn trên mọi nền tảng). `Dispatchers.IO` chỉ có trên JVM/Android — dùng `Dispatchers.Default` trên các nền tảng khác hoặc cung cấp qua DI.
 
 ## Cancellation
 
 ### Cooperative Cancellation
 
-Long-running loops must check for cancellation:
+Các vòng lặp chạy lâu phải kiểm tra cancellation:
 
 ```kotlin
 suspend fun processItems(items: List<Item>) = coroutineScope {
@@ -197,7 +197,7 @@ suspend fun processItems(items: List<Item>) = coroutineScope {
 }
 ```
 
-### Cleanup with try/finally
+### Dọn dẹp với try/finally
 
 ```kotlin
 viewModelScope.launch {
@@ -213,7 +213,7 @@ viewModelScope.launch {
 
 ## Testing
 
-### Testing StateFlow with Turbine
+### Test StateFlow với Turbine
 
 ```kotlin
 @Test
@@ -235,7 +235,7 @@ fun `search updates item list`() = runTest {
 }
 ```
 
-### Testing with TestDispatcher
+### Test với TestDispatcher
 
 ```kotlin
 @Test
@@ -254,7 +254,7 @@ fun `parallel load completes correctly`() = runTest {
 }
 ```
 
-### Faking Flows
+### Giả lập Flow (Faking Flows)
 
 ```kotlin
 class FakeItemRepository : ItemRepository {
@@ -270,16 +270,16 @@ class FakeItemRepository : ItemRepository {
 }
 ```
 
-## Anti-Patterns to Avoid
+## Anti-Pattern cần tránh
 
-- Using `GlobalScope` — leaks coroutines, no structured cancellation
-- Collecting Flows in `init {}` without a scope — use `viewModelScope.launch`
-- Using `MutableStateFlow` with mutable collections — always use immutable copies: `_state.update { it.copy(list = it.list + newItem) }`
-- Catching `CancellationException` — let it propagate for proper cancellation
-- Using `flowOn(Dispatchers.Main)` to collect — collection dispatcher is the caller's dispatcher
-- Creating `Flow` in `@Composable` without `remember` — recreates the flow every recomposition
+- Dùng `GlobalScope` — rò rỉ coroutine, không có structured cancellation
+- Collect Flow trong `init {}` mà không có scope — hãy dùng `viewModelScope.launch`
+- Dùng `MutableStateFlow` với collection có thể thay đổi (mutable) — luôn dùng bản sao bất biến (immutable): `_state.update { it.copy(list = it.list + newItem) }`
+- Bắt `CancellationException` — hãy để nó lan truyền để cancellation hoạt động đúng
+- Dùng `flowOn(Dispatchers.Main)` để collect — dispatcher của việc collect là dispatcher của bên gọi
+- Tạo `Flow` trong `@Composable` mà không có `remember` — tạo lại flow ở mỗi lần recomposition
 
-## References
+## Tham khảo
 
-See skill: `compose-multiplatform-patterns` for UI consumption of Flows.
-See skill: `android-clean-architecture` for where coroutines fit in layers.
+Xem skill: `compose-multiplatform-patterns` để biết cách UI tiêu thụ Flow.
+Xem skill: `android-clean-architecture` để biết coroutine nằm ở đâu trong các tầng.

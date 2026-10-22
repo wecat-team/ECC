@@ -1,38 +1,38 @@
 ---
-description: Orchestrate altering an existing, working feature to new desired behavior — update tests to the new spec, change impl, review, gated commit. Wrapper for the orch-change-feature skill.
+description: Điều phối việc thay đổi một tính năng đang hoạt động sang hành vi mong muốn mới — cập nhật test theo spec mới, đổi phần triển khai, review, commit có cổng kiểm soát. Wrapper cho skill orch-change-feature.
 ---
 
 # /orch-change-feature
 
-Manually launch the **orch-change-feature** orchestrator: change behavior that
-already works to a new desired spec, tests-first.
+Khởi chạy thủ công orchestrator **orch-change-feature**: đổi hành vi
+đang hoạt động sang một spec mong muốn mới, theo hướng test-first.
 
-## Usage
+## Cách dùng
 
 ```
 /orch-change-feature <the new desired behavior>
 ```
 
-Examples:
+Ví dụ:
 
 ```
 /orch-change-feature make nws-poller alert at 2 warnings instead of 3
 /orch-change-feature instead of sorting by date, sort by priority
 ```
 
-## What It Does
+## Nó làm gì
 
-Invoke the `orch-change-feature` skill with `$ARGUMENTS` as the request. The skill
-(via the shared `orch-pipeline` engine) will:
+Gọi skill `orch-change-feature` với `$ARGUMENTS` làm yêu cầu. Skill
+(thông qua engine dùng chung `orch-pipeline`) sẽ:
 
-1. Classify size (default floor: small) and state the tier.
-2. Light plan only if the new behavior needs research. → **GATE 1** (approve changed-test plan).
-3. **Update the existing tests** to express the new behavior, then change the
-   implementation until green. (Changing the tests first is what makes this a
-   tweak, not a fix.)
-4. `code-reviewer` (+ `security-reviewer` on a security trigger), then commit. → **GATE 2**.
+1. Phân loại quy mô (mức sàn mặc định: small) và nêu rõ tier.
+2. Chỉ lập kế hoạch nhẹ nếu hành vi mới cần nghiên cứu. → **GATE 1** (duyệt kế hoạch test thay đổi).
+3. **Cập nhật các test hiện có** để thể hiện hành vi mới, rồi đổi phần
+   triển khai cho đến khi xanh. (Đổi test trước chính là điều biến việc này thành
+   một tinh chỉnh, không phải một bản sửa lỗi.)
+4. `code-reviewer` (+ `security-reviewer` khi có trigger bảo mật), sau đó commit. → **GATE 2**.
 
-Use this only when the feature **works** but should behave differently — not for
-bugs (`/orch-fix-defect`) or net-new capability (`/orch-add-feature`).
+Chỉ dùng khi tính năng **đang hoạt động** nhưng cần hoạt động khác đi — không dùng cho
+bug (`/orch-fix-defect`) hay năng lực hoàn toàn mới (`/orch-add-feature`).
 
-If `$ARGUMENTS` is empty, ask the user what behavior should change.
+Nếu `$ARGUMENTS` trống, hãy hỏi người dùng hành vi nào cần thay đổi.

@@ -1,30 +1,30 @@
 ---
 name: rust-patterns
-description: Idiomatic Rust patterns, ownership, error handling, traits, concurrency, and best practices for building safe, performant applications. Use when writing or reviewing Rust code and ownership, error handling, traits, or concurrency is in question.
+description: Các pattern Rust idiomatic, ownership, xử lý lỗi, trait, concurrency và best practice để xây dựng ứng dụng an toàn, hiệu năng cao. Dùng khi viết hoặc review code Rust và có vấn đề về ownership, xử lý lỗi, trait hoặc concurrency.
 metadata:
   origin: ECC
 ---
 
-# Rust Development Patterns
+# Pattern phát triển Rust
 
-Idiomatic Rust patterns and best practices for building safe, performant, and maintainable applications.
+Các pattern Rust idiomatic và best practice để xây dựng ứng dụng an toàn, hiệu năng cao và dễ bảo trì.
 
-## When to Use
+## Khi nào dùng
 
-- Writing new Rust code
-- Reviewing Rust code
-- Refactoring existing Rust code
-- Designing crate structure and module layout
+- Viết code Rust mới
+- Review code Rust
+- Refactor code Rust hiện có
+- Thiết kế cấu trúc crate và bố cục module
 
-## How It Works
+## Cách hoạt động
 
-This skill enforces idiomatic Rust conventions across six key areas: ownership and borrowing to prevent data races at compile time, `Result`/`?` error propagation with `thiserror` for libraries and `anyhow` for applications, enums and exhaustive pattern matching to make illegal states unrepresentable, traits and generics for zero-cost abstraction, safe concurrency via `Arc<Mutex<T>>`, channels, and async/await, and minimal `pub` surfaces organized by domain.
+Skill này thực thi các quy ước Rust idiomatic trên sáu lĩnh vực chính: ownership và borrowing để ngăn data race ngay lúc compile, lan truyền lỗi bằng `Result`/`?` với `thiserror` cho thư viện và `anyhow` cho ứng dụng, enum và exhaustive pattern matching để biến các trạng thái không hợp lệ thành không thể biểu diễn, trait và generic cho abstraction không tốn chi phí (zero-cost), concurrency an toàn qua `Arc<Mutex<T>>`, channel và async/await, cùng bề mặt `pub` tối thiểu được tổ chức theo domain.
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
-### 1. Ownership and Borrowing
+### 1. Ownership và Borrowing
 
-Rust's ownership system prevents data races and memory bugs at compile time.
+Hệ thống ownership của Rust ngăn data race và lỗi bộ nhớ ngay lúc compile.
 
 ```rust
 // Good: Pass references when you don't need ownership
@@ -44,7 +44,7 @@ fn process_bad(data: &Vec<u8>) -> usize {
 }
 ```
 
-### Use `Cow` for Flexible Ownership
+### Dùng `Cow` cho ownership linh hoạt
 
 ```rust
 use std::borrow::Cow;
@@ -58,9 +58,9 @@ fn normalize(input: &str) -> Cow<'_, str> {
 }
 ```
 
-## Error Handling
+## Xử lý lỗi
 
-### Use `Result` and `?` — Never `unwrap()` in Production
+### Dùng `Result` và `?` — KHÔNG BAO GIỜ dùng `unwrap()` trong production
 
 ```rust
 // Good: Propagate errors with context
@@ -81,7 +81,7 @@ fn load_config_bad(path: &str) -> Config {
 }
 ```
 
-### Library Errors with `thiserror`, Application Errors with `anyhow`
+### Lỗi của thư viện dùng `thiserror`, lỗi của ứng dụng dùng `anyhow`
 
 ```rust
 // Library code: structured, typed errors
@@ -109,7 +109,7 @@ fn run() -> Result<()> {
 }
 ```
 
-### `Option` Combinators Over Nested Matching
+### Dùng combinator của `Option` thay vì matching lồng nhau
 
 ```rust
 // Good: Combinator chain
@@ -130,9 +130,9 @@ fn find_user_email_bad(users: &[User], id: u64) -> Option<String> {
 }
 ```
 
-## Enums and Pattern Matching
+## Enum và Pattern Matching
 
-### Model States as Enums
+### Mô hình hóa trạng thái bằng Enum
 
 ```rust
 // Good: Impossible states are unrepresentable
@@ -155,7 +155,7 @@ fn handle(state: &ConnectionState) {
 }
 ```
 
-### Exhaustive Matching — No Catch-All for Business Logic
+### Exhaustive Matching — Không dùng catch-all cho business logic
 
 ```rust
 // Good: Handle every variant explicitly
@@ -173,9 +173,9 @@ match command {
 }
 ```
 
-## Traits and Generics
+## Trait và Generic
 
-### Accept Generics, Return Concrete Types
+### Nhận generic, trả về kiểu cụ thể
 
 ```rust
 // Good: Generic input, concrete output
@@ -191,7 +191,7 @@ fn process<T: Display + Send + 'static>(item: T) -> String {
 }
 ```
 
-### Trait Objects for Dynamic Dispatch
+### Trait Object cho Dynamic Dispatch
 
 ```rust
 // Use when you need heterogeneous collections or plugin systems
@@ -209,7 +209,7 @@ fn fast_process<H: Handler>(handler: &H, request: &Request) -> Response {
 }
 ```
 
-### Newtype Pattern for Type Safety
+### Newtype Pattern cho an toàn kiểu
 
 ```rust
 // Good: Distinct types prevent mixing up arguments
@@ -227,9 +227,9 @@ fn get_order_bad(user_id: u64, order_id: u64) -> Result<Order> {
 }
 ```
 
-## Structs and Data Modeling
+## Struct và mô hình hóa dữ liệu
 
-### Builder Pattern for Complex Construction
+### Builder Pattern cho việc khởi tạo phức tạp
 
 ```rust
 struct ServerConfig {
@@ -256,9 +256,9 @@ impl ServerConfigBuilder {
 // Usage: ServerConfig::builder("localhost", 8080).max_connections(200).build()
 ```
 
-## Iterators and Closures
+## Iterator và Closure
 
-### Prefer Iterator Chains Over Manual Loops
+### Ưu tiên chuỗi Iterator hơn vòng lặp thủ công
 
 ```rust
 // Good: Declarative, lazy, composable
@@ -276,7 +276,7 @@ for user in &users {
 }
 ```
 
-### Use `collect()` with Type Annotation
+### Dùng `collect()` kèm type annotation
 
 ```rust
 // Collect into different types
@@ -290,7 +290,7 @@ let parsed: Result<Vec<i32>, _> = strings.iter().map(|s| s.parse()).collect();
 
 ## Concurrency
 
-### `Arc<Mutex<T>>` for Shared Mutable State
+### `Arc<Mutex<T>>` cho mutable state dùng chung
 
 ```rust
 use std::sync::{Arc, Mutex};
@@ -309,7 +309,7 @@ for handle in handles {
 }
 ```
 
-### Channels for Message Passing
+### Channel để truyền thông điệp
 
 ```rust
 use std::sync::mpsc;
@@ -329,7 +329,7 @@ for msg in rx {
 }
 ```
 
-### Async with Tokio
+### Async với Tokio
 
 ```rust
 use tokio::time::Duration;
@@ -362,9 +362,9 @@ async fn fetch_all(urls: Vec<String>) -> Vec<Result<String>> {
 }
 ```
 
-## Unsafe Code
+## Code Unsafe
 
-### When Unsafe Is Acceptable
+### Khi nào chấp nhận dùng Unsafe
 
 ```rust
 // Acceptable: FFI boundary with documented invariants (Rust 2024+)
@@ -380,7 +380,7 @@ unsafe fn widget_from_raw<'a>(ptr: *const Widget) -> &'a Widget {
 unsafe { slice.get_unchecked(index) }
 ```
 
-### When Unsafe Is NOT Acceptable
+### Khi nào KHÔNG chấp nhận dùng Unsafe
 
 ```rust
 // Bad: Using unsafe to bypass borrow checker
@@ -389,9 +389,9 @@ unsafe { slice.get_unchecked(index) }
 // Bad: Transmuting between unrelated types
 ```
 
-## Module System and Crate Structure
+## Hệ thống Module và cấu trúc Crate
 
-### Organize by Domain, Not by Type
+### Tổ chức theo Domain, không theo loại
 
 ```text
 my_app/
@@ -414,7 +414,7 @@ my_app/
 └── Cargo.toml
 ```
 
-### Visibility — Expose Minimally
+### Visibility — Chỉ expose tối thiểu
 
 ```rust
 // Good: pub(crate) for internal sharing
@@ -430,9 +430,9 @@ pub use auth::AuthMiddleware;
 pub fn internal_helper() {} // Should be pub(crate) or private
 ```
 
-## Tooling Integration
+## Tích hợp công cụ
 
-### Essential Commands
+### Các lệnh thiết yếu
 
 ```bash
 # Build and check
@@ -456,22 +456,22 @@ cargo update             # Update dependencies
 cargo bench              # Run benchmarks
 ```
 
-## Quick Reference: Rust Idioms
+## Tham khảo nhanh: Các idiom của Rust
 
-| Idiom | Description |
+| Idiom | Mô tả |
 |-------|-------------|
-| Borrow, don't clone | Pass `&T` instead of cloning unless ownership is needed |
-| Make illegal states unrepresentable | Use enums to model valid states only |
-| `?` over `unwrap()` | Propagate errors, never panic in library/production code |
-| Parse, don't validate | Convert unstructured data to typed structs at the boundary |
-| Newtype for type safety | Wrap primitives in newtypes to prevent argument swaps |
-| Prefer iterators over loops | Declarative chains are clearer and often faster |
-| `#[must_use]` on Results | Ensure callers handle return values |
-| `Cow` for flexible ownership | Avoid allocations when borrowing suffices |
-| Exhaustive matching | No wildcard `_` for business-critical enums |
-| Minimal `pub` surface | Use `pub(crate)` for internal APIs |
+| Borrow, đừng clone | Truyền `&T` thay vì clone trừ khi cần ownership |
+| Biến trạng thái không hợp lệ thành không thể biểu diễn | Dùng enum để chỉ mô hình hóa các trạng thái hợp lệ |
+| `?` thay vì `unwrap()` | Lan truyền lỗi, không bao giờ panic trong code thư viện/production |
+| Parse, đừng validate | Chuyển dữ liệu phi cấu trúc thành struct có kiểu ngay tại ranh giới |
+| Newtype cho an toàn kiểu | Bọc kiểu nguyên thủy trong newtype để tránh nhầm thứ tự tham số |
+| Ưu tiên iterator hơn vòng lặp | Chuỗi khai báo (declarative) rõ ràng hơn và thường nhanh hơn |
+| `#[must_use]` trên Result | Đảm bảo bên gọi xử lý giá trị trả về |
+| `Cow` cho ownership linh hoạt | Tránh cấp phát khi borrow là đủ |
+| Exhaustive matching | Không dùng wildcard `_` cho enum quan trọng về nghiệp vụ |
+| Bề mặt `pub` tối thiểu | Dùng `pub(crate)` cho API nội bộ |
 
-## Anti-Patterns to Avoid
+## Anti-Pattern cần tránh
 
 ```rust
 // Bad: .unwrap() in production code
@@ -497,4 +497,4 @@ async fn bad_async() {
 }
 ```
 
-**Remember**: If it compiles, it's probably correct — but only if you avoid `unwrap()`, minimize `unsafe`, and let the type system work for you.
+**Hãy nhớ**: Nếu nó compile được thì khả năng cao là đúng — nhưng chỉ khi bạn tránh `unwrap()`, hạn chế `unsafe` và để hệ thống kiểu làm việc cho bạn.

@@ -3,34 +3,34 @@ paths:
   - "**/*.kt"
   - "**/*.kts"
 ---
-# Kotlin Coding Style
+# Phong cách code Kotlin
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with Kotlin-specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho Kotlin.
 
-## Formatting
+## Định dạng
 
-- **ktlint** or **Detekt** for style enforcement
-- Official Kotlin code style (`kotlin.code.style=official` in `gradle.properties`)
+- **ktlint** hoặc **Detekt** để ép buộc style
+- Code style chính thức của Kotlin (`kotlin.code.style=official` trong `gradle.properties`)
 
-## Immutability
+## Bất biến (Immutability)
 
-- Prefer `val` over `var` — default to `val` and only use `var` when mutation is required
-- Use `data class` for value types; use immutable collections (`List`, `Map`, `Set`) in public APIs
-- Copy-on-write for state updates: `state.copy(field = newValue)`
+- Ưu tiên `val` hơn `var` — mặc định dùng `val` và chỉ dùng `var` khi cần mutate
+- Dùng `data class` cho value type; dùng collection bất biến (`List`, `Map`, `Set`) trong API public
+- Copy-on-write cho cập nhật state: `state.copy(field = newValue)`
 
-## Naming
+## Đặt tên
 
-Follow Kotlin conventions:
-- `camelCase` for functions and properties
-- `PascalCase` for classes, interfaces, objects, and type aliases
-- `SCREAMING_SNAKE_CASE` for constants (`const val` or `@JvmStatic`)
-- Prefix interfaces with behavior, not `I`: `Clickable` not `IClickable`
+Tuân theo quy ước Kotlin:
+- `camelCase` cho hàm và property
+- `PascalCase` cho class, interface, object và type alias
+- `SCREAMING_SNAKE_CASE` cho hằng số (`const val` hoặc `@JvmStatic`)
+- Đặt tên interface theo hành vi, không thêm tiền tố `I`: `Clickable` chứ không phải `IClickable`
 
 ## Null Safety
 
-- Never use `!!` — prefer `?.`, `?:`, `requireNotNull()`, or `checkNotNull()`
-- Use `?.let {}` for scoped null-safe operations
-- Return nullable types from functions that can legitimately have no result
+- KHÔNG BAO GIỜ dùng `!!` — ưu tiên `?.`, `?:`, `requireNotNull()` hoặc `checkNotNull()`
+- Dùng `?.let {}` cho các thao tác null-safe có phạm vi
+- Trả về kiểu nullable từ các hàm có thể hợp lệ không có kết quả
 
 ```kotlin
 // BAD
@@ -41,9 +41,9 @@ val name = user?.name ?: "Unknown"
 val name = requireNotNull(user) { "User must be set before accessing name" }.name
 ```
 
-## Sealed Types
+## Sealed Type
 
-Use sealed classes/interfaces to model closed state hierarchies:
+Dùng sealed class/interface để mô hình hóa các hệ phân cấp state đóng:
 
 ```kotlin
 sealed interface UiState<out T> {
@@ -53,29 +53,29 @@ sealed interface UiState<out T> {
 }
 ```
 
-Always use exhaustive `when` with sealed types — no `else` branch.
+Luôn dùng `when` đầy đủ (exhaustive) với sealed type — không có nhánh `else`.
 
-## Extension Functions
+## Extension Function
 
-Use extension functions for utility operations, but keep them discoverable:
-- Place in a file named after the receiver type (`StringExt.kt`, `FlowExt.kt`)
-- Keep scope limited — don't add extensions to `Any` or overly generic types
+Dùng extension function cho các thao tác tiện ích, nhưng giữ cho chúng dễ tìm:
+- Đặt trong file được đặt tên theo receiver type (`StringExt.kt`, `FlowExt.kt`)
+- Giữ phạm vi hạn chế — không thêm extension cho `Any` hoặc các type quá chung chung
 
-## Scope Functions
+## Scope Function
 
-Use the right scope function:
-- `let` — null check + transform: `user?.let { greet(it) }`
-- `run` — compute a result using receiver: `service.run { fetch(config) }`
-- `apply` — configure an object: `builder.apply { timeout = 30 }`
-- `also` — side effects: `result.also { log(it) }`
-- Avoid deep nesting of scope functions (max 2 levels)
+Dùng đúng scope function:
+- `let` — kiểm tra null + biến đổi: `user?.let { greet(it) }`
+- `run` — tính toán kết quả dùng receiver: `service.run { fetch(config) }`
+- `apply` — cấu hình một object: `builder.apply { timeout = 30 }`
+- `also` — side effect: `result.also { log(it) }`
+- Tránh lồng sâu các scope function (tối đa 2 cấp)
 
-## Error Handling
+## Xử lý lỗi
 
-- Use `Result<T>` or custom sealed types
-- Use `runCatching {}` for wrapping throwable code
-- Never catch `CancellationException` — always rethrow it
-- Avoid `try-catch` for control flow
+- Dùng `Result<T>` hoặc sealed type tùy chỉnh
+- Dùng `runCatching {}` để bọc code có thể throw
+- KHÔNG BAO GIỜ catch `CancellationException` — luôn rethrow nó
+- Tránh `try-catch` để điều khiển luồng
 
 ```kotlin
 // BAD — using exceptions for control flow

@@ -1,13 +1,13 @@
 ---
-description: Pull the latest ECC repo changes and reinstall the current managed targets.
+description: Pull các thay đổi mới nhất của repo ECC và cài đặt lại các target đang được quản lý hiện tại.
 disable-model-invocation: true
 ---
 
 # Auto Update
 
-Update ECC from its upstream repo and regenerate the current context's managed install using the original install-state request.
+Cập nhật ECC từ repo upstream và tạo lại bản cài đặt được quản lý của context hiện tại bằng yêu cầu install-state ban đầu.
 
-## Usage
+## Cách dùng
 
 ```bash
 # Preview the update without mutating anything
@@ -21,8 +21,8 @@ node "$ECC_ROOT/scripts/auto-update.js" --target cursor
 node "$ECC_ROOT/scripts/auto-update.js" --repo-root /path/to/ECC
 ```
 
-## Notes
+## Ghi chú
 
-- This command uses the recorded install-state request and reruns `install-apply.js` after pulling the latest repo changes.
-- Reinstall is intentional: it handles upstream renames and deletions that `repair.js` cannot safely reconstruct from stale operations alone.
-- Use `--dry-run` first if you want to see the reconstructed reinstall plan before mutating anything.
+- Lệnh này dùng yêu cầu install-state đã được ghi lại và chạy lại `install-apply.js` sau khi pull các thay đổi mới nhất của repo.
+- Việc cài đặt lại là có chủ đích: nó xử lý các thay đổi đổi tên và xóa ở upstream mà `repair.js` không thể tái dựng an toàn chỉ từ các thao tác cũ (stale operation).
+- Hãy dùng `--dry-run` trước nếu bạn muốn xem kế hoạch cài đặt lại được tái dựng trước khi thay đổi bất cứ thứ gì.

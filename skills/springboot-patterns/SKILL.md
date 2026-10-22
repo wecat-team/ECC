@@ -1,24 +1,24 @@
 ---
 name: springboot-patterns
-description: Spring Boot architecture patterns, REST API design, layered services, data access, caching, async processing, and logging. Use for Java Spring Boot backend work. Use when building or reviewing a Spring Boot backend — REST layer, services, data access, caching, or async work.
+description: "Các pattern kiến trúc Spring Boot, thiết kế REST API, service phân tầng, data access, caching, xử lý bất đồng bộ và logging. Dùng cho công việc backend Java Spring Boot. Dùng khi xây dựng hoặc review backend Spring Boot — tầng REST, service, data access, caching hoặc xử lý async."
 metadata:
   origin: ECC
 ---
 
-# Spring Boot Development Patterns
+# Pattern phát triển Spring Boot
 
-Spring Boot architecture and API patterns for scalable, production-grade services.
+Các pattern kiến trúc và API của Spring Boot cho service có khả năng mở rộng, đạt chuẩn production.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Building REST APIs with Spring MVC or WebFlux
-- Structuring controller → service → repository layers
-- Configuring Spring Data JPA, caching, or async processing
-- Adding validation, exception handling, or pagination
-- Setting up profiles for dev/staging/production environments
-- Implementing event-driven patterns with Spring Events or Kafka
+- Xây dựng REST API với Spring MVC hoặc WebFlux
+- Tổ chức các tầng controller → service → repository
+- Cấu hình Spring Data JPA, caching hoặc xử lý async
+- Thêm validation, xử lý exception hoặc phân trang
+- Thiết lập profile cho các môi trường dev/staging/production
+- Triển khai các pattern hướng sự kiện (event-driven) với Spring Events hoặc Kafka
 
-## REST API Structure
+## Cấu trúc REST API
 
 ```java
 @RestController
@@ -56,7 +56,7 @@ public interface MarketRepository extends JpaRepository<MarketEntity, Long> {
 }
 ```
 
-## Service Layer with Transactions
+## Tầng Service với Transaction
 
 ```java
 @Service
@@ -76,7 +76,7 @@ public class MarketService {
 }
 ```
 
-## DTOs and Validation
+## DTO và Validation
 
 ```java
 public record CreateMarketRequest(
@@ -92,7 +92,7 @@ public record MarketResponse(Long id, String name, MarketStatus status) {
 }
 ```
 
-## Exception Handling
+## Xử lý Exception
 
 ```java
 @ControllerAdvice
@@ -121,7 +121,7 @@ class GlobalExceptionHandler {
 
 ## Caching
 
-Requires `@EnableCaching` on a configuration class.
+Yêu cầu `@EnableCaching` trên một class cấu hình.
 
 ```java
 @Service
@@ -144,9 +144,9 @@ public class MarketCacheService {
 }
 ```
 
-## Async Processing
+## Xử lý bất đồng bộ (Async)
 
-Requires `@EnableAsync` on a configuration class.
+Yêu cầu `@EnableAsync` trên một class cấu hình.
 
 ```java
 @Service
@@ -179,7 +179,7 @@ public class ReportService {
 }
 ```
 
-## Middleware / Filters
+## Middleware / Filter
 
 ```java
 @Component
@@ -201,14 +201,14 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 }
 ```
 
-## Pagination and Sorting
+## Phân trang và sắp xếp
 
 ```java
 PageRequest page = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
 Page<Market> results = marketService.list(page);
 ```
 
-## Error-Resilient External Calls
+## Gọi dịch vụ bên ngoài có khả năng chịu lỗi
 
 ```java
 public <T> T withRetry(Supplier<T> supplier, int maxRetries) {
@@ -234,17 +234,17 @@ public <T> T withRetry(Supplier<T> supplier, int maxRetries) {
 
 ## Rate Limiting (Filter + Bucket4j)
 
-**Security Note**: The `X-Forwarded-For` header is untrusted by default because clients can spoof it.
-Only use forwarded headers when:
-1. Your app is behind a trusted reverse proxy (nginx, AWS ALB, etc.)
-2. You have registered `ForwardedHeaderFilter` as a bean
-3. You have configured `server.forward-headers-strategy=NATIVE` or `FRAMEWORK` in application properties
-4. Your proxy is configured to overwrite (not append to) the `X-Forwarded-For` header
+**Lưu ý bảo mật**: Header `X-Forwarded-For` mặc định không đáng tin cậy vì client có thể giả mạo nó.
+Chỉ dùng các forwarded header khi:
+1. Ứng dụng của bạn nằm sau một reverse proxy đáng tin cậy (nginx, AWS ALB, v.v.)
+2. Bạn đã đăng ký `ForwardedHeaderFilter` như một bean
+3. Bạn đã cấu hình `server.forward-headers-strategy=NATIVE` hoặc `FRAMEWORK` trong application properties
+4. Proxy của bạn được cấu hình để ghi đè (không phải nối thêm vào) header `X-Forwarded-For`
 
-When `ForwardedHeaderFilter` is properly configured, `request.getRemoteAddr()` will automatically
-return the correct client IP from the forwarded headers. Without this configuration, use
-`request.getRemoteAddr()` directly—it returns the immediate connection IP, which is the only
-trustworthy value.
+Khi `ForwardedHeaderFilter` được cấu hình đúng, `request.getRemoteAddr()` sẽ tự động
+trả về đúng IP của client từ các forwarded header. Nếu không có cấu hình này, hãy dùng
+trực tiếp `request.getRemoteAddr()` — nó trả về IP của kết nối trực tiếp, đây là giá trị duy nhất
+đáng tin cậy.
 
 ```java
 @Component
@@ -294,22 +294,22 @@ public class RateLimitFilter extends OncePerRequestFilter {
 }
 ```
 
-## Background Jobs
+## Background Job
 
-Use Spring’s `@Scheduled` or integrate with queues (e.g., Kafka, SQS, RabbitMQ). Keep handlers idempotent and observable.
+Dùng `@Scheduled` của Spring hoặc tích hợp với queue (ví dụ Kafka, SQS, RabbitMQ). Giữ các handler idempotent và có thể quan sát (observable).
 
 ## Observability
 
-- Structured logging (JSON) via Logback encoder
+- Structured logging (JSON) qua Logback encoder
 - Metrics: Micrometer + Prometheus/OTel
-- Tracing: Micrometer Tracing with OpenTelemetry or Brave backend
+- Tracing: Micrometer Tracing với backend OpenTelemetry hoặc Brave
 
-## Production Defaults
+## Mặc định cho Production
 
-- Prefer constructor injection, avoid field injection
-- Enable `spring.mvc.problemdetails.enabled=true` for RFC 7807 errors (Spring Boot 3+)
-- Configure HikariCP pool sizes for workload, set timeouts
-- Use `@Transactional(readOnly = true)` for queries
-- Enforce null-safety via `@NonNull` and `Optional` where appropriate
+- Ưu tiên constructor injection, tránh field injection
+- Bật `spring.mvc.problemdetails.enabled=true` cho lỗi theo RFC 7807 (Spring Boot 3+)
+- Cấu hình kích thước pool HikariCP theo workload, đặt timeout
+- Dùng `@Transactional(readOnly = true)` cho các truy vấn
+- Đảm bảo null-safety qua `@NonNull` và `Optional` khi phù hợp
 
-**Remember**: Keep controllers thin, services focused, repositories simple, and errors handled centrally. Optimize for maintainability and testability.
+**Hãy nhớ**: Giữ controller mỏng, service tập trung, repository đơn giản và xử lý lỗi tập trung. Tối ưu cho khả năng bảo trì và khả năng test.

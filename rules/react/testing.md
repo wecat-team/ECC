@@ -7,51 +7,51 @@ paths:
   - "**/__tests__/**/*.ts"
   - "**/__tests__/**/*.tsx"
 ---
-# React Testing
+# Kiểm thử React
 
-> This file extends [typescript/testing.md](../typescript/testing.md) and [common/testing.md](../common/testing.md) with React specific content.
+> File này mở rộng [typescript/testing.md](../typescript/testing.md) và [common/testing.md](../common/testing.md) với nội dung riêng cho React.
 
-## Library Choice
+## Lựa chọn thư viện
 
-- **React Testing Library (RTL)** — the standard for component testing. Tests behavior through the rendered DOM.
-- **Vitest** — preferred runner for new Vite-based projects. Faster than Jest, native ESM, same API.
-- **Jest** — still the default for Next.js / CRA projects. RTL works identically.
-- **Playwright Component Testing** — when component tests need a real browser engine (animation, layout, complex events)
-- **Cypress Component Testing** — alternative real-browser component runner
+- **React Testing Library (RTL)** — chuẩn để kiểm thử component. Kiểm thử hành vi thông qua DOM đã render.
+- **Vitest** — runner được ưu tiên cho các dự án mới dựa trên Vite. Nhanh hơn Jest, ESM gốc, cùng API.
+- **Jest** — vẫn là mặc định cho các dự án Next.js / CRA. RTL hoạt động y hệt.
+- **Playwright Component Testing** — khi test component cần engine trình duyệt thật (animation, layout, sự kiện phức tạp)
+- **Cypress Component Testing** — runner component trên trình duyệt thật thay thế
 
-Pick one component test runner per project — do not mix RTL + Playwright CT in the same repo.
+Chọn một component test runner cho mỗi dự án — không trộn RTL + Playwright CT trong cùng một repo.
 
-## Core Principle
+## Nguyên tắc cốt lõi
 
-Test what the user sees and does, not implementation details.
+Hãy test những gì người dùng thấy và làm, không test chi tiết triển khai.
 
-- Query by accessible role first, then label, then text — fall back to `data-testid` only when nothing else fits
-- Never assert on internal state, props passed to children, or which hooks were called
-- Refactor without breaking tests = the test was testing behavior; that is the goal
+- Truy vấn theo accessible role trước, rồi đến label, rồi đến text — chỉ dùng `data-testid` khi không còn cách nào khác phù hợp
+- Không bao giờ assert trên state nội bộ, props truyền cho component con, hay việc hook nào đã được gọi
+- Refactor mà không làm hỏng test = test đang kiểm thử hành vi; đó chính là mục tiêu
 
-## Query Priority
+## Thứ tự ưu tiên của Query
 
-RTL exposes queries in three families. Use this priority order top-down:
+RTL cung cấp các query theo ba nhóm. Dùng theo thứ tự ưu tiên từ trên xuống:
 
-1. **Accessible to everyone**
-   - `getByRole(role, { name })` — primary choice
-   - `getByLabelText` — for form inputs
-   - `getByPlaceholderText` — when no label is available (and add a label)
-   - `getByText` — for non-interactive text
-   - `getByDisplayValue` — for form fields with a current value
+1. **Truy cập được với mọi người (accessible to everyone)**
+   - `getByRole(role, { name })` — lựa chọn chính
+   - `getByLabelText` — cho input của form
+   - `getByPlaceholderText` — khi không có label (và hãy thêm label)
+   - `getByText` — cho text không tương tác
+   - `getByDisplayValue` — cho field của form đang có giá trị
 
-2. **Semantic queries**
-   - `getByAltText` — for images
-   - `getByTitle` — last resort, low accessibility value
+2. **Query ngữ nghĩa (semantic)**
+   - `getByAltText` — cho ảnh
+   - `getByTitle` — phương án cuối cùng, giá trị accessibility thấp
 
-3. **Test IDs**
-   - `getByTestId("some-id")` — escape hatch only, when none of the above work
+3. **Test ID**
+   - `getByTestId("some-id")` — chỉ là lối thoát khi không có cách nào ở trên dùng được
 
-`getBy*` throws when no match. `queryBy*` returns null (use for asserting absence). `findBy*` returns a promise (use for async).
+`getBy*` ném lỗi khi không khớp. `queryBy*` trả về null (dùng để assert sự vắng mặt). `findBy*` trả về promise (dùng cho async).
 
-## User Interaction
+## Tương tác của người dùng
 
-Prefer `userEvent` over `fireEvent`. `userEvent` simulates real browser sequences (focus, keydown, beforeinput, input, keyup) — `fireEvent` dispatches a single synthetic event.
+Ưu tiên `userEvent` hơn `fireEvent`. `userEvent` mô phỏng chuỗi sự kiện thật của trình duyệt (focus, keydown, beforeinput, input, keyup) — `fireEvent` chỉ dispatch một sự kiện tổng hợp duy nhất.
 
 ```tsx
 import userEvent from "@testing-library/user-event";
@@ -67,29 +67,29 @@ test("submits the form", async () => {
 });
 ```
 
-- Always `await` `userEvent` calls — they are async
-- Call `userEvent.setup()` once at the top of each test, then reuse the returned `user`
+- Luôn `await` các lời gọi `userEvent` — chúng là async
+- Gọi `userEvent.setup()` một lần ở đầu mỗi test, sau đó dùng lại `user` được trả về
 
-## Async Assertions
+## Assertion bất đồng bộ
 
 ```tsx
-// WRONG: synchronous query for async-rendered content
+// SAI: query đồng bộ cho nội dung render bất đồng bộ
 expect(screen.getByText("Loaded")).toBeInTheDocument();   // throws — not in DOM yet
 
-// CORRECT: findBy* (returns a promise, retries)
+// ĐÚNG: findBy* (returns a promise, retries)
 expect(await screen.findByText("Loaded")).toBeInTheDocument();
 
-// CORRECT: waitFor for non-element assertions
+// ĐÚNG: waitFor cho các assertion không phải về element
 await waitFor(() => expect(saveSpy).toHaveBeenCalled());
 ```
 
-- `findBy*` for async element appearance
-- `waitFor` for async expectations on side effects or other matchers
-- Never `setTimeout` + assertion — flaky
+- `findBy*` cho element xuất hiện bất đồng bộ
+- `waitFor` cho các expectation bất đồng bộ về side effect hoặc các matcher khác
+- Không bao giờ dùng `setTimeout` + assertion — dễ flaky
 
-## Network Mocking with MSW
+## Mock mạng bằng MSW
 
-Use Mock Service Worker for any test that hits a network boundary. MSW runs at the network layer, so the component, hooks, and fetch library all behave as in production.
+Dùng Mock Service Worker cho mọi test chạm tới ranh giới mạng. MSW chạy ở tầng mạng, nên component, hook và thư viện fetch đều hoạt động như trên production.
 
 ```tsx
 // test setup
@@ -107,7 +107,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 ```
 
-Per-test override:
+Ghi đè theo từng test:
 
 ```tsx
 test("renders error on 500", async () => {
@@ -117,18 +117,18 @@ test("renders error on 500", async () => {
 });
 ```
 
-## Avoid Snapshot Tests for Components
+## Tránh Snapshot Test cho Component
 
-Snapshots of rendered output are brittle, hard to review, and rubber-stamped by reviewers. Use them only for:
+Snapshot của output đã render rất mong manh, khó review và thường bị reviewer duyệt qua loa. Chỉ dùng chúng cho:
 
-- Pure data serialization (e.g., a transformer that produces a stable string)
-- Catching unintended regressions in non-visual output
+- Serialization dữ liệu thuần (ví dụ một transformer tạo ra chuỗi ổn định)
+- Bắt các regression ngoài ý muốn ở output không phải hình ảnh
 
-For component visual regression, use Playwright / Cypress / Percy screenshots — actual visual diffs, not DOM diffs.
+Với visual regression của component, hãy dùng screenshot của Playwright / Cypress / Percy — so sánh hình ảnh thực sự, không phải so sánh DOM.
 
-## Test Setup Helpers
+## Helper thiết lập Test
 
-Wrap providers once:
+Bọc các provider một lần:
 
 ```tsx
 function renderWithProviders(ui: React.ReactElement) {
@@ -142,11 +142,11 @@ function renderWithProviders(ui: React.ReactElement) {
 }
 ```
 
-Export from `test-utils.tsx` and use everywhere.
+Export từ `test-utils.tsx` và dùng ở mọi nơi.
 
-## Custom Hook Testing
+## Test Custom Hook
 
-Use `renderHook` from RTL:
+Dùng `renderHook` từ RTL:
 
 ```tsx
 import { renderHook, act } from "@testing-library/react";
@@ -158,10 +158,10 @@ test("useCounter increments", () => {
 });
 ```
 
-- Always wrap state-changing calls in `act`
-- Always test through the public hook API, not internal implementation
+- Luôn bọc các lời gọi làm thay đổi state trong `act`
+- Luôn test thông qua API công khai của hook, không test triển khai nội bộ
 
-## Accessibility Assertions
+## Assertion về Accessibility
 
 ```tsx
 import { axe } from "vitest-axe";   // or jest-axe
@@ -172,37 +172,37 @@ test("UserCard has no a11y violations", async () => {
 });
 ```
 
-Run axe assertions in component tests — catches missing labels, ARIA misuse, color contrast (limited).
+Chạy assertion axe trong test component — bắt được label bị thiếu, dùng sai ARIA, độ tương phản màu (có giới hạn).
 
-## When to Reach for Playwright / Cypress
+## Khi nào cần dùng Playwright / Cypress
 
-Component test with RTL + JSDOM cannot:
+Test component bằng RTL + JSDOM không thể:
 
-- Test real layout (flexbox, grid, viewport-dependent rendering)
-- Test scrolling, drag-and-drop, paste from clipboard
-- Test browser-native animation, CSS transitions
-- Test cross-frame interactions (iframes, popups)
+- Test layout thật (flexbox, grid, render phụ thuộc viewport)
+- Test scroll, drag-and-drop, paste từ clipboard
+- Test animation gốc của trình duyệt, CSS transition
+- Test tương tác xuyên frame (iframe, popup)
 
-For those, use Playwright Component Testing or end-to-end Playwright/Cypress runs. See [e2e-testing skill](../../skills/e2e-testing/SKILL.md).
+Với những trường hợp này, dùng Playwright Component Testing hoặc chạy end-to-end bằng Playwright/Cypress. Xem [skill e2e-testing](../../skills/e2e-testing/SKILL.md).
 
-## Coverage Targets
+## Mục tiêu Coverage
 
-| Layer | Target |
+| Tầng | Mục tiêu |
 |---|---|
-| Pure utility functions | ≥90% |
-| Custom hooks | ≥85% |
-| Components (presentational) | ≥80% — behavior, not lines |
-| Container components | ≥70% — golden paths + error states |
-| Pages (E2E covered separately) | Smoke test per route minimum |
+| Hàm utility thuần | ≥90% |
+| Custom hook | ≥85% |
+| Component (presentational) | ≥80% — hành vi, không phải số dòng |
+| Container component | ≥70% — golden path + trạng thái lỗi |
+| Page (E2E bao phủ riêng) | Tối thiểu một smoke test cho mỗi route |
 
-## Anti-Patterns
+## Anti-Pattern
 
-- Asserting on `container.querySelector` — bypasses accessibility queries
-- Asserting on number of renders — implementation detail
-- Mocking React hooks (`jest.mock("react", ...)`) — refactor the component instead
-- Mocking child components by default — tests the integration, not the parent in isolation
-- Manual `act()` warnings ignored — they indicate real bugs
+- Assert trên `container.querySelector` — bỏ qua các accessibility query
+- Assert trên số lần render — là chi tiết triển khai
+- Mock React hook (`jest.mock("react", ...)`) — hãy refactor component thay vì mock
+- Mock component con theo mặc định — chỉ test phần tích hợp, không test cha một cách độc lập
+- Bỏ qua cảnh báo `act()` thủ công — chúng chỉ ra bug thật
 
-## Skill Reference
+## Tham chiếu Skill
 
-See `skills/react-testing/SKILL.md` for end-to-end test examples, MSW patterns, and accessibility test scaffolding.
+Xem `skills/react-testing/SKILL.md` để có ví dụ test end-to-end, các pattern MSW và khung test accessibility.

@@ -1,26 +1,26 @@
 ---
-description: Get help with the hookify system
+description: Nhận trợ giúp về hệ thống hookify
 ---
 
-Display comprehensive hookify documentation.
+Hiển thị tài liệu hookify đầy đủ.
 
-## Hook System Overview
+## Tổng quan hệ thống hook
 
-Hookify creates rule files that integrate with Claude Code's hook system to prevent unwanted behaviors.
-ECC's built-in runtime loads these rules automatically while plugin hooks are
-enabled; installing a separate Hookify plugin is not required.
+Hookify tạo các file rule tích hợp với hệ thống hook của Claude Code để ngăn các hành vi không mong muốn.
+Runtime tích hợp sẵn của ECC tự động nạp các rule này khi plugin hook
+được bật; không cần cài một plugin Hookify riêng.
 
-### Event Types
+### Các loại event
 
-- `bash`: triggers on Bash tool use and matches command patterns
-- `file`: triggers on Write/Edit tool use and matches file paths
-- `stop`: triggers after each Claude response
-- `prompt`: triggers on user message submission and matches input patterns
-- `all`: triggers on all events
+- `bash`: kích hoạt khi dùng tool Bash và khớp theo pattern của command
+- `file`: kích hoạt khi dùng tool Write/Edit và khớp theo đường dẫn file
+- `stop`: kích hoạt sau mỗi phản hồi của Claude
+- `prompt`: kích hoạt khi người dùng gửi tin nhắn và khớp theo pattern của input
+- `all`: kích hoạt trên mọi event
 
-### Rule File Format
+### Định dạng file rule
 
-Files are stored as `.claude/hookify.{name}.local.md`:
+Các file được lưu dưới dạng `.claude/hookify.{name}.local.md`:
 
 ```yaml
 ---
@@ -34,26 +34,26 @@ Message to display when rule triggers.
 Supports multiple lines.
 ```
 
-### Commands
+### Các command
 
-- `/hookify [description]` creates new rules and auto-analyzes the conversation when no description is given
-- `/hookify-list` lists configured rules
-- `/hookify-configure` toggles rules on or off
+- `/hookify [description]` tạo rule mới và tự động phân tích hội thoại khi không có mô tả
+- `/hookify-list` liệt kê các rule đã cấu hình
+- `/hookify-configure` bật hoặc tắt các rule
 
-### Pattern Tips
+### Mẹo về pattern
 
-- use regex syntax
-- for `bash`, match against the full command string
-- for `file`, match against the file path
-- test patterns before deploying
-- avoid nested quantifiers such as `(a+)+`; the runtime rejects unsafe regexes
-- every regex evaluation also has a 25 ms hard timeout
-- malformed or oversized rules fail open with a diagnostic so one bad local rule cannot disable all hooks
-- Git-tracked local rules require explicit `ECC_HOOKIFY_ALLOW_TRACKED=1` approval
+- dùng cú pháp regex
+- với `bash`, khớp theo toàn bộ chuỗi command
+- với `file`, khớp theo đường dẫn file
+- test pattern trước khi deploy
+- tránh quantifier lồng nhau như `(a+)+`; runtime sẽ từ chối các regex không an toàn
+- mỗi lần đánh giá regex cũng có timeout cứng 25 ms
+- rule bị lỗi định dạng hoặc quá lớn sẽ fail open kèm chẩn đoán, để một rule cục bộ hỏng không thể vô hiệu hóa toàn bộ hook
+- Rule cục bộ được Git theo dõi cần có sự chấp thuận tường minh `ECC_HOOKIFY_ALLOW_TRACKED=1`
 
-### Action Behavior
+### Hành vi của action
 
-- `warn` adds the rule message to Claude's context and allows processing to continue
-- `block` denies matching shell/file actions before execution
-- `block` on prompt, post-tool, or stop events uses that event's structured block decision
-- stop rules are skipped when `stop_hook_active` is already true to prevent loops
+- `warn` thêm thông điệp của rule vào context của Claude và cho phép tiếp tục xử lý
+- `block` từ chối các hành động shell/file khớp trước khi thực thi
+- `block` trên các event prompt, post-tool hoặc stop dùng quyết định block có cấu trúc của event đó
+- rule stop bị bỏ qua khi `stop_hook_active` đã là true để tránh vòng lặp

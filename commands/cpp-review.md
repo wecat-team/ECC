@@ -1,54 +1,54 @@
 ---
-description: Comprehensive C++ code review for memory safety, modern C++ idioms, concurrency, and security. Invokes the cpp-reviewer agent.
+description: Code review C++ toàn diện về an toàn bộ nhớ, idiom C++ hiện đại, đồng thời (concurrency) và bảo mật. Gọi agent cpp-reviewer.
 ---
 
-# C++ Code Review
+# Code Review C++
 
-This command invokes the **cpp-reviewer** agent for comprehensive C++-specific code review.
+Lệnh này gọi agent **cpp-reviewer** để code review toàn diện riêng cho C++.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Identify C++ Changes**: Find modified `.cpp`, `.hpp`, `.cc`, `.h` files via `git diff`
-2. **Run Static Analysis**: Execute `clang-tidy` and `cppcheck`
-3. **Memory Safety Scan**: Check for raw new/delete, buffer overflows, use-after-free
-4. **Concurrency Review**: Analyze thread safety, mutex usage, data races
-5. **Modern C++ Check**: Verify code follows C++17/20 conventions and best practices
-6. **Generate Report**: Categorize issues by severity
+1. **Xác định thay đổi C++**: Tìm các file `.cpp`, `.hpp`, `.cc`, `.h` đã sửa qua `git diff`
+2. **Chạy phân tích tĩnh**: Thực thi `clang-tidy` và `cppcheck`
+3. **Quét an toàn bộ nhớ**: Kiểm tra new/delete thô, buffer overflow, use-after-free
+4. **Review đồng thời**: Phân tích thread safety, cách dùng mutex, data race
+5. **Kiểm tra C++ hiện đại**: Xác minh code tuân theo quy ước và best practice của C++17/20
+6. **Tạo báo cáo**: Phân loại issue theo mức độ nghiêm trọng
 
-## When to Use
+## Khi nào dùng
 
-Use `/cpp-review` when:
-- After writing or modifying C++ code
-- Before committing C++ changes
-- Reviewing pull requests with C++ code
-- Onboarding to a new C++ codebase
-- Checking for memory safety issues
+Dùng `/cpp-review` khi:
+- Sau khi viết hoặc sửa code C++
+- Trước khi commit các thay đổi C++
+- Review pull request có code C++
+- Làm quen với một codebase C++ mới
+- Kiểm tra các vấn đề an toàn bộ nhớ
 
-## Review Categories
+## Các hạng mục review
 
-### CRITICAL (Must Fix)
-- Raw `new`/`delete` without RAII
-- Buffer overflows and use-after-free
-- Data races without synchronization
-- Command injection via `system()`
-- Uninitialized variable reads
-- Null pointer dereferences
+### CRITICAL (Phải sửa)
+- `new`/`delete` thô không có RAII
+- Buffer overflow và use-after-free
+- Data race không có đồng bộ hóa
+- Command injection qua `system()`
+- Đọc biến chưa khởi tạo
+- Dereference con trỏ null
 
-### HIGH (Should Fix)
-- Rule of Five violations
-- Missing `std::lock_guard` / `std::scoped_lock`
-- Detached threads without proper lifetime management
-- C-style casts instead of `static_cast`/`dynamic_cast`
-- Missing `const` correctness
+### HIGH (Nên sửa)
+- Vi phạm Rule of Five
+- Thiếu `std::lock_guard` / `std::scoped_lock`
+- Thread detached không quản lý lifetime đúng cách
+- Ép kiểu kiểu C thay vì `static_cast`/`dynamic_cast`
+- Thiếu `const` correctness
 
-### MEDIUM (Consider)
-- Unnecessary copies (pass by value instead of `const&`)
-- Missing `reserve()` on known-size containers
-- `using namespace std;` in headers
-- Missing `[[nodiscard]]` on important return values
-- Overly complex template metaprogramming
+### MEDIUM (Cân nhắc)
+- Copy không cần thiết (truyền theo giá trị thay vì `const&`)
+- Thiếu `reserve()` trên container đã biết kích thước
+- `using namespace std;` trong header
+- Thiếu `[[nodiscard]]` trên các giá trị trả về quan trọng
+- Template metaprogramming quá phức tạp
 
-## Automated Checks Run
+## Các kiểm tra tự động được chạy
 
 ```bash
 # Static analysis
@@ -61,7 +61,7 @@ cppcheck --enable=all --suppress=missingIncludeSystem src/
 cmake --build build -- -Wall -Wextra -Wpedantic
 ```
 
-## Example Usage
+## Ví dụ sử dụng
 
 ```text
 User: /cpp-review
@@ -111,22 +111,22 @@ void processUser(const User& user) {
 Recommendation: FAIL: Block merge until CRITICAL issue is fixed
 ```
 
-## Approval Criteria
+## Tiêu chí phê duyệt
 
-| Status | Condition |
+| Trạng thái | Điều kiện |
 |--------|-----------|
-| PASS: Approve | No CRITICAL or HIGH issues |
-| WARNING: Warning | Only MEDIUM issues (merge with caution) |
-| FAIL: Block | CRITICAL or HIGH issues found |
+| PASS: Approve | Không có issue CRITICAL hoặc HIGH |
+| WARNING: Warning | Chỉ có issue MEDIUM (merge nhưng thận trọng) |
+| FAIL: Block | Phát hiện issue CRITICAL hoặc HIGH |
 
-## Integration with Other Commands
+## Tích hợp với các lệnh khác
 
-- Use `/cpp-test` first to ensure tests pass
-- Use `/cpp-build` if build errors occur
-- Use `/cpp-review` before committing
-- Use `/code-review` for non-C++ specific concerns
+- Dùng `/cpp-test` trước để đảm bảo test pass
+- Dùng `/cpp-build` nếu có lỗi build
+- Dùng `/cpp-review` trước khi commit
+- Dùng `/code-review` cho các mối quan tâm không riêng của C++
 
-## Related
+## Liên quan
 
 - Agent: `agents/cpp-reviewer.md`
 - Skills: `skills/cpp-coding-standards/`, `skills/cpp-testing/`

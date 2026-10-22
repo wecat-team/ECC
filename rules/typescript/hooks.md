@@ -5,18 +5,18 @@ paths:
   - "**/*.js"
   - "**/*.jsx"
 ---
-# TypeScript/JavaScript Hooks
+# Hook TypeScript/JavaScript
 
-> This file extends [common/hooks.md](../common/hooks.md) with TypeScript/JavaScript specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung riêng cho TypeScript/JavaScript.
 
-## PostToolUse Hooks
+## Hook PostToolUse
 
-Configure in `~/.claude/settings.json`:
+Cấu hình trong `~/.claude/settings.json`:
 
-- **Prettier**: Auto-format JS/TS files after edit
-- **TypeScript check**: Run `tsc` after editing `.ts`/`.tsx` files
-- **console.log warning**: Warn about `console.log` in edited files
+- **Prettier**: Tự động định dạng file JS/TS sau khi sửa
+- **TypeScript check**: Chạy `tsc` sau khi sửa file `.ts`/`.tsx`
+- **console.log warning**: Cảnh báo về `console.log` trong các file đã sửa
 
-## Stop Hooks
+## Hook Stop
 
-- **console.log audit**: Check all modified files for `console.log` before session ends
+- **console.log audit**: Kiểm tra mọi file đã sửa xem có `console.log` không trước khi session kết thúc

@@ -1,28 +1,28 @@
 ---
-description: Review a FastAPI application for architecture, async correctness, dependency injection, Pydantic schemas, security, performance, and testability.
+description: Review một ứng dụng FastAPI về kiến trúc, tính đúng đắn của async, dependency injection, Pydantic schema, bảo mật, hiệu năng và khả năng kiểm thử.
 ---
 
 # FastAPI Review
 
-Invoke the `fastapi-reviewer` agent for a focused FastAPI review.
+Gọi agent `fastapi-reviewer` để review FastAPI có trọng tâm.
 
-## Usage
+## Cách dùng
 
 ```text
 /fastapi-review [file-or-directory]
 ```
 
-## Review Areas
+## Các hạng mục review
 
-- App factory, router boundaries, middleware, and exception handlers.
-- Pydantic request and response schema separation.
-- Dependency injection for database sessions, auth, pagination, and settings.
-- Async database and external HTTP patterns.
-- CORS, auth, rate limits, logging, and secret handling.
-- OpenAPI metadata and documented response models.
-- Test client setup and dependency overrides.
+- App factory, ranh giới router, middleware và exception handler.
+- Tách biệt Pydantic schema cho request và response.
+- Dependency injection cho database session, auth, phân trang và settings.
+- Các pattern async cho database và HTTP bên ngoài.
+- CORS, auth, rate limit, logging và xử lý secret.
+- Metadata OpenAPI và các response model được tài liệu hóa.
+- Thiết lập test client và dependency override.
 
-## Expected Output
+## Output mong đợi
 
 ```text
 [SEVERITY] Short issue title
@@ -31,7 +31,7 @@ Issue: What is wrong and why it matters.
 Fix: Concrete change to make.
 ```
 
-## Related
+## Liên quan
 
 - Agent: `fastapi-reviewer`
 - Skill: `fastapi-patterns`

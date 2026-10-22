@@ -1,42 +1,42 @@
 ---
 name: bun-runtime
-description: Bun as runtime, package manager, bundler, and test runner. When to choose Bun vs Node, migration notes, and Vercel support.
+description: Bun làm runtime, package manager, bundler và test runner. Khi nào chọn Bun thay vì Node, ghi chú migration và hỗ trợ trên Vercel.
 metadata:
   origin: ECC
 ---
 
 # Bun Runtime
 
-Bun is a fast all-in-one JavaScript runtime and toolkit: runtime, package manager, bundler, and test runner.
+Bun là runtime và bộ công cụ JavaScript all-in-one nhanh: runtime, package manager, bundler và test runner.
 
-## When to Use
+## Khi nào dùng
 
-- **Prefer Bun** for: new JS/TS projects, scripts where install/run speed matters, Vercel deployments with Bun runtime, and when you want a single toolchain (run + install + test + build).
-- **Prefer Node** for: maximum ecosystem compatibility, legacy tooling that assumes Node, or when a dependency has known Bun issues.
+- **Ưu tiên Bun** cho: dự án JS/TS mới, script cần tốc độ install/run, deploy Vercel với Bun runtime, và khi muốn một toolchain duy nhất (run + install + test + build).
+- **Ưu tiên Node** cho: khả năng tương thích hệ sinh thái tối đa, tooling cũ mặc định dùng Node, hoặc khi một dependency có lỗi đã biết với Bun.
 
-Use when: adopting Bun, migrating from Node, writing or debugging Bun scripts/tests, or configuring Bun on Vercel or other platforms.
+Dùng khi: áp dụng Bun, migrate từ Node, viết hoặc debug script/test Bun, hoặc cấu hình Bun trên Vercel hay các nền tảng khác.
 
-## How It Works
+## Cách hoạt động
 
-- **Version baseline**: guidance below targets Bun 1.4.x. Check the actual version with `bun --version` before relying on flag names, since CLI flags can change between releases.
-- **Runtime**: Drop-in Node-compatible runtime, built on JavaScriptCore. As of Bun 1.4 the runtime itself is implemented in Rust (migrated from Zig). Not 100% Node-compatible — some native addons, less-common `node:` internal APIs, and packages that depend on Node-specific internals can still fail; verify before depending on it in production.
-- **Package manager**: Bun includes a package manager; installation performance depends on the project, network conditions, and cache state. Lockfile is `bun.lock` (text) by default in current Bun; older versions used `bun.lockb` (binary) — Bun still reads that format for migration, but new projects should use `bun.lock`.
-- **Bundler**: Built-in bundler and transpiler for apps and libraries.
-- **Test runner**: Built-in `bun test` with a Jest-like API.
+- **Phiên bản cơ sở**: hướng dẫn bên dưới nhắm tới Bun 1.4.x. Kiểm tra phiên bản thực tế bằng `bun --version` trước khi dựa vào tên flag, vì CLI flag có thể thay đổi giữa các bản phát hành.
+- **Runtime**: Runtime tương thích Node kiểu drop-in, xây dựng trên JavaScriptCore. Từ Bun 1.4, bản thân runtime được triển khai bằng Rust (migrate từ Zig). Không tương thích Node 100% — một số native addon, các API nội bộ `node:` ít phổ biến và các package phụ thuộc vào phần nội bộ riêng của Node vẫn có thể lỗi; hãy kiểm chứng trước khi phụ thuộc vào nó trong production.
+- **Package manager**: Bun có sẵn package manager; hiệu năng cài đặt phụ thuộc vào dự án, điều kiện mạng và trạng thái cache. Lockfile mặc định là `bun.lock` (text) trong Bun hiện tại; các phiên bản cũ dùng `bun.lockb` (nhị phân) — Bun vẫn đọc định dạng đó để migrate, nhưng dự án mới nên dùng `bun.lock`.
+- **Bundler**: Bundler và transpiler tích hợp sẵn cho ứng dụng và thư viện.
+- **Test runner**: `bun test` tích hợp sẵn với API giống Jest.
 
-**Migration from Node**: Replace `node script.js` with `bun run script.js` or `bun script.js`. Run `bun install` in place of `npm install`; most packages work. Use `bun run` for npm scripts; `bun x` for npx-style one-off runs. Node built-ins are supported; prefer Bun APIs where they exist for better performance.
+**Migration từ Node**: Thay `node script.js` bằng `bun run script.js` hoặc `bun script.js`. Chạy `bun install` thay cho `npm install`; hầu hết package đều hoạt động. Dùng `bun run` cho npm script; `bun x` cho các lần chạy một lần kiểu npx. Các built-in của Node được hỗ trợ; ưu tiên API của Bun khi có để đạt hiệu năng tốt hơn.
 
-**Package and workspace commands**: `bun add <pkg>` / `bun remove <pkg>` / `bun update [pkg]` manage dependencies; `bun outdated` lists stale deps. `bun pm ls` lists project dependencies and resolved versions using the lockfile; `--all` includes transitive dependencies. It is not an integrity check of installed file contents. [`bun audit`](https://bun.com/docs/pm/cli/audit) queries registry advisories using package names and versions from `bun.lock`; it does not modify `package.json`, `bun.lock`, or `node_modules`. Review approved destinations before sending private package metadata. Packages whose scoped registry lacks an advisory endpoint are skipped and do not affect the exit code. `bun audit fix` upgrades and installs dependencies, changing the lockfile and installed packages and sometimes direct version pins; review it as a modifying install operation, including applicable lifecycle scripts. `bun dedupe` collapses duplicate installs, and `bun prune` removes packages no longer referenced. Monorepos use a root `workspaces` array in `package.json` (same convention as npm/yarn); run a script in one workspace with `bun run --filter <pkg-name> <script>`.
+**Lệnh package và workspace**: `bun add <pkg>` / `bun remove <pkg>` / `bun update [pkg]` quản lý dependency; `bun outdated` liệt kê các dependency cũ. `bun pm ls` liệt kê dependency của dự án và các phiên bản đã resolve dựa trên lockfile; `--all` bao gồm cả dependency bắc cầu. Đây không phải là kiểm tra tính toàn vẹn của nội dung file đã cài. [`bun audit`](https://bun.com/docs/pm/cli/audit) truy vấn các advisory từ registry dựa trên tên package và phiên bản trong `bun.lock`; nó không sửa `package.json`, `bun.lock` hay `node_modules`. Hãy xem lại các đích đã được phê duyệt trước khi gửi metadata của package private. Các package có scoped registry không có endpoint advisory sẽ bị bỏ qua và không ảnh hưởng exit code. `bun audit fix` nâng cấp và cài đặt dependency, làm thay đổi lockfile và các package đã cài, đôi khi cả các version pin trực tiếp; hãy review nó như một thao tác cài đặt có thay đổi dữ liệu, bao gồm các lifecycle script áp dụng. `bun dedupe` gộp các bản cài trùng lặp, và `bun prune` xóa các package không còn được tham chiếu. Monorepo dùng mảng `workspaces` ở root trong `package.json` (cùng quy ước với npm/yarn); chạy script trong một workspace bằng `bun run --filter <pkg-name> <script>`.
 
-**Built-in APIs**: reach for these before adding a dependency — `Bun.file` / `Bun.write` for file I/O, `bun:sqlite` for an embedded SQLite database, `Bun.serve` for an HTTP/WebSocket server, [`Bun.sql`](https://bun.com/docs/runtime/sql) for SQL databases, [`Bun.redis`](https://bun.com/docs/runtime/redis) for Redis, and [`Bun.S3Client`](https://bun.com/docs/runtime/s3) for S3-compatible object storage. See the [1.4 release notes](https://bun.com/blog/bun-v1.4) for the rest of what's new.
+**API tích hợp sẵn**: hãy dùng các API này trước khi thêm dependency — `Bun.file` / `Bun.write` cho file I/O, `bun:sqlite` cho cơ sở dữ liệu SQLite nhúng, `Bun.serve` cho HTTP/WebSocket server, [`Bun.sql`](https://bun.com/docs/runtime/sql) cho cơ sở dữ liệu SQL, [`Bun.redis`](https://bun.com/docs/runtime/redis) cho Redis, và [`Bun.S3Client`](https://bun.com/docs/runtime/s3) cho object storage tương thích S3. Xem [ghi chú phát hành 1.4](https://bun.com/blog/bun-v1.4) để biết phần còn lại của những điểm mới.
 
-**Vercel**: Set `bunVersion: "1.4.x"` in `vercel.json` to use Bun 1.4 (Rust runtime). See [Vercel's Bun runtime docs](https://vercel.com/docs/functions/runtimes/bun). Build: `bun run build` or `bun build ./src/index.ts --outdir=dist`. Install: `bun install --frozen-lockfile` for reproducible deploys.
+**Vercel**: Đặt `bunVersion: "1.4.x"` trong `vercel.json` để dùng Bun 1.4 (Rust runtime). Xem [tài liệu Bun runtime của Vercel](https://vercel.com/docs/functions/runtimes/bun). Build: `bun run build` hoặc `bun build ./src/index.ts --outdir=dist`. Install: `bun install --frozen-lockfile` để deploy có thể tái lập.
 
-**Reference**: [Bun 1.4 release notes](https://bun.com/blog/bun-v1.4).
+**Tham khảo**: [Ghi chú phát hành Bun 1.4](https://bun.com/blog/bun-v1.4).
 
-## Examples
+## Ví dụ
 
-### Run and install
+### Run và install
 
 ```bash
 # Install dependencies (creates/updates bun.lock)
@@ -48,7 +48,7 @@ bun run src/index.ts
 bun src/index.ts
 ```
 
-### Scripts and env
+### Script và env
 
 ```bash
 bun run --env-file=.env dev
@@ -62,7 +62,7 @@ bun test
 bun test --watch
 ```
 
-For CI on Bun 1.4, available options include `bun test --changed[=<ref>]` for affected tests, `bun test --isolate` for per-file globals, `bun test --parallel[=<n>]` for worker processes, and `bun test --shard=<n>/<count>` for CI partitioning. `--isolate` creates a fresh JavaScript global for each file in the same process and cleans up documented per-file resources; it is not a process or security sandbox. `--parallel` enables it by default. `--timings=<file>` reads prior durations for scheduling; `--update-timings` records durations. Example: `bun test --parallel --timings=./test-timings.json --update-timings`. Check the installed version's help and documentation before choosing timing-file paths for a multi-shard workflow.
+Với CI trên Bun 1.4, các tùy chọn khả dụng gồm `bun test --changed[=<ref>]` để chạy các test bị ảnh hưởng, `bun test --isolate` để có global riêng cho từng file, `bun test --parallel[=<n>]` để chạy theo worker process, và `bun test --shard=<n>/<count>` để chia nhỏ trên CI. `--isolate` tạo một JavaScript global mới cho mỗi file trong cùng một process và dọn dẹp các tài nguyên theo từng file đã được ghi tài liệu; đây không phải là sandbox ở mức process hay bảo mật. `--parallel` bật nó theo mặc định. `--timings=<file>` đọc các thời lượng trước đó để lập lịch; `--update-timings` ghi lại thời lượng. Ví dụ: `bun test --parallel --timings=./test-timings.json --update-timings`. Hãy kiểm tra help và tài liệu của phiên bản đã cài trước khi chọn đường dẫn file timing cho workflow nhiều shard.
 
 ```typescript
 // test/example.test.ts
@@ -87,8 +87,8 @@ Bun.serve({
 });
 ```
 
-## Best Practices
+## Best Practice
 
-- Commit the lockfile (`bun.lock`) for reproducible installs.
-- Prefer `bun run` for scripts. For TypeScript, Bun runs `.ts` natively.
-- Keep dependencies up to date; Bun and the ecosystem evolve quickly.
+- Commit lockfile (`bun.lock`) để cài đặt có thể tái lập.
+- Ưu tiên `bun run` cho script. Với TypeScript, Bun chạy `.ts` natively.
+- Giữ dependency luôn cập nhật; Bun và hệ sinh thái phát triển rất nhanh.

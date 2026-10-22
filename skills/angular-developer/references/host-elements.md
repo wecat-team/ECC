@@ -1,10 +1,10 @@
-# Component Host Elements
+# Host Element của Component
 
-The **host element** is the DOM element that matches a component's selector. The component's template renders inside this element.
+**Host element** là phần tử DOM khớp với selector của component. Template của component được render bên trong phần tử này.
 
-## Binding to the Host Element
+## Binding vào Host Element
 
-Use the `host` property in the `@Component` decorator to bind properties, attributes, styles, and events to the host element. This is the **preferred approach** over legacy decorators.
+Dùng thuộc tính `host` trong decorator `@Component` để bind property, attribute, style và event vào host element. Đây là **cách được ưu tiên** so với các decorator cũ (legacy).
 
 ```ts
 @Component({
@@ -30,9 +30,9 @@ export class CustomSlider {
 }
 ```
 
-## Legacy Decorators
+## Decorator cũ (Legacy)
 
-`@HostBinding` and `@HostListener` are supported for backwards compatibility but should be avoided in new code.
+`@HostBinding` và `@HostListener` vẫn được hỗ trợ để tương thích ngược nhưng nên tránh trong code mới.
 
 ```ts
 export class CustomSlider {
@@ -48,17 +48,17 @@ export class CustomSlider {
 }
 ```
 
-## Binding Collisions
+## Xung đột Binding
 
-If both the component (host binding) and the consumer (template binding) bind to the same property:
+Nếu cả component (host binding) và bên sử dụng (template binding) cùng bind vào một property:
 
-1. **Static vs Static**: The instance (consumer) binding wins.
-2. **Static vs Dynamic**: The dynamic binding wins.
-3. **Dynamic vs Dynamic**: The component's host binding wins.
+1. **Static so với Static**: Binding của instance (bên sử dụng) thắng.
+2. **Static so với Dynamic**: Binding động thắng.
+3. **Dynamic so với Dynamic**: Host binding của component thắng.
 
-## Injecting Host Attributes
+## Inject Host Attribute
 
-Use `HostAttributeToken` with the `inject` function to read static attributes from the host element at construction time.
+Dùng `HostAttributeToken` với hàm `inject` để đọc các attribute tĩnh từ host element tại thời điểm khởi tạo.
 
 ```ts
 import {Component, HostAttributeToken, inject} from '@angular/core';
@@ -73,7 +73,7 @@ export class AppButton {
 }
 ```
 
-Usage:
+Cách dùng:
 
 ```html
 <app-btn type="primary">Click Me</app-btn>

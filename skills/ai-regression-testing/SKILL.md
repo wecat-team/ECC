@@ -1,31 +1,31 @@
 ---
 name: ai-regression-testing
-description: Regression testing strategies for AI-assisted development. Sandbox-mode API testing without database dependencies, automated bug-check workflows, and patterns to catch AI blind spots where the same model writes and reviews code. Use when adding regression coverage to AI-assisted code, or when the same model both wrote and reviewed a change.
+description: Chiến lược kiểm thử hồi quy (regression testing) cho phát triển có AI hỗ trợ. Test API ở chế độ sandbox không phụ thuộc database, workflow bug-check tự động, và các pattern bắt điểm mù của AI khi cùng một model vừa viết vừa review code. Dùng khi thêm regression coverage cho code do AI hỗ trợ, hoặc khi cùng một model vừa viết vừa review một thay đổi.
 metadata:
   origin: ECC
 ---
 
 # AI Regression Testing
 
-Testing patterns specifically designed for AI-assisted development, where the same model writes code and reviews it — creating systematic blind spots that only automated tests can catch.
+Các pattern kiểm thử được thiết kế riêng cho phát triển có AI hỗ trợ, nơi cùng một model vừa viết code vừa review nó — tạo ra các điểm mù có hệ thống mà chỉ test tự động mới bắt được.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- AI agent (Claude Code, Cursor, Codex) has modified API routes or backend logic
-- A bug was found and fixed — need to prevent re-introduction
-- Project has a sandbox/mock mode that can be leveraged for DB-free testing
-- Running `/bug-check` or similar review commands after code changes
-- Multiple code paths exist (sandbox vs production, feature flags, etc.)
+- AI agent (Claude Code, Cursor, Codex) đã sửa API route hoặc logic backend
+- Một bug đã được tìm thấy và sửa — cần ngăn việc tái xuất hiện
+- Dự án có chế độ sandbox/mock có thể tận dụng để test không cần DB
+- Chạy `/bug-check` hoặc các lệnh review tương tự sau khi thay đổi code
+- Tồn tại nhiều đường đi của code (sandbox so với production, feature flag, v.v.)
 
-## The Core Problem
+## Vấn đề cốt lõi
 
-When an AI writes code and then reviews its own work, it carries the same assumptions into both steps. This creates a predictable failure pattern:
+Khi một AI viết code rồi tự review công việc của mình, nó mang cùng một bộ giả định vào cả hai bước. Điều này tạo ra một pattern lỗi có thể dự đoán:
 
 ```
 AI writes fix → AI reviews fix → AI says "looks correct" → Bug still exists
 ```
 
-**Real-world example** (observed in production):
+**Ví dụ thực tế** (quan sát được trên production):
 
 ```
 Fix 1: Added notification_settings to API response
@@ -43,13 +43,13 @@ Fix 3: Changed to SELECT *
 Fix 4: Test caught it instantly on first run PASS:
 ```
 
-The pattern: **sandbox/production path inconsistency** is the #1 AI-introduced regression.
+Pattern: **sự không nhất quán giữa đường đi sandbox/production** là regression số 1 do AI gây ra.
 
-## Sandbox-Mode API Testing
+## Test API ở chế độ Sandbox
 
-Most projects with AI-friendly architecture have a sandbox/mock mode. This is the key to fast, DB-free API testing.
+Hầu hết các dự án có kiến trúc thân thiện với AI đều có chế độ sandbox/mock. Đây là chìa khóa để test API nhanh và không cần DB.
 
-### Setup (Vitest + Next.js App Router)
+### Thiết lập (Vitest + Next.js App Router)
 
 ```typescript
 // vitest.config.ts
@@ -73,13 +73,13 @@ export default defineConfig({
 
 ```typescript
 // __tests__/setup.ts
-// Force sandbox mode — no database needed
+// Ép bật chế độ sandbox — không cần database
 process.env.SANDBOX_MODE = "true";
 process.env.NEXT_PUBLIC_SUPABASE_URL = "";
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = "";
 ```
 
-### Test Helper for Next.js API Routes
+### Test Helper cho Next.js API Route
 
 ```typescript
 // __tests__/helpers.ts
@@ -121,9 +121,9 @@ export async function parseResponse(response: Response) {
 }
 ```
 
-### Writing Regression Tests
+### Viết Regression Test
 
-The key principle: **write tests for bugs that were found, not for code that works**.
+Nguyên tắc then chốt: **viết test cho các bug đã được tìm thấy, không phải cho code đang chạy tốt**.
 
 ```typescript
 // __tests__/api/user/profile.test.ts
@@ -131,7 +131,7 @@ import { describe, it, expect } from "vitest";
 import { createTestRequest, parseResponse } from "../../helpers";
 import { GET, PATCH } from "@/app/api/user/profile/route";
 
-// Define the contract — what fields MUST be in the response
+// Định nghĩa hợp đồng (contract) — những field PHẢI có trong response
 const REQUIRED_FIELDS = [
   "id",
   "email",
@@ -155,7 +155,7 @@ describe("GET /api/user/profile", () => {
     }
   });
 
-  // Regression test — this exact bug was introduced by AI 4 times
+  // Regression test — đúng bug này đã bị AI gây ra 4 lần
   it("notification_settings is not undefined (BUG-R1 regression)", async () => {
     const req = createTestRequest("/api/user/profile");
     const res = await GET(req);
@@ -168,12 +168,12 @@ describe("GET /api/user/profile", () => {
 });
 ```
 
-### Testing Sandbox/Production Parity
+### Test sự tương đương Sandbox/Production
 
-The most common AI regression: fixing production path but forgetting sandbox path (or vice versa).
+Regression phổ biến nhất của AI: sửa đường đi production nhưng quên đường đi sandbox (hoặc ngược lại).
 
 ```typescript
-// Test that sandbox responses match the expected contract
+// Test rằng response của sandbox khớp với contract kỳ vọng
 describe("GET /api/user/messages (conversation list)", () => {
   it("includes partner_name in sandbox mode", async () => {
     const req = createTestRequest("/api/user/messages", {
@@ -193,9 +193,9 @@ describe("GET /api/user/messages (conversation list)", () => {
 });
 ```
 
-## Integrating Tests into Bug-Check Workflow
+## Tích hợp Test vào workflow Bug-Check
 
-### Custom Command Definition
+### Định nghĩa Custom Command
 
 ```markdown
 <!-- .claude/commands/bug-check.md -->
@@ -223,7 +223,7 @@ Run these commands FIRST before any code review:
 ## Step 3: For each bug fixed, propose a regression test
 ```
 
-### The Workflow
+### Workflow
 
 ```
 User: "バグチェックして" (or "/bug-check")
@@ -243,28 +243,28 @@ User: "バグチェックして" (or "/bug-check")
       └─ Next bug-check catches if fix breaks
 ```
 
-## Common AI Regression Patterns
+## Các pattern Regression thường gặp của AI
 
-### Pattern 1: Sandbox/Production Path Mismatch
+### Pattern 1: Lệch đường đi Sandbox/Production
 
-**Frequency**: Most common (observed in 3 out of 4 regressions)
+**Tần suất**: Phổ biến nhất (quan sát thấy ở 3 trong 4 regression)
 
 ```typescript
-// FAIL: AI adds field to production path only
+// FAIL: AI chỉ thêm field vào đường đi production
 if (isSandboxMode()) {
   return { data: { id, email, name } };  // Missing new field
 }
 // Production path
 return { data: { id, email, name, notification_settings } };
 
-// PASS: Both paths must return the same shape
+// PASS: Cả hai đường đi phải trả về cùng một shape
 if (isSandboxMode()) {
   return { data: { id, email, name, notification_settings: null } };
 }
 return { data: { id, email, name, notification_settings } };
 ```
 
-**Test to catch it**:
+**Test để bắt nó**:
 
 ```typescript
 it("sandbox and production return same fields", async () => {
@@ -278,12 +278,12 @@ it("sandbox and production return same fields", async () => {
 });
 ```
 
-### Pattern 2: SELECT Clause Omission
+### Pattern 2: Bỏ sót trong mệnh đề SELECT
 
-**Frequency**: Common with Supabase/Prisma when adding new columns
+**Tần suất**: Thường gặp với Supabase/Prisma khi thêm cột mới
 
 ```typescript
-// FAIL: New column added to response but not to SELECT
+// FAIL: Cột mới được thêm vào response nhưng không có trong SELECT
 const { data } = await supabase
   .from("users")
   .select("id, email, name")  // notification_settings not here
@@ -292,42 +292,42 @@ const { data } = await supabase
 return { data: { ...data, notification_settings: data.notification_settings } };
 // → notification_settings is always undefined
 
-// PASS: Use SELECT * or explicitly include new columns
+// PASS: Dùng SELECT * hoặc đưa cột mới vào tường minh
 const { data } = await supabase
   .from("users")
   .select("*")
   .single();
 ```
 
-### Pattern 3: Error State Leakage
+### Pattern 3: Rò rỉ Error State
 
-**Frequency**: Moderate — when adding error handling to existing components
+**Tần suất**: Trung bình — khi thêm xử lý lỗi vào các component hiện có
 
 ```typescript
-// FAIL: Error state set but old data not cleared
+// FAIL: Đã đặt error state nhưng dữ liệu cũ chưa bị xóa
 catch (err) {
   setError("Failed to load");
   // reservations still shows data from previous tab!
 }
 
-// PASS: Clear related state on error
+// PASS: Xóa state liên quan khi có lỗi
 catch (err) {
   setReservations([]);  // Clear stale data
   setError("Failed to load");
 }
 ```
 
-### Pattern 4: Optimistic Update Without Proper Rollback
+### Pattern 4: Optimistic Update không có Rollback đúng cách
 
 ```typescript
-// FAIL: No rollback on failure
+// FAIL: Không rollback khi thất bại
 const handleRemove = async (id: string) => {
   setItems(prev => prev.filter(i => i.id !== id));
   await fetch(`/api/items/${id}`, { method: "DELETE" });
   // If API fails, item is gone from UI but still in DB
 };
 
-// PASS: Capture previous state and rollback on failure
+// PASS: Lưu state trước đó và rollback khi thất bại
 const handleRemove = async (id: string) => {
   const prevItems = [...items];
   setItems(prev => prev.filter(i => i.id !== id));
@@ -341,9 +341,9 @@ const handleRemove = async (id: string) => {
 };
 ```
 
-## Strategy: Test Where Bugs Were Found
+## Chiến lược: Test ở nơi bug đã xuất hiện
 
-Don't aim for 100% coverage. Instead:
+Đừng nhắm tới coverage 100%. Thay vào đó:
 
 ```
 Bug found in /api/user/profile     → Write test for profile API
@@ -352,35 +352,35 @@ Bug found in /api/user/favorites   → Write test for favorites API
 No bug in /api/user/notifications  → Don't write test (yet)
 ```
 
-**Why this works with AI development:**
+**Vì sao cách này hiệu quả với phát triển có AI:**
 
-1. AI tends to make the **same category of mistake** repeatedly
-2. Bugs cluster in complex areas (auth, multi-path logic, state management)
-3. Once tested, that exact regression **cannot happen again**
-4. Test count grows organically with bug fixes — no wasted effort
+1. AI có xu hướng mắc **cùng một loại lỗi** lặp đi lặp lại
+2. Bug tập trung ở các vùng phức tạp (auth, logic nhiều đường đi, quản lý state)
+3. Một khi đã được test, đúng regression đó **không thể xảy ra lại**
+4. Số lượng test tăng tự nhiên theo các bản sửa bug — không lãng phí công sức
 
-## Quick Reference
+## Tham khảo nhanh
 
-| AI Regression Pattern | Test Strategy | Priority |
+| Pattern Regression của AI | Chiến lược test | Ưu tiên |
 |---|---|---|
-| Sandbox/production mismatch | Assert same response shape in sandbox mode |  High |
-| SELECT clause omission | Assert all required fields in response |  High |
-| Error state leakage | Assert state cleanup on error |  Medium |
-| Missing rollback | Assert state restored on API failure |  Medium |
-| Type cast masking null | Assert field is not undefined |  Medium |
+| Lệch sandbox/production | Assert response shape giống nhau ở chế độ sandbox |  High |
+| Bỏ sót trong mệnh đề SELECT | Assert mọi field bắt buộc có trong response |  High |
+| Rò rỉ error state | Assert state được dọn dẹp khi lỗi |  Medium |
+| Thiếu rollback | Assert state được khôi phục khi API lỗi |  Medium |
+| Ép kiểu che giấu null | Assert field không phải undefined |  Medium |
 
 ## DO / DON'T
 
-**DO:**
-- Write tests immediately after finding a bug (before fixing it if possible)
-- Test the API response shape, not the implementation
-- Run tests as the first step of every bug-check
-- Keep tests fast (< 1 second total with sandbox mode)
-- Name tests after the bug they prevent (e.g., "BUG-R1 regression")
+**NÊN:**
+- Viết test ngay sau khi tìm thấy bug (trước khi sửa nếu có thể)
+- Test response shape của API, không test phần triển khai
+- Chạy test như bước đầu tiên của mọi bug-check
+- Giữ test nhanh (< 1 giây tổng cộng với chế độ sandbox)
+- Đặt tên test theo bug mà nó ngăn chặn (ví dụ "BUG-R1 regression")
 
-**DON'T:**
-- Write tests for code that has never had a bug
-- Trust AI self-review as a substitute for automated tests
-- Skip sandbox path testing because "it's just mock data"
-- Write integration tests when unit tests suffice
-- Aim for coverage percentage — aim for regression prevention
+**KHÔNG NÊN:**
+- Viết test cho code chưa từng có bug
+- Tin vào việc AI tự review thay cho test tự động
+- Bỏ qua test đường đi sandbox vì "chỉ là mock data"
+- Viết integration test khi unit test là đủ
+- Nhắm tới tỷ lệ coverage — hãy nhắm tới việc ngăn regression

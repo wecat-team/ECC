@@ -3,13 +3,13 @@ paths:
   - "**/*.swift"
   - "**/Package.swift"
 ---
-# Swift Testing
+# Kiểm thử Swift
 
-> This file extends [common/testing.md](../common/testing.md) with Swift specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung riêng cho Swift.
 
 ## Framework
 
-Use **Swift Testing** (`import Testing`) for new tests. Use `@Test` and `#expect`:
+Dùng **Swift Testing** (`import Testing`) cho test mới. Dùng `@Test` và `#expect`:
 
 ```swift
 @Test("User creation validates email")
@@ -20,11 +20,11 @@ func userCreationValidatesEmail() throws {
 }
 ```
 
-## Test Isolation
+## Cô lập test (Test Isolation)
 
-Each test gets a fresh instance — set up in `init`, tear down in `deinit`. No shared mutable state between tests.
+Mỗi test nhận một instance mới — thiết lập trong `init`, dọn dẹp trong `deinit`. Không có shared mutable state giữa các test.
 
-## Parameterized Tests
+## Test tham số hóa
 
 ```swift
 @Test("Validates formats", arguments: ["json", "xml", "csv"])
@@ -40,6 +40,6 @@ func validatesFormat(format: String) throws {
 swift test --enable-code-coverage
 ```
 
-## Reference
+## Tham chiếu
 
-See skill: `swift-protocol-di-testing` for protocol-based dependency injection and mock patterns with Swift Testing.
+Xem skill: `swift-protocol-di-testing` để biết dependency injection dựa trên protocol và các pattern mock với Swift Testing.

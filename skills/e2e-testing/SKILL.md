@@ -1,15 +1,15 @@
 ---
 name: e2e-testing
-description: Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies. Use when writing Playwright tests, structuring page objects, or fixing flaky E2E runs in CI.
+description: "Các pattern E2E testing với Playwright, Page Object Model, cấu hình, tích hợp CI/CD, quản lý artifact và chiến lược xử lý flaky test. Dùng khi viết Playwright test, cấu trúc page object, hoặc sửa các lần chạy E2E không ổn định (flaky) trong CI."
 metadata:
   origin: ECC
 ---
 
-# E2E Testing Patterns
+# Pattern E2E Testing
 
-Comprehensive Playwright patterns for building stable, fast, and maintainable E2E test suites.
+Các pattern Playwright toàn diện để xây dựng bộ E2E test ổn định, nhanh và dễ bảo trì.
 
-## Test File Organization
+## Tổ chức file test
 
 ```
 tests/
@@ -65,7 +65,7 @@ export class ItemsPage {
 }
 ```
 
-## Test Structure
+## Cấu trúc test
 
 ```typescript
 import { test, expect } from '@playwright/test'
@@ -98,7 +98,7 @@ test.describe('Item Search', () => {
 })
 ```
 
-## Playwright Configuration
+## Cấu hình Playwright
 
 ```typescript
 import { defineConfig, devices } from '@playwright/test'
@@ -137,9 +137,9 @@ export default defineConfig({
 })
 ```
 
-## Flaky Test Patterns
+## Pattern xử lý Flaky Test
 
-### Quarantine
+### Cách ly (Quarantine)
 
 ```typescript
 test('flaky: complex search', async ({ page }) => {
@@ -153,16 +153,16 @@ test('conditional skip', async ({ page }) => {
 })
 ```
 
-### Identify Flakiness
+### Xác định flakiness
 
 ```bash
 npx playwright test tests/search.spec.ts --repeat-each=10
 npx playwright test tests/search.spec.ts --retries=3
 ```
 
-### Common Causes & Fixes
+### Nguyên nhân thường gặp & Cách sửa
 
-**Race conditions:**
+**Race condition:**
 ```typescript
 // Bad: assumes element is ready
 await page.click('[data-testid="button"]')
@@ -171,7 +171,7 @@ await page.click('[data-testid="button"]')
 await page.locator('[data-testid="button"]').click()
 ```
 
-**Network timing:**
+**Thời điểm network:**
 ```typescript
 // Bad: arbitrary timeout
 await page.waitForTimeout(5000)
@@ -180,7 +180,7 @@ await page.waitForTimeout(5000)
 await page.waitForResponse(resp => resp.url().includes('/api/data'))
 ```
 
-**Animation timing:**
+**Thời điểm animation:**
 ```typescript
 // Bad: click during animation
 await page.click('[data-testid="menu-item"]')
@@ -191,9 +191,9 @@ await page.waitForLoadState('networkidle')
 await page.locator('[data-testid="menu-item"]').click()
 ```
 
-## Artifact Management
+## Quản lý Artifact
 
-### Screenshots
+### Screenshot
 
 ```typescript
 await page.screenshot({ path: 'artifacts/after-login.png' })
@@ -201,7 +201,7 @@ await page.screenshot({ path: 'artifacts/full-page.png', fullPage: true })
 await page.locator('[data-testid="chart"]').screenshot({ path: 'artifacts/chart.png' })
 ```
 
-### Traces
+### Trace
 
 ```typescript
 await browser.startTracing(page, {
@@ -223,7 +223,7 @@ use: {
 }
 ```
 
-## CI/CD Integration
+## Tích hợp CI/CD
 
 ```yaml
 # .github/workflows/e2e.yml
@@ -251,7 +251,7 @@ jobs:
           retention-days: 30
 ```
 
-## Test Report Template
+## Mẫu báo cáo test
 
 ```markdown
 # E2E Test Report
@@ -278,7 +278,7 @@ jobs:
 - Traces: artifacts/*.zip
 ```
 
-## Wallet / Web3 Testing
+## Test Wallet / Web3
 
 ```typescript
 test('wallet connection', async ({ page, context }) => {
@@ -300,7 +300,7 @@ test('wallet connection', async ({ page, context }) => {
 })
 ```
 
-## Financial / Critical Flow Testing
+## Test luồng tài chính / quan trọng
 
 ```typescript
 test('trade execution', async ({ page }) => {

@@ -1,36 +1,36 @@
 ---
 name: dart-flutter-patterns
-description: Production-ready Dart and Flutter patterns covering null safety, immutable state with Freezed, async composition, widget architecture, state management (BLoC, Riverpod, Provider), GoRouter navigation with auth guards, Dio networking, error handling, and testing. Use when writing or reviewing Dart and Flutter code — state, widgets, navigation, networking, or architecture.
+description: "Các pattern Dart và Flutter sẵn sàng cho production, bao gồm null safety, state bất biến (immutable) với Freezed, async composition, kiến trúc widget, quản lý state (BLoC, Riverpod, Provider), điều hướng GoRouter với auth guard, networking với Dio, xử lý lỗi và testing. Dùng khi viết hoặc review code Dart và Flutter — state, widget, điều hướng, networking hoặc kiến trúc."
 metadata:
   origin: ECC
 ---
 
-# Dart/Flutter Patterns
+# Pattern Dart/Flutter
 
-## When to Use
+## Khi nào dùng
 
-Use this skill when:
-- Starting a new Flutter feature and need idiomatic patterns for state management, navigation, or data access
-- Reviewing or writing Dart code and need guidance on null safety, sealed types, or async composition
-- Setting up a new Flutter project and choosing between BLoC, Riverpod, or Provider
-- Implementing secure HTTP clients, WebView integration, or local storage
-- Writing tests for Flutter widgets, Cubits, or Riverpod providers
-- Wiring up GoRouter with authentication guards
+Dùng skill này khi:
+- Bắt đầu một tính năng Flutter mới và cần các pattern idiomatic cho quản lý state, điều hướng hoặc truy cập dữ liệu
+- Review hoặc viết code Dart và cần hướng dẫn về null safety, sealed type hoặc async composition
+- Thiết lập dự án Flutter mới và chọn giữa BLoC, Riverpod hoặc Provider
+- Triển khai HTTP client an toàn, tích hợp WebView hoặc lưu trữ cục bộ
+- Viết test cho widget Flutter, Cubit hoặc Riverpod provider
+- Nối GoRouter với authentication guard
 
-## How It Works
+## Cách hoạt động
 
-This skill provides copy-paste-ready Dart/Flutter code patterns organized by concern:
-1. **Null safety** — avoid `!`, prefer `?.`/`??`/pattern matching
-2. **Immutable state** — sealed classes, `freezed`, `copyWith`
-3. **Async composition** — concurrent `Future.wait`, safe `BuildContext` after `await`
-4. **Widget architecture** — extract to classes (not methods), `const` propagation, scoped rebuilds
-5. **State management** — BLoC/Cubit events, Riverpod notifiers and derived providers
-6. **Navigation** — GoRouter with reactive auth guards via `refreshListenable`
-7. **Networking** — Dio with interceptors, token refresh with one-time retry guard
-8. **Error handling** — global capture, `ErrorWidget.builder`, crashlytics wiring
-9. **Testing** — unit (BLoC test), widget (ProviderScope overrides), fakes over mocks
+Skill này cung cấp các pattern code Dart/Flutter có thể copy-paste, được tổ chức theo mối quan tâm:
+1. **Null safety** — tránh `!`, ưu tiên `?.`/`??`/pattern matching
+2. **State bất biến** — sealed class, `freezed`, `copyWith`
+3. **Async composition** — `Future.wait` đồng thời, dùng `BuildContext` an toàn sau `await`
+4. **Kiến trúc widget** — tách thành class (không phải method), lan truyền `const`, rebuild có phạm vi
+5. **Quản lý state** — event BLoC/Cubit, notifier và derived provider của Riverpod
+6. **Điều hướng** — GoRouter với auth guard phản ứng qua `refreshListenable`
+7. **Networking** — Dio với interceptor, refresh token kèm guard retry một lần
+8. **Xử lý lỗi** — bắt lỗi toàn cục, `ErrorWidget.builder`, nối crashlytics
+9. **Testing** — unit (BLoC test), widget (override ProviderScope), ưu tiên fake hơn mock
 
-## Examples
+## Ví dụ
 
 ```dart
 // Sealed state — prevents impossible states
@@ -64,13 +64,13 @@ double cartTotal(Ref ref) {
 
 ---
 
-Practical, production-ready patterns for Dart and Flutter applications. Library-agnostic where possible, with explicit coverage of the most common ecosystem packages.
+Các pattern thực tế, sẵn sàng cho production dành cho ứng dụng Dart và Flutter. Không phụ thuộc thư viện khi có thể, đồng thời bao phủ rõ ràng các package phổ biến nhất trong hệ sinh thái.
 
 ---
 
-## 1. Null Safety Fundamentals
+## 1. Nền tảng Null Safety
 
-### Prefer Patterns Over Bang Operator
+### Ưu tiên pattern hơn toán tử bang
 
 ```dart
 // BAD — crashes at runtime if null
@@ -92,7 +92,7 @@ String getUserName(User? user) {
 }
 ```
 
-### Avoid `late` Overuse
+### Tránh lạm dụng `late`
 
 ```dart
 // BAD — defers null error to runtime
@@ -114,9 +114,9 @@ void initState() {
 
 ---
 
-## 2. Immutable State
+## 2. State bất biến (Immutable)
 
-### Sealed Classes for State Hierarchies
+### Sealed class cho phân cấp state
 
 ```dart
 sealed class UserState {}
@@ -144,7 +144,7 @@ Widget buildFrom(UserState state) => switch (state) {
 };
 ```
 
-### Freezed for Boilerplate-Free Immutability
+### Freezed cho tính bất biến không cần boilerplate
 
 ```dart
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -175,7 +175,7 @@ final fromJson = User.fromJson(json);
 
 ## 3. Async Composition
 
-### Structured Concurrency with Future.wait
+### Structured Concurrency với Future.wait
 
 ```dart
 Future<DashboardData> loadDashboard(UserRepository users, OrderRepository orders) async {
@@ -189,7 +189,7 @@ Future<DashboardData> loadDashboard(UserRepository users, OrderRepository orders
 }
 ```
 
-### Stream Patterns
+### Pattern Stream
 
 ```dart
 // Repository exposes reactive streams for live data
@@ -210,7 +210,7 @@ StreamBuilder<List<Item>>(
 )
 ```
 
-### BuildContext After Await
+### BuildContext sau Await
 
 ```dart
 // CRITICAL — always check mounted after any await in StatefulWidget
@@ -231,9 +231,9 @@ Future<void> _handleSubmit() async {
 
 ---
 
-## 4. Widget Architecture
+## 4. Kiến trúc Widget
 
-### Extract to Classes, Not Methods
+### Tách thành class, không phải method
 
 ```dart
 // BAD — private method returning widget, prevents optimization
@@ -259,7 +259,7 @@ class _PageHeader extends StatelessWidget {
 }
 ```
 
-### const Propagation
+### Lan truyền const
 
 ```dart
 // BAD — new instances every rebuild
@@ -275,7 +275,7 @@ child: const Padding(
 )
 ```
 
-### Scoped Rebuilds
+### Rebuild có phạm vi
 
 ```dart
 // BAD — entire page rebuilds on every counter change
@@ -322,7 +322,7 @@ class _CounterDisplay extends ConsumerWidget {
 
 ---
 
-## 5. State Management: BLoC/Cubit
+## 5. Quản lý state: BLoC/Cubit
 
 ```dart
 // Cubit — synchronous or simple async state
@@ -359,7 +359,7 @@ BlocBuilder<AuthCubit, AuthState>(
 
 ---
 
-## 6. State Management: Riverpod
+## 6. Quản lý state: Riverpod
 
 ```dart
 // Auto-dispose async provider
@@ -412,7 +412,7 @@ double cartTotal(Ref ref) {
 
 ---
 
-## 7. Navigation with GoRouter
+## 7. Điều hướng với GoRouter
 
 ```dart
 final router = GoRouter(
@@ -445,7 +445,7 @@ final router = GoRouter(
 
 ---
 
-## 8. HTTP with Dio
+## 8. HTTP với Dio
 
 ```dart
 final dio = Dio(BaseOptions(
@@ -490,7 +490,7 @@ class UserApiDataSource {
 
 ---
 
-## 9. Error Handling Architecture
+## 9. Kiến trúc xử lý lỗi
 
 ```dart
 // Global error capture — set up in main()
@@ -520,7 +520,7 @@ class App extends StatelessWidget {
 
 ---
 
-## 10. Testing Quick Reference
+## 10. Tham khảo nhanh về Testing
 
 ```dart
 // Unit test — use case
@@ -552,7 +552,7 @@ testWidgets('CartBadge shows item count', (tester) async {
 
 ---
 
-## References
+## Tham khảo
 
 - [Effective Dart: Design](https://dart.dev/effective-dart/design)
 - [Flutter Performance Best Practices](https://docs.flutter.dev/perf/best-practices)
@@ -560,5 +560,5 @@ testWidgets('CartBadge shows item count', (tester) async {
 - [BLoC Library](https://bloclibrary.dev/)
 - [GoRouter](https://pub.dev/packages/go_router)
 - [Freezed](https://pub.dev/packages/freezed)
-- Skill: `flutter-dart-code-review` — comprehensive review checklist
-- Rules: `rules/dart/` — coding style, patterns, security, testing, hooks
+- Skill: `flutter-dart-code-review` — checklist review toàn diện
+- Rules: `rules/dart/` — coding style, pattern, bảo mật, testing, hook

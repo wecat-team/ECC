@@ -1,30 +1,30 @@
 ---
-description: Enforce TDD workflow for C++. Write GoogleTest tests first, then implement. Verify coverage with gcov/lcov.
+description: Thực thi workflow TDD cho C++. Viết test GoogleTest trước, rồi mới triển khai. Xác minh coverage bằng gcov/lcov.
 ---
 
-# C++ TDD Command
+# Lệnh TDD C++
 
-This command enforces test-driven development methodology for C++ code using GoogleTest/GoogleMock with CMake/CTest.
+Lệnh này thực thi phương pháp test-driven development cho code C++ bằng GoogleTest/GoogleMock với CMake/CTest.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Define Interfaces**: Scaffold class/function signatures first
-2. **Write Tests**: Create comprehensive GoogleTest test cases (RED)
-3. **Run Tests**: Verify tests fail for the right reason
-4. **Implement Code**: Write minimal code to pass (GREEN)
-5. **Refactor**: Improve while keeping tests green
-6. **Check Coverage**: Ensure 80%+ coverage
+1. **Định nghĩa interface**: Dựng sườn chữ ký class/function trước
+2. **Viết test**: Tạo các test case GoogleTest toàn diện (RED)
+3. **Chạy test**: Xác minh test thất bại vì đúng lý do
+4. **Triển khai code**: Viết code tối thiểu để pass (GREEN)
+5. **Refactor**: Cải thiện trong khi giữ test xanh
+6. **Kiểm tra coverage**: Đảm bảo coverage từ 80% trở lên
 
-## When to Use
+## Khi nào dùng
 
-Use `/cpp-test` when:
-- Implementing new C++ functions or classes
-- Adding test coverage to existing code
-- Fixing bugs (write failing test first)
-- Building critical business logic
-- Learning TDD workflow in C++
+Dùng `/cpp-test` khi:
+- Triển khai function hoặc class C++ mới
+- Bổ sung test coverage cho code hiện có
+- Sửa bug (viết test thất bại trước)
+- Xây dựng business logic quan trọng
+- Học workflow TDD trong C++
 
-## TDD Cycle
+## Chu trình TDD
 
 ```
 RED     → Write failing GoogleTest test
@@ -33,7 +33,7 @@ REFACTOR → Improve code, tests stay green
 REPEAT  → Next test case
 ```
 
-## Example Session
+## Ví dụ một phiên làm việc
 
 ````
 User: /cpp-test I need a function to validate email addresses
@@ -156,9 +156,9 @@ validator/email.cpp     | 100%
 ## TDD Complete!
 ````
 
-## Test Patterns
+## Các pattern test
 
-### Basic Tests
+### Test cơ bản
 ```cpp
 TEST(SuiteName, TestName) {
     EXPECT_EQ(add(2, 3), 5);
@@ -168,7 +168,7 @@ TEST(SuiteName, TestName) {
 }
 ```
 
-### Fixtures
+### Fixture
 ```cpp
 class DatabaseTest : public ::testing::Test {
 protected:
@@ -183,7 +183,7 @@ TEST_F(DatabaseTest, InsertsRecord) {
 }
 ```
 
-### Parameterized Tests
+### Test tham số hóa (Parameterized)
 ```cpp
 class PrimeTest : public ::testing::TestWithParam<std::pair<int, bool>> {};
 
@@ -199,7 +199,7 @@ INSTANTIATE_TEST_SUITE_P(Primes, PrimeTest, ::testing::Values(
 ));
 ```
 
-## Coverage Commands
+## Lệnh coverage
 
 ```bash
 # Build with coverage
@@ -214,38 +214,38 @@ lcov --remove coverage.info '/usr/*' --output-file coverage.info
 genhtml coverage.info --output-directory coverage_html
 ```
 
-## Coverage Targets
+## Mục tiêu coverage
 
-| Code Type | Target |
+| Loại code | Mục tiêu |
 |-----------|--------|
-| Critical business logic | 100% |
+| Business logic quan trọng | 100% |
 | Public APIs | 90%+ |
-| General code | 80%+ |
-| Generated code | Exclude |
+| Code thông thường | 80%+ |
+| Code được sinh tự động | Loại trừ |
 
-## TDD Best Practices
+## Best practice TDD
 
-**DO:**
-- Write test FIRST, before any implementation
-- Run tests after each change
-- Use `EXPECT_*` (continues) over `ASSERT_*` (stops) when appropriate
-- Test behavior, not implementation details
-- Include edge cases (empty, null, max values, boundary conditions)
+**NÊN:**
+- Viết test TRƯỚC, trước mọi phần implementation
+- Chạy test sau mỗi thay đổi
+- Dùng `EXPECT_*` (tiếp tục) thay vì `ASSERT_*` (dừng) khi phù hợp
+- Test hành vi, không phải chi tiết triển khai
+- Bao gồm edge case (rỗng, null, giá trị tối đa, điều kiện biên)
 
-**DON'T:**
-- Write implementation before tests
-- Skip the RED phase
-- Test private methods directly (test through public API)
-- Use `sleep` in tests
-- Ignore flaky tests
+**KHÔNG NÊN:**
+- Viết implementation trước test
+- Bỏ qua pha RED
+- Test trực tiếp các private method (hãy test qua public API)
+- Dùng `sleep` trong test
+- Bỏ qua các test flaky
 
-## Related Commands
+## Lệnh liên quan
 
-- `/cpp-build` - Fix build errors
-- `/cpp-review` - Review code after implementation
-- `verification-loop` skill - Run full verification loop
+- `/cpp-build` - Sửa lỗi build
+- `/cpp-review` - Review code sau khi triển khai
+- skill `verification-loop` - Chạy vòng xác minh đầy đủ
 
-## Related
+## Liên quan
 
 - Skill: `skills/cpp-testing/`
 - Skill: `skills/tdd-workflow/`

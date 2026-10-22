@@ -1,132 +1,132 @@
 ---
 name: code-tour
-description: Create CodeTour `.tour` files — persona-targeted, step-by-step walkthroughs with real file and line anchors. Use for onboarding tours, architecture walkthroughs, PR tours, RCA tours, and structured "explain how this works" requests. Use when the user asks for a code tour, onboarding walkthrough, PR tour, or an explanation of how a subsystem works.
+description: Tạo các file CodeTour `.tour` — walkthrough từng bước hướng theo persona, với anchor file và dòng thực tế. Dùng cho onboarding tour, architecture walkthrough, PR tour, RCA tour và các yêu cầu có cấu trúc kiểu "explain how this works". Dùng khi người dùng yêu cầu code tour, onboarding walkthrough, PR tour, hoặc giải thích cách một subsystem hoạt động.
 metadata:
   origin: ECC
 ---
 
 # Code Tour
 
-Create **CodeTour** `.tour` files for codebase walkthroughs that open directly to real files and line ranges. Tours live in `.tours/` and are meant for the CodeTour format, not ad hoc Markdown notes.
+Tạo các file **CodeTour** `.tour` cho các walkthrough codebase, mở thẳng tới file và khoảng dòng thực tế. Tour nằm trong `.tours/` và dành cho định dạng CodeTour, không phải ghi chú Markdown ad hoc.
 
-A good tour is a narrative for a specific reader:
-- what they are looking at
-- why it matters
-- what path they should follow next
+Một tour tốt là một câu chuyện dành cho một người đọc cụ thể:
+- họ đang nhìn vào cái gì
+- tại sao nó quan trọng
+- họ nên đi theo con đường nào tiếp theo
 
-Only create `.tour` JSON files. Do not modify source code as part of this skill.
+Chỉ tạo file JSON `.tour`. Không sửa source code như một phần của skill này.
 
-## When to Use
+## Khi nào dùng
 
-Use this skill when:
-- the user asks for a code tour, onboarding tour, architecture walkthrough, or PR tour
-- the user says "explain how X works" and wants a reusable guided artifact
-- the user wants a ramp-up path for a new engineer or reviewer
-- the task is better served by a guided sequence than a flat summary
+Dùng skill này khi:
+- người dùng yêu cầu code tour, onboarding tour, architecture walkthrough hoặc PR tour
+- người dùng nói "explain how X works" và muốn một artifact hướng dẫn có thể tái sử dụng
+- người dùng muốn một lộ trình ramp-up cho kỹ sư hoặc reviewer mới
+- tác vụ phù hợp với một chuỗi hướng dẫn hơn là một bản tóm tắt phẳng
 
-Examples:
-- onboarding a new maintainer
-- architecture tour for one service or package
-- PR-review walk-through anchored to changed files
-- RCA tour showing the failure path
-- security review tour of trust boundaries and key checks
+Ví dụ:
+- onboarding một maintainer mới
+- architecture tour cho một service hoặc package
+- PR-review walk-through bám theo các file đã thay đổi
+- RCA tour cho thấy đường dẫn xảy ra lỗi
+- security review tour về các trust boundary và các điểm kiểm tra chính
 
-## When NOT to Use
+## Khi nào KHÔNG dùng
 
-| Instead of code-tour | Use |
+| Thay vì code-tour | Dùng |
 | --- | --- |
-| A one-off explanation in chat is enough | answer directly |
-| The user wants prose docs, not a `.tour` artifact | `documentation-lookup` or repo docs editing |
-| The task is implementation or refactoring | do the implementation work |
-| The task is broad codebase onboarding without a tour artifact | `codebase-onboarding` |
+| Một lời giải thích một lần trong chat là đủ | trả lời trực tiếp |
+| Người dùng muốn tài liệu dạng văn xuôi, không phải artifact `.tour` | `documentation-lookup` hoặc chỉnh sửa docs của repo |
+| Tác vụ là triển khai hoặc refactor | thực hiện công việc triển khai |
+| Tác vụ là onboarding codebase tổng quát mà không cần artifact tour | `codebase-onboarding` |
 
 ## Workflow
 
-### 1. Discover
+### 1. Khám phá (Discover)
 
-Explore the repo before writing anything:
-- README and package/app entry points
-- folder structure
-- relevant config files
-- the changed files if the tour is PR-focused
+Khám phá repo trước khi viết bất cứ thứ gì:
+- README và các entry point của package/app
+- cấu trúc thư mục
+- các file config liên quan
+- các file đã thay đổi nếu tour tập trung vào PR
 
-Do not start writing steps before you understand the shape of the code.
+Không bắt đầu viết các bước trước khi bạn hiểu hình dạng của code.
 
-### 2. Infer the reader
+### 2. Suy ra người đọc
 
-Decide the persona and depth from the request.
+Quyết định persona và độ sâu từ yêu cầu.
 
-| Request shape | Persona | Suggested depth |
+| Dạng yêu cầu | Persona | Độ sâu đề xuất |
 | --- | --- | --- |
-| "onboarding", "new joiner" | `new-joiner` | 9-13 steps |
-| "quick tour", "vibe check" | `vibecoder` | 5-8 steps |
-| "architecture" | `architect` | 14-18 steps |
-| "tour this PR" | `pr-reviewer` | 7-11 steps |
-| "why did this break" | `rca-investigator` | 7-11 steps |
-| "security review" | `security-reviewer` | 7-11 steps |
-| "explain how this feature works" | `feature-explainer` | 7-11 steps |
-| "debug this path" | `bug-fixer` | 7-11 steps |
+| "onboarding", "new joiner" | `new-joiner` | 9-13 bước |
+| "quick tour", "vibe check" | `vibecoder` | 5-8 bước |
+| "architecture" | `architect` | 14-18 bước |
+| "tour this PR" | `pr-reviewer` | 7-11 bước |
+| "why did this break" | `rca-investigator` | 7-11 bước |
+| "security review" | `security-reviewer` | 7-11 bước |
+| "explain how this feature works" | `feature-explainer` | 7-11 bước |
+| "debug this path" | `bug-fixer` | 7-11 bước |
 
-### 3. Read and verify anchors
+### 3. Đọc và xác minh anchor
 
-Every file path and line anchor must be real:
-- confirm the file exists
-- confirm the line numbers are in range
-- if using a selection, verify the exact block
-- if the file is volatile, prefer a pattern-based anchor
+Mọi đường dẫn file và anchor dòng phải là thật:
+- xác nhận file tồn tại
+- xác nhận số dòng nằm trong phạm vi
+- nếu dùng selection, xác minh đúng block đó
+- nếu file hay thay đổi, ưu tiên anchor dựa trên pattern
 
-Never guess line numbers.
+KHÔNG BAO GIỜ đoán số dòng.
 
-### 4. Write the `.tour`
+### 4. Viết file `.tour`
 
-Write to:
+Ghi vào:
 
 ```text
 .tours/<persona>-<focus>.tour
 ```
 
-Keep the path deterministic and readable.
+Giữ đường dẫn có tính xác định và dễ đọc.
 
-### 5. Validate
+### 5. Xác thực (Validate)
 
-Before finishing:
-- every referenced path exists
-- every line or selection is valid
-- the first step is anchored to a real file or directory
-- the `ref` points at a branch or commit that actually has every file the tour references (see below)
-- the tour tells a coherent story rather than listing files
+Trước khi kết thúc:
+- mọi đường dẫn được tham chiếu đều tồn tại
+- mọi dòng hoặc selection đều hợp lệ
+- bước đầu tiên được anchor vào một file hoặc thư mục thật
+- `ref` trỏ tới một branch hoặc commit thực sự có mọi file mà tour tham chiếu (xem bên dưới)
+- tour kể một câu chuyện mạch lạc thay vì chỉ liệt kê file
 
-## The `ref` Field
+## Trường `ref`
 
-`ref` ties the tour to a git branch or commit. It matters more than it looks: when `ref` is not the branch the reader has checked out, CodeTour opens each step's file from that revision in git, not from the files on disk. If a file is not in that revision, the step will not open — the reader sees *"The editor could not be opened because the file was not found"* even though the file is sitting right there. The tour and its comments still show, so the real cause is easy to miss.
+`ref` gắn tour với một git branch hoặc commit. Nó quan trọng hơn vẻ bề ngoài: khi `ref` không phải là branch mà người đọc đang checkout, CodeTour mở file của mỗi bước từ revision đó trong git, chứ không phải từ file trên đĩa. Nếu một file không có trong revision đó, bước sẽ không mở được — người đọc thấy *"The editor could not be opened because the file was not found"* dù file đang nằm ngay đó. Tour và các comment của nó vẫn hiển thị, nên nguyên nhân thật rất dễ bị bỏ sót.
 
-Pick `ref` by tour type:
+Chọn `ref` theo loại tour:
 
-| Tour type | Set `ref` to |
+| Loại tour | Đặt `ref` thành |
 | --- | --- |
-| PR tour | the PR branch — never the base branch |
-| Onboarding / architecture | the branch the reader will be on (often `main`), or leave it out |
-| Not sure | leave `ref` out, so CodeTour reads files straight from disk |
+| PR tour | branch của PR — KHÔNG BAO GIỜ là base branch |
+| Onboarding / architecture | branch mà người đọc sẽ đang dùng (thường là `main`), hoặc bỏ qua |
+| Không chắc | bỏ `ref`, để CodeTour đọc file trực tiếp từ đĩa |
 
-The PR case is the common trap: a PR usually adds new files, and new files do not exist on the base branch yet. Point `ref` at the base (e.g. `develop`) and every step on a new file fails to open.
+Trường hợp PR là cái bẫy thường gặp: một PR thường thêm file mới, và file mới chưa tồn tại trên base branch. Trỏ `ref` vào base (ví dụ `develop`) thì mọi bước trên file mới đều không mở được.
 
-Before finishing, confirm each step's file actually exists at the `ref` you chose.
+Trước khi kết thúc, xác nhận file của mỗi bước thực sự tồn tại tại `ref` bạn đã chọn.
 
-## Step Types
+## Các loại bước (Step Types)
 
 ### Content
 
-Use sparingly, usually only for a closing step:
+Dùng tiết kiệm, thường chỉ cho bước kết thúc:
 
 ```json
 { "title": "Next Steps", "description": "You can now trace the request path end to end." }
 ```
 
-Do not make the first step content-only.
+Không làm bước đầu tiên chỉ có content.
 
 ### Directory
 
-Use to orient the reader to a module:
+Dùng để định hướng người đọc tới một module:
 
 ```json
 { "directory": "src/services", "title": "Service Layer", "description": "The core orchestration logic lives here." }
@@ -134,7 +134,7 @@ Use to orient the reader to a module:
 
 ### File + line
 
-This is the default step type:
+Đây là loại bước mặc định:
 
 ```json
 { "file": "src/auth/middleware.ts", "line": 42, "title": "Auth Gate", "description": "Every protected request passes here first." }
@@ -142,7 +142,7 @@ This is the default step type:
 
 ### Selection
 
-Use when one code block matters more than the whole file:
+Dùng khi một block code quan trọng hơn cả file:
 
 ```json
 {
@@ -158,7 +158,7 @@ Use when one code block matters more than the whole file:
 
 ### Pattern
 
-Use when exact lines may drift:
+Dùng khi số dòng chính xác có thể bị lệch:
 
 ```json
 { "file": "src/app.ts", "pattern": "export default class App", "title": "Application Entry" }
@@ -166,34 +166,34 @@ Use when exact lines may drift:
 
 ### URI
 
-Use for PRs, issues, or docs when helpful:
+Dùng cho PR, issue hoặc docs khi hữu ích:
 
 ```json
 { "uri": "https://github.com/org/repo/pull/456", "title": "The PR" }
 ```
 
-## Writing Rule: SMIG
+## Quy tắc viết: SMIG
 
-Each description should answer:
-- **Situation**: what the reader is looking at
-- **Mechanism**: how it works
-- **Implication**: why it matters for this persona
-- **Gotcha**: what a smart reader might miss
+Mỗi description nên trả lời:
+- **Situation (Tình huống)**: người đọc đang nhìn vào cái gì
+- **Mechanism (Cơ chế)**: nó hoạt động như thế nào
+- **Implication (Hệ quả)**: tại sao nó quan trọng với persona này
+- **Gotcha (Điểm dễ vấp)**: điều mà một người đọc thông minh có thể bỏ sót
 
-Keep descriptions compact, specific, and grounded in the actual code.
+Giữ description gọn, cụ thể, và bám sát code thực tế.
 
-## Narrative Shape
+## Cấu trúc tự sự
 
-Use this arc unless the task clearly needs something different:
-1. orientation
-2. module map
-3. core execution path
-4. edge case or gotcha
-5. closing / next move
+Dùng mạch này trừ khi tác vụ rõ ràng cần thứ khác:
+1. định hướng
+2. bản đồ module
+3. đường thực thi cốt lõi
+4. edge case hoặc gotcha
+5. kết thúc / bước tiếp theo
 
-The tour should feel like a path, not an inventory.
+Tour nên giống một con đường, không phải một bản kiểm kê.
 
-## Example
+## Ví dụ
 
 ```json
 {
@@ -227,28 +227,28 @@ The tour should feel like a path, not an inventory.
 }
 ```
 
-## Anti-Patterns
+## Anti-Pattern
 
-| Anti-pattern | Fix |
+| Anti-pattern | Cách sửa |
 | --- | --- |
-| Flat file listing | Tell a story with dependency between steps |
-| Generic descriptions | Name the concrete code path or pattern |
-| Guessed anchors | Verify every file and line first |
-| Too many steps for a quick tour | Cut aggressively |
-| First step is content-only | Anchor the first step to a real file or directory |
-| Persona mismatch | Write for the actual reader, not a generic engineer |
+| Liệt kê file phẳng | Kể một câu chuyện với sự phụ thuộc giữa các bước |
+| Description chung chung | Nêu tên đường code hoặc pattern cụ thể |
+| Anchor đoán mò | Xác minh mọi file và dòng trước |
+| Quá nhiều bước cho một quick tour | Cắt mạnh tay |
+| Bước đầu tiên chỉ có content | Anchor bước đầu tiên vào một file hoặc thư mục thật |
+| Persona không khớp | Viết cho người đọc thực tế, không phải một kỹ sư chung chung |
 
-## Best Practices
+## Best Practice
 
-- keep step count proportional to repo size and persona depth
-- use directory steps for orientation, file steps for substance
-- for PR tours, cover changed files first
-- for monorepos, scope to the relevant packages instead of touring everything
-- close with what the reader can now do, not a recap
+- giữ số bước tương xứng với kích thước repo và độ sâu của persona
+- dùng directory step để định hướng, file step cho phần nội dung chính
+- với PR tour, bao quát các file đã thay đổi trước
+- với monorepo, giới hạn phạm vi vào các package liên quan thay vì tour mọi thứ
+- kết thúc bằng những gì người đọc giờ có thể làm, không phải một bản recap
 
-## Related Skills
+## Skill liên quan
 
 - `codebase-onboarding`
 - `coding-standards`
 - `council`
-- official upstream format: `microsoft/codetour`
+- định dạng upstream chính thức: `microsoft/codetour`

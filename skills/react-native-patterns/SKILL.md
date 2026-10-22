@@ -1,37 +1,37 @@
 ---
 name: react-native-patterns
-description: React Native and Expo app patterns — Expo Router navigation, state separation (server/client/route/form), TanStack Query data fetching with Zod, performant lists, NativeWind/StyleSheet styling, native APIs, and secure storage. Use when building or editing React Native / Expo screens, components, navigation, or data layers.
+description: Các pattern cho ứng dụng React Native và Expo — điều hướng bằng Expo Router, tách biệt state (server/client/route/form), data fetching bằng TanStack Query với Zod, list hiệu năng cao, styling bằng NativeWind/StyleSheet, native API và secure storage. Dùng khi xây dựng hoặc chỉnh sửa screen, component, navigation hoặc data layer của React Native / Expo.
 origin: ECC
 ---
 
-# React Native / Expo Patterns
+# Các pattern React Native / Expo
 
-Practical patterns for building production React Native apps with Expo. Covers navigation, state, data fetching, lists, styling, and native APIs. Pairs with the `rules/react-native/` ruleset: rules say *what* to enforce, this skill shows *how*.
+Các pattern thực tế để xây dựng ứng dụng React Native production với Expo. Bao gồm navigation, state, data fetching, list, styling và native API. Đi cùng bộ rule `rules/react-native/`: rule nói *cái gì* cần áp dụng, skill này chỉ ra *cách làm*.
 
-Libraries named below (NativeWind, Zustand/Jotai, TanStack Query) are common, well-established options shown for illustration — the patterns matter more than the specific package, and any equivalent works. Zod is used for validation to stay consistent with ECC's existing `typescript/` rules.
+Các thư viện được nêu bên dưới (NativeWind, Zustand/Jotai, TanStack Query) là những lựa chọn phổ biến, đã được kiểm chứng và chỉ dùng để minh họa — pattern quan trọng hơn package cụ thể, và bất kỳ giải pháp tương đương nào cũng dùng được. Zod được dùng để validation nhằm nhất quán với các rule `typescript/` hiện có của ECC.
 
-These patterns assume the managed Expo workflow (Expo Router, EAS, `expo-*` modules) on the New Architecture (the default in recent Expo SDKs, mandatory from SDK 55+). They do NOT assume the browser DOM — React Native has no `<div>`, no URL bar, and no web data-fetching defaults.
+Các pattern này giả định managed Expo workflow (Expo Router, EAS, các module `expo-*`) chạy trên New Architecture (mặc định trong các Expo SDK gần đây, bắt buộc từ SDK 55+). Chúng KHÔNG giả định có browser DOM — React Native không có `<div>`, không có thanh URL, và không có các mặc định data-fetching của web.
 
-## When to Activate
+## Khi nào kích hoạt
 
-Use this skill when:
+Dùng skill này khi:
 
-- Building or editing React Native / Expo screens, components, or navigation
-- Setting up routing with Expo Router (file-based `app/` directory)
-- Deciding where state belongs (server cache vs client store vs route params vs form)
-- Wiring data fetching with TanStack Query and validating responses with Zod
-- Rendering long or heavy lists
-- Choosing or applying a styling approach (NativeWind or StyleSheet)
-- Accessing native device APIs (camera, location, notifications) or secure storage
-- Reviewing RN code for mobile-specific issues
+- Xây dựng hoặc chỉnh sửa screen, component hoặc navigation của React Native / Expo
+- Thiết lập routing với Expo Router (thư mục `app/` dựa trên file)
+- Quyết định state thuộc về đâu (server cache, client store, route params hay form)
+- Kết nối data fetching bằng TanStack Query và validate response bằng Zod
+- Render các list dài hoặc nặng
+- Chọn hoặc áp dụng cách styling (NativeWind hoặc StyleSheet)
+- Truy cập native API của thiết bị (camera, vị trí, thông báo) hoặc secure storage
+- Review code RN để tìm các vấn đề đặc thù của mobile
 
-Do NOT use the web/React-DOM patterns here — URL-as-state, `<div>`, and SWR-for-browser do not apply to React Native.
+KHÔNG dùng các pattern của web/React-DOM ở đây — URL-as-state, `<div>` và SWR-for-browser không áp dụng cho React Native.
 
-## Core Concepts
+## Khái niệm cốt lõi
 
-### Project structure (Expo Router)
+### Cấu trúc dự án (Expo Router)
 
-File-based routing under `app/`. Keep route files thin: they read and validate params, then delegate to a screen component that lives in `components/` or `features/`.
+Routing dựa trên file trong `app/`. Giữ các file route mỏng: chúng đọc và validate param, rồi ủy thác cho một screen component nằm trong `components/` hoặc `features/`.
 
 ```
 app/
@@ -45,9 +45,9 @@ features/
   user/UserProfile.tsx
 ```
 
-### Navigation: validate route params
+### Navigation: validate route param
 
-Deep links and dynamic routes deliver untrusted strings. Validate them with Zod before use.
+Deep link và dynamic route đưa vào các chuỗi không đáng tin cậy. Hãy validate chúng bằng Zod trước khi dùng.
 
 ```tsx
 // app/user/[id].tsx
@@ -67,24 +67,24 @@ export default function UserRoute() {
 }
 ```
 
-### State: keep concerns separate
+### State: tách biệt các mối quan tâm
 
-Do not duplicate server data into a client store. Each concern has its own home.
+Không sao chép dữ liệu server vào client store. Mỗi mối quan tâm có nơi riêng của nó.
 
-| Concern | Common choices |
+| Mối quan tâm | Lựa chọn phổ biến |
 |---------|------|
-| Server state (remote data) | a server-cache library (TanStack Query, SWR) |
-| Client/UI state | a lightweight store (Zustand, Jotai) or Context |
-| Route/navigation state | Expo Router params |
-| Form state | a form library (e.g. React Hook Form) + schema validation |
-| Secrets / tokens | `expo-secure-store` |
-| Non-secret persistence | `AsyncStorage` / MMKV |
+| Server state (dữ liệu từ xa) | một thư viện server-cache (TanStack Query, SWR) |
+| Client/UI state | một store nhẹ (Zustand, Jotai) hoặc Context |
+| Route/navigation state | param của Expo Router |
+| Form state | một thư viện form (ví dụ React Hook Form) + schema validation |
+| Secret / token | `expo-secure-store` |
+| Lưu trữ không phải secret | `AsyncStorage` / MMKV |
 
-Prefer local `useState` until state genuinely needs sharing.
+Ưu tiên `useState` cục bộ cho đến khi state thực sự cần được chia sẻ.
 
-### Data fetching: a cache library + Zod
+### Data fetching: thư viện cache + Zod
 
-Use a server-cache library (TanStack Query, SWR) instead of fetch-in-`useEffect`. Validate at the boundary and infer types from the schema. Handle loading, error, and empty states explicitly. (Example uses TanStack Query.)
+Dùng thư viện server-cache (TanStack Query, SWR) thay vì fetch trong `useEffect`. Validate ở ranh giới và suy ra type từ schema. Xử lý tường minh các trạng thái loading, error và empty. (Ví dụ dùng TanStack Query.)
 
 ```tsx
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -109,7 +109,7 @@ export function useUpdateEmail(id: string) {
 }
 ```
 
-### Lists: virtualize, never map a big array in a ScrollView
+### List: dùng virtualization, KHÔNG BAO GIỜ map một array lớn trong ScrollView
 
 ```tsx
 import { FlatList } from 'react-native'
@@ -123,11 +123,11 @@ import { FlatList } from 'react-native'
 />
 ```
 
-Use `FlashList` (Shopify) for large or heterogeneous lists.
+Dùng `FlashList` (Shopify) cho các list lớn hoặc không đồng nhất.
 
-### Styling: pick one system
+### Styling: chọn một hệ thống
 
-`StyleSheet.create()` is the framework-native option; utility-class libraries (e.g. NativeWind) are a common alternative. Choose one and stay consistent. Never build style objects inline in JSX on hot paths.
+`StyleSheet.create()` là lựa chọn native của framework; các thư viện utility-class (ví dụ NativeWind) là một phương án thay thế phổ biến. Hãy chọn một và giữ nhất quán. KHÔNG BAO GIỜ tạo style object inline trong JSX ở các hot path.
 
 ```tsx
 // NativeWind
@@ -140,9 +140,9 @@ const styles = StyleSheet.create({ card: { padding: 16, borderRadius: 16, backgr
 <View style={styles.card}>...</View>
 ```
 
-### Native APIs: wrap in hooks, clean up effects
+### Native API: bọc trong hook, dọn dẹp effect
 
-Keep Expo SDK calls and subscriptions inside `use*` hooks, not in JSX. Always clean up.
+Giữ các lời gọi Expo SDK và subscription bên trong hook `use*`, không đặt trong JSX. LUÔN LUÔN dọn dẹp (clean up).
 
 ```tsx
 import { useEffect, useState } from 'react'
@@ -176,7 +176,7 @@ export function useCurrentLocation() {
 }
 ```
 
-### Secure storage for tokens
+### Secure storage cho token
 
 ```tsx
 import * as SecureStore from 'expo-secure-store'
@@ -185,9 +185,9 @@ await SecureStore.setItemAsync('auth_token', token)   // Keychain / Keystore
 const token = await SecureStore.getItemAsync('auth_token')
 ```
 
-## Code Examples
+## Ví dụ code
 
-### A full screen: route → query → list → states
+### Một screen đầy đủ: route → query → list → các state
 
 ```tsx
 // app/(tabs)/orders.tsx
@@ -237,7 +237,7 @@ export default function OrdersScreen() {
 }
 ```
 
-### A form: React Hook Form + Zod resolver
+### Một form: React Hook Form + Zod resolver
 
 ```tsx
 import { useForm, Controller } from 'react-hook-form'
@@ -308,19 +308,19 @@ const STRIPE_SECRET = 'sk_live_...'
 
 ## Best Practices
 
-- Keep route files thin; put logic in screen components and `use*` hooks.
-- Validate every external input (API responses, route params, push payloads) with Zod.
-- Let TanStack Query own server state; keep client stores small.
-- Always render loading, error, and empty states — never just a spinner with no fallback.
-- Virtualize lists; memoize `renderItem`; provide a stable `keyExtractor`.
-- Use `react-native-reanimated` for animation (UI thread); avoid heavy work on the JS thread.
-- Store tokens in `expo-secure-store`; never trust the client for authorization.
-- Respect safe areas, Dynamic Type, and accessibility roles/labels from the start.
-- Confirm New Architecture compatibility for every native dependency before release.
+- Giữ các file route mỏng; đặt logic trong screen component và hook `use*`.
+- Validate mọi input từ bên ngoài (API response, route param, push payload) bằng Zod.
+- Để TanStack Query sở hữu server state; giữ client store nhỏ.
+- LUÔN LUÔN render các trạng thái loading, error và empty — không bao giờ chỉ có spinner mà không có fallback.
+- Dùng virtualization cho list; memoize `renderItem`; cung cấp `keyExtractor` ổn định.
+- Dùng `react-native-reanimated` cho animation (chạy trên UI thread); tránh công việc nặng trên JS thread.
+- Lưu token trong `expo-secure-store`; không bao giờ tin client cho việc phân quyền (authorization).
+- Tôn trọng safe area, Dynamic Type và accessibility role/label ngay từ đầu.
+- Xác nhận khả năng tương thích New Architecture cho mọi native dependency trước khi release.
 
-## Related Skills
+## Skill liên quan
 
-- `frontend-patterns` — React/Next.js (web) patterns; useful for shared React concepts, but DOM-specific.
-- `coding-standards` — TypeScript/JavaScript idioms that apply to RN code.
-- `tdd-workflow`, `e2e-testing` — testing process (use Jest + React Native Testing Library, Maestro/Detox for RN).
-- `security-review` — general security checklist that complements the RN bundle/secret guidance above.
+- `frontend-patterns` — các pattern React/Next.js (web); hữu ích cho các khái niệm React dùng chung, nhưng gắn với DOM.
+- `coding-standards` — các idiom TypeScript/JavaScript áp dụng cho code RN.
+- `tdd-workflow`, `e2e-testing` — quy trình testing (dùng Jest + React Native Testing Library, Maestro/Detox cho RN).
+- `security-review` — checklist bảo mật chung bổ sung cho hướng dẫn về bundle/secret của RN ở trên.

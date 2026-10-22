@@ -1,55 +1,55 @@
 ---
-description: Comprehensive Kotlin code review for idiomatic patterns, null safety, coroutine safety, and security. Invokes the kotlin-reviewer agent.
+description: Code review toàn diện cho Kotlin về pattern idiomatic, null safety, an toàn coroutine và bảo mật. Gọi agent kotlin-reviewer.
 ---
 
 # Kotlin Code Review
 
-This command invokes the **kotlin-reviewer** agent for comprehensive Kotlin-specific code review.
+Command này gọi agent **kotlin-reviewer** để code review toàn diện dành riêng cho Kotlin.
 
-## What This Command Does
+## Command này làm gì
 
-1. **Identify Kotlin Changes**: Find modified `.kt` and `.kts` files via `git diff`
-2. **Run Build & Static Analysis**: Execute `./gradlew build`, `detekt`, `ktlintCheck`
-3. **Security Scan**: Check for SQL injection, command injection, hardcoded secrets
-4. **Null Safety Review**: Analyze `!!` usage, platform type handling, unsafe casts
-5. **Coroutine Review**: Check structured concurrency, dispatcher usage, cancellation
-6. **Generate Report**: Categorize issues by severity
+1. **Xác định thay đổi Kotlin**: Tìm các file `.kt` và `.kts` đã sửa qua `git diff`
+2. **Chạy build & phân tích tĩnh**: Thực thi `./gradlew build`, `detekt`, `ktlintCheck`
+3. **Quét bảo mật**: Kiểm tra SQL injection, command injection, secret bị hardcode
+4. **Review null safety**: Phân tích việc dùng `!!`, xử lý platform type, unsafe cast
+5. **Review coroutine**: Kiểm tra structured concurrency, cách dùng dispatcher, cancellation
+6. **Tạo báo cáo**: Phân loại vấn đề theo mức độ nghiêm trọng
 
-## When to Use
+## Khi nào dùng
 
-Use `/kotlin-review` when:
-- After writing or modifying Kotlin code
-- Before committing Kotlin changes
-- Reviewing pull requests with Kotlin code
-- Onboarding to a new Kotlin codebase
-- Learning idiomatic Kotlin patterns
+Dùng `/kotlin-review` khi:
+- Sau khi viết hoặc sửa code Kotlin
+- Trước khi commit các thay đổi Kotlin
+- Review pull request có code Kotlin
+- Làm quen với một codebase Kotlin mới
+- Học các pattern Kotlin idiomatic
 
-## Review Categories
+## Các nhóm review
 
-### CRITICAL (Must Fix)
-- SQL/Command injection vulnerabilities
-- Force-unwrap `!!` without justification
-- Platform type null safety violations
-- GlobalScope usage (structured concurrency violation)
-- Hardcoded credentials
-- Unsafe deserialization
+### CRITICAL (PHẢI sửa)
+- Lỗ hổng SQL/Command injection
+- Force-unwrap `!!` không có lý do chính đáng
+- Vi phạm null safety của platform type
+- Dùng GlobalScope (vi phạm structured concurrency)
+- Credential bị hardcode
+- Deserialization không an toàn
 
-### HIGH (Should Fix)
-- Mutable state where immutable suffices
-- Blocking calls inside coroutine context
-- Missing cancellation checks in long loops
-- Non-exhaustive `when` on sealed types
-- Large functions (>50 lines)
-- Deep nesting (>4 levels)
+### HIGH (Nên sửa)
+- State mutable ở nơi bất biến (immutable) là đủ
+- Lời gọi blocking bên trong context coroutine
+- Thiếu kiểm tra cancellation trong vòng lặp dài
+- `when` không exhaustive trên sealed type
+- Hàm lớn (>50 dòng)
+- Lồng nhau quá sâu (>4 cấp)
 
-### MEDIUM (Consider)
-- Non-idiomatic Kotlin (Java-style patterns)
-- Missing trailing commas
-- Scope function misuse or nesting
-- Missing sequence for large collection chains
-- Redundant explicit types
+### MEDIUM (Cân nhắc)
+- Kotlin không idiomatic (pattern kiểu Java)
+- Thiếu trailing comma
+- Lạm dụng hoặc lồng scope function
+- Thiếu sequence cho các chuỗi xử lý collection lớn
+- Khai báo kiểu tường minh thừa
 
-## Automated Checks Run
+## Các kiểm tra tự động được chạy
 
 ```bash
 # Build check
@@ -65,7 +65,7 @@ Use `/kotlin-review` when:
 ./gradlew test
 ```
 
-## Example Usage
+## Ví dụ sử dụng
 
 ````text
 User: /kotlin-review
@@ -119,22 +119,22 @@ launch {
 Recommendation: FAIL: Block merge until CRITICAL issue is fixed
 ````
 
-## Approval Criteria
+## Tiêu chí phê duyệt
 
-| Status | Condition |
+| Trạng thái | Điều kiện |
 |--------|-----------|
-| PASS: Approve | No CRITICAL or HIGH issues |
-| WARNING: Warning | Only MEDIUM issues (merge with caution) |
-| FAIL: Block | CRITICAL or HIGH issues found |
+| PASS: Approve | Không có vấn đề CRITICAL hoặc HIGH |
+| WARNING: Warning | Chỉ có vấn đề MEDIUM (merge cần thận trọng) |
+| FAIL: Block | Phát hiện vấn đề CRITICAL hoặc HIGH |
 
-## Integration with Other Commands
+## Tích hợp với các command khác
 
-- Use `/kotlin-test` first to ensure tests pass
-- Use `/kotlin-build` if build errors occur
-- Use `/kotlin-review` before committing
-- Use `/code-review` for non-Kotlin-specific concerns
+- Dùng `/kotlin-test` trước để đảm bảo test thành công
+- Dùng `/kotlin-build` nếu có lỗi build
+- Dùng `/kotlin-review` trước khi commit
+- Dùng `/code-review` cho các mối quan tâm không đặc thù của Kotlin
 
-## Related
+## Liên quan
 
 - Agent: `agents/kotlin-reviewer.md`
 - Skills: `skills/kotlin-patterns/`, `skills/kotlin-testing/`

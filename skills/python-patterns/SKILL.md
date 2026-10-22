@@ -1,26 +1,26 @@
 ---
 name: python-patterns
-description: Pythonic idioms, PEP 8 standards, type hints, and best practices for building robust, efficient, and maintainable Python applications. Use when writing or reviewing Python code and idiomatic structure, typing, or PEP 8 is in question.
+description: Các idiom Pythonic, chuẩn PEP 8, type hint và best practice để xây dựng ứng dụng Python vững chắc, hiệu quả và dễ bảo trì. Dùng khi viết hoặc review code Python và cần xác định cấu trúc idiomatic, typing hoặc PEP 8.
 metadata:
   origin: ECC
 ---
 
-# Python Development Patterns
+# Các pattern phát triển Python
 
-Idiomatic Python patterns and best practices for building robust, efficient, and maintainable applications.
+Các pattern Python idiomatic và best practice để xây dựng ứng dụng vững chắc, hiệu quả và dễ bảo trì.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new Python code
-- Reviewing Python code
-- Refactoring existing Python code
-- Designing Python packages/modules
+- Viết code Python mới
+- Review code Python
+- Refactor code Python hiện có
+- Thiết kế package/module Python
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
-### 1. Readability Counts
+### 1. Độ dễ đọc là quan trọng
 
-Python prioritizes readability. Code should be obvious and easy to understand.
+Python ưu tiên độ dễ đọc. Code phải rõ ràng và dễ hiểu.
 
 ```python
 # Good: Clear and readable
@@ -34,9 +34,9 @@ def get_active_users(u):
     return [x for x in u if x.a]
 ```
 
-### 2. Explicit is Better Than Implicit
+### 2. Tường minh tốt hơn ngầm định
 
-Avoid magic; be clear about what your code does.
+Tránh "phép thuật"; hãy làm rõ code của bạn làm gì.
 
 ```python
 # Good: Explicit configuration
@@ -52,9 +52,9 @@ import some_module
 some_module.setup()  # What does this do?
 ```
 
-### 3. EAFP - Easier to Ask Forgiveness Than Permission
+### 3. EAFP - Xin lỗi dễ hơn xin phép
 
-Python prefers exception handling over checking conditions.
+Python ưu tiên xử lý exception hơn là kiểm tra điều kiện.
 
 ```python
 # Good: EAFP style
@@ -72,9 +72,9 @@ def get_value(dictionary: dict, key: str, default_value: Any = None) -> Any:
         return default_value
 ```
 
-## Type Hints
+## Type Hint
 
-### Basic Type Annotations
+### Type Annotation cơ bản
 
 ```python
 from typing import Optional, List, Dict, Any
@@ -90,7 +90,7 @@ def process_user(
     return User(user_id, data)
 ```
 
-### Modern Type Hints (Python 3.9+)
+### Type Hint hiện đại (Python 3.9+)
 
 ```python
 # Python 3.9+ - Use built-in types
@@ -104,7 +104,7 @@ def process_items(items: List[str]) -> Dict[str, int]:
     return {item: len(item) for item in items}
 ```
 
-### Type Aliases and TypeVar
+### Type Alias và TypeVar
 
 ```python
 from typing import TypeVar, Union
@@ -123,7 +123,7 @@ def first(items: list[T]) -> T | None:
     return items[0] if items else None
 ```
 
-### Protocol-Based Duck Typing
+### Duck Typing dựa trên Protocol
 
 ```python
 from typing import Protocol
@@ -137,9 +137,9 @@ def render_all(items: list[Renderable]) -> str:
     return "\n".join(item.render() for item in items)
 ```
 
-## Error Handling Patterns
+## Các pattern xử lý lỗi
 
-### Specific Exception Handling
+### Xử lý exception cụ thể
 
 ```python
 # Good: Catch specific exceptions
@@ -172,7 +172,7 @@ def process_data(data: str) -> Result:
         raise ValueError(f"Failed to parse data: {data}") from e
 ```
 
-### Custom Exception Hierarchy
+### Phân cấp Exception tùy chỉnh
 
 ```python
 class AppError(Exception):
@@ -195,9 +195,9 @@ def get_user(user_id: str) -> User:
     return user
 ```
 
-## Context Managers
+## Context Manager
 
-### Resource Management
+### Quản lý tài nguyên
 
 ```python
 # Good: Using context managers
@@ -214,7 +214,7 @@ def process_file(path: str) -> str:
         f.close()
 ```
 
-### Custom Context Managers
+### Context Manager tùy chỉnh
 
 ```python
 from contextlib import contextmanager
@@ -232,7 +232,7 @@ with timer("data processing"):
     process_large_dataset()
 ```
 
-### Context Manager Classes
+### Class Context Manager
 
 ```python
 class DatabaseTransaction:
@@ -256,9 +256,9 @@ with DatabaseTransaction(conn):
     conn.create_profile(user.id, profile_data)
 ```
 
-## Comprehensions and Generators
+## Comprehension và Generator
 
-### List Comprehensions
+### List Comprehension
 
 ```python
 # Good: List comprehension for simple transformations
@@ -283,7 +283,7 @@ def filter_and_transform(items: Iterable[int]) -> list[int]:
     return result
 ```
 
-### Generator Expressions
+### Generator Expression
 
 ```python
 # Good: Generator for lazy evaluation
@@ -293,7 +293,7 @@ total = sum(x * x for x in range(1_000_000))
 total = sum([x * x for x in range(1_000_000)])
 ```
 
-### Generator Functions
+### Generator Function
 
 ```python
 def read_large_file(path: str) -> Iterator[str]:
@@ -307,9 +307,9 @@ for line in read_large_file("huge.txt"):
     process(line)
 ```
 
-## Data Classes and Named Tuples
+## Data Class và Named Tuple
 
-### Data Classes
+### Data Class
 
 ```python
 from dataclasses import dataclass, field
@@ -332,7 +332,7 @@ user = User(
 )
 ```
 
-### Data Classes with Validation
+### Data Class kèm Validation
 
 ```python
 @dataclass
@@ -349,7 +349,7 @@ class User:
             raise ValueError(f"Invalid age: {self.age}")
 ```
 
-### Named Tuples
+### Named Tuple
 
 ```python
 from typing import NamedTuple
@@ -368,9 +368,9 @@ p2 = Point(3, 4)
 print(p1.distance(p2))  # 5.0
 ```
 
-## Decorators
+## Decorator
 
-### Function Decorators
+### Function Decorator
 
 ```python
 import functools
@@ -394,7 +394,7 @@ def slow_function():
 # slow_function() prints: slow_function took 1.0012s
 ```
 
-### Parameterized Decorators
+### Decorator có tham số
 
 ```python
 def repeat(times: int):
@@ -416,7 +416,7 @@ def greet(name: str) -> str:
 # greet("Alice") returns ["Hello, Alice!", "Hello, Alice!", "Hello, Alice!"]
 ```
 
-### Class-Based Decorators
+### Decorator dựa trên Class
 
 ```python
 class CountCalls:
@@ -438,9 +438,9 @@ def process():
 # Each call to process() prints the call count
 ```
 
-## Concurrency Patterns
+## Các pattern xử lý đồng thời (Concurrency)
 
-### Threading for I/O-Bound Tasks
+### Threading cho tác vụ I/O-bound
 
 ```python
 import concurrent.futures
@@ -466,7 +466,7 @@ def fetch_all_urls(urls: list[str]) -> dict[str, str]:
     return results
 ```
 
-### Multiprocessing for CPU-Bound Tasks
+### Multiprocessing cho tác vụ CPU-bound
 
 ```python
 def process_data(data: list[int]) -> int:
@@ -480,7 +480,7 @@ def process_all(datasets: list[list[int]]) -> list[int]:
     return results
 ```
 
-### Async/Await for Concurrent I/O
+### Async/Await cho I/O đồng thời
 
 ```python
 import asyncio
@@ -499,9 +499,9 @@ async def fetch_all(urls: list[str]) -> dict[str, str]:
     return dict(zip(urls, results))
 ```
 
-## Package Organization
+## Tổ chức package
 
-### Standard Project Layout
+### Bố cục dự án chuẩn
 
 ```
 myproject/
@@ -528,7 +528,7 @@ myproject/
 └── .gitignore
 ```
 
-### Import Conventions
+### Quy ước import
 
 ```python
 # Good: Import order - stdlib, third-party, local
@@ -546,7 +546,7 @@ from mypackage.utils import format_name
 # pip install isort
 ```
 
-### __init__.py for Package Exports
+### __init__.py để export package
 
 ```python
 # mypackage/__init__.py
@@ -561,9 +561,9 @@ from mypackage.utils import format_name
 __all__ = ["User", "Post", "format_name"]
 ```
 
-## Memory and Performance
+## Bộ nhớ và hiệu năng
 
-### Using __slots__ for Memory Efficiency
+### Dùng __slots__ để tiết kiệm bộ nhớ
 
 ```python
 # Bad: Regular class uses __dict__ (more memory)
@@ -581,7 +581,7 @@ class Point:
         self.y = y
 ```
 
-### Generator for Large Data
+### Generator cho dữ liệu lớn
 
 ```python
 # Bad: Returns full list in memory
@@ -596,7 +596,7 @@ def read_lines(path: str) -> Iterator[str]:
             yield line.strip()
 ```
 
-### Avoid String Concatenation in Loops
+### Tránh nối chuỗi trong vòng lặp
 
 ```python
 # Bad: O(n²) due to string immutability
@@ -616,9 +616,9 @@ for item in items:
 result = buffer.getvalue()
 ```
 
-## Python Tooling Integration
+## Tích hợp tooling Python
 
-### Essential Commands
+### Các lệnh thiết yếu
 
 ```bash
 # Code formatting
@@ -643,7 +643,7 @@ pip-audit
 safety check
 ```
 
-### pyproject.toml Configuration
+### Cấu hình pyproject.toml
 
 ```toml
 [project]
@@ -683,22 +683,22 @@ testpaths = ["tests"]
 addopts = "--cov=mypackage --cov-report=term-missing"
 ```
 
-## Quick Reference: Python Idioms
+## Tham khảo nhanh: Các idiom Python
 
-| Idiom | Description |
+| Idiom | Mô tả |
 |-------|-------------|
-| EAFP | Easier to Ask Forgiveness than Permission |
-| Context managers | Use `with` for resource management |
-| List comprehensions | For simple transformations |
-| Generators | For lazy evaluation and large datasets |
-| Type hints | Annotate function signatures |
-| Dataclasses | For data containers with auto-generated methods |
-| `__slots__` | For memory optimization |
-| f-strings | For string formatting (Python 3.6+) |
-| `pathlib.Path` | For path operations (Python 3.4+) |
-| `enumerate` | For index-element pairs in loops |
+| EAFP | Xin lỗi dễ hơn xin phép (Easier to Ask Forgiveness than Permission) |
+| Context managers | Dùng `with` để quản lý tài nguyên |
+| List comprehensions | Cho các phép biến đổi đơn giản |
+| Generators | Cho lazy evaluation và dataset lớn |
+| Type hints | Chú thích signature của hàm |
+| Dataclasses | Cho container dữ liệu với các method tự sinh |
+| `__slots__` | Để tối ưu bộ nhớ |
+| f-strings | Để định dạng chuỗi (Python 3.6+) |
+| `pathlib.Path` | Cho các thao tác với đường dẫn (Python 3.4+) |
+| `enumerate` | Cho cặp index-phần tử trong vòng lặp |
 
-## Anti-Patterns to Avoid
+## Anti-Pattern cần tránh
 
 ```python
 # Bad: Mutable default arguments
@@ -748,4 +748,4 @@ except SpecificError as e:
     logger.error(f"Operation failed: {e}")
 ```
 
-__Remember__: Python code should be readable, explicit, and follow the principle of least surprise. When in doubt, prioritize clarity over cleverness.
+__Hãy nhớ__: Code Python nên dễ đọc, tường minh và tuân theo nguyên tắc ít gây bất ngờ nhất (least surprise). Khi còn nghi ngờ, hãy ưu tiên sự rõ ràng hơn sự khéo léo.

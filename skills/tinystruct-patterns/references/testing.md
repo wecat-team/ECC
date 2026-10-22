@@ -1,27 +1,27 @@
-# tinystruct Testing Patterns
+# Pattern kiểm thử trong tinystruct
 
-## When to Use
+## Khi nào dùng
 
-Use these patterns when writing unit tests for your applications with **JUnit 5**. Essential for verifying action logic, routing registration, and HTTP mode behavior.
+Dùng các pattern này khi viết unit test cho ứng dụng bằng **JUnit 5**. Rất cần thiết để xác minh logic của action, việc đăng ký routing và hành vi của các HTTP mode.
 
-## How It Works
+## Cách hoạt động
 
-### Unit Testing Applications
-ActionRegistry is a singleton. To test an application:
-1. Instantiate the application.
-2. Provide a `Settings` object (triggers `init()` and annotation processing).
-3. Use `app.invoke(path, args)` to test logic directly.
+### Unit test cho ứng dụng
+ActionRegistry là singleton. Để test một ứng dụng:
+1. Khởi tạo ứng dụng.
+2. Cung cấp một object `Settings` (kích hoạt `init()` và xử lý annotation).
+3. Dùng `app.invoke(path, args)` để test logic trực tiếp.
 
-### HTTP Integration Testing
-For tests involving the built-in HTTP server:
-1. Start `HttpServer` in a background thread.
-2. Use `ApplicationManager.call("start", context, Action.Mode.CLI)` to boot.
-3. Wait for the port to be open using a `Socket`.
-4. Use `URLRequest` and `HTTPHandler` to perform actual requests.
+### Integration test qua HTTP
+Với các test dùng HTTP server tích hợp sẵn:
+1. Khởi động `HttpServer` trong một background thread.
+2. Dùng `ApplicationManager.call("start", context, Action.Mode.CLI)` để boot.
+3. Chờ cổng mở bằng một `Socket`.
+4. Dùng `URLRequest` và `HTTPHandler` để thực hiện request thật.
 
-## Examples
+## Ví dụ
 
-### Unit Test
+### Unit test
 ```java
 import org.junit.jupiter.api.*;
 import org.tinystruct.system.Settings;
@@ -50,7 +50,7 @@ class MyAppTest {
 }
 ```
 
-### ActionRegistry Match Testing
+### Test việc khớp ActionRegistry
 ```java
 @Test
 void testRouting() {
@@ -60,8 +60,8 @@ void testRouting() {
 }
 ```
 
-### HTTP Integration Pattern
-Reference: `src/test/java/org/tinystruct/system/HttpServerHttpModeTest.java`
+### Pattern integration test qua HTTP
+Tham khảo: `src/test/java/org/tinystruct/system/HttpServerHttpModeTest.java`
 
 ```java
 // Pattern:

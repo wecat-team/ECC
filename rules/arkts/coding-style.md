@@ -6,119 +6,119 @@ paths:
   - "**/oh-package.json5"
   - "**/build-profile.json5"
 ---
-# HarmonyOS / ArkTS Coding Style
+# Phong cách code HarmonyOS / ArkTS
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with HarmonyOS and ArkTS-specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho HarmonyOS và ArkTS.
 
-## ArkTS Language Constraints
+## Ràng buộc của ngôn ngữ ArkTS
 
-ArkTS is a strict, statically-typed subset of TypeScript. Violating these constraints causes **compilation failures**.
+ArkTS là một tập con nghiêm ngặt, định kiểu tĩnh của TypeScript. Vi phạm các ràng buộc này sẽ gây **lỗi biên dịch**.
 
-### Type System
+### Hệ thống kiểu
 
-- No `any` or `unknown` types - always use explicit types
-- No index access types - use type names directly
-- No conditional type aliases or `infer` keyword
-- No intersection types - use inheritance
-- No mapped types - use classes and regular idioms
-- No `typeof` for type annotations - use explicit type declarations
-- No `as const` assertions - use explicit type annotations
-- No structural typing - use inheritance, interfaces, or type aliases
-- No TypeScript utility types except `Partial`, `Required`, `Readonly`, `Record`
-- For `Record<K, V>`, index expression type is `V | undefined`
-- Omit type annotations in `catch` clauses (ArkTS does not support `any`/`unknown`)
+- Không dùng kiểu `any` hoặc `unknown` - luôn dùng kiểu tường minh
+- Không dùng index access type - dùng trực tiếp tên kiểu
+- Không dùng conditional type alias hoặc từ khóa `infer`
+- Không dùng intersection type - dùng kế thừa
+- Không dùng mapped type - dùng class và các idiom thông thường
+- Không dùng `typeof` cho type annotation - dùng khai báo kiểu tường minh
+- Không dùng `as const` assertion - dùng type annotation tường minh
+- Không dùng structural typing - dùng kế thừa, interface hoặc type alias
+- Không dùng các utility type của TypeScript ngoại trừ `Partial`, `Required`, `Readonly`, `Record`
+- Với `Record<K, V>`, kiểu của biểu thức index là `V | undefined`
+- Bỏ type annotation trong mệnh đề `catch` (ArkTS không hỗ trợ `any`/`unknown`)
 
-### Functions & Classes
+### Hàm & Class
 
-- No function expressions - use arrow functions
-- No nested functions - use lambdas
-- No generator functions - use `async`/`await` for multitasking
-- No `Function.apply`, `Function.call`, `Function.bind` - follow traditional OOP for `this`
-- No constructor type expressions - use lambdas
-- No constructor signatures in interfaces or object types - use methods or classes
-- No declaring class fields in constructors - declare in class body
-- No `this` in standalone functions or static methods - only in instance methods
-- No `new.target`
-- No definite assignment assertions (`let v!: T`) - use initialized declarations
-- No class literals - introduce named class types
-- No using classes as objects (assigning to variables) - class declarations introduce types, not values
-- Only one static block per class - merge all static statements
+- Không dùng function expression - dùng arrow function
+- Không dùng hàm lồng nhau - dùng lambda
+- Không dùng generator function - dùng `async`/`await` để xử lý đa tác vụ
+- Không dùng `Function.apply`, `Function.call`, `Function.bind` - tuân theo OOP truyền thống đối với `this`
+- Không dùng constructor type expression - dùng lambda
+- Không dùng constructor signature trong interface hoặc object type - dùng method hoặc class
+- Không khai báo field của class trong constructor - khai báo trong thân class
+- Không dùng `this` trong hàm độc lập hoặc static method - chỉ dùng trong instance method
+- Không dùng `new.target`
+- Không dùng definite assignment assertion (`let v!: T`) - dùng khai báo có khởi tạo
+- Không dùng class literal - hãy tạo named class type
+- Không dùng class như object (gán vào biến) - khai báo class tạo ra type, không phải value
+- Chỉ một static block cho mỗi class - gộp mọi câu lệnh static lại
 
-### Object & Property Access
+### Object & truy cập thuộc tính
 
-- No dynamic field declaration or `obj["field"]` access - use `obj.field` syntax
-- No `delete` operator - use nullable type with `null` to mark absence
-- No prototype assignment - use classes and interfaces
-- No `in` operator - use `instanceof`
-- No reassigning object methods - use wrapper functions or inheritance
-- No `Symbol()` API (except `Symbol.iterator`)
-- No `globalThis` or global scope - use explicit module exports/imports
-- No namespaces as objects - use classes or modules
-- No statements inside namespaces - use functions
+- Không khai báo field động hoặc truy cập `obj["field"]` - dùng cú pháp `obj.field`
+- Không dùng toán tử `delete` - dùng nullable type với `null` để đánh dấu sự vắng mặt
+- Không gán prototype - dùng class và interface
+- Không dùng toán tử `in` - dùng `instanceof`
+- Không gán lại method của object - dùng wrapper function hoặc kế thừa
+- Không dùng API `Symbol()` (ngoại trừ `Symbol.iterator`)
+- Không dùng `globalThis` hoặc phạm vi global - dùng export/import module tường minh
+- Không dùng namespace như object - dùng class hoặc module
+- Không đặt câu lệnh bên trong namespace - dùng hàm
 
 ### Destructuring & Spread
 
-- No destructuring assignments or variable declarations - use intermediate objects and field-by-field access
-- No destructuring parameter declarations - pass parameters directly, assign local names manually
-- Spread operator only for expanding arrays (or array-derived classes) into rest parameters or array literals
+- Không dùng destructuring assignment hoặc khai báo biến bằng destructuring - dùng object trung gian và truy cập từng field
+- Không dùng destructuring trong khai báo tham số - truyền tham số trực tiếp, tự gán tên cục bộ
+- Spread operator chỉ dùng để trải mảng (hoặc class dẫn xuất từ mảng) vào rest parameter hoặc array literal
 
-### Modules & Imports
+### Module & Import
 
-- No `require()` - use regular `import` syntax
-- No `export = ...` - use normal export/import
-- No import assertions - imports are compile-time in ArkTS
-- No UMD modules
-- No wildcards in module names
-- All `import` statements must appear before all other statements
-- TypeScript codebases must not depend on ArkTS codebases via import (reverse is supported)
+- Không dùng `require()` - dùng cú pháp `import` thông thường
+- Không dùng `export = ...` - dùng export/import thông thường
+- Không dùng import assertion - import trong ArkTS diễn ra lúc biên dịch
+- Không dùng module UMD
+- Không dùng wildcard trong tên module
+- Mọi câu lệnh `import` PHẢI xuất hiện trước tất cả các câu lệnh khác
+- Codebase TypeScript không được phụ thuộc vào codebase ArkTS qua import (chiều ngược lại được hỗ trợ)
 
-### Other Restrictions
+### Các hạn chế khác
 
-- No `var` - use `let`
-- No `for...in` loops - use regular `for` loops for arrays
-- No `with` statements
-- No JSX expressions
-- No `#` private identifiers - use `private` keyword
-- No declaration merging (classes, interfaces, enums) - keep definitions compact
-- No index signatures - use arrays
-- Comma operator only in `for` loops
-- Unary operators `+`, `-`, `~` only for numeric types (no implicit string conversion)
-- Enum members: only same-type compile-time expressions for explicit initializers
-- Function return type inference is limited - specify return types explicitly when calling functions with omitted return types
+- Không dùng `var` - dùng `let`
+- Không dùng vòng lặp `for...in` - dùng vòng lặp `for` thông thường cho mảng
+- Không dùng câu lệnh `with`
+- Không dùng biểu thức JSX
+- Không dùng định danh private `#` - dùng từ khóa `private`
+- Không dùng declaration merging (class, interface, enum) - giữ định nghĩa gọn
+- Không dùng index signature - dùng mảng
+- Toán tử dấu phẩy chỉ dùng trong vòng lặp `for`
+- Toán tử một ngôi `+`, `-`, `~` chỉ dùng cho kiểu số (không chuyển đổi chuỗi ngầm định)
+- Thành viên enum: chỉ dùng biểu thức compile-time cùng kiểu cho initializer tường minh
+- Suy luận kiểu trả về của hàm bị hạn chế - hãy chỉ định kiểu trả về tường minh khi gọi các hàm bị bỏ kiểu trả về
 
-### Object Literals
+### Object Literal
 
-- Supported only when compiler can infer the corresponding class or interface
-- NOT supported for: `any`/`Object`/`object` types, classes/interfaces with methods, classes with parameterized constructors, classes with `readonly` fields
+- Chỉ được hỗ trợ khi compiler suy luận được class hoặc interface tương ứng
+- KHÔNG được hỗ trợ cho: kiểu `any`/`Object`/`object`, class/interface có method, class có constructor tham số hóa, class có field `readonly`
 
-## Naming Conventions
+## Quy ước đặt tên
 
-- Variables / functions: `camelCase` (e.g., `getUserInfo`, `goodsList`)
-- Classes / interfaces: `PascalCase` (e.g., `UserViewModel`, `IGoodsModel`)
-- Constants: `UPPER_SNAKE_CASE` (e.g., `MAX_PAGE_SIZE`, `COLOR_PRIMARY`)
-- File names: `PascalCase` for components (e.g., `HomePage.ets`), `camelCase` for utilities
+- Biến / hàm: `camelCase` (ví dụ: `getUserInfo`, `goodsList`)
+- Class / interface: `PascalCase` (ví dụ: `UserViewModel`, `IGoodsModel`)
+- Hằng số: `UPPER_SNAKE_CASE` (ví dụ: `MAX_PAGE_SIZE`, `COLOR_PRIMARY`)
+- Tên file: `PascalCase` cho component (ví dụ: `HomePage.ets`), `camelCase` cho utility
 
-## Formatting
+## Định dạng
 
-- Prefer double quotes for strings
-- Semicolons at end of statements
-- Never use `var` - prefer `const`, then `let`
-- All methods, parameters, return values must have complete type annotations
+- Ưu tiên dấu nháy kép cho chuỗi
+- Dấu chấm phẩy ở cuối câu lệnh
+- KHÔNG BAO GIỜ dùng `var` - ưu tiên `const`, sau đó đến `let`
+- Mọi method, tham số, giá trị trả về PHẢI có type annotation đầy đủ
 
-## File Organization
+## Tổ chức file
 
-- Component files (`.ets`): one `@ComponentV2` per file
-- ViewModel files: one ViewModel class per file
-- Model files: related data models may share a file
-- Keep files under 400 lines; extract helpers for files approaching 800 lines
+- File component (`.ets`): mỗi file một `@ComponentV2`
+- File ViewModel: mỗi file một class ViewModel
+- File Model: các data model liên quan có thể dùng chung một file
+- Giữ file dưới 400 dòng; tách helper ra khi file tiến gần 800 dòng
 
-## Comments
+## Comment
 
-- File header: `@file` (file purpose) + `@author` (developer), if the project already uses file headers
-- Public methods: JSDoc with `@param`, `@returns`; add `@example` for complex methods
-- Match the project's existing documentation language; use English unless the repository has already standardized on Chinese comments
+- Header file: `@file` (mục đích file) + `@author` (lập trình viên), nếu dự án đã dùng header cho file
+- Method public: JSDoc với `@param`, `@returns`; thêm `@example` cho method phức tạp
+- Khớp với ngôn ngữ tài liệu sẵn có của dự án; dùng tiếng Anh trừ khi repo đã chuẩn hóa dùng comment tiếng Trung
 
-## Error Handling
+## Xử lý lỗi
 
 ```typescript
 // Use try/catch with proper error handling
@@ -131,9 +131,9 @@ try {
 }
 ```
 
-## Immutability
+## Bất biến (Immutability)
 
-Follow the common immutability principles - create new objects instead of mutating:
+Tuân theo các nguyên tắc bất biến chung - tạo object mới thay vì mutate:
 
 ```typescript
 // BAD: mutation

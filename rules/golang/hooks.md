@@ -4,14 +4,14 @@ paths:
   - "**/go.mod"
   - "**/go.sum"
 ---
-# Go Hooks
+# Hook cho Go
 
-> This file extends [common/hooks.md](../common/hooks.md) with Go specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung dành riêng cho Go.
 
-## PostToolUse Hooks
+## Hook PostToolUse
 
-Configure in `~/.claude/settings.json`:
+Cấu hình trong `~/.claude/settings.json`:
 
-- **gofmt/goimports**: Auto-format `.go` files after edit
-- **go vet**: Run static analysis after editing `.go` files
-- **staticcheck**: Run extended static checks on modified packages
+- **gofmt/goimports**: Tự động format các file `.go` sau khi sửa
+- **go vet**: Chạy phân tích tĩnh sau khi sửa các file `.go`
+- **staticcheck**: Chạy các kiểm tra tĩnh mở rộng trên các package đã sửa

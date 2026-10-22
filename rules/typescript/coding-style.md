@@ -5,19 +5,19 @@ paths:
   - "**/*.js"
   - "**/*.jsx"
 ---
-# TypeScript/JavaScript Coding Style
+# Coding Style TypeScript/JavaScript
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with TypeScript/JavaScript specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung riêng cho TypeScript/JavaScript.
 
-## Types and Interfaces
+## Type và Interface
 
-Use types to make public APIs, shared models, and component props explicit, readable, and reusable.
+Dùng type để làm cho API công khai, model dùng chung và props của component tường minh, dễ đọc và tái sử dụng được.
 
-### Public APIs
+### API công khai
 
-- Add parameter and return types to exported functions, shared utilities, and public class methods
-- Let TypeScript infer obvious local variable types
-- Extract repeated inline object shapes into named types or interfaces
+- Thêm type cho tham số và giá trị trả về của các hàm được export, utility dùng chung và method công khai của class
+- Để TypeScript suy luận type của các biến cục bộ hiển nhiên
+- Tách các object shape inline lặp lại thành type hoặc interface có tên
 
 ```typescript
 // WRONG: Exported function without explicit types
@@ -36,11 +36,11 @@ export function formatUser(user: User): string {
 }
 ```
 
-### Interfaces vs. Type Aliases
+### Interface so với Type Alias
 
-- Use `interface` for object shapes that may be extended or implemented
-- Use `type` for unions, intersections, tuples, mapped types, and utility types
-- Prefer string literal unions over `enum` unless an `enum` is required for interoperability
+- Dùng `interface` cho object shape có thể được mở rộng hoặc implement
+- Dùng `type` cho union, intersection, tuple, mapped type và utility type
+- Ưu tiên union của string literal hơn `enum`, trừ khi cần `enum` để tương thích
 
 ```typescript
 interface User {
@@ -54,11 +54,11 @@ type UserWithRole = User & {
 }
 ```
 
-### Avoid `any`
+### Tránh `any`
 
-- Avoid `any` in application code
-- Use `unknown` for external or untrusted input, then narrow it safely
-- Use generics when a value's type depends on the caller
+- Tránh `any` trong code ứng dụng
+- Dùng `unknown` cho đầu vào bên ngoài hoặc không đáng tin, rồi thu hẹp (narrow) nó một cách an toàn
+- Dùng generic khi type của một giá trị phụ thuộc vào bên gọi
 
 ```typescript
 // WRONG: any removes type safety
@@ -78,9 +78,9 @@ function getErrorMessage(error: unknown): string {
 
 ### React Props
 
-- Define component props with a named `interface` or `type`
-- Type callback props explicitly
-- Do not use `React.FC` unless there is a specific reason to do so
+- Định nghĩa props của component bằng `interface` hoặc `type` có tên
+- Khai báo type tường minh cho callback props
+- Không dùng `React.FC` trừ khi có lý do cụ thể
 
 ```typescript
 interface User {
@@ -98,10 +98,10 @@ function UserCard({ user, onSelect }: UserCardProps) {
 }
 ```
 
-### JavaScript Files
+### File JavaScript
 
-- In `.js` and `.jsx` files, use JSDoc when types improve clarity and a TypeScript migration is not practical
-- Keep JSDoc aligned with runtime behavior
+- Trong file `.js` và `.jsx`, dùng JSDoc khi type giúp rõ ràng hơn và việc migrate sang TypeScript chưa khả thi
+- Giữ JSDoc khớp với hành vi lúc runtime
 
 ```javascript
 /**
@@ -113,9 +113,9 @@ export function formatUser(user) {
 }
 ```
 
-## Immutability
+## Bất biến (Immutability)
 
-Use spread operator for immutable updates:
+Dùng spread operator để cập nhật bất biến:
 
 ```typescript
 interface User {
@@ -138,9 +138,9 @@ function updateUser(user: Readonly<User>, name: string): User {
 }
 ```
 
-## Error Handling
+## Xử lý lỗi
 
-Use async/await with try-catch and narrow unknown errors safely:
+Dùng async/await với try-catch và thu hẹp lỗi unknown một cách an toàn:
 
 ```typescript
 interface User {
@@ -175,9 +175,9 @@ async function loadUser(userId: string): Promise<User> {
 }
 ```
 
-## Input Validation
+## Kiểm tra đầu vào (Input Validation)
 
-Use Zod for schema-based validation and infer types from the schema:
+Dùng Zod để validate dựa trên schema và suy ra type từ schema:
 
 ```typescript
 import { z } from 'zod'
@@ -194,6 +194,6 @@ const validated: UserInput = userSchema.parse(input)
 
 ## Console.log
 
-- No `console.log` statements in production code
-- Use proper logging libraries instead
-- See hooks for automatic detection
+- Không có câu lệnh `console.log` trong code production
+- Hãy dùng thư viện logging phù hợp thay thế
+- Xem hook để phát hiện tự động

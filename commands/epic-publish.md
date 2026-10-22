@@ -1,23 +1,23 @@
 ---
-description: Publish a validated epic update back to the issue and local cache.
+description: Publish một cập nhật epic đã được validate trở lại issue và cache cục bộ.
 ---
 
 # /epic-publish
 
-Publish a validated coordination update to GitHub.
+Publish một cập nhật điều phối đã được validate lên GitHub.
 
 ```bash
 node scripts/github-coordination.js publish <issue-number> --repo <owner/repo>
 ```
 
-What this does:
+Việc này làm gì:
 
-1. Re-validates the epic before publishing.
-2. Updates the coordination block in the issue body.
-3. Appends a concise publish comment.
-4. Records the final local snapshot.
+1. Validate lại epic trước khi publish.
+2. Cập nhật khối điều phối trong nội dung issue.
+3. Thêm một comment publish ngắn gọn.
+4. Ghi lại snapshot cục bộ cuối cùng.
 
-Compatibility aliases:
+Alias tương thích:
 
 - `/pr`
 - `/prp-pr`

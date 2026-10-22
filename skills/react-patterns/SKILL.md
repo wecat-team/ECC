@@ -1,28 +1,28 @@
 ---
 name: react-patterns
-description: React 18/19 patterns including hooks discipline, server/client component boundaries, Suspense + error boundaries, form actions, data fetching, state management decision trees, and accessibility-first composition. Use when writing or reviewing React components.
+description: Các pattern React 18/19 gồm kỷ luật dùng hook, ranh giới server/client component, Suspense + error boundary, form action, data fetching, cây quyết định quản lý state và composition ưu tiên accessibility. Dùng khi viết hoặc review React component.
 metadata:
   origin: ECC
 ---
 
-# React Patterns
+# Các pattern React
 
-Idiomatic React 18/19 patterns for building robust, accessible, performant component trees.
+Các pattern React 18/19 idiomatic để xây dựng cây component vững chắc, dễ tiếp cận (accessible) và hiệu năng cao.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing or modifying React function components, custom hooks, or component trees
-- Reviewing JSX/TSX files
-- Designing state shape or component composition
-- Migrating class components or older `forwardRef`/`useEffect`-heavy code
-- Choosing between local state, lifted state, context, and external stores
-- Working with Server Components / Client Components (Next.js App Router, RSC)
-- Implementing forms with React 19 actions or controlled inputs
-- Wiring data fetching with TanStack Query / SWR / RSC
+- Viết hoặc chỉnh sửa React function component, custom hook hoặc cây component
+- Review file JSX/TSX
+- Thiết kế hình dạng state hoặc composition của component
+- Migrate class component hoặc code cũ nặng về `forwardRef`/`useEffect`
+- Chọn giữa local state, lifted state, context và external store
+- Làm việc với Server Component / Client Component (Next.js App Router, RSC)
+- Triển khai form bằng React 19 action hoặc controlled input
+- Kết nối data fetching bằng TanStack Query / SWR / RSC
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
-### 1. Render is a Pure Function of Props and State
+### 1. Render là một hàm thuần của Props và State
 
 ```tsx
 // Good: derive during render
@@ -41,27 +41,27 @@ function Cart({ items }: { items: CartItem[] }) {
 }
 ```
 
-Derived state in `useEffect` adds a render cycle, can desync, and obscures the data flow.
+Derived state trong `useEffect` thêm một chu kỳ render, có thể bị lệch đồng bộ và làm mờ luồng dữ liệu.
 
-### 2. Side Effects Outside Render
+### 2. Side Effect nằm ngoài Render
 
-Effects, mutations, network calls, and subscriptions live in event handlers or `useEffect` — never in the render body.
+Effect, mutation, lời gọi mạng và subscription nằm trong event handler hoặc `useEffect` — KHÔNG BAO GIỜ nằm trong phần thân render.
 
-### 3. Composition Over Inheritance
+### 3. Composition thay vì Inheritance
 
-React has no inheritance model for components. Compose with `children`, render props, or component props.
+React không có mô hình kế thừa cho component. Hãy kết hợp bằng `children`, render prop hoặc component prop.
 
-## Hooks Discipline
+## Kỷ luật dùng Hook
 
-See [rules/react/hooks.md](../../rules/react/hooks.md) for the full ruleset. Highlights:
+Xem [rules/react/hooks.md](../../rules/react/hooks.md) để biết đầy đủ bộ rule. Điểm nổi bật:
 
-- Top-level only, never conditional
-- Cleanup every subscription, interval, listener
-- Functional updater (`setX(prev => prev + 1)`) when new state depends on old
-- Default position: do not memoize — add `useMemo`/`useCallback` only when a profiler or a dependency chain proves it matters
-- Extract a custom hook only when the same hook sequence appears in 2+ components
+- Chỉ gọi ở top-level, KHÔNG BAO GIỜ gọi có điều kiện
+- Cleanup mọi subscription, interval, listener
+- Dùng functional updater (`setX(prev => prev + 1)`) khi state mới phụ thuộc state cũ
+- Quan điểm mặc định: không memoize — chỉ thêm `useMemo`/`useCallback` khi profiler hoặc một chuỗi dependency chứng minh điều đó cần thiết
+- Chỉ tách custom hook khi cùng một chuỗi hook xuất hiện trong từ 2 component trở lên
 
-## State Location Decision Tree
+## Cây quyết định vị trí đặt State
 
 ```
 Used by one component?
@@ -80,9 +80,9 @@ Derived from a server?
   -> server-state library (TanStack Query, SWR, RSC fetch)
 ```
 
-Most pages do not need context or a global store. Resist abstraction until duplicated lifting becomes painful.
+Hầu hết các trang không cần context hay global store. Hãy kìm lại việc trừu tượng hóa cho đến khi việc lift state lặp đi lặp lại trở nên khó chịu.
 
-## Server / Client Components (RSC)
+## Server / Client Component (RSC)
 
 ```tsx
 // Server Component - default, async, never ships JS for itself
@@ -107,13 +107,13 @@ export function AddToCartButton({ productId }: { productId: string }) {
 }
 ```
 
-Boundaries:
+Ranh giới:
 
-- Server -> Client: pass serializable props or `children`
-- Client -> Server: invoke Server Actions via `<form action={...}>` or imperatively from event handlers
-- Never `import` a Server Component from a Client Component file — compose them via `children` instead
+- Server -> Client: truyền prop có thể serialize hoặc `children`
+- Client -> Server: gọi Server Action qua `<form action={...}>` hoặc gọi trực tiếp từ event handler
+- KHÔNG BAO GIỜ `import` Server Component từ file Client Component — hãy kết hợp chúng qua `children`
 
-## Suspense + Error Boundaries
+## Suspense + Error Boundary
 
 ```tsx
 <ErrorBoundary fallback={<ErrorView />}>
@@ -123,13 +123,13 @@ Boundaries:
 </ErrorBoundary>
 ```
 
-- Place Suspense boundaries close to the data, not at the route root — progressively reveal content
-- Error Boundary remains a class API; use `react-error-boundary` for a hook-friendly wrapper
-- A boundary catches errors thrown during render, lifecycle, and constructors of its children — NOT in event handlers or async code
+- Đặt Suspense boundary gần dữ liệu, không đặt ở gốc route — hiển thị nội dung dần dần
+- Error Boundary vẫn là API dạng class; dùng `react-error-boundary` để có wrapper thân thiện với hook
+- Một boundary bắt lỗi được ném ra trong quá trình render, lifecycle và constructor của các con của nó — KHÔNG bắt lỗi trong event handler hoặc code async
 
-## Forms
+## Form
 
-### React 19 form actions (preferred for new code)
+### Form action của React 19 (ưu tiên cho code mới)
 
 ```tsx
 "use client";
@@ -157,29 +157,29 @@ export function UserForm() {
 }
 ```
 
-### Controlled inputs
+### Controlled input
 
-Use controlled when the value drives other UI, formats on every keystroke, or implements real-time validation.
+Dùng controlled khi giá trị điều khiển phần UI khác, định dạng lại sau mỗi lần gõ phím, hoặc cần validation theo thời gian thực.
 
-### Complex forms
+### Form phức tạp
 
-For multi-step forms, dynamic field arrays, or cross-field validation: use a library (React Hook Form, TanStack Form). Roll-your-own state management for forms past trivial complexity is a maintenance trap.
+Với form nhiều bước, field array động hoặc validation chéo giữa các field: hãy dùng thư viện (React Hook Form, TanStack Form). Tự viết quản lý state cho form vượt quá độ phức tạp tầm thường là một cái bẫy về bảo trì.
 
-## Data Fetching Decision Matrix
+## Ma trận quyết định Data Fetching
 
-| Need | Tool |
+| Nhu cầu | Công cụ |
 |---|---|
-| Per-request data in Next.js App Router | RSC `await fetch()` |
-| Client-side cache + mutations + invalidation | TanStack Query |
-| Lightweight client cache + revalidation | SWR |
-| Real-time subscriptions | Server-Sent Events, WebSockets, or the lib's subscription API |
-| One-off fire-and-forget | `fetch()` in an event handler |
+| Dữ liệu theo từng request trong Next.js App Router | RSC `await fetch()` |
+| Cache phía client + mutation + invalidation | TanStack Query |
+| Cache nhẹ phía client + revalidation | SWR |
+| Subscription thời gian thực | Server-Sent Events, WebSocket, hoặc subscription API của thư viện |
+| Gọi một lần, không cần chờ kết quả (fire-and-forget) | `fetch()` trong event handler |
 
-Avoid `useEffect` + `fetch` for application data — race conditions, no cache, no retry, no Suspense integration.
+Tránh `useEffect` + `fetch` cho dữ liệu của ứng dụng — dễ gặp race condition, không có cache, không retry, không tích hợp Suspense.
 
-## Composition Recipes
+## Công thức Composition
 
-### Slot via `children`
+### Slot qua `children`
 
 ```tsx
 <Layout>
@@ -188,7 +188,7 @@ Avoid `useEffect` + `fetch` for application data — race conditions, no cache, 
 </Layout>
 ```
 
-### Named slots
+### Named slot
 
 ```tsx
 <Page header={<Nav />} sidebar={<Filters />}>
@@ -196,7 +196,7 @@ Avoid `useEffect` + `fetch` for application data — race conditions, no cache, 
 </Page>
 ```
 
-### Compound components (shared state via Context)
+### Compound component (chia sẻ state qua Context)
 
 ```tsx
 <Tabs defaultValue="profile">
@@ -211,7 +211,7 @@ Avoid `useEffect` + `fetch` for application data — race conditions, no cache, 
 
 ### Render prop / function-as-child
 
-Useful when the parent needs to pass parameters to the rendered output:
+Hữu ích khi component cha cần truyền tham số cho phần output được render:
 
 ```tsx
 <DataLoader id={id}>
@@ -219,60 +219,60 @@ Useful when the parent needs to pass parameters to the rendered output:
 </DataLoader>
 ```
 
-Modern alternative: a hook (`useData(id)`) returning the same shape — usually cleaner.
+Phương án hiện đại thay thế: một hook (`useData(id)`) trả về cùng cấu trúc — thường gọn hơn.
 
-## Performance
+## Hiệu năng
 
-### When `React.memo` Actually Helps
+### Khi nào `React.memo` thực sự có ích
 
-Wrap a component in `React.memo` only when:
+Chỉ bọc component trong `React.memo` khi:
 
-1. It re-renders frequently
-2. Its props are usually the same between renders
-3. Its render is measurably expensive
+1. Nó re-render thường xuyên
+2. Prop của nó thường giống nhau giữa các lần render
+3. Việc render của nó tốn kém một cách đo lường được
 
-`React.memo` adds an equality check on every render. If props differ on most renders, the check is pure overhead.
+`React.memo` thêm một lần kiểm tra bằng nhau ở mỗi lần render. Nếu prop khác nhau ở hầu hết các lần render, việc kiểm tra này chỉ là chi phí thừa.
 
-### Avoiding Render Cascades
+### Tránh Render Cascade
 
-- Lift state down rather than up where possible
-- Split context: one context per concern, so a change to `themeContext` does not re-render auth consumers
-- Use `useSyncExternalStore` for external state libraries — required for safe concurrent rendering
+- Ưu tiên đẩy state xuống (lift state down) thay vì đẩy lên khi có thể
+- Tách context: mỗi mối quan tâm một context, để thay đổi `themeContext` không làm re-render các consumer của auth
+- Dùng `useSyncExternalStore` cho các thư viện external state — bắt buộc để concurrent rendering an toàn
 
-### Lists
+### List
 
-- Provide stable `key` props (database id, not array index)
-- Virtualize long lists with `@tanstack/react-virtual` or `react-window` once visible item count exceeds ~50 with non-trivial rows
+- Cung cấp prop `key` ổn định (id từ database, không dùng index của array)
+- Dùng virtualization cho list dài với `@tanstack/react-virtual` hoặc `react-window` khi số item hiển thị vượt ~50 và mỗi dòng không đơn giản
 
-## Accessibility-First Composition
+## Composition ưu tiên Accessibility
 
-- Always render semantic HTML (`<button>`, `<a>`, `<nav>`, `<main>`) before reaching for `role` attributes
-- Every interactive element must be reachable by keyboard
-- Form inputs need labels — `<label htmlFor>` or `aria-label` if visually labeled by an icon
-- Manage focus on route changes and modal open/close
-- Run `axe` in component tests (see [skills/react-testing](../react-testing/SKILL.md))
-- Cross-link: [skills/accessibility/SKILL.md](../accessibility/SKILL.md) covers WCAG criteria and pattern libraries
+- LUÔN LUÔN render HTML ngữ nghĩa (`<button>`, `<a>`, `<nav>`, `<main>`) trước khi dùng đến thuộc tính `role`
+- Mọi phần tử tương tác đều phải truy cập được bằng bàn phím
+- Input của form cần có label — `<label htmlFor>` hoặc `aria-label` nếu được gắn nhãn bằng icon
+- Quản lý focus khi đổi route và khi mở/đóng modal
+- Chạy `axe` trong component test (xem [skills/react-testing](../react-testing/SKILL.md))
+- Liên kết chéo: [skills/accessibility/SKILL.md](../accessibility/SKILL.md) bao gồm các tiêu chí WCAG và thư viện pattern
 
 ## Routing
 
-This skill is router-agnostic. The patterns above work with React Router, TanStack Router, Next.js App Router, Remix Router. Router-specific patterns (loaders, actions, nested layouts) follow the router's documentation — those are framework concerns layered on top of React core.
+Skill này không phụ thuộc vào router cụ thể. Các pattern ở trên hoạt động với React Router, TanStack Router, Next.js App Router, Remix Router. Các pattern đặc thù của router (loader, action, nested layout) hãy theo tài liệu của router đó — đó là các vấn đề của framework được xếp lớp bên trên React core.
 
-## Out of Scope (Pointer Sections)
+## Ngoài phạm vi (các mục chỉ dẫn)
 
-- **Next.js specifics**: App Router data loading, Route Handlers, Middleware, Parallel Routes — separate concern, use Next.js docs
-- **React Native**: Platform-specific patterns differ enough to warrant a separate `react-native-patterns` skill (not present yet)
-- **Remix**: Loader/action conventions overlap with RSC but follow Remix docs
+- **Đặc thù của Next.js**: App Router data loading, Route Handler, Middleware, Parallel Route — là vấn đề riêng, hãy dùng tài liệu Next.js
+- **React Native**: Các pattern đặc thù theo nền tảng khác biệt đủ nhiều để cần một skill `react-native-patterns` riêng (chưa có)
+- **Remix**: Quy ước loader/action chồng lấn với RSC nhưng hãy theo tài liệu Remix
 
-## Related
+## Liên quan
 
 - Rules: [rules/react/](../../rules/react/) — coding-style, hooks, patterns, security, testing
-- Skills: [react-performance](../react-performance/SKILL.md) for the Vercel-derived performance ruleset, [frontend-patterns](../frontend-patterns/SKILL.md) for cross-framework UI concerns, [accessibility](../accessibility/SKILL.md), [angular-developer](../angular-developer/SKILL.md) for framework comparison
-- Agents: `react-reviewer` for code review, `react-build-resolver` for build/bundler errors
+- Skills: [react-performance](../react-performance/SKILL.md) cho bộ rule hiệu năng bắt nguồn từ Vercel, [frontend-patterns](../frontend-patterns/SKILL.md) cho các vấn đề UI xuyên framework, [accessibility](../accessibility/SKILL.md), [angular-developer](../angular-developer/SKILL.md) để so sánh framework
+- Agents: `react-reviewer` cho code review, `react-build-resolver` cho lỗi build/bundler
 - Commands: `/react-review`, `/react-build`, `/react-test`
 
-## Examples
+## Ví dụ
 
-### Custom hook for debounced search
+### Custom hook cho tìm kiếm có debounce
 
 ```tsx
 function useDebounce<T>(value: T, delay = 300): T {
@@ -301,7 +301,7 @@ function SearchBox() {
 }
 ```
 
-### Optimistic UI with React 19 `useOptimistic`
+### Optimistic UI với `useOptimistic` của React 19
 
 ```tsx
 "use client";
@@ -331,7 +331,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
 }
 ```
 
-### Splitting context to avoid render cascades
+### Tách context để tránh render cascade
 
 ```tsx
 // Two contexts: one rarely changes, one frequently

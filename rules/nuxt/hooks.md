@@ -6,34 +6,34 @@ paths:
   - "**/*.vue"
 ---
 
-# Nuxt Hooks
+# Hook cho Nuxt
 
-> This file extends [common/hooks.md](../common/hooks.md) with Nuxt specific content.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với nội dung dành riêng cho Nuxt.
 
-These are Claude Code harness hooks for Nuxt work. They run via the harness, not Claude.
+Đây là các hook của harness Claude Code dành cho công việc Nuxt. Chúng chạy qua harness, không phải do Claude chạy.
 
 ## Typecheck
 
-- `nuxi typecheck` wraps `vue-tsc`. Requires `vue-tsc` + `typescript` dev deps.
-- Run on `.vue` / `.ts` edit or pre-commit. Typecheck is project-wide, so debounce it and wrap it in a timeout (mirror `web/hooks.md`, for example `timeout 60 nuxi typecheck`) so a hung type-check is reaped instead of accumulating across fast edits.
+- `nuxi typecheck` bọc `vue-tsc`. Yêu cầu dev dependency `vue-tsc` + `typescript`.
+- Chạy khi sửa `.vue` / `.ts` hoặc pre-commit. Typecheck áp dụng toàn dự án, nên hãy debounce nó và bọc trong timeout (theo `web/hooks.md`, ví dụ `timeout 60 nuxi typecheck`) để một lần type-check bị treo sẽ được thu hồi thay vì dồn lại qua các lần sửa nhanh liên tiếp.
 
 ## Lint
 
-- Use the `@nuxt/eslint` module (flat-config, project-aware, generates `.nuxt/eslint.config.mjs`).
-- Run `eslint .` or `eslint --fix`. This is the Nuxt-official ESLint integration, prefer it over hand-rolled configs.
+- Dùng module `@nuxt/eslint` (flat-config, nhận biết dự án, sinh ra `.nuxt/eslint.config.mjs`).
+- Chạy `eslint .` hoặc `eslint --fix`. Đây là tích hợp ESLint chính thức của Nuxt, hãy ưu tiên nó hơn các config tự viết.
 
 ## Format
 
-- `prettier --write`, or enable stylistic rules in `@nuxt/eslint` to avoid a Prettier/ESLint conflict.
-- Pick one formatting authority. Do not run both Prettier and ESLint stylistic at once.
+- `prettier --write`, hoặc bật các rule stylistic trong `@nuxt/eslint` để tránh xung đột giữa Prettier và ESLint.
+- Chọn một nguồn quyết định định dạng duy nhất. Không chạy đồng thời cả Prettier và ESLint stylistic.
 
-## Suggested PostToolUse chain
+## Chuỗi PostToolUse gợi ý
 
-- On Edit to `app/**` and `server/**`: run `eslint --fix` then `timeout 60 nuxi typecheck`.
-- Order matters: lint-fix first (mutates the file), the timed typecheck second (verifies the result). Debouncing still applies.
+- Khi Edit `app/**` và `server/**`: chạy `eslint --fix` rồi `timeout 60 nuxi typecheck`.
+- Thứ tự quan trọng: lint-fix trước (sửa file), typecheck có timeout sau (xác minh kết quả). Vẫn áp dụng debounce.
 
-## Reference
+## Tham chiếu
 
-- ECC skills: `nuxt4-patterns`, `vite-patterns`.
+- Skill ECC: `nuxt4-patterns`, `vite-patterns`.
 - [@nuxt/eslint module](https://eslint.nuxt.com/)
 - [nuxi typecheck](https://nuxt.com/docs/api/commands/typecheck)

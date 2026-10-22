@@ -10,13 +10,13 @@ paths:
   - "**/*.vue"
   - "**/*.svelte"
 ---
-> This file extends [common/performance.md](../common/performance.md) with web-specific performance content.
+> File này mở rộng [common/performance.md](../common/performance.md) với nội dung hiệu năng riêng cho web.
 
-# Web Performance Rules
+# Quy tắc hiệu năng Web
 
-## Core Web Vitals Targets
+## Mục tiêu Core Web Vitals
 
-| Metric | Target |
+| Chỉ số | Mục tiêu |
 |--------|--------|
 | LCP | < 2.5s |
 | INP | < 200ms |
@@ -24,53 +24,53 @@ paths:
 | FCP | < 1.5s |
 | TBT | < 200ms |
 
-## Bundle Budget
+## Ngân sách Bundle
 
-| Page Type | JS Budget (gzipped) | CSS Budget |
+| Loại trang | Ngân sách JS (gzipped) | Ngân sách CSS |
 |-----------|---------------------|------------|
 | Landing page | < 150kb | < 30kb |
-| App page | < 300kb | < 50kb |
+| Trang app | < 300kb | < 50kb |
 | Microsite | < 80kb | < 15kb |
 
-## Loading Strategy
+## Chiến lược tải
 
-1. Inline critical above-the-fold CSS where justified
-2. Preload the hero image and primary font only
-3. Defer non-critical CSS or JS
-4. Dynamically import heavy libraries
+1. Inline CSS critical above-the-fold khi có lý do chính đáng
+2. Chỉ preload ảnh hero và font chính
+3. Defer CSS hoặc JS không critical
+4. Import động các thư viện nặng
 
 ```js
 const gsapModule = await import('gsap');
 const { ScrollTrigger } = await import('gsap/ScrollTrigger');
 ```
 
-## Image Optimization
+## Tối ưu ảnh
 
-- Explicit `width` and `height`
-- `loading="eager"` plus `fetchpriority="high"` for hero media only
-- `loading="lazy"` for below-the-fold assets
-- Prefer AVIF or WebP with fallbacks
-- Never ship source images far beyond rendered size
+- `width` và `height` tường minh
+- `loading="eager"` cùng `fetchpriority="high"` chỉ cho media hero
+- `loading="lazy"` cho asset dưới màn hình đầu tiên (below-the-fold)
+- Ưu tiên AVIF hoặc WebP kèm fallback
+- Không bao giờ phát hành ảnh nguồn lớn hơn nhiều so với kích thước render
 
-## Font Loading
+## Tải Font
 
-- Max two font families unless there is a clear exception
+- Tối đa hai font family trừ khi có ngoại lệ rõ ràng
 - `font-display: swap`
-- Subset where possible
-- Preload only the truly critical weight/style
+- Subset khi có thể
+- Chỉ preload weight/style thực sự quan trọng
 
-## Animation Performance
+## Hiệu năng Animation
 
-- Animate compositor-friendly properties only
-- Use `will-change` narrowly and remove it when done
-- Prefer CSS for simple transitions
-- Use `requestAnimationFrame` or established animation libraries for JS motion
-- Avoid scroll handler churn; use IntersectionObserver or well-behaved libraries
+- Chỉ animate các thuộc tính thân thiện với compositor
+- Dùng `will-change` một cách hạn chế và gỡ nó khi xong
+- Ưu tiên CSS cho các transition đơn giản
+- Dùng `requestAnimationFrame` hoặc thư viện animation đã được kiểm chứng cho chuyển động bằng JS
+- Tránh scroll handler chạy dồn dập; dùng IntersectionObserver hoặc các thư viện hoạt động tốt
 
-## Performance Checklist
+## Checklist hiệu năng
 
-- [ ] All images have explicit dimensions
-- [ ] No accidental render-blocking resources
-- [ ] No layout shifts from dynamic content
-- [ ] Motion stays on compositor-friendly properties
-- [ ] Third-party scripts load async/defer and only when needed
+- [ ] Mọi ảnh đều có kích thước tường minh
+- [ ] Không có resource chặn render ngoài ý muốn
+- [ ] Không có layout shift do nội dung động
+- [ ] Chuyển động chỉ dùng các thuộc tính thân thiện với compositor
+- [ ] Script bên thứ ba tải async/defer và chỉ khi cần

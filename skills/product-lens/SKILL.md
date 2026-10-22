@@ -1,29 +1,29 @@
 ---
 name: product-lens
-description: Validate the why before building through four product diagnostics — a YC-style product diagnostic that produces PRODUCT-BRIEF.md with a go/no-go recommendation, a founder review scoring product-market-fit signals, a user journey audit measuring time-to-value, and ICE feature prioritization. Use when pressure-testing product direction, choosing between features, sanity-checking a launch, or converting a vague idea into a product brief.
+description: Xác thực lý do (the why) trước khi build thông qua bốn chẩn đoán sản phẩm — chẩn đoán sản phẩm kiểu YC tạo ra PRODUCT-BRIEF.md kèm khuyến nghị go/no-go, founder review chấm điểm các tín hiệu product-market-fit, user journey audit đo time-to-value, và ICE feature prioritization. Dùng khi kiểm chứng hướng đi sản phẩm, chọn giữa các tính năng, kiểm tra lại trước khi launch, hoặc biến một ý tưởng mơ hồ thành product brief.
 metadata:
   origin: ECC
 ---
 
-# Product Lens — Think Before You Build
+# Product Lens — Nghĩ trước khi build
 
-This lane owns product diagnosis, not implementation-ready specification writing.
+Lane này phụ trách chẩn đoán sản phẩm, không phải viết đặc tả sẵn sàng để triển khai.
 
-If the user needs a durable PRD-to-SRS or capability-contract artifact, hand off to `product-capability`.
+Nếu người dùng cần artifact bền vững dạng PRD-to-SRS hoặc capability-contract, hãy chuyển giao cho `product-capability`.
 
-## When to Use
+## Khi nào dùng
 
-- Before starting any feature — validate the "why"
-- Weekly product review — are we building the right thing?
-- When stuck choosing between features
-- Before a launch — sanity check the user journey
-- When converting a vague idea into a product brief before engineering planning starts
+- Trước khi bắt đầu bất kỳ tính năng nào — xác thực "why"
+- Product review hằng tuần — chúng ta có đang build đúng thứ cần build không?
+- Khi đang phân vân chọn giữa các tính năng
+- Trước khi launch — kiểm tra lại user journey
+- Khi biến một ý tưởng mơ hồ thành product brief trước khi bắt đầu lập kế hoạch kỹ thuật
 
-## How It Works
+## Cách hoạt động
 
-### Mode 1: Product Diagnostic
+### Chế độ 1: Product Diagnostic
 
-Like YC office hours but automated. Asks the hard questions:
+Giống YC office hours nhưng được tự động hóa. Đặt ra những câu hỏi khó:
 
 ```
 1. Who is this for? (specific person, not "developers")
@@ -35,13 +35,13 @@ Like YC office hours but automated. Asks the hard questions:
 7. How do you know it's working? (metric, not vibes)
 ```
 
-Output: a `PRODUCT-BRIEF.md` with answers, risks, and a go/no-go recommendation.
+Đầu ra: một file `PRODUCT-BRIEF.md` gồm các câu trả lời, rủi ro và khuyến nghị go/no-go.
 
-If the result is "yes, build this," the next lane is `product-capability`, not more founder-theater.
+Nếu kết quả là "có, hãy build cái này", lane tiếp theo là `product-capability`, không phải thêm founder-theater.
 
-### Mode 2: Founder Review
+### Chế độ 2: Founder Review
 
-Reviews your current project through a founder lens:
+Review project hiện tại dưới góc nhìn của founder:
 
 ```
 1. Read README, CLAUDE.md, package.json, recent commits
@@ -55,9 +55,9 @@ Reviews your current project through a founder lens:
 5. Flag: things you're building that don't matter
 ```
 
-### Mode 3: User Journey Audit
+### Chế độ 3: User Journey Audit
 
-Maps the actual user experience:
+Lập bản đồ trải nghiệm người dùng thực tế:
 
 ```
 1. Clone/install the product as a new user
@@ -68,9 +68,9 @@ Maps the actual user experience:
 6. Recommend: top 3 fixes for onboarding
 ```
 
-### Mode 4: Feature Prioritization
+### Chế độ 4: Feature Prioritization
 
-When you have 10 ideas and need to pick 2:
+Khi có 10 ý tưởng và cần chọn 2:
 
 ```
 1. List all candidate features
@@ -80,14 +80,14 @@ When you have 10 ideas and need to pick 2:
 5. Output: prioritized roadmap with rationale
 ```
 
-## Output
+## Đầu ra
 
-All modes output actionable docs, not essays. Every recommendation has a specific next step.
+Mọi chế độ đều xuất ra tài liệu có thể hành động ngay, không phải bài luận. Mỗi khuyến nghị đều có một bước tiếp theo cụ thể.
 
-## Integration
+## Tích hợp
 
-Pair with:
-- `/browser-qa` to verify the user journey audit findings
-- `/design-system audit` for visual polish assessment
-- `/canary-watch` for post-launch monitoring
-- `product-capability` when the product brief needs to become an implementation-ready capability plan
+Kết hợp với:
+- `/browser-qa` để xác minh các phát hiện của user journey audit
+- `/design-system audit` để đánh giá độ hoàn thiện về mặt hình ảnh
+- `/canary-watch` để giám sát sau launch
+- `product-capability` khi product brief cần trở thành kế hoạch capability sẵn sàng để triển khai

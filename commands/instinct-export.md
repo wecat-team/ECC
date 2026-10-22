@@ -1,17 +1,17 @@
 ---
 name: instinct-export
-description: Export instincts from project/global scope to a file
+description: Export các instinct từ phạm vi project/global ra một file
 command: /instinct-export
 ---
 
-# Instinct Export Command
+# Lệnh Instinct Export
 
-Exports instincts to a shareable format. Perfect for:
-- Sharing with teammates
-- Transferring to a new machine
-- Contributing to project conventions
+Export các instinct sang định dạng có thể chia sẻ. Rất phù hợp để:
+- Chia sẻ với đồng đội
+- Chuyển sang máy mới
+- Đóng góp vào quy ước của dự án
 
-## Usage
+## Cách dùng
 
 ```
 /instinct-export                           # Export all personal instincts
@@ -21,19 +21,19 @@ Exports instincts to a shareable format. Perfect for:
 /instinct-export --scope project --output project-instincts.yaml
 ```
 
-## What to Do
+## Cần làm gì
 
-1. Detect current project context
-2. Load instincts by selected scope:
-   - `project`: current project only
-   - `global`: global only
-   - `all`: project + global merged (default)
-3. Apply filters (`--domain`, `--min-confidence`)
-4. Write YAML-style export to file (or stdout if no output path provided)
+1. Phát hiện context dự án hiện tại
+2. Nạp instinct theo phạm vi được chọn:
+   - `project`: chỉ dự án hiện tại
+   - `global`: chỉ global
+   - `all`: gộp project + global (mặc định)
+3. Áp dụng các bộ lọc (`--domain`, `--min-confidence`)
+4. Ghi export dạng YAML ra file (hoặc stdout nếu không cung cấp đường dẫn output)
 
-## Output Format
+## Định dạng output
 
-Creates a YAML file:
+Tạo một file YAML:
 
 ```yaml
 # Instincts Export
@@ -58,9 +58,9 @@ project_name: my-app
 Use functional patterns over classes.
 ```
 
-## Flags
+## Flag
 
-- `--domain <name>`: Export only specified domain
-- `--min-confidence <n>`: Minimum confidence threshold
-- `--output <file>`: Output file path (prints to stdout when omitted)
-- `--scope <project|global|all>`: Export scope (default: `all`)
+- `--domain <name>`: Chỉ export domain được chỉ định
+- `--min-confidence <n>`: Ngưỡng độ tin cậy tối thiểu
+- `--output <file>`: Đường dẫn file output (in ra stdout nếu bỏ qua)
+- `--scope <project|global|all>`: Phạm vi export (mặc định: `all`)

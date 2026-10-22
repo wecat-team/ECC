@@ -3,25 +3,25 @@ paths:
   - "**/*.ts"
   - "**/*.tsx"
 ---
-# React Native / Expo Testing
+# Kiểm thử React Native / Expo
 
-> This file extends [common/testing.md](../common/testing.md) with React Native / Expo specific content.
-> Coverage target and TDD workflow are inherited from common/testing.md (80% minimum, RED-GREEN-REFACTOR).
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung riêng cho React Native / Expo.
+> Mục tiêu coverage và quy trình TDD được kế thừa từ common/testing.md (tối thiểu 80%, RED-GREEN-REFACTOR).
 
-## Tooling
+## Công cụ
 
-| Layer | Tool |
+| Tầng | Công cụ |
 |-------|------|
-| Unit / component | Jest + `@testing-library/react-native` (via `jest-expo` preset) |
-| Hooks | `@testing-library/react-native` `renderHook` |
-| E2E | Maestro (recommended, simple YAML flows) or Detox |
-| Type safety | `tsc --noEmit` in CI |
+| Unit / component | Jest + `@testing-library/react-native` (qua preset `jest-expo`) |
+| Hook | `renderHook` của `@testing-library/react-native` |
+| E2E | Maestro (khuyến nghị, flow YAML đơn giản) hoặc Detox |
+| An toàn kiểu (type safety) | `tsc --noEmit` trong CI |
 
-## Component Tests
+## Test component
 
-- Query by accessible role/label/text, not by `testID` unless necessary — this also enforces accessibility.
-- Assert on user-visible behavior, not implementation details.
-- Follow Arrange-Act-Assert.
+- Truy vấn theo role/label/text có thể truy cập (accessible), không dùng `testID` trừ khi cần thiết — cách này cũng buộc tuân thủ khả năng truy cập (accessibility).
+- Assert trên hành vi người dùng nhìn thấy, không assert chi tiết triển khai.
+- Tuân theo Arrange-Act-Assert.
 
 ```tsx
 import { render, screen, fireEvent } from '@testing-library/react-native'
@@ -38,15 +38,15 @@ test('calls onSelect with the user id when pressed', () => {
 
 ## Mocking
 
-- Mock Expo SDK modules (camera, location, notifications, secure-store) at the test boundary.
-- Wrap components that use TanStack Query in a `QueryClientProvider` with a fresh client per test.
-- Mock navigation (`expo-router`) so screens render in isolation.
+- Mock các module Expo SDK (camera, location, notifications, secure-store) tại ranh giới của test.
+- Bọc các component dùng TanStack Query trong `QueryClientProvider` với client mới cho mỗi test.
+- Mock điều hướng (`expo-router`) để các màn hình render độc lập.
 
 ## E2E
 
-- Cover critical flows only: auth, primary navigation, core transactions.
-- Run E2E on CI against a built app (EAS Build) before release.
+- Chỉ bao phủ các flow quan trọng: xác thực, điều hướng chính, giao dịch cốt lõi.
+- Chạy E2E trên CI với app đã build (EAS Build) trước khi release.
 
-## What to test first
+## Test gì trước
 
-Use the `tdd-guide` agent proactively for new features: write a failing test that captures the behavior, then implement.
+Hãy CHỦ ĐỘNG dùng agent `tdd-guide` cho tính năng mới: viết một test thất bại mô tả đúng hành vi, rồi mới triển khai.

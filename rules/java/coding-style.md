@@ -2,23 +2,23 @@
 paths:
   - "**/*.java"
 ---
-# Java Coding Style
+# Phong cách code Java
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with Java-specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung dành riêng cho Java.
 
-## Formatting
+## Định dạng
 
-- **google-java-format** or **Checkstyle** (Google or Sun style) for enforcement
-- One public top-level type per file
-- Consistent indent: 2 or 4 spaces (match project standard)
-- Member order: constants, fields, constructors, public methods, protected, private
+- **google-java-format** hoặc **Checkstyle** (style của Google hoặc Sun) để ép buộc
+- Mỗi file một top-level type public
+- Thụt lề nhất quán: 2 hoặc 4 dấu cách (khớp với chuẩn của dự án)
+- Thứ tự thành viên: hằng số, field, constructor, method public, protected, private
 
-## Immutability
+## Bất biến (Immutability)
 
-- Prefer `record` for value types (Java 16+)
-- Mark fields `final` by default — use mutable state only when required
-- Return defensive copies from public APIs: `List.copyOf()`, `Map.copyOf()`, `Set.copyOf()`
-- Copy-on-write: return new instances rather than mutating existing ones
+- Ưu tiên `record` cho các value type (Java 16+)
+- Mặc định đánh dấu field là `final` — chỉ dùng mutable state khi cần thiết
+- Trả về bản sao phòng vệ (defensive copy) từ API public: `List.copyOf()`, `Map.copyOf()`, `Set.copyOf()`
+- Copy-on-write: trả về instance mới thay vì mutate instance hiện có
 
 ```java
 // GOOD — immutable value type
@@ -35,23 +35,23 @@ public class Order {
 }
 ```
 
-## Naming
+## Đặt tên
 
-Follow standard Java conventions:
-- `PascalCase` for classes, interfaces, records, enums
-- `camelCase` for methods, fields, parameters, local variables
-- `SCREAMING_SNAKE_CASE` for `static final` constants
-- Packages: all lowercase, reverse domain (`com.example.app.service`)
+Tuân theo quy ước Java chuẩn:
+- `PascalCase` cho class, interface, record, enum
+- `camelCase` cho method, field, tham số, biến cục bộ
+- `SCREAMING_SNAKE_CASE` cho hằng số `static final`
+- Package: toàn bộ chữ thường, domain đảo ngược (`com.example.app.service`)
 
-## Modern Java Features
+## Tính năng Java hiện đại
 
-Use modern language features where they improve clarity:
-- **Records** for DTOs and value types (Java 16+)
-- **Sealed classes** for closed type hierarchies (Java 17+)
-- **Pattern matching** with `instanceof` — no explicit cast (Java 16+)
-- **Text blocks** for multi-line strings — SQL, JSON templates (Java 15+)
-- **Switch expressions** with arrow syntax (Java 14+)
-- **Pattern matching in switch** — exhaustive sealed type handling (Java 21+)
+Dùng các tính năng ngôn ngữ hiện đại khi chúng giúp code rõ ràng hơn:
+- **Record** cho DTO và value type (Java 16+)
+- **Sealed class** cho hệ phân cấp type đóng (Java 17+)
+- **Pattern matching** với `instanceof` — không cần ép kiểu tường minh (Java 16+)
+- **Text block** cho chuỗi nhiều dòng — SQL, template JSON (Java 15+)
+- **Switch expression** với cú pháp mũi tên (Java 14+)
+- **Pattern matching trong switch** — xử lý đầy đủ sealed type (Java 21+)
 
 ```java
 // Pattern matching instanceof
@@ -70,11 +70,11 @@ String label = switch (status) {
 };
 ```
 
-## Optional Usage
+## Sử dụng Optional
 
-- Return `Optional<T>` from finder methods that may have no result
-- Use `map()`, `flatMap()`, `orElseThrow()` — never call `get()` without `isPresent()`
-- Never use `Optional` as a field type or method parameter
+- Trả về `Optional<T>` từ các finder method có thể không có kết quả
+- Dùng `map()`, `flatMap()`, `orElseThrow()` — KHÔNG BAO GIỜ gọi `get()` mà không có `isPresent()`
+- KHÔNG BAO GIỜ dùng `Optional` làm kiểu field hoặc tham số method
 
 ```java
 // GOOD
@@ -86,12 +86,12 @@ return repository.findById(id)
 public void process(Optional<String> name) {}
 ```
 
-## Error Handling
+## Xử lý lỗi
 
-- Prefer unchecked exceptions for domain errors
-- Create domain-specific exceptions extending `RuntimeException`
-- Avoid broad `catch (Exception e)` unless at top-level handlers
-- Include context in exception messages
+- Ưu tiên unchecked exception cho lỗi domain
+- Tạo exception riêng cho domain, kế thừa `RuntimeException`
+- Tránh `catch (Exception e)` quá rộng trừ khi ở các handler cấp cao nhất
+- Đưa ngữ cảnh vào thông báo exception
 
 ```java
 public class OrderNotFoundException extends RuntimeException {
@@ -101,14 +101,14 @@ public class OrderNotFoundException extends RuntimeException {
 }
 ```
 
-## Streams
+## Stream
 
-- Use streams for transformations; keep pipelines short (3-4 operations max)
-- Prefer method references when readable: `.map(Order::getTotal)`
-- Avoid side effects in stream operations
-- For complex logic, prefer a loop over a convoluted stream pipeline
+- Dùng stream cho các phép biến đổi; giữ pipeline ngắn (tối đa 3-4 thao tác)
+- Ưu tiên method reference khi dễ đọc: `.map(Order::getTotal)`
+- Tránh side effect trong các thao tác stream
+- Với logic phức tạp, ưu tiên vòng lặp hơn một stream pipeline rối rắm
 
-## References
+## Tham chiếu
 
-See skill: `java-coding-standards` for full coding standards with examples.
-See skill: `jpa-patterns` for JPA/Hibernate entity design patterns.
+Xem skill: `java-coding-standards` để có đầy đủ tiêu chuẩn code kèm ví dụ.
+Xem skill: `jpa-patterns` để có các pattern thiết kế entity JPA/Hibernate.

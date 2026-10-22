@@ -3,26 +3,26 @@ paths:
   - "**/*.ts"
   - "**/*.tsx"
 ---
-# React Native / Expo Hooks
+# Hook cho React Native / Expo
 
-> This file extends [common/hooks.md](../common/hooks.md) with React Native / Expo-specific automation guidance.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với hướng dẫn tự động hóa riêng cho React Native / Expo.
 
-These are recommended PostToolUse automations to keep RN/Expo code healthy. Wire them in your hook runtime (or run manually); adapt commands to your package manager.
+Đây là các tự động hóa PostToolUse được khuyến nghị để giữ code RN/Expo khỏe mạnh. Nối chúng vào hook runtime của bạn (hoặc chạy thủ công); điều chỉnh lệnh theo package manager của bạn.
 
-## Suggested PostToolUse checks (on edit of *.ts/*.tsx)
+## Các kiểm tra PostToolUse gợi ý (khi sửa *.ts/*.tsx)
 
-- **Type check:** `tsc --noEmit` — catch type errors early.
-- **Lint:** `npx expo lint` (uses `eslint-config-expo`; flat config `eslint.config.js` is the default from SDK 53+).
-- **Format:** `prettier --write` on changed files.
+- **Type check:** `tsc --noEmit` — bắt lỗi type sớm.
+- **Lint:** `npx expo lint` (dùng `eslint-config-expo`; flat config `eslint.config.js` là mặc định từ SDK 53+).
+- **Format:** `prettier --write` trên các file đã thay đổi.
 
-## Pre-release / periodic
+## Trước release / định kỳ
 
-- `npx expo-doctor` — validates Expo/native dependency health and config.
-- `npx expo install --check` — keeps native deps aligned with the installed Expo SDK.
-- `npm audit` — dependency vulnerability scan.
+- `npx expo-doctor` — kiểm tra tình trạng dependency native của Expo và cấu hình.
+- `npx expo install --check` — giữ các dependency native khớp với Expo SDK đã cài.
+- `npm audit` — quét lỗ hổng của dependency.
 
-## Notes
+## Ghi chú
 
-- Do not run heavy native builds inside fast edit hooks; keep edit-time hooks to typecheck/lint/format.
-- Reserve `eas build` / E2E for explicit commands or CI, not per-edit automation.
-- Keep these consistent with ECC hook runtime controls (`ECC_HOOK_PROFILE`, `ECC_DISABLED_HOOKS`).
+- Không chạy các bản build native nặng bên trong hook lúc sửa nhanh; giữ hook lúc sửa ở mức typecheck/lint/format.
+- Dành `eas build` / E2E cho các lệnh tường minh hoặc CI, không dùng cho tự động hóa mỗi lần sửa.
+- Giữ chúng nhất quán với các điều khiển hook runtime của ECC (`ECC_HOOK_PROFILE`, `ECC_DISABLED_HOOKS`).

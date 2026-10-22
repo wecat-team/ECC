@@ -1,70 +1,70 @@
 ---
-description: Restate requirements, assess risks, and create step-by-step implementation plan. WAIT for user CONFIRM before touching any code. Use for a single-model inline or PRD-driven implementation plan; for a dual-model (Codex/Antigravity) plan use /multi-plan, and for visual annotate-and-approve review of the resulting plan use /plan-canvas.
-argument-hint: "[feature description | path/to/*.prd.md]"
+description: Diễn đạt lại yêu cầu, đánh giá rủi ro và tạo kế hoạch triển khai từng bước. CHỜ người dùng XÁC NHẬN trước khi đụng vào bất kỳ code nào. Dùng cho kế hoạch triển khai đơn model chạy inline hoặc dựa trên PRD; với kế hoạch hai model (Codex/Antigravity) hãy dùng /multi-plan, và để review trực quan kiểu annotate-and-approve kế hoạch kết quả hãy dùng /plan-canvas.
+argument-hint: "[mô tả tính năng | path/to/*.prd.md]"
 ---
 
-# Plan Command
+# Lệnh Plan
 
-This command creates a comprehensive implementation plan before writing any code. It accepts either free-form requirements or a PRD markdown file.
+Command này tạo một kế hoạch triển khai toàn diện trước khi viết bất kỳ code nào. Nó nhận yêu cầu dạng tự do hoặc một file markdown PRD.
 
-Run inline by default. Do not call the Task tool or any subagent by default. This keeps `/plan` usable from plugin installs that ship commands without agent files.
+Mặc định chạy inline. Không gọi tool Task hay bất kỳ subagent nào theo mặc định. Điều này giữ cho `/plan` dùng được từ các bản cài plugin chỉ có command mà không có file agent.
 
-## What This Command Does
+## Command này làm gì
 
-1. **Restate Requirements** - Clarify what needs to be built
-2. **Identify Risks** - Surface potential issues and blockers
-3. **Create Step Plan** - Break down implementation into phases
-4. **Wait for Confirmation** - MUST receive user approval before proceeding
+1. **Diễn đạt lại yêu cầu** - Làm rõ cần xây dựng gì
+2. **Xác định rủi ro** - Nêu ra các vấn đề và điểm nghẽn tiềm ẩn
+3. **Tạo kế hoạch từng bước** - Chia việc triển khai thành các giai đoạn
+4. **Chờ xác nhận** - PHẢI nhận được sự chấp thuận của người dùng trước khi tiếp tục
 
-## When to Use
+## Khi nào dùng
 
-Use `/plan` when:
-- Starting a new feature
-- Making significant architectural changes
-- Working on complex refactoring
-- Multiple files/components will be affected
-- Requirements are unclear or ambiguous
+Dùng `/plan` khi:
+- Bắt đầu một tính năng mới
+- Thực hiện các thay đổi kiến trúc đáng kể
+- Làm việc với refactor phức tạp
+- Nhiều file/component sẽ bị ảnh hưởng
+- Yêu cầu chưa rõ ràng hoặc mơ hồ
 
-## How It Works
+## Cách hoạt động
 
-The assistant will:
+Trợ lý sẽ:
 
-1. **Analyze the request** and restate requirements in clear terms
-2. **Ground the plan** in relevant codebase patterns when the repo is available
-3. **Break down into phases** with specific, actionable steps
-4. **Identify dependencies** between components
-5. **Assess risks** and potential blockers
-6. **Estimate complexity** (High/Medium/Low)
-7. **Present the plan** and WAIT for your explicit confirmation
+1. **Phân tích yêu cầu** và diễn đạt lại các yêu cầu một cách rõ ràng
+2. **Neo kế hoạch** vào các pattern liên quan của codebase khi có repo
+3. **Chia thành các giai đoạn** với các bước cụ thể, có thể hành động
+4. **Xác định dependency** giữa các component
+5. **Đánh giá rủi ro** và các điểm nghẽn tiềm ẩn
+6. **Ước lượng độ phức tạp** (High/Medium/Low)
+7. **Trình bày kế hoạch** và CHỜ sự xác nhận tường minh của bạn
 
-## Input Modes
+## Chế độ input
 
-| Input | Mode | Behavior |
+| Input | Chế độ | Hành vi |
 |---|---|---|
-| `path/to/name.prd.md` | PRD artifact mode | Read the PRD, pick the next pending delivery milestone or implementation phase, and write `.claude/plans/{name}.plan.md` |
-| Any other markdown path | Reference mode | Read the file as context and produce an inline plan |
-| Free-form text | Conversational mode | Produce an inline plan |
-| Empty input | Clarification mode | Ask what should be planned |
+| `path/to/name.prd.md` | Chế độ PRD artifact | Đọc PRD, chọn delivery milestone hoặc giai đoạn triển khai pending kế tiếp, và ghi `.claude/plans/{name}.plan.md` |
+| Bất kỳ đường dẫn markdown nào khác | Chế độ tham chiếu | Đọc file làm context và tạo kế hoạch inline |
+| Văn bản tự do | Chế độ hội thoại | Tạo kế hoạch inline |
+| Input rỗng | Chế độ làm rõ | Hỏi cần lập kế hoạch cho việc gì |
 
-In PRD artifact mode, create `.claude/plans/` if needed. If the PRD contains a `Delivery Milestones` table, update only the selected row from `pending` to `in-progress` and set its `Plan` cell to the generated plan path. If the PRD uses the legacy `.claude/PRPs/prds/` format with `Implementation Phases`, read it without migrating paths.
+Trong chế độ PRD artifact, tạo `.claude/plans/` nếu cần. Nếu PRD có bảng `Delivery Milestones`, chỉ cập nhật dòng được chọn từ `pending` sang `in-progress` và đặt ô `Plan` của nó thành đường dẫn kế hoạch đã sinh. Nếu PRD dùng định dạng legacy `.claude/PRPs/prds/` với `Implementation Phases`, hãy đọc nó mà không di chuyển đường dẫn.
 
-## Pattern Grounding
+## Neo vào pattern (Pattern Grounding)
 
-Before writing the plan, search the codebase for conventions the implementation should mirror. Capture the top example for each relevant category with file references:
+Trước khi viết kế hoạch, hãy tìm trong codebase các quy ước mà phần triển khai nên phản chiếu. Ghi lại ví dụ tiêu biểu nhất cho từng nhóm liên quan kèm tham chiếu file:
 
-| Category | What to capture |
+| Nhóm | Cần ghi lại gì |
 |---|---|
-| Naming | File, function, type, command, or script naming in the affected area |
-| Error handling | How failures are raised, returned, logged, or handled gracefully |
-| Logging | Levels, format, and what gets logged |
-| Data access | Repository, service, query, or filesystem patterns |
-| Tests | Test file location, framework, fixtures, and assertion style |
+| Đặt tên | Cách đặt tên file, hàm, type, command hoặc script trong khu vực bị ảnh hưởng |
+| Xử lý lỗi | Cách lỗi được ném, trả về, ghi log hoặc xử lý êm thấm |
+| Logging | Các mức, định dạng và những gì được ghi log |
+| Truy cập dữ liệu | Pattern repository, service, query hoặc filesystem |
+| Test | Vị trí file test, framework, fixture và phong cách assertion |
 
-If no similar code exists, state that explicitly. Do not invent a pattern.
+Nếu không có code tương tự, hãy nêu rõ điều đó. Không bịa ra một pattern.
 
-## PRD Artifact Output
+## Output PRD Artifact
 
-When called with a `.prd.md` file, write the plan to `.claude/plans/{kebab-case-name}.plan.md` using this structure:
+Khi được gọi với một file `.prd.md`, hãy ghi kế hoạch vào `.claude/plans/{kebab-case-name}.plan.md` theo cấu trúc này:
 
 ````markdown
 # Plan: {Feature Name}
@@ -109,14 +109,14 @@ When called with a `.prd.md` file, write the plan to `.claude/plans/{kebab-case-
 - [ ] Patterns mirrored, not reinvented
 ````
 
-After writing the artifact, report its path and WAIT for confirmation before writing code.
+Sau khi ghi artifact, hãy báo cáo đường dẫn của nó và CHỜ xác nhận trước khi viết code.
 
-> **Visual review:** instead of asking for a typed confirmation, you can open the
-> artifact in the browser Plan Canvas (`/plan-canvas`, or the `plan-canvas` skill):
-> the user annotates the plan in place and clicks **Approve plan** or **Request
-> changes**, which arrives as your confirmation signal.
+> **Review trực quan:** thay vì yêu cầu xác nhận bằng cách gõ, bạn có thể mở
+> artifact trong Plan Canvas trên trình duyệt (`/plan-canvas`, hoặc skill `plan-canvas`):
+> người dùng chú thích kế hoạch ngay tại chỗ và nhấn **Approve plan** hoặc **Request
+> changes**, và đó sẽ là tín hiệu xác nhận của bạn.
 
-## Example Usage
+## Ví dụ sử dụng
 
 ```
 User: /plan I need to add real-time notifications when markets resolve
@@ -174,33 +174,33 @@ Assistant:
 **WAITING FOR CONFIRMATION**: Proceed with this plan? (yes/no/modify)
 ```
 
-## Important Notes
+## Lưu ý quan trọng
 
-**CRITICAL**: This command will **NOT** write any code until you explicitly confirm the plan with "yes" or "proceed" or similar affirmative response.
+**QUAN TRỌNG**: Command này sẽ **KHÔNG** viết bất kỳ code nào cho đến khi bạn xác nhận tường minh kế hoạch bằng "yes" hoặc "proceed" hoặc một phản hồi đồng ý tương tự.
 
-If you want changes, respond with:
+Nếu bạn muốn thay đổi, hãy phản hồi bằng:
 - "modify: [your changes]"
 - "different approach: [alternative]"
 - "skip phase 2 and do phase 3 first"
 
-## Integration with Other Commands
+## Tích hợp với các command khác
 
-After planning:
-- Use `/plan-canvas` to run the confirmation gate visually in the browser (annotate + approve)
-- Use the `tdd-workflow` skill to implement with test-driven development
-- Use `/build-fix` if build errors occur
-- Use `/code-review` to review completed implementation
-- Use `/pr` or `/prp-pr` to open a pull request
+Sau khi lập kế hoạch:
+- Dùng `/plan-canvas` để chạy cổng xác nhận một cách trực quan trên trình duyệt (annotate + approve)
+- Dùng skill `tdd-workflow` để triển khai theo hướng kiểm thử (TDD)
+- Dùng `/build-fix` nếu có lỗi build
+- Dùng `/code-review` để review phần triển khai đã hoàn tất
+- Dùng `/pr` hoặc `/prp-pr` để mở pull request
 
-> **Need requirements first?** Use `/plan-prd` for a lean PRD at `.claude/prds/{name}.prd.md`.
+> **Cần yêu cầu trước?** Dùng `/plan-prd` để có một PRD gọn tại `.claude/prds/{name}.prd.md`.
 >
-> **Need the legacy PRP flow?** Use `/prp-plan` for deep PRP planning with `.claude/PRPs/` artifacts. Use `/prp-implement` to execute those plans with rigorous validation loops.
+> **Cần luồng PRP legacy?** Dùng `/prp-plan` để lập kế hoạch PRP chuyên sâu với các artifact `.claude/PRPs/`. Dùng `/prp-implement` để thực thi các kế hoạch đó với các vòng lặp validation nghiêm ngặt.
 
-## Optional Planner Agent
+## Agent Planner tùy chọn
 
-ECC also provides a `planner` agent for manual installs that include agent files. Use it only when the local runtime already exposes that subagent and the user explicitly asks you to delegate planning.
+ECC cũng cung cấp một agent `planner` cho các bản cài thủ công có kèm file agent. Chỉ dùng nó khi runtime cục bộ đã cung cấp subagent đó và người dùng tường minh yêu cầu bạn ủy quyền việc lập kế hoạch.
 
-If the `planner` subagent is unavailable, continue planning inline instead of surfacing an "Agent type 'planner' not found" error.
+Nếu subagent `planner` không khả dụng, hãy tiếp tục lập kế hoạch inline thay vì đưa ra lỗi "Agent type 'planner' not found".
 
-For manual installs, the source file lives at:
+Với bản cài thủ công, file nguồn nằm tại:
 `agents/planner.md`

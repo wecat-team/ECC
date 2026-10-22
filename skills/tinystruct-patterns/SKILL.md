@@ -1,22 +1,22 @@
 ---
 name: tinystruct-patterns
-description: Expert guidance for developing with the tinystruct Java framework. Use when working on the tinystruct codebase or any project built on tinystruct — including generating the bin/dispatcher and bin/dispatcher.cmd launcher scripts when a project lacks them, creating Application classes, @Action-mapped routes, unit tests, ActionRegistry, HTTP/CLI dual-mode handling, the built-in HTTP server, the event system, JSON with Builder/Builders, database persistence with AbstractData, POJO generation, Server-Sent Events (SSE), file uploads, and outbound HTTP networking.
+description: Hướng dẫn chuyên sâu để phát triển với Java framework tinystruct. Dùng khi làm việc trên codebase tinystruct hoặc bất kỳ dự án nào xây dựng trên tinystruct — bao gồm sinh các script launcher bin/dispatcher và bin/dispatcher.cmd khi dự án chưa có, tạo class Application, route ánh xạ bằng @Action, unit test, ActionRegistry, xử lý dual-mode HTTP/CLI, HTTP server tích hợp sẵn, hệ thống sự kiện (event system), JSON với Builder/Builders, lưu trữ database với AbstractData, sinh POJO, Server-Sent Events (SSE), upload file, và kết nối HTTP ra ngoài.
 metadata:
   origin: ECC
   upstream: tinystruct==1.7.34
 ---
 
-# tinystruct Development Patterns
+# Pattern phát triển với tinystruct
 
-Architecture and implementation patterns for building modules with the **tinystruct** Java framework – a lightweight, high-performance framework that treats CLI and HTTP as equal citizens, requiring no `main()` method and minimal configuration.
+Các pattern kiến trúc và triển khai để xây dựng module với Java framework **tinystruct** – một framework nhẹ, hiệu năng cao, coi CLI và HTTP là hai công dân ngang hàng, không cần method `main()` và chỉ cần cấu hình tối thiểu.
 
-## Core Principle
+## Nguyên tắc cốt lõi
 
-**CLI and HTTP are equal citizens.** Every method annotated with `@Action` should ideally be runnable from both a terminal and a web browser without modification. This "dual-mode" capability is the core design philosophy of tinystruct.
+**CLI và HTTP là hai công dân ngang hàng.** Mọi method được gắn `@Action` về lý tưởng đều nên chạy được từ cả terminal lẫn trình duyệt web mà không cần sửa đổi. Khả năng "dual-mode" này là triết lý thiết kế cốt lõi của tinystruct.
 
-## Primary Development Tool: `bin/dispatcher`
+## Công cụ phát triển chính: `bin/dispatcher`
 
-**`bin/dispatcher` is the default, highest-priority tool for developing, running, testing, and debugging a tinystruct application — reach for it before an IDE run configuration, a hand-written `main()`, curl, or a browser.** Because every `@Action` is dual-mode by design, `bin/dispatcher` lets you exercise routing, argument binding, and business logic directly from the terminal, with the fastest possible feedback loop and no server/browser required.
+**`bin/dispatcher` là công cụ mặc định, có ưu tiên cao nhất để phát triển, chạy, test và debug một ứng dụng tinystruct — hãy dùng nó trước cả run configuration của IDE, `main()` tự viết, curl hay trình duyệt.** Vì mọi `@Action` đều được thiết kế dual-mode, `bin/dispatcher` cho phép bạn thử routing, binding tham số và business logic trực tiếp từ terminal, với vòng phản hồi nhanh nhất có thể và không cần server/trình duyệt.
 
 ```bash
 # Run any @Action directly - the fastest way to verify a new action works
@@ -36,83 +36,83 @@ bin/dispatcher --help
 bin/dispatcher --version
 ```
 
-Default to this workflow: implement the `@Action`, run it immediately via `bin/dispatcher <action>` to confirm it behaves correctly in CLI mode, and only start the HTTP server (also via `bin/dispatcher start ...`) once you need to verify the web-facing path (e.g. `mode = Mode.HTTP_POST`, sessions, file uploads). Never hardcode a `main(String[] args)` as an app's entry point — `bin/dispatcher` (or `bin/dispatcher.cmd` on Windows) is the one entry point for every module.
+Hãy mặc định theo workflow này: triển khai `@Action`, chạy ngay qua `bin/dispatcher <action>` để xác nhận nó hoạt động đúng ở chế độ CLI, và chỉ khởi động HTTP server (cũng qua `bin/dispatcher start ...`) khi cần kiểm tra đường đi hướng web (ví dụ `mode = Mode.HTTP_POST`, session, upload file). KHÔNG BAO GIỜ hardcode `main(String[] args)` làm điểm vào của ứng dụng — `bin/dispatcher` (hoặc `bin/dispatcher.cmd` trên Windows) là điểm vào duy nhất cho mọi module.
 
-### Generating `bin/dispatcher` and `bin/dispatcher.cmd`
+### Sinh `bin/dispatcher` và `bin/dispatcher.cmd`
 
-Every tinystruct project needs its launcher in `bin/`. **The framework generates it — never write it by hand, and never copy it from another project or substitute a `main()`.** `ApplicationManager.init()` writes the launcher for the current operating system into `bin/` under the working directory whenever it is missing, from templates inside the tinystruct jar, with that jar's version filled in. Line endings and the executable bit are already right.
+Mọi dự án tinystruct đều cần launcher của nó trong `bin/`. **Framework sẽ sinh ra nó — KHÔNG BAO GIỜ viết tay, không bao giờ copy từ dự án khác hay thay bằng `main()`.** `ApplicationManager.init()` ghi launcher cho hệ điều hành hiện tại vào `bin/` dưới thư mục làm việc bất cứ khi nào nó bị thiếu, từ các template nằm trong jar của tinystruct, với phiên bản của jar đó được điền sẵn. Ký tự xuống dòng và quyền executable đã đúng sẵn.
 
-**1. Find the tinystruct version** the project builds against: the `<tinystruct.version>` property or the `org.tinystruct:tinystruct` dependency in `pom.xml`. The jar must be reachable, in `~/.m2/repository/org/tinystruct/tinystruct/<version>/` (run `mvn dependency:resolve` if it is not) or in the project's `lib/`.
+**1. Tìm phiên bản tinystruct** mà dự án build với: thuộc tính `<tinystruct.version>` hoặc dependency `org.tinystruct:tinystruct` trong `pom.xml`. Jar phải truy cập được, trong `~/.m2/repository/org/tinystruct/tinystruct/<version>/` (chạy `mvn dependency:resolve` nếu chưa có) hoặc trong `lib/` của dự án.
 
-**2. From the project root, run the framework once:**
+**2. Từ thư mục gốc của dự án, chạy framework một lần:**
 
 ```bash
 java -cp ~/.m2/repository/org/tinystruct/tinystruct/<version>/tinystruct-<version>.jar \
      org.tinystruct.system.Dispatcher --version
 ```
 
-Replace `<version>` with the version found in step 1. On Windows use `%USERPROFILE%\.m2\repository\org\tinystruct\tinystruct\<version>\tinystruct-<version>.jar` and the same class. This creates **only the script for the OS you ran it on**, and only if it is not already there:
+Thay `<version>` bằng phiên bản tìm được ở bước 1. Trên Windows dùng `%USERPROFILE%\.m2\repository\org\tinystruct\tinystruct\<version>\tinystruct-<version>.jar` và cùng class đó. Lệnh này tạo **chỉ script cho hệ điều hành bạn đã chạy**, và chỉ khi nó chưa tồn tại:
 
-| Run on | Creates |
+| Chạy trên | Tạo ra |
 |---|---|
 | Linux, macOS | `bin/dispatcher` (executable, LF) |
 | Windows | `bin\dispatcher.cmd` (CRLF) |
 
-**3. Verify.** From the project root run `bin/dispatcher --version` (Windows: `bin\dispatcher.cmd --version`). It prints `Dispatcher (cli) (built on tinystruct-<version>)`, and the `VERSION` inside the script equals the jar's version. Then `bin/dispatcher --help` lists the commands and every imported action. Show the user the file you created.
+**3. Xác minh.** Từ thư mục gốc dự án chạy `bin/dispatcher --version` (Windows: `bin\dispatcher.cmd --version`). Nó in ra `Dispatcher (cli) (built on tinystruct-<version>)`, và `VERSION` bên trong script bằng phiên bản của jar. Sau đó `bin/dispatcher --help` liệt kê các lệnh và mọi action đã import. Hãy cho người dùng xem file bạn đã tạo.
 
-**4. Get both scripts by running step 2 on each OS**, or let a teammate or CI on the other OS run it and commit the result. Commit both, so a checkout on either OS works. Do not try to fake the other OS with `-Dos.name=…`: on Windows it fails (`UnsupportedOperationException` from `setPosixFilePermissions`) and leaves an empty `bin/dispatcher`. Recommended `.gitattributes`, so a checkout does not corrupt the line endings:
+**4. Lấy cả hai script bằng cách chạy bước 2 trên từng hệ điều hành**, hoặc nhờ đồng đội hay CI trên hệ điều hành còn lại chạy rồi commit kết quả. Commit cả hai, để checkout trên hệ điều hành nào cũng chạy được. Đừng cố giả lập hệ điều hành kia bằng `-Dos.name=…`: trên Windows nó thất bại (`UnsupportedOperationException` từ `setPosixFilePermissions`) và để lại một `bin/dispatcher` rỗng. `.gitattributes` khuyến nghị, để checkout không làm hỏng ký tự xuống dòng:
 
 ```
 bin/dispatcher     text eol=lf
 bin/dispatcher.cmd text eol=crlf
 ```
 
-**Upgrading tinystruct:** change the version in `pom.xml`, delete the old script, and repeat step 2 with the new jar. Alternatively `bin/dispatcher update` checks Maven Central for the latest release, upgrades the project's dependency and regenerates the script with force; it needs the network, edits the `pom.xml`, and goes to the *latest* version, not a chosen one.
+**Nâng cấp tinystruct:** đổi phiên bản trong `pom.xml`, xóa script cũ, và lặp lại bước 2 với jar mới. Hoặc `bin/dispatcher update` kiểm tra Maven Central để tìm bản phát hành mới nhất, nâng cấp dependency của dự án và sinh lại script với force; nó cần mạng, sửa `pom.xml`, và nâng lên phiên bản *mới nhất*, không phải phiên bản tự chọn.
 
-**It also happens implicitly.** Any code that reaches `ApplicationManager.init()` (the dispatcher itself, or `ApplicationManager.install(app, config)` in a unit test) creates the script in the *current directory* if it is missing. If unit tests scatter `bin/dispatcher.cmd` into module directories, run them from the build directory: in the surefire configuration set `<workingDirectory>${project.build.directory}</workingDirectory>`.
+**Nó cũng xảy ra ngầm.** Bất kỳ đoạn code nào chạm tới `ApplicationManager.init()` (chính dispatcher, hoặc `ApplicationManager.install(app, config)` trong unit test) đều tạo script trong *thư mục hiện tại* nếu nó thiếu. Nếu unit test làm vương vãi `bin/dispatcher.cmd` vào các thư mục module, hãy chạy chúng từ thư mục build: trong cấu hình surefire đặt `<workingDirectory>${project.build.directory}</workingDirectory>`.
 
-**What the scripts do**, which explains most problems:
+**Các script làm gì**, điều này giải thích phần lớn các vấn đề:
 
-- Run them **from the project root**: the shell script takes the current directory as the root, the `.cmd` takes the parent of `bin/`.
-- The classpath is `target/classes`, `lib/*.jar`, `WEB-INF/lib/*`, `WEB-INF/classes` and the tinystruct jar (from `lib/`, else `~/.m2`), then they run `org.tinystruct.system.Dispatcher` with your arguments.
-- On the first run, if `mvnw` / `mvnw.cmd` is missing, they extract the Maven Wrapper into the project root (`unzip` on Unix, PowerShell on Windows). Tell the user this happens; the files can be committed or ignored.
-- Only the shell script treats `-D…` and `-X…` arguments as JVM options.
+- Chạy chúng **từ thư mục gốc dự án**: shell script lấy thư mục hiện tại làm root, còn `.cmd` lấy thư mục cha của `bin/`.
+- Classpath gồm `target/classes`, `lib/*.jar`, `WEB-INF/lib/*`, `WEB-INF/classes` và jar tinystruct (từ `lib/`, nếu không thì `~/.m2`), sau đó chạy `org.tinystruct.system.Dispatcher` với các tham số của bạn.
+- Ở lần chạy đầu, nếu thiếu `mvnw` / `mvnw.cmd`, chúng giải nén Maven Wrapper vào thư mục gốc dự án (`unzip` trên Unix, PowerShell trên Windows). Hãy báo cho người dùng biết điều này xảy ra; các file có thể commit hoặc ignore.
+- Chỉ shell script coi các tham số `-D…` và `-X…` là JVM option.
 
-**Gotchas:**
+**Những điểm dễ vấp:**
 
-- **On Windows use `bin\dispatcher.cmd`.** The shell script joins the classpath with `:`, so under Git Bash/MSYS it fails with `ClassNotFoundException: org.tinystruct.system.Dispatcher`. Use WSL, or the `.cmd`.
-- **Only the tinystruct jar is on the classpath.** The framework no longer ships a fat jar by default, so your other modules, JDBC drivers and libraries (jjwt, lettuce, …) must be in `lib/`: `mvn dependency:copy-dependencies -DoutputDirectory=lib` (and git-ignore `lib/`). In a multi-module build, keep the launcher in the directory that holds `target/classes` and `lib/`, and copy the sibling modules' jars into that `lib/`; running it from a module whose siblings are not on its classpath fails with `NoClassDefFoundError`.
-- **Load applications with `--import` or configuration.** One `--import` per class (`--import a.A,b.B` fails; write `--import a.A --import b.B`), or list them once in `application.properties`: `default.import.applications=a.A;b.B` (`;`-separated).
-- **`JAVA_HOME` must be set** for the `.cmd`; it stops with an error otherwise.
-- **`bin/` sits directly under the directory that holds `target/classes` and `lib/`.** The `.cmd` treats the parent of `bin/` as the root, so a `bin/` nested in the wrong directory puts the wrong classpath in front of `Dispatcher`.
+- **Trên Windows dùng `bin\dispatcher.cmd`.** Shell script nối classpath bằng `:`, nên dưới Git Bash/MSYS nó lỗi với `ClassNotFoundException: org.tinystruct.system.Dispatcher`. Hãy dùng WSL, hoặc `.cmd`.
+- **Chỉ có jar tinystruct nằm trên classpath.** Framework không còn đóng gói fat jar theo mặc định, nên các module khác, JDBC driver và thư viện (jjwt, lettuce, …) của bạn phải nằm trong `lib/`: `mvn dependency:copy-dependencies -DoutputDirectory=lib` (và git-ignore `lib/`). Trong build multi-module, hãy để launcher ở thư mục chứa `target/classes` và `lib/`, và copy jar của các module anh em vào `lib/` đó; chạy nó từ một module mà các module anh em không nằm trên classpath sẽ lỗi `NoClassDefFoundError`.
+- **Nạp application bằng `--import` hoặc cấu hình.** Mỗi class một `--import` (`--import a.A,b.B` lỗi; hãy viết `--import a.A --import b.B`), hoặc liệt kê một lần trong `application.properties`: `default.import.applications=a.A;b.B` (phân cách bằng `;`).
+- **PHẢI đặt `JAVA_HOME`** cho `.cmd`; nếu không nó dừng với lỗi.
+- **`bin/` nằm trực tiếp dưới thư mục chứa `target/classes` và `lib/`.** `.cmd` coi thư mục cha của `bin/` là root, nên một `bin/` lồng sai thư mục sẽ đặt sai classpath trước `Dispatcher`.
 
-## When to Activate
+## Khi nào kích hoạt
 
-### When to Use
+### Khi nào dùng
 
-- Running, testing, or debugging any `@Action` via `bin/dispatcher` — this is the default way to work with a tinystruct app, before reaching for HTTP or an IDE run configuration.
-- Setting up a project that has no `bin/dispatcher` / `bin/dispatcher.cmd` — have the framework generate it (see "Generating `bin/dispatcher` and `bin/dispatcher.cmd`").
-- Creating new `Application` modules by extending `AbstractApplication`.
-- Defining routes and command-line actions using `@Action`.
-- Handling per-request state via `Context`.
-- Performing JSON serialization using the native `Builder` and `Builders` components.
-- Working with database persistence via `AbstractData` POJOs.
-- Generating POJOs from database tables using the `generate` command, with an XML mapping file or annotations (`--mapping annotation`).
-- Implementing Server-Sent Events (SSE) for real-time push.
-- Handling file uploads via multipart data.
-- Making outbound HTTP requests with `URLRequest` and `HTTPHandler`.
-- Configuring database connections or system settings in `application.properties`.
-- Debugging routing conflicts (Actions) or CLI argument parsing.
+- Chạy, test hoặc debug bất kỳ `@Action` nào qua `bin/dispatcher` — đây là cách làm việc mặc định với ứng dụng tinystruct, trước khi dùng đến HTTP hay run configuration của IDE.
+- Thiết lập dự án chưa có `bin/dispatcher` / `bin/dispatcher.cmd` — hãy để framework sinh ra (xem "Sinh `bin/dispatcher` và `bin/dispatcher.cmd`").
+- Tạo module `Application` mới bằng cách kế thừa `AbstractApplication`.
+- Định nghĩa route và action dòng lệnh bằng `@Action`.
+- Xử lý trạng thái theo từng request qua `Context`.
+- Thực hiện serialize JSON bằng các thành phần native `Builder` và `Builders`.
+- Làm việc với lưu trữ database qua các POJO `AbstractData`.
+- Sinh POJO từ bảng database bằng lệnh `generate`, với file XML mapping hoặc annotation (`--mapping annotation`).
+- Triển khai Server-Sent Events (SSE) cho push thời gian thực.
+- Xử lý upload file qua dữ liệu multipart.
+- Gửi HTTP request ra ngoài bằng `URLRequest` và `HTTPHandler`.
+- Cấu hình kết nối database hoặc cài đặt hệ thống trong `application.properties`.
+- Debug xung đột routing (Action) hoặc việc parse tham số CLI.
 
-## How It Works
+## Cách hoạt động
 
-The tinystruct framework treats any method annotated with `@Action` as a routable endpoint for both terminal and web environments. Applications are created by extending `AbstractApplication`, which provides core lifecycle hooks like `init()` and access to the request `Context`.
+Framework tinystruct coi bất kỳ method nào được gắn `@Action` là một endpoint có thể route được cho cả môi trường terminal lẫn web. Ứng dụng được tạo bằng cách kế thừa `AbstractApplication`, class này cung cấp các lifecycle hook cốt lõi như `init()` và quyền truy cập `Context` của request.
 
-Routing is handled by the `ActionRegistry`, which automatically maps path segments to method arguments and injects dependencies. For data-only services, the native `Builder` and `Builders` components should be used for JSON serialization to maintain a zero-dependency footprint. The database layer uses `AbstractData` POJOs mapped to tables with `@Table`/`@Column` annotations or XML mapping files for CRUD operations without external ORM libraries. Missing tables can be created automatically with `database.autocreate=true`.
+Routing do `ActionRegistry` đảm nhiệm, nó tự động ánh xạ các đoạn đường dẫn sang tham số method và inject dependency. Với các dịch vụ chỉ phục vụ dữ liệu, nên dùng các thành phần native `Builder` và `Builders` để serialize JSON nhằm giữ footprint không có dependency ngoài. Lớp database dùng các POJO `AbstractData` được ánh xạ tới bảng bằng annotation `@Table`/`@Column` hoặc file XML mapping để thực hiện CRUD mà không cần thư viện ORM ngoài. Các bảng còn thiếu có thể được tạo tự động với `database.autocreate=true`.
 
-## Examples
+## Ví dụ
 
-### Basic Application (MyService)
+### Application cơ bản (MyService)
 ```java
 public class MyService extends AbstractApplication {
     @Override
@@ -135,7 +135,7 @@ public class MyService extends AbstractApplication {
 }
 ```
 
-### HTTP Mode Disambiguation (login)
+### Phân biệt HTTP Mode (login)
 ```java
 @Action(value = "login", mode = Mode.HTTP_POST)
 public String doLogin(Request<?, ?> request) throws ApplicationException {
@@ -144,7 +144,7 @@ public String doLogin(Request<?, ?> request) throws ApplicationException {
 }
 ```
 
-### Native JSON Data Handling (Builder + Builders)
+### Xử lý dữ liệu JSON native (Builder + Builders)
 ```java
 import org.tinystruct.data.component.Builder;
 import org.tinystruct.data.component.Builders;
@@ -184,7 +184,7 @@ SSEPushManager.getInstance().push(sessionId, msg);
 SSEPushManager.getInstance().broadcast(msg);
 ```
 
-### File Upload
+### Upload file
 ```java
 import org.tinystruct.data.FileEntity;
 
@@ -200,8 +200,8 @@ public String upload(Request<?, ?> request) throws ApplicationException {
 }
 ```
 
-### Database Metadata Operations
-`DatabaseOperator` provides direct access to connection-level catalog, schema, and metadata:
+### Thao tác metadata của database
+`DatabaseOperator` cung cấp truy cập trực tiếp tới catalog, schema và metadata ở mức connection:
 ```java
 import org.tinystruct.data.DatabaseOperator;
 
@@ -216,10 +216,10 @@ try {
 }
 ```
 
-## MCP Server and Tools Integration
+## Tích hợp MCP Server và Tools
 
-tinystruct provides native support for the Model Context Protocol (MCP) starting with SDK version **`1.7.0`**.
-The MCP APIs (e.g., `org.tinystruct.mcp.MCPTool`, `org.tinystruct.mcp.MCPServer`, `org.tinystruct.mcp.MCPException`) are included directly in the core dependency:
+tinystruct hỗ trợ native cho Model Context Protocol (MCP) kể từ phiên bản SDK **`1.7.0`**.
+Các API MCP (ví dụ `org.tinystruct.mcp.MCPTool`, `org.tinystruct.mcp.MCPServer`, `org.tinystruct.mcp.MCPException`) nằm sẵn trong dependency lõi:
 ```xml
 <dependency>
     <groupId>org.tinystruct</groupId>
@@ -228,13 +228,13 @@ The MCP APIs (e.g., `org.tinystruct.mcp.MCPTool`, `org.tinystruct.mcp.MCPServer`
 </dependency>
 ```
 
-> **SECURITY WARNING (Prompt Injection):**
-> Tool return values are fed directly back into the AI model's context window. You **MUST** validate and sanitize all caller-supplied arguments before including them in the tool's return string. Failure to sanitize inputs can allow an attacker to inject adversarial instructions (Prompt Injection) that override the model's behavior. Always validate length, character sets, and nullity.
+> **CẢNH BÁO BẢO MẬT (Prompt Injection):**
+> Giá trị trả về của tool được đưa thẳng trở lại context window của mô hình AI. Bạn **PHẢI** validate và sanitize mọi tham số do bên gọi cung cấp trước khi đưa chúng vào chuỗi trả về của tool. Không sanitize đầu vào có thể cho phép kẻ tấn công chèn các chỉ thị đối nghịch (Prompt Injection) ghi đè hành vi của mô hình. Luôn kiểm tra độ dài, tập ký tự và null.
 
-**To create an MCP Tool:**
-1. Extend `org.tinystruct.mcp.MCPTool`.
-2. Annotate operations with `@Action` and declare parameters using `@Argument` within the `arguments` array.
-3. Accept parameters as explicit method arguments matching the keys in `@Argument`. (Do **not** use `getContext().getAttribute(...)` for tool arguments).
+**Để tạo một MCP Tool:**
+1. Kế thừa `org.tinystruct.mcp.MCPTool`.
+2. Gắn `@Action` cho các thao tác và khai báo tham số bằng `@Argument` trong mảng `arguments`.
+3. Nhận tham số dưới dạng đối số method tường minh khớp với các key trong `@Argument`. (KHÔNG dùng `getContext().getAttribute(...)` cho tham số của tool).
 
 ```java
 import org.tinystruct.mcp.MCPTool;
@@ -265,9 +265,9 @@ public class MyCustomTool extends MCPTool {
 }
 ```
 
-**To deploy an MCP Server:**
-1. Extend `org.tinystruct.mcp.MCPServer`.
-2. Override `init()` and register your tools using `this.registerTool()`. The framework automatically scans and maps the `@Action` methods.
+**Để triển khai một MCP Server:**
+1. Kế thừa `org.tinystruct.mcp.MCPServer`.
+2. Override `init()` và đăng ký các tool bằng `this.registerTool()`. Framework tự động quét và ánh xạ các method `@Action`.
 
 ```java
 import org.tinystruct.mcp.MCPServer;
@@ -286,19 +286,19 @@ public class MyMCPServer extends MCPServer {
 }
 ```
 
-Run the server via the dispatcher:
+Chạy server qua dispatcher:
 ```bash
 bin/dispatcher start --import org.tinystruct.system.HttpServer --import com.example.MyMCPServer
 ```
 
-### Overloaded Tool Methods
-tinystruct supports overloaded methods for the same tool name in `MCPTool` (sharing the same tool name but accepting different parameter signatures).
-- **Schema Merging**: Input schemas of all overloads with the same name are dynamically merged into a unified JSON schema. Properties are unioned, and required properties are intersected (only fields required across *all* overloads remain marked mandatory).
-- **Execution Routing**: When executing a tool, the server iterates sequentially through the available overloaded methods, attempting execution. Each method's schema validation is performed first, and the first overload that validates against the provided arguments successfully executes. If no signature matches or succeeds, the framework throws an appropriate exception.
+### Method của Tool được overload
+tinystruct hỗ trợ các method overload cho cùng một tên tool trong `MCPTool` (dùng chung tên tool nhưng nhận các chữ ký tham số khác nhau).
+- **Gộp schema (Schema Merging)**: Input schema của mọi overload cùng tên được gộp động thành một JSON schema thống nhất. Các property được lấy hợp, còn các property bắt buộc được lấy giao (chỉ các field bắt buộc trong *tất cả* overload mới vẫn được đánh dấu bắt buộc).
+- **Định tuyến thực thi (Execution Routing)**: Khi thực thi một tool, server duyệt tuần tự qua các method overload hiện có và thử thực thi. Việc validate schema của từng method được thực hiện trước, và overload đầu tiên validate thành công với các tham số được cung cấp sẽ được thực thi. Nếu không chữ ký nào khớp hoặc thành công, framework ném exception phù hợp.
 
-## Configuration
+## Cấu hình
 
-Settings are managed in `src/main/resources/application.properties`.
+Các cài đặt được quản lý trong `src/main/resources/application.properties`.
 
 ```properties
 # Database
@@ -328,73 +328,73 @@ logging.level=INFO
 org.tinystruct.level=FINE
 ```
 
-Access config values in your application:
+Truy cập giá trị cấu hình trong ứng dụng:
 ```java
 String port = this.getConfiguration("server.port");
 ```
 
-## Logging and Diagnostics
+## Logging và chẩn đoán
 
-The framework includes a programmatic wrapper around `java.util.logging` (JUL) that provides beautiful console output and advanced caller tracing out of the box.
+Framework có một lớp bao (wrapper) lập trình được quanh `java.util.logging` (JUL), cung cấp output console đẹp mắt và truy vết caller nâng cao ngay từ đầu.
 
-- **ANSI Console Colors**: Console output is color-coded based on the log level (red for SEVERE, yellow for WARNING, green for INFO, cyan for CONFIG, and grey for FINE/debug logs).
-- **Precise Caller Tracing**: Uses Java's `StackWalker` API to trace the call stack at runtime. It identifies and logs the exact class, method, filename, and line number of the caller that initiated the log (bypassing internal utility and logging layers).
-- **Package/Logger Level Overrides**: Set package-specific overrides directly in `application.properties` (e.g., `org.tinystruct.level=FINE`).
+- **Màu ANSI trên console**: Output console được tô màu theo mức log (đỏ cho SEVERE, vàng cho WARNING, xanh lá cho INFO, cyan cho CONFIG, và xám cho log FINE/debug).
+- **Truy vết caller chính xác**: Dùng API `StackWalker` của Java để truy vết call stack lúc runtime. Nó xác định và ghi log chính xác class, method, tên file và số dòng của caller đã khởi tạo log (bỏ qua các lớp tiện ích và logging nội bộ).
+- **Ghi đè mức theo package/logger**: Đặt các ghi đè riêng cho package trực tiếp trong `application.properties` (ví dụ `org.tinystruct.level=FINE`).
 
-## Red Flags & Anti-patterns
+## Dấu hiệu cảnh báo & Anti-pattern
 
-| Symptom | Correct Pattern |
+| Triệu chứng | Pattern đúng |
 |---|---|
-| Importing `com.google.gson` or `com.fasterxml.jackson` | Use `org.tinystruct.data.component.Builder` / `Builders`. |
-| Using `List<Builder>` for JSON arrays | Use `Builders` to avoid generic type erasure issues. |
-| `ApplicationRuntimeException: template not found` | Call `setTemplateRequired(false)` in `init()` for API-only apps. |
-| Annotating `private` methods with `@Action` | Actions must be `public` to be registered by the framework. |
-| Hardcoding `main(String[] args)` in apps, or testing only via curl/browser/IDE run configs | Use `bin/dispatcher` as the entry point and default dev/test tool for all modules. |
-| `bin/dispatcher` is missing, or a hand-written or copied launcher script | Let the framework generate it: run `org.tinystruct.system.Dispatcher --version` once from the project root (creates the current OS's script). |
-| `bin/dispatcher` fails with `ClassNotFoundException: org.tinystruct.system.Dispatcher` on Windows | The shell script cannot run under Git Bash/MSYS; use `bin\dispatcher.cmd` or WSL. |
-| `ClassNotFoundException` for `--import a.A,b.B` | One `--import` per class: `--import a.A --import b.B`. |
-| A shell-script launcher that fails with `\r: command not found` | The file has CRLF endings; convert `bin/dispatcher` to LF. |
-| Manual `ActionRegistry` registration | Prefer the `@Action` annotation for automatic discovery. |
-| Action not found at runtime | Ensure class is imported via `--import` or listed in `application.properties`. |
-| CLI arg not visible | Pass with `--key value`; access via `getContext().getAttribute("--key")`. |
-| Two methods same path, wrong one fires | Set explicit `mode` (e.g., `HTTP_GET` vs `HTTP_POST`) to disambiguate. |
+| Import `com.google.gson` hoặc `com.fasterxml.jackson` | Dùng `org.tinystruct.data.component.Builder` / `Builders`. |
+| Dùng `List<Builder>` cho JSON array | Dùng `Builders` để tránh các vấn đề type erasure của generic. |
+| `ApplicationRuntimeException: template not found` | Gọi `setTemplateRequired(false)` trong `init()` với ứng dụng chỉ làm API. |
+| Gắn `@Action` cho method `private` | Action phải là `public` thì framework mới đăng ký. |
+| Hardcode `main(String[] args)` trong ứng dụng, hoặc chỉ test qua curl/trình duyệt/run config của IDE | Dùng `bin/dispatcher` làm điểm vào và công cụ dev/test mặc định cho mọi module. |
+| Thiếu `bin/dispatcher`, hoặc là script launcher viết tay hay copy | Để framework sinh ra: chạy `org.tinystruct.system.Dispatcher --version` một lần từ thư mục gốc dự án (tạo script cho hệ điều hành hiện tại). |
+| `bin/dispatcher` lỗi `ClassNotFoundException: org.tinystruct.system.Dispatcher` trên Windows | Shell script không chạy được dưới Git Bash/MSYS; dùng `bin\dispatcher.cmd` hoặc WSL. |
+| `ClassNotFoundException` với `--import a.A,b.B` | Mỗi class một `--import`: `--import a.A --import b.B`. |
+| Script launcher shell lỗi `\r: command not found` | File có ký tự xuống dòng CRLF; chuyển `bin/dispatcher` sang LF. |
+| Đăng ký `ActionRegistry` thủ công | Ưu tiên annotation `@Action` để được phát hiện tự động. |
+| Không tìm thấy action lúc runtime | Đảm bảo class được import qua `--import` hoặc được liệt kê trong `application.properties`. |
+| Không thấy tham số CLI | Truyền bằng `--key value`; truy cập qua `getContext().getAttribute("--key")`. |
+| Hai method cùng đường dẫn, method chạy sai | Đặt `mode` tường minh (ví dụ `HTTP_GET` so với `HTTP_POST`) để phân biệt. |
 
-## Best Practices
+## Best practice
 
-1. **`bin/dispatcher` first**: Develop and verify against `bin/dispatcher` before anything else — run the action from the CLI, confirm behavior, then layer on HTTP/mode concerns. It's the fastest inner-loop and the one tool guaranteed to match how the framework actually routes and binds arguments.
-2. **Granular Applications**: Break logic into smaller, focused applications rather than one monolithic class.
-3. **Setup in `init()`**: Leverage `init()` for setup (config, DB) rather than the constructor. Do NOT call `setAction()` — use `@Action` annotation.
-4. **Mode Awareness**: Use the `Mode` parameter in `@Action` to restrict sensitive operations to `CLI` only or specific HTTP methods.
-5. **Context over Params**: For optional CLI flags, use `getContext().getAttribute("--flag")` rather than adding parameters to the method signature.
-6. **Asynchronous Events**: For heavy tasks triggered by events, use `CompletableFuture.runAsync()` inside the event handler.
+1. **`bin/dispatcher` trước tiên**: Phát triển và xác minh với `bin/dispatcher` trước mọi thứ khác — chạy action từ CLI, xác nhận hành vi, rồi mới thêm các vấn đề HTTP/mode. Đó là vòng lặp nội bộ nhanh nhất và là công cụ duy nhất đảm bảo khớp với cách framework thực sự route và bind tham số.
+2. **Application chi tiết nhỏ**: Chia logic thành các application nhỏ, tập trung thay vì một class nguyên khối.
+3. **Thiết lập trong `init()`**: Dùng `init()` để thiết lập (config, DB) thay vì constructor. KHÔNG gọi `setAction()` — hãy dùng annotation `@Action`.
+4. **Nhận thức về Mode**: Dùng tham số `Mode` trong `@Action` để giới hạn các thao tác nhạy cảm chỉ ở `CLI` hoặc các phương thức HTTP cụ thể.
+5. **Context thay vì tham số**: Với các flag CLI tùy chọn, dùng `getContext().getAttribute("--flag")` thay vì thêm tham số vào chữ ký method.
+6. **Sự kiện bất đồng bộ**: Với tác vụ nặng được kích hoạt bởi sự kiện, dùng `CompletableFuture.runAsync()` bên trong event handler.
 
-## Technical Reference
+## Tài liệu tham chiếu kỹ thuật
 
-Detailed guides are available in the `references/` directory:
+Các hướng dẫn chi tiết có trong thư mục `references/`:
 
-- [Architecture & Config](references/architecture.md) — Abstractions, Package Map, Properties
-- [Routing & @Action](references/routing.md) — Annotation details, Modes, Parameters
-- [Data Handling](references/data-handling.md) — Builder, Builders, JSON serialization & parsing
-- [Database Persistence](references/database.md) — AbstractData POJOs, CRUD, annotation and XML mapping, POJO generation, table auto-creation
-- [System & Usage](references/system-usage.md) — Context, Sessions, SSE, File Uploads, Events, Networking
-- [Testing Patterns](references/testing.md) — JUnit 5 unit and HTTP integration testing
+- [Architecture & Config](references/architecture.md) — Abstraction, Package Map, Properties
+- [Routing & @Action](references/routing.md) — Chi tiết annotation, Mode, tham số
+- [Data Handling](references/data-handling.md) — Builder, Builders, serialize & parse JSON
+- [Database Persistence](references/database.md) — POJO AbstractData, CRUD, annotation và XML mapping, sinh POJO, tự động tạo bảng
+- [System & Usage](references/system-usage.md) — Context, Session, SSE, Upload file, Event, Networking
+- [Testing Patterns](references/testing.md) — Unit test JUnit 5 và integration test qua HTTP
 
-## Reference Source Files (Internal)
+## File mã nguồn tham chiếu (nội bộ)
 
-- `src/main/java/org/tinystruct/AbstractApplication.java` — Core base class with lifecycle hooks
-- `src/main/java/org/tinystruct/system/annotation/Action.java` — Annotation & Modes
-- `src/main/java/org/tinystruct/application/ActionRegistry.java` — Routing Engine
-- `src/main/java/org/tinystruct/data/component/Builder.java` — JSON object serializer
-- `src/main/java/org/tinystruct/data/component/Builders.java` — JSON array serializer
-- `src/main/java/org/tinystruct/data/component/AbstractData.java` — Base POJO class with CRUD
-- `src/main/java/org/tinystruct/data/Mapping.java` — Mapping metadata (annotations or XML), cached per class
-- `src/main/java/org/tinystruct/data/annotation/Table.java` — `@Table`, with `@Id` and `@Column` alongside it
-- `src/main/java/org/tinystruct/data/tools/TableCreator.java` — Creates missing tables (`database.autocreate`)
-- `src/main/java/org/tinystruct/data/tools/MySQLGenerator.java` — POJO generator reference (`MappingMode` selects XML or annotations)
-- `src/main/java/org/tinystruct/data/component/FieldType.java` — SQL-to-Java type mappings
-- `src/main/java/org/tinystruct/data/component/Condition.java` — Fluent SQL query builder
-- `src/main/java/org/tinystruct/http/SSEPushManager.java` — SSE connection management
-- `src/main/java/org/tinystruct/system/logging/LogFormatter.java` — Custom log formatter with ANSI console colors and StackWalker-based caller tracing
-- `src/main/java/org/tinystruct/system/logging/LoggerConfigurer.java` — Programmatic logging configurator from application properties
-- `src/test/java/org/tinystruct/application/ActionRegistryTest.java` — Registry test examples
-- `src/test/java/org/tinystruct/system/HttpServerHttpModeTest.java` — HTTP integration test patterns
+- `src/main/java/org/tinystruct/AbstractApplication.java` — Base class cốt lõi với các lifecycle hook
+- `src/main/java/org/tinystruct/system/annotation/Action.java` — Annotation & Mode
+- `src/main/java/org/tinystruct/application/ActionRegistry.java` — Engine routing
+- `src/main/java/org/tinystruct/data/component/Builder.java` — Bộ serialize JSON object
+- `src/main/java/org/tinystruct/data/component/Builders.java` — Bộ serialize JSON array
+- `src/main/java/org/tinystruct/data/component/AbstractData.java` — Base class POJO với CRUD
+- `src/main/java/org/tinystruct/data/Mapping.java` — Metadata mapping (annotation hoặc XML), được cache theo class
+- `src/main/java/org/tinystruct/data/annotation/Table.java` — `@Table`, cùng với `@Id` và `@Column` bên cạnh
+- `src/main/java/org/tinystruct/data/tools/TableCreator.java` — Tạo các bảng còn thiếu (`database.autocreate`)
+- `src/main/java/org/tinystruct/data/tools/MySQLGenerator.java` — Tham chiếu bộ sinh POJO (`MappingMode` chọn XML hoặc annotation)
+- `src/main/java/org/tinystruct/data/component/FieldType.java` — Ánh xạ kiểu SQL sang Java
+- `src/main/java/org/tinystruct/data/component/Condition.java` — Bộ dựng truy vấn SQL fluent
+- `src/main/java/org/tinystruct/http/SSEPushManager.java` — Quản lý kết nối SSE
+- `src/main/java/org/tinystruct/system/logging/LogFormatter.java` — Log formatter tùy chỉnh với màu ANSI console và truy vết caller dựa trên StackWalker
+- `src/main/java/org/tinystruct/system/logging/LoggerConfigurer.java` — Bộ cấu hình logging lập trình được từ application properties
+- `src/test/java/org/tinystruct/application/ActionRegistryTest.java` — Ví dụ test registry
+- `src/test/java/org/tinystruct/system/HttpServerHttpModeTest.java` — Pattern integration test qua HTTP

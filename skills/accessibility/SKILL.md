@@ -1,59 +1,59 @@
 ---
 name: accessibility
-description: Design, implement, and audit accessible UI to WCAG 2.2 Level AA across Web, iOS, and Android — semantic ARIA roles and labels, accessibility traits and hints, focus management, contrast, target size, and screen-reader support. Use when building or auditing UI for accessibility compliance, keyboard navigation, or screen-reader support.
+description: Thiết kế, triển khai và audit UI accessible theo WCAG 2.2 Level AA trên Web, iOS và Android — ARIA role và label ngữ nghĩa, accessibility trait và hint, quản lý focus, độ tương phản, kích thước vùng chạm (target size) và hỗ trợ screen reader. Dùng khi xây dựng hoặc audit UI về tuân thủ accessibility, điều hướng bằng bàn phím hoặc hỗ trợ screen reader.
 metadata:
   origin: ECC
 ---
 
 # Accessibility (WCAG 2.2)
 
-This skill ensures that digital interfaces are Perceivable, Operable, Understandable, and Robust (POUR) for all users, including those using screen readers, switch controls, or keyboard navigation. It focuses on the technical implementation of WCAG 2.2 success criteria.
+Skill này đảm bảo giao diện số Perceivable, Operable, Understandable và Robust (POUR) với mọi người dùng, kể cả những người dùng screen reader, switch control hoặc điều hướng bằng bàn phím. Skill tập trung vào việc triển khai kỹ thuật các success criterion của WCAG 2.2.
 
-## When to Use
+## Khi nào dùng
 
-- Defining UI component specifications for Web, iOS, or Android.
-- Auditing existing code for accessibility barriers or compliance gaps.
-- Implementing new WCAG 2.2 standards like Target Size (Minimum) and Focus Appearance.
-- Mapping high-level design requirements to technical attributes (ARIA roles, traits, hints).
+- Định nghĩa đặc tả component UI cho Web, iOS hoặc Android.
+- Audit code hiện có để tìm rào cản accessibility hoặc lỗ hổng tuân thủ.
+- Triển khai các tiêu chuẩn mới của WCAG 2.2 như Target Size (Minimum) và Focus Appearance.
+- Ánh xạ yêu cầu thiết kế cấp cao sang các thuộc tính kỹ thuật (ARIA role, trait, hint).
 
-## Core Concepts
+## Khái niệm cốt lõi
 
-- **POUR Principles**: The foundation of WCAG (Perceivable, Operable, Understandable, Robust).
-- **Semantic Mapping**: Using native elements over generic containers to provide built-in accessibility.
-- **Accessibility Tree**: The representation of the UI that assistive technologies actually "read."
-- **Focus Management**: Controlling the order and visibility of the keyboard/screen reader cursor.
-- **Labeling & Hints**: Providing context through `aria-label`, `accessibilityLabel`, and `contentDescription`.
+- **Nguyên tắc POUR**: Nền tảng của WCAG (Perceivable, Operable, Understandable, Robust).
+- **Semantic Mapping**: Dùng phần tử native thay vì container chung chung để có sẵn accessibility.
+- **Accessibility Tree**: Biểu diễn của UI mà công nghệ hỗ trợ (assistive technology) thực sự "đọc".
+- **Focus Management**: Kiểm soát thứ tự và khả năng hiển thị của con trỏ bàn phím/screen reader.
+- **Labeling & Hints**: Cung cấp ngữ cảnh qua `aria-label`, `accessibilityLabel` và `contentDescription`.
 
-## How It Works
+## Cách hoạt động
 
-### Step 1: Identify the Component Role
+### Bước 1: Xác định vai trò của Component
 
-Determine the functional purpose (e.g., Is this a button, a link, or a tab?). Use the most semantic native element available before resorting to custom roles.
+Xác định mục đích chức năng (ví dụ: đây là button, link hay tab?). Dùng phần tử native có ngữ nghĩa nhất sẵn có trước khi chuyển sang role tùy chỉnh.
 
-### Step 2: Define Perceivable Attributes
+### Bước 2: Định nghĩa các thuộc tính Perceivable
 
-- Ensure text contrast meets **4.5:1** (normal) or **3:1** (large/UI).
-- Add text alternatives for non-text content (images, icons).
-- Implement responsive reflow (up to 400% zoom without loss of function).
+- Đảm bảo độ tương phản văn bản đạt **4.5:1** (thường) hoặc **3:1** (lớn/UI).
+- Thêm text alternative cho nội dung không phải văn bản (ảnh, icon).
+- Triển khai responsive reflow (zoom tới 400% mà không mất chức năng).
 
-### Step 3: Implement Operable Controls
+### Bước 3: Triển khai các điều khiển Operable
 
-- Ensure a minimum **24x24 CSS pixel** target size (WCAG 2.2 SC 2.5.8).
-- Verify all interactive elements are reachable via keyboard and have a visible focus indicator (SC 2.4.11).
-- Provide single-pointer alternatives for dragging movements.
+- Đảm bảo kích thước vùng chạm tối thiểu **24x24 CSS pixel** (WCAG 2.2 SC 2.5.8).
+- Xác minh mọi phần tử tương tác đều truy cập được bằng bàn phím và có chỉ báo focus hiển thị rõ (SC 2.4.11).
+- Cung cấp phương án thay thế bằng một con trỏ (single-pointer) cho các thao tác kéo.
 
-### Step 4: Ensure Understandable Logic
+### Bước 4: Đảm bảo logic Understandable
 
-- Use consistent navigation patterns.
-- Provide descriptive error messages and suggestions for correction (SC 3.3.3).
-- Implement "Redundant Entry" (SC 3.3.7) to prevent asking for the same data twice.
+- Dùng các pattern điều hướng nhất quán.
+- Cung cấp thông báo lỗi mô tả rõ và gợi ý cách sửa (SC 3.3.3).
+- Triển khai "Redundant Entry" (SC 3.3.7) để tránh yêu cầu nhập cùng một dữ liệu hai lần.
 
-### Step 5: Verify Robust Compatibility
+### Bước 5: Xác minh tính tương thích Robust
 
-- Use correct `Name, Role, Value` patterns.
-- Implement `aria-live` or live regions for dynamic status updates.
+- Dùng đúng các pattern `Name, Role, Value`.
+- Triển khai `aria-live` hoặc live region cho các cập nhật trạng thái động.
 
-## Accessibility Architecture Diagram
+## Sơ đồ kiến trúc Accessibility
 
 ```mermaid
 flowchart TD
@@ -67,18 +67,18 @@ flowchart TD
   Compose --> AT
 ```
 
-## Cross-Platform Mapping
+## Ánh xạ đa nền tảng
 
-| Feature            | Web (HTML/ARIA)          | iOS (SwiftUI)                        | Android (Compose)                                           |
+| Tính năng            | Web (HTML/ARIA)          | iOS (SwiftUI)                        | Android (Compose)                                           |
 | :----------------- | :----------------------- | :----------------------------------- | :---------------------------------------------------------- |
-| **Primary Label**  | `aria-label` / `<label>` | `.accessibilityLabel()`              | `contentDescription`                                        |
-| **Secondary Hint** | `aria-describedby`       | `.accessibilityHint()`               | `Modifier.semantics { stateDescription = ... }`             |
+| **Label chính**  | `aria-label` / `<label>` | `.accessibilityLabel()`              | `contentDescription`                                        |
+| **Hint phụ** | `aria-describedby`       | `.accessibilityHint()`               | `Modifier.semantics { stateDescription = ... }`             |
 | **Action Role**    | `role="button"`          | `.accessibilityAddTraits(.isButton)` | `Modifier.semantics { role = Role.Button }`                 |
-| **Live Updates**   | `aria-live="polite"`     | `.accessibilityLiveRegion(.polite)`  | `Modifier.semantics { liveRegion = LiveRegionMode.Polite }` |
+| **Cập nhật trực tiếp (Live Updates)**   | `aria-live="polite"`     | `.accessibilityLiveRegion(.polite)`  | `Modifier.semantics { liveRegion = LiveRegionMode.Polite }` |
 
-## Examples
+## Ví dụ
 
-### Web: Accessible Search
+### Web: Ô tìm kiếm accessible
 
 ```html
 <form role="search">
@@ -90,7 +90,7 @@ flowchart TD
 </form>
 ```
 
-### iOS: Accessible Action Button
+### iOS: Nút hành động accessible
 
 ```swift
 Button(action: deleteItem) {
@@ -101,7 +101,7 @@ Button(action: deleteItem) {
 .accessibilityAddTraits(.isButton)
 ```
 
-### Android: Accessible Toggle
+### Android: Toggle accessible
 
 ```kotlin
 Switch(
@@ -113,24 +113,24 @@ Switch(
 )
 ```
 
-## Anti-Patterns to Avoid
+## Anti-Pattern cần tránh
 
-- **Div-Buttons**: Using a `<div>` or `<span>` for a click event without adding a role and keyboard support.
-- **Color-Only Meaning**: Indicating an error or status _only_ with a color change (e.g., turning a border red).
-- **Uncontained Modal Focus**: Modals that don't trap focus, allowing keyboard users to navigate background content while the modal is open. Focus must be contained _and_ escapable via the `Escape` key or an explicit close button (WCAG SC 2.1.2).
-- **Redundant Alt Text**: Using "Image of..." or "Picture of..." in alt text (screen readers already announce the role "Image").
+- **Div-Buttons**: Dùng `<div>` hoặc `<span>` cho sự kiện click mà không thêm role và hỗ trợ bàn phím.
+- **Color-Only Meaning**: Chỉ biểu thị lỗi hoặc trạng thái _bằng_ thay đổi màu (ví dụ: đổi viền sang màu đỏ).
+- **Uncontained Modal Focus**: Modal không giữ (trap) focus, cho phép người dùng bàn phím điều hướng nội dung nền khi modal đang mở. Focus phải được giữ trong modal _và_ thoát được bằng phím `Escape` hoặc nút đóng tường minh (WCAG SC 2.1.2).
+- **Redundant Alt Text**: Dùng "Image of..." hoặc "Picture of..." trong alt text (screen reader đã đọc role "Image" rồi).
 
-## Best Practices Checklist
+## Checklist thực hành tốt
 
-- [ ] Interactive elements meet the **24x24px** (Web) or **44x44pt** (Native) target size.
-- [ ] Focus indicators are clearly visible and high-contrast.
-- [ ] Modals **contain focus** while open, and release it cleanly on close (`Escape` key or close button).
-- [ ] Dropdowns and menus restore focus to the trigger element on close.
-- [ ] Forms provide text-based error suggestions.
-- [ ] All icon-only buttons have a descriptive text label.
-- [ ] Content reflows properly when text is scaled.
+- [ ] Các phần tử tương tác đạt kích thước vùng chạm **24x24px** (Web) hoặc **44x44pt** (Native).
+- [ ] Chỉ báo focus hiển thị rõ ràng và có độ tương phản cao.
+- [ ] Modal **giữ focus** khi đang mở, và nhả focus gọn gàng khi đóng (phím `Escape` hoặc nút đóng).
+- [ ] Dropdown và menu khôi phục focus về phần tử kích hoạt khi đóng.
+- [ ] Form cung cấp gợi ý lỗi dạng văn bản.
+- [ ] Mọi nút chỉ có icon đều có label văn bản mô tả.
+- [ ] Nội dung reflow đúng khi văn bản được phóng to.
 
-## References
+## Tham khảo
 
 - [WCAG 2.2 Guidelines](https://www.w3.org/TR/WCAG22/)
 - [WAI-ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices/)
@@ -138,7 +138,7 @@ Switch(
 - [iOS Human Interface Guidelines - Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility)
 - [Android Accessibility Developer Guide](https://developer.android.com/guide/topics/ui/accessibility)
 
-## Related Skills
+## Skill liên quan
 
 - `frontend-patterns`
 - `design-system`

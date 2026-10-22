@@ -1,10 +1,10 @@
-# Navigate to Routes
+# Điều hướng tới Route
 
-Angular provides both declarative and programmatic ways to navigate between routes.
+Angular cung cấp cả cách khai báo (declarative) lẫn lập trình (programmatic) để điều hướng giữa các route.
 
-## Declarative Navigation (`RouterLink`)
+## Điều hướng khai báo (`RouterLink`)
 
-Use the `RouterLink` directive on anchor elements.
+Dùng directive `RouterLink` trên các phần tử anchor.
 
 ```ts
 import {RouterLink, RouterLinkActive} from '@angular/router';
@@ -23,16 +23,16 @@ export class Nav {
 }
 ```
 
-- **Absolute Paths**: Start with `/` (e.g., `/settings`).
-- **Relative Paths**: No leading `/`. Use `../` to go up a level.
+- **Đường dẫn tuyệt đối**: Bắt đầu bằng `/` (ví dụ: `/settings`).
+- **Đường dẫn tương đối**: Không có `/` ở đầu. Dùng `../` để lên một cấp.
 
-## Programmatic Navigation (`Router`)
+## Điều hướng bằng lập trình (`Router`)
 
-Inject the `Router` service to navigate via TypeScript code.
+Inject service `Router` để điều hướng qua code TypeScript.
 
 ### `router.navigate()`
 
-Uses an array of commands.
+Dùng một mảng các command.
 
 ```ts
 private router = inject(Router);
@@ -53,7 +53,7 @@ this.router.navigate(['edit'], { relativeTo: this.route });
 
 ### `router.navigateByUrl()`
 
-Uses a string path. Ideal for absolute navigation or full URLs.
+Dùng một đường dẫn dạng chuỗi. Lý tưởng cho điều hướng tuyệt đối hoặc URL đầy đủ.
 
 ```ts
 this.router.navigateByUrl('/products/123?view=details');
@@ -62,8 +62,8 @@ this.router.navigateByUrl('/products/123?view=details');
 this.router.navigateByUrl('/login', {replaceUrl: true});
 ```
 
-## URL Parameters
+## URL Parameter
 
-- **Route Params**: Part of the path (e.g., `/user/123`).
-- **Query Params**: After the `?` (e.g., `/search?q=query`).
-- **Matrix Params**: Scoped to a segment (e.g., `/products;category=books`).
+- **Route Param**: Là một phần của đường dẫn (ví dụ: `/user/123`).
+- **Query Param**: Nằm sau dấu `?` (ví dụ: `/search?q=query`).
+- **Matrix Param**: Giới hạn trong một segment (ví dụ: `/products;category=books`).

@@ -1,22 +1,22 @@
 ---
 name: repo-scan
-description: Bootstrap pointer that installs the external repo-scan skill from a pinned, reviewable commit. Use when repo-scan must be installed before running its cross-stack source-code asset audit; this ECC pointer does not perform the audit itself.
+description: "Bootstrap pointer cài đặt skill repo-scan bên ngoài từ một commit đã ghim (pinned), có thể review. Dùng khi cần cài repo-scan trước khi chạy audit tài sản mã nguồn đa stack (cross-stack source-code asset audit); pointer ECC này không tự thực hiện audit."
 metadata:
   origin: community
 ---
 
 # repo-scan
 
-> Every ecosystem has its own dependency manager, but no tool looks across C++, Android, iOS, and Web to tell you: how much code is actually yours, what's third-party, and what's dead weight.
+> Mỗi hệ sinh thái đều có trình quản lý dependency riêng, nhưng không có công cụ nào nhìn xuyên suốt C++, Android, iOS và Web để cho bạn biết: bao nhiêu code thực sự là của bạn, phần nào là của bên thứ ba, và phần nào là gánh nặng vô ích.
 
-## When to Use
+## Khi nào dùng
 
-- Taking over a large legacy codebase and need a structural overview
-- Before major refactoring — identify what's core, what's duplicate, what's dead
-- Auditing third-party dependencies embedded directly in source (not declared in package managers)
-- Preparing architecture decision records for monorepo reorganization
+- Tiếp quản một codebase legacy lớn và cần cái nhìn tổng quan về cấu trúc
+- Trước khi refactor lớn — xác định phần nào là lõi, phần nào trùng lặp, phần nào đã chết
+- Audit các dependency bên thứ ba được nhúng trực tiếp vào mã nguồn (không khai báo trong package manager)
+- Chuẩn bị architecture decision record cho việc tái tổ chức monorepo
 
-## Installation
+## Cài đặt
 
 ```bash
 # Clone first so the pinned commit can be reviewed before installation
@@ -118,53 +118,53 @@ if ! move_repo_scan_dir "$REPO_SCAN_STAGE" "$REPO_SCAN_INSTALL_DIR"; then
 fi
 ```
 
-> Review the source before installing any agent skill.
+> Hãy review mã nguồn trước khi cài đặt bất kỳ agent skill nào.
 
-Installation completes only the bootstrap. Reload your agent harness, then invoke `repo-scan` again. This ECC pointer installs the external skill but does not run a scan itself.
+Việc cài đặt chỉ hoàn tất bước bootstrap. Hãy tải lại agent harness, rồi gọi lại `repo-scan`. Pointer ECC này cài đặt skill bên ngoài nhưng không tự chạy scan.
 
-## Core Capabilities
+## Năng lực cốt lõi
 
-| Capability | Description |
+| Năng lực | Mô tả |
 |---|---|
-| **Cross-stack scanning** | C/C++, Java/Android, iOS (OC/Swift), Web (TS/JS/Vue) in one pass |
-| **File classification** | Every file tagged as project code, third-party, or build artifact |
-| **Library detection** | 50+ known libraries (FFmpeg, Boost, OpenSSL…) with version extraction |
-| **Four-level verdicts** | Core Asset / Extract & Merge / Rebuild / Deprecate |
-| **HTML reports** | Interactive dark-theme pages with drill-down navigation |
-| **Monorepo support** | Hierarchical scanning with summary + sub-project reports |
+| **Cross-stack scanning** | C/C++, Java/Android, iOS (OC/Swift), Web (TS/JS/Vue) trong một lượt |
+| **Phân loại file** | Mỗi file được gắn nhãn là code dự án, bên thứ ba hoặc build artifact |
+| **Phát hiện thư viện** | Hơn 50 thư viện đã biết (FFmpeg, Boost, OpenSSL…) kèm trích xuất phiên bản |
+| **Kết luận bốn mức** | Core Asset / Extract & Merge / Rebuild / Deprecate |
+| **Báo cáo HTML** | Trang tương tác giao diện tối với điều hướng drill-down |
+| **Hỗ trợ monorepo** | Quét phân cấp với báo cáo tổng hợp + báo cáo từng sub-project |
 
-## Analysis Depth Levels
+## Các mức độ sâu của phân tích
 
-| Level | Files Read | Use Case |
+| Mức | Số file đọc | Use Case |
 |---|---|---|
-| `fast` | 1-2 per module | Quick inventory of huge directories |
-| `standard` | 2-5 per module | Default audit with full dependency + architecture checks |
-| `deep` | 5-10 per module | Adds thread safety, memory management, API consistency |
-| `full` | All files | Pre-merge comprehensive review |
+| `fast` | 1-2 mỗi module | Kiểm kê nhanh các thư mục khổng lồ |
+| `standard` | 2-5 mỗi module | Audit mặc định với kiểm tra đầy đủ dependency + kiến trúc |
+| `deep` | 5-10 mỗi module | Bổ sung thread safety, quản lý bộ nhớ, tính nhất quán của API |
+| `full` | Tất cả file | Review toàn diện trước khi merge |
 
-## How It Works
+## Cách hoạt động
 
-1. **Classify the repo surface**: enumerate files, then tag each as project code, embedded third-party code, or build artifact.
-2. **Detect embedded libraries**: inspect directory names, headers, license files, and version markers to identify bundled dependencies and likely versions.
-3. **Score each module**: group files by module or subsystem, then assign one of the four verdicts based on ownership, duplication, and maintenance cost.
-4. **Highlight structural risks**: call out dead-weight artifacts, duplicated wrappers, outdated vendored code, and modules that should be extracted, rebuilt, or deprecated.
-5. **Produce the report**: return a concise summary plus the interactive HTML output with per-module drill-down so the audit can be reviewed asynchronously.
+1. **Phân loại bề mặt repo**: liệt kê file, rồi gắn nhãn từng file là code dự án, code bên thứ ba được nhúng, hoặc build artifact.
+2. **Phát hiện thư viện nhúng**: kiểm tra tên thư mục, header, file license và dấu hiệu phiên bản để xác định các dependency được đóng gói kèm và phiên bản khả dĩ.
+3. **Chấm điểm từng module**: nhóm file theo module hoặc subsystem, rồi gán một trong bốn kết luận dựa trên quyền sở hữu, mức độ trùng lặp và chi phí bảo trì.
+4. **Làm nổi bật rủi ro cấu trúc**: chỉ ra các artifact vô ích, wrapper bị nhân bản, code vendored đã lỗi thời, và các module nên được extract, rebuild hoặc deprecate.
+5. **Tạo báo cáo**: trả về bản tóm tắt ngắn gọn cùng đầu ra HTML tương tác với drill-down theo từng module để có thể review audit một cách bất đồng bộ.
 
-## Examples
+## Ví dụ
 
-On a 50,000-file C++ monorepo:
-- Found FFmpeg 2.x (2015 vintage) still in production
-- Discovered the same SDK wrapper duplicated 3 times
-- Identified 636 MB of committed Debug/ipch/obj build artifacts
-- Classified: 3 MB project code vs 596 MB third-party
+Trên một monorepo C++ gồm 50.000 file:
+- Phát hiện FFmpeg 2.x (đời 2015) vẫn đang chạy trong production
+- Phát hiện cùng một SDK wrapper bị nhân bản 3 lần
+- Xác định 636 MB build artifact Debug/ipch/obj đã bị commit
+- Phân loại: 3 MB code dự án so với 596 MB bên thứ ba
 
-## Best Practices
+## Best Practice
 
-- Start with `standard` depth for first-time audits
-- Use `fast` for monorepos with 100+ modules to get a quick inventory
-- Run `deep` incrementally on modules flagged for refactoring
-- Review the cross-module analysis for duplicate detection across sub-projects
+- Bắt đầu với mức `standard` cho lần audit đầu tiên
+- Dùng `fast` cho monorepo có hơn 100 module để kiểm kê nhanh
+- Chạy `deep` dần dần trên các module được đánh dấu cần refactor
+- Xem lại phân tích cross-module để phát hiện trùng lặp giữa các sub-project
 
-## Links
+## Liên kết
 
 - [GitHub Repository](https://github.com/haibindev/repo-scan)

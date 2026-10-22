@@ -1,27 +1,27 @@
 ---
 name: vue-patterns
-description: Vue.js 3 Composition API patterns, component architecture, reactivity best practices, Pinia state management, Vue Router navigation, and Nuxt SSR patterns. Activates for Vue, Nuxt, Vite, or Pinia projects. Use when building or reviewing Vue 3, Nuxt, or Pinia code — Composition API, reactivity, or router navigation.
+description: Các pattern Vue.js 3 Composition API, kiến trúc component, best practice về reactivity, quản lý state bằng Pinia, điều hướng Vue Router và các pattern SSR của Nuxt. Kích hoạt cho dự án Vue, Nuxt, Vite hoặc Pinia. Dùng khi xây dựng hoặc review code Vue 3, Nuxt hoặc Pinia — Composition API, reactivity hoặc điều hướng router.
 origin: ECC
 ---
 
-# Vue.js Patterns and Best Practices
+# Pattern và best practice Vue.js
 
-Comprehensive guide for Vue.js 3 development using Composition API (`<script setup>`), covering component design, reactivity, state management, routing, testing, and SSR patterns. Nuxt-specific guidance is included where it differs from vanilla Vue.
+Hướng dẫn toàn diện cho phát triển Vue.js 3 dùng Composition API (`<script setup>`), bao gồm thiết kế component, reactivity, quản lý state, routing, testing và pattern SSR. Có kèm hướng dẫn riêng cho Nuxt ở những chỗ khác với Vue thuần.
 
-## When to Activate
+## Khi nào kích hoạt
 
-Activate this skill when:
-- The project uses Vue.js (any version), Nuxt, Vite + Vue, or Pinia.
-- The user asks about Vue component architecture, composables, reactivity, or state management.
-- Reviewing Vue Single-File Components (`.vue` files).
-- Setting up Vue Router, Pinia stores, or Vite/Vitest configuration.
-- Discussing Vue-specific performance, security, or SSR patterns.
+Kích hoạt skill này khi:
+- Dự án dùng Vue.js (bất kỳ phiên bản nào), Nuxt, Vite + Vue hoặc Pinia.
+- Người dùng hỏi về kiến trúc component Vue, composable, reactivity hoặc quản lý state.
+- Review các Vue Single-File Component (file `.vue`).
+- Thiết lập Vue Router, Pinia store hoặc cấu hình Vite/Vitest.
+- Thảo luận về hiệu năng, bảo mật hoặc pattern SSR đặc thù của Vue.
 
 ---
 
-## 1. Project Structure
+## 1. Cấu trúc dự án
 
-### Recommended Layout (Feature-First)
+### Layout khuyến nghị (Feature-First)
 
 ```
 src/
@@ -40,20 +40,20 @@ src/
 └── App.vue           # Root component
 ```
 
-### File Naming
+### Đặt tên file
 
-| Convention | When to Use |
+| Quy ước | Khi nào dùng |
 |-----------|-------------|
-| `PascalCase.vue` | All components (enforced by `vue/multi-word-component-names`) |
-| `useCamelCase.ts` | Composables |
-| `camelCase.ts` | Utilities, API clients, types |
-| `kebab-case` directories | Route segments, feature folders |
+| `PascalCase.vue` | Mọi component (được ép buộc bởi `vue/multi-word-component-names`) |
+| `useCamelCase.ts` | Composable |
+| `camelCase.ts` | Utility, API client, type |
+| thư mục `kebab-case` | Route segment, thư mục feature |
 
 ---
 
-## 2. Component Architecture
+## 2. Kiến trúc component
 
-### Single-File Component Order
+### Thứ tự trong Single-File Component
 
 ```vue
 <script setup lang="ts">
@@ -76,12 +76,12 @@ src/
 </style>
 ```
 
-### Presentational vs Container
+### Presentational và Container
 
-- **Container components**: Own data fetching, state, and side effects. Render presentational components.
-- **Presentational components**: Receive props, emit events. No API calls, no store access. Pure rendering.
+- **Container component**: Tự đảm nhiệm data fetching, state và side effect. Render các presentational component.
+- **Presentational component**: Nhận props, emit event. Không gọi API, không truy cập store. Chỉ render thuần.
 
-### Props Best Practices
+### Best practice cho Props
 
 ```ts
 // Type-based props with defaults
@@ -98,10 +98,10 @@ const props = withDefaults(defineProps<Props>(), {
 });
 ```
 
-- Always provide `type`, and `required`/`default` where appropriate.
-- Boolean props: `isXxx`, `hasXxx`, `canXxx`.
-- Never mutate props — emit events instead.
-- For v-model binding, use `defineModel()` (Vue 3.4+) or `modelValue` + `update:modelValue`.
+- LUÔN LUÔN khai báo `type`, và `required`/`default` khi phù hợp.
+- Prop kiểu boolean: `isXxx`, `hasXxx`, `canXxx`.
+- KHÔNG BAO GIỜ mutate props — hãy emit event.
+- Với binding v-model, dùng `defineModel()` (Vue 3.4+) hoặc `modelValue` + `update:modelValue`.
 
 ### Events
 
@@ -113,14 +113,14 @@ const emit = defineEmits<{
 }>();
 ```
 
-- Use kebab-case in templates (`@update:model-value`).
-- Use camelCase in script (`emit("update:modelValue", val)`).
+- Dùng kebab-case trong template (`@update:model-value`).
+- Dùng camelCase trong script (`emit("update:modelValue", val)`).
 
 ---
 
-## 3. Composables (Reusable Logic)
+## 3. Composable (logic tái sử dụng)
 
-### Structure
+### Cấu trúc
 
 ```ts
 // composables/useDebounce.ts
@@ -141,35 +141,35 @@ export function useDebounce<T>(value: MaybeRef<T>, delay: number): Ref<T> {
 }
 ```
 
-### Rules
+### Quy tắc
 
-- Must start with `use` prefix.
-- Return reactive values (`ref`, `computed`, `reactive`), never plain primitives.
-- Accept reactive inputs via `MaybeRef` / `toRef()` / `toValue()`.
-- Clean up side effects in `onUnmounted` or watcher `onCleanup`.
-- No module-scope side effects.
+- PHẢI bắt đầu bằng tiền tố `use`.
+- Trả về các giá trị reactive (`ref`, `computed`, `reactive`), KHÔNG BAO GIỜ trả về primitive thuần.
+- Nhận đầu vào reactive qua `MaybeRef` / `toRef()` / `toValue()`.
+- Dọn dẹp side effect trong `onUnmounted` hoặc `onCleanup` của watcher.
+- Không có side effect ở phạm vi module.
 
-### vs Mixins
+### So với Mixin
 
-Composables replace Vue 2 mixins entirely:
-- **Mixins**: Opaque data flow, source-of-truth collisions, name conflicts.
-- **Composables**: Explicit imports, clear return values, composable and tree-shakable.
+Composable thay thế hoàn toàn mixin của Vue 2:
+- **Mixin**: Luồng dữ liệu mờ đục, xung đột nguồn sự thật (source-of-truth), xung đột tên.
+- **Composable**: Import tường minh, giá trị trả về rõ ràng, có thể kết hợp (composable) và tree-shake được.
 
 ---
 
-## 4. State Management
+## 4. Quản lý state
 
-### When to Use What
+### Khi nào dùng cái gì
 
-| Pattern | Use Case |
+| Pattern | Trường hợp dùng |
 |---------|----------|
-| `ref()` / `reactive()` | Local component state |
-| Props + Emits | Parent-child communication |
+| `ref()` / `reactive()` | State cục bộ của component |
+| Props + Emits | Giao tiếp cha-con |
 | Provide / Inject | Theme, config, plugin API |
-| Pinia store | Global, shared, complex state |
-| Server state composable | API data with caching (wrap `fetch`/TanStack Query) |
+| Pinia store | State toàn cục, dùng chung, phức tạp |
+| Server state composable | Dữ liệu API có caching (bọc `fetch`/TanStack Query) |
 
-### Pinia Setup Store (Preferred)
+### Pinia Setup Store (ưu tiên)
 
 ```ts
 // stores/useCartStore.ts
@@ -200,15 +200,15 @@ export const useCartStore = defineStore("cart", () => {
 });
 ```
 
-- Use Setup Store syntax (not Options Store).
-- Prefer actions for business-level mutations and `$patch()` for grouped updates.
-- Every async action: handle loading + success + error.
+- Dùng cú pháp Setup Store (không dùng Options Store).
+- Ưu tiên action cho các mutation ở mức nghiệp vụ và `$patch()` cho các cập nhật theo nhóm.
+- Mọi async action: xử lý loading + success + error.
 
 ---
 
 ## 5. Vue Router
 
-### Route Definitions
+### Định nghĩa route
 
 ```ts
 const routes = [
@@ -222,7 +222,7 @@ const routes = [
 ];
 ```
 
-### Navigation Guards
+### Navigation Guard
 
 ```ts
 router.beforeEach((to, from) => {
@@ -233,9 +233,9 @@ router.beforeEach((to, from) => {
 });
 ```
 
-### Reactive Route Params
+### Route param reactive
 
-When a component stays mounted but route params change:
+Khi một component vẫn được mount nhưng route param thay đổi:
 
 ```ts
 const route = useRoute();
@@ -245,9 +245,9 @@ watch(id, (newId) => fetchItem(newId));
 
 ---
 
-## 6. Template Patterns
+## 6. Pattern cho Template
 
-### Template Syntax
+### Cú pháp Template
 
 ```vue
 <!-- v-if/v-else-if/v-else -->
@@ -276,18 +276,18 @@ watch(id, (newId) => fetchItem(newId));
 
 ---
 
-## 7. Performance
+## 7. Hiệu năng
 
-| Technique | When to Use |
+| Kỹ thuật | Khi nào dùng |
 |-----------|-------------|
-| `v-memo` | List items that rarely change |
-| `v-once` | Content rendered once and static forever |
-| `shallowRef()` | Large data structures replaced wholesale |
-| `shallowReactive()` | Only top-level properties are reactive |
-| `v-show` over `v-if` | Frequent visibility toggles |
-| `<KeepAlive :max="10">` | Cache toggled views |
-| Lazy routes | `() => import(...)` for non-critical routes |
-| `Suspense` | Async component loading with fallback |
+| `v-memo` | Các item trong danh sách hiếm khi thay đổi |
+| `v-once` | Nội dung chỉ render một lần và tĩnh mãi mãi |
+| `shallowRef()` | Cấu trúc dữ liệu lớn được thay thế nguyên khối |
+| `shallowReactive()` | Chỉ các property cấp cao nhất là reactive |
+| `v-show` thay cho `v-if` | Bật/tắt hiển thị thường xuyên |
+| `<KeepAlive :max="10">` | Cache các view được bật/tắt |
+| Lazy route | `() => import(...)` cho các route không quan trọng |
+| `Suspense` | Tải async component kèm fallback |
 
 ---
 
@@ -295,12 +295,12 @@ watch(id, (newId) => fetchItem(newId));
 
 ### Stack
 
-- **Vitest** for unit and component tests
-- **Vue Test Utils** for mounting and interaction
-- **@pinia/testing** for store mocking
-- **Playwright** for E2E
+- **Vitest** cho unit test và component test
+- **Vue Test Utils** để mount và tương tác
+- **@pinia/testing** để mock store
+- **Playwright** cho E2E
 
-### Component Test Pattern
+### Pattern test component
 
 ```ts
 import { mount } from "@vue/test-utils";
@@ -321,11 +321,11 @@ it("renders and emits", async () => {
 
 ---
 
-## 9. Nuxt-Specific Patterns
+## 9. Pattern riêng cho Nuxt
 
-### Auto-Imports
+### Auto-Import
 
-Nuxt auto-imports `ref`, `computed`, `watch`, `useFetch`, `useAsyncData`, etc. Use them directly without importing. For non-Nuxt projects, always import explicitly.
+Nuxt tự động import `ref`, `computed`, `watch`, `useFetch`, `useAsyncData`, v.v. Dùng trực tiếp mà không cần import. Với dự án không phải Nuxt, luôn import tường minh.
 
 ### useAsyncData / useFetch
 
@@ -341,7 +341,7 @@ const { data: posts } = await useFetch("/api/posts", {
 });
 ```
 
-### Server Routes
+### Server Route
 
 ```ts
 // server/api/users/[id].ts
@@ -371,11 +371,11 @@ export default defineNuxtConfig({
 
 ---
 
-## 10. Vue 3.5+ New APIs
+## 10. Các API mới của Vue 3.5+
 
 ### Reactive Props Destructure
 
-Vue 3.5 stabilized reactive props destructure — destructured variables from `defineProps()` are automatically reactive:
+Vue 3.5 đã ổn định reactive props destructure — các biến được destructure từ `defineProps()` tự động reactive:
 
 ```ts
 // Vue 3.5+: destructured props are reactive (no need for toRefs)
@@ -390,7 +390,7 @@ watch(() => count, (newVal) => { ... }); // PASS getter required
 
 ### `useTemplateRef()`
 
-Replace name-matched plain refs with `useTemplateRef()` for template references:
+Thay các ref thường khớp theo tên bằng `useTemplateRef()` cho template reference:
 
 ```ts
 import { useTemplateRef } from "vue";
@@ -398,11 +398,11 @@ const inputEl = useTemplateRef<HTMLInputElement>("input");
 // "input" matches the ref="input" attribute in template, not the variable name
 ```
 
-Supports dynamic ref IDs: `useTemplateRef(dynamicRefId)`.
+Hỗ trợ ref ID động: `useTemplateRef(dynamicRefId)`.
 
 ### `onWatcherCleanup()`
 
-Globally importable watcher cleanup API (Vue 3.5+). It must be called synchronously inside the watcher callback:
+API dọn dẹp watcher có thể import toàn cục (Vue 3.5+). Phải được gọi đồng bộ bên trong callback của watcher:
 
 ```ts
 import { watch, onWatcherCleanup } from "vue";
@@ -416,16 +416,16 @@ watch(userId, async (newId) => {
 
 ### `useId()`
 
-SSR-stable unique ID generation for form elements and accessibility:
+Sinh ID duy nhất ổn định với SSR cho phần tử form và accessibility:
 
 ```ts
 import { useId } from "vue";
 const id = useId();
 ```
 
-### `defer` Teleport
+### Teleport `defer`
 
-`<Teleport defer>` allows teleporting to targets rendered in the same cycle:
+`<Teleport defer>` cho phép teleport tới các target được render trong cùng một chu kỳ:
 
 ```vue
 <Teleport defer to="#container">Content</Teleport>
@@ -434,7 +434,7 @@ const id = useId();
 
 ### Lazy Hydration (SSR)
 
-`defineAsyncComponent()` now supports `hydrate` strategy:
+`defineAsyncComponent()` giờ hỗ trợ chiến lược `hydrate`:
 
 ```ts
 import { defineAsyncComponent, hydrateOnVisible } from "vue";
@@ -446,26 +446,26 @@ const AsyncComp = defineAsyncComponent({
 
 ---
 
-## Anti-Patterns
+## Anti-Pattern
 
-| Anti-Pattern | Why It's Wrong | The Fix |
+| Anti-Pattern | Vì sao sai | Cách sửa |
 |-------------|---------------|---------|
-| Destructuring `defineProps()` (Vue < 3.5) | Captures snapshot, loses reactivity | Access via `props.xxx` or use `toRefs()` |
-| `watch()` on destructured prop (Vue 3.5+) | Compile-time error — destructured props can't be watched directly | Use getter wrapper: `watch(() => count, ...)` |
-| `v-if` + `v-for` on same element | Ambiguous execution order | Use computed filtered array |
-| `v-for` key = index | Broken state on reorder | Use stable database IDs |
-| Mutating props | Violates one-way data flow | Emit events or use `v-model` |
-| `v-html` with user content | XSS vulnerability | Sanitize with DOMPurify |
-| Mixins in Vue 3 | Opaque, collision-prone | Replace with composables |
-| Module-scope side effects in composable | Shared across instances | Scope in `onMounted` + `onUnmounted` |
-| `reactive()` for replaceable state | Replacement breaks reactivity | Use `ref()` instead |
-| Watcher without cleanup | Memory leaks, race conditions | Use `onCleanup` or `onWatcherCleanup()` (Vue 3.5+) |
-| Options API in new Vue 3 code | Ecosystem move to Composition API | Use `<script setup>` |
-| Plain ref for template references | No dynamic ref support, name-matching fragile | Use `useTemplateRef()` (Vue 3.5+) |
+| Destructure `defineProps()` (Vue < 3.5) | Chụp snapshot, mất reactivity | Truy cập qua `props.xxx` hoặc dùng `toRefs()` |
+| `watch()` trên prop đã destructure (Vue 3.5+) | Lỗi lúc compile — prop đã destructure không thể watch trực tiếp | Dùng getter wrapper: `watch(() => count, ...)` |
+| `v-if` + `v-for` trên cùng một phần tử | Thứ tự thực thi không rõ ràng | Dùng mảng đã lọc bằng computed |
+| key của `v-for` = index | State hỏng khi đổi thứ tự | Dùng ID ổn định từ database |
+| Mutate props | Vi phạm luồng dữ liệu một chiều | Emit event hoặc dùng `v-model` |
+| `v-html` với nội dung người dùng | Lỗ hổng XSS | Sanitize bằng DOMPurify |
+| Mixin trong Vue 3 | Mờ đục, dễ xung đột | Thay bằng composable |
+| Side effect ở phạm vi module trong composable | Bị chia sẻ giữa các instance | Giới hạn phạm vi trong `onMounted` + `onUnmounted` |
+| `reactive()` cho state có thể bị thay thế | Việc thay thế làm hỏng reactivity | Dùng `ref()` thay thế |
+| Watcher không có cleanup | Rò rỉ bộ nhớ, race condition | Dùng `onCleanup` hoặc `onWatcherCleanup()` (Vue 3.5+) |
+| Options API trong code Vue 3 mới | Hệ sinh thái đã chuyển sang Composition API | Dùng `<script setup>` |
+| Ref thường cho template reference | Không hỗ trợ ref động, khớp theo tên dễ vỡ | Dùng `useTemplateRef()` (Vue 3.5+) |
 
-## Related Skills
+## Skill liên quan
 
-- `accessibility` — ARIA, semantic HTML, focus management
-- `frontend-patterns` — Cross-framework frontend architecture
-- `typescript` — TypeScript best practices applied to Vue projects
-- `coding-standards` — General code quality standards
+- `accessibility` — ARIA, HTML ngữ nghĩa, quản lý focus
+- `frontend-patterns` — Kiến trúc frontend xuyên framework
+- `typescript` — best practice TypeScript áp dụng cho dự án Vue
+- `coding-standards` — Tiêu chuẩn chất lượng code chung

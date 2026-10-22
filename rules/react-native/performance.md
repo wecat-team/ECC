@@ -3,43 +3,43 @@ paths:
   - "**/*.ts"
   - "**/*.tsx"
 ---
-# React Native / Expo Performance
+# Hiệu năng React Native / Expo
 
-> This file extends [common/performance.md](../common/performance.md) with React Native / Expo specific content.
+> File này mở rộng [common/performance.md](../common/performance.md) với nội dung dành riêng cho React Native / Expo.
 
 ## Rendering
 
-- Memoize expensive components with `React.memo`; memoize callbacks/values passed to children with `useCallback`/`useMemo` only where they prevent real re-renders.
-- Keep component state local and narrow — lifting state too high re-renders large subtrees.
-- Avoid creating new objects/arrays/functions inline in props on hot paths; they break memoization.
-- Split large screens so a state change re-renders the smallest possible subtree.
+- Memoize các component tốn kém bằng `React.memo`; chỉ memoize callback/giá trị truyền cho component con bằng `useCallback`/`useMemo` ở nơi chúng thực sự ngăn được re-render.
+- Giữ state của component ở cục bộ và hẹp — nâng state lên quá cao sẽ re-render các cây con lớn.
+- Tránh tạo object/array/function mới inline trong props ở các đường nóng; chúng phá vỡ memoization.
+- Tách các màn hình lớn để một thay đổi state chỉ re-render cây con nhỏ nhất có thể.
 
-## Lists
+## Danh sách
 
-- Use `FlatList`/`SectionList`, or `FlashList` (Shopify) for large or heterogeneous lists.
-- Provide `keyExtractor`, a memoized `renderItem`, and stable item heights when possible (`getItemLayout`).
-- Tune `initialNumToRender`, `windowSize`, `maxToRenderPerBatch` for heavy rows.
-- Never render large data sets with `.map()` inside a `ScrollView`.
+- Dùng `FlatList`/`SectionList`, hoặc `FlashList` (Shopify) cho danh sách lớn hoặc không đồng nhất.
+- Cung cấp `keyExtractor`, `renderItem` đã memoize, và chiều cao item ổn định khi có thể (`getItemLayout`).
+- Tinh chỉnh `initialNumToRender`, `windowSize`, `maxToRenderPerBatch` cho các hàng nặng.
+- KHÔNG BAO GIỜ render tập dữ liệu lớn bằng `.map()` bên trong `ScrollView`.
 
-## Images & Assets
+## Hình ảnh & Asset
 
-- Use `expo-image` for caching, priority, and placeholders; serve appropriately sized images.
-- Avoid loading full-resolution images into small thumbnails.
+- Dùng `expo-image` để có caching, priority và placeholder; phục vụ hình ảnh có kích thước phù hợp.
+- Tránh tải ảnh độ phân giải đầy đủ vào các thumbnail nhỏ.
 
-## Animations
+## Animation
 
-- Prefer `react-native-reanimated` (runs on the UI thread) over the JS-driven `Animated` API.
-- For legacy `Animated`, set `useNativeDriver: true` where supported.
-- Keep heavy computation off the JS thread; offload to Reanimated worklets or native modules.
+- Ưu tiên `react-native-reanimated` (chạy trên UI thread) hơn API `Animated` chạy bằng JS.
+- Với `Animated` cũ, đặt `useNativeDriver: true` ở nơi được hỗ trợ.
+- Giữ các tính toán nặng ra khỏi JS thread; chuyển sang Reanimated worklet hoặc native module.
 
 ## Runtime & Build
 
-- Build on the **New Architecture** (Fabric + TurboModules). It is the default in recent Expo SDKs (opt-out still available on SDK 53–54) and is mandatory — cannot be disabled — from SDK 55+. Verify every native dependency is New-Arch compatible before shipping.
-- Ensure **Hermes** is enabled (default in modern Expo) for faster startup and lower memory.
-- Defer non-critical work after first paint; lazy-load heavy screens/modules.
-- Use `InteractionManager.runAfterInteractions` for work that can wait until animations finish.
+- Build trên **New Architecture** (Fabric + TurboModules). Nó là mặc định trong các Expo SDK gần đây (vẫn có thể opt-out trên SDK 53–54) và là bắt buộc — không thể tắt — từ SDK 55+. Xác minh mọi dependency native đều tương thích New-Arch trước khi phát hành.
+- Đảm bảo **Hermes** được bật (mặc định trong Expo hiện đại) để khởi động nhanh hơn và dùng ít bộ nhớ hơn.
+- Hoãn công việc không quan trọng sau first paint; lazy-load các màn hình/module nặng.
+- Dùng `InteractionManager.runAfterInteractions` cho công việc có thể chờ đến khi animation kết thúc.
 
-## Measuring
+## Đo lường
 
-- Profile with the React DevTools profiler, the Hermes sampling profiler, and the in-app performance monitor. (Avoid Flipper — it is deprecated and not supported on the New Architecture.)
-- Watch for: long lists without virtualization, oversized images, frequent full-tree re-renders, and synchronous work on the JS thread.
+- Profile bằng React DevTools profiler, Hermes sampling profiler và performance monitor trong app. (Tránh Flipper — nó đã deprecated và không được hỗ trợ trên New Architecture.)
+- Chú ý: danh sách dài không ảo hóa, hình ảnh quá lớn, re-render toàn cây thường xuyên, và công việc đồng bộ trên JS thread.

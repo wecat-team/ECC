@@ -1,22 +1,22 @@
 ---
-description: Validate epic readiness, dependencies, and coordination policy.
+description: Validate mức độ sẵn sàng của epic, dependency và chính sách điều phối.
 ---
 
 # /epic-validate
 
-Validate a single epic issue before publishing or review handoff.
+Validate một epic issue đơn lẻ trước khi publish hoặc bàn giao để review.
 
 ```bash
 node scripts/github-coordination.js validate <issue-number> --repo <owner/repo>
 ```
 
-What this checks:
+Việc này kiểm tra gì:
 
-1. Coordination state exists and is parseable.
-2. Validation state is satisfied by policy.
-3. Declared dependencies are closed.
-4. The epic is ready for the next workflow stage.
+1. Trạng thái điều phối tồn tại và parse được.
+2. Trạng thái validation thỏa chính sách.
+3. Các dependency đã khai báo đều đã đóng.
+4. Epic sẵn sàng cho giai đoạn workflow tiếp theo.
 
-Compatibility aliases:
+Alias tương thích:
 
 - `/quality-gate`

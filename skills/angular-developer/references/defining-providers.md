@@ -1,14 +1,14 @@
-# Defining Dependency Providers
+# Định nghĩa Dependency Provider
 
-Angular offers automatic and manual ways to provide dependencies to its Dependency Injection (DI) system.
+Angular cung cấp cả cách tự động lẫn thủ công để cung cấp dependency cho hệ thống Dependency Injection (DI) của nó.
 
-## Automatic Provision
+## Cung cấp tự động
 
-The most common way to provide a service is using `providedIn: 'root'` on an `@Injectable()`.
+Cách phổ biến nhất để cung cấp một service là dùng `providedIn: 'root'` trên `@Injectable()`.
 
 ### InjectionToken
 
-Use `InjectionToken` for non-class dependencies (configuration objects, functions, primitives). An `InjectionToken` can also be automatically provided.
+Dùng `InjectionToken` cho các dependency không phải class (object cấu hình, hàm, kiểu nguyên thủy). Một `InjectionToken` cũng có thể được cung cấp tự động.
 
 ```ts
 import {InjectionToken} from '@angular/core';
@@ -23,9 +23,9 @@ export const APP_CONFIG = new InjectionToken<AppConfig>('app.config', {
 });
 ```
 
-## Manual Provision
+## Cung cấp thủ công
 
-You use the `providers` array when a service lacks `providedIn`, when you want a new instance for a specific component, or when configuring runtime values.
+Bạn dùng mảng `providers` khi một service không có `providedIn`, khi bạn muốn một instance mới cho một component cụ thể, hoặc khi cấu hình các giá trị lúc runtime.
 
 ```ts
 @Component({
@@ -55,15 +55,15 @@ You use the `providers` array when a service lacks `providedIn`, when you want a
 export class Example {}
 ```
 
-## Scopes of Providers
+## Phạm vi của Provider
 
-- **Application Bootstrap**: Global singletons. Use for HTTP clients, logging, or app-wide config.
-- **Component/Directive**: Isolated instances. Use for component-specific state or forms. Services are destroyed when the component is destroyed.
-- **Route**: Feature-specific services loaded only with specific routes.
+- **Application Bootstrap**: Singleton toàn cục. Dùng cho HTTP client, logging hoặc cấu hình toàn ứng dụng.
+- **Component/Directive**: Instance được cô lập. Dùng cho state hoặc form riêng của component. Service bị hủy khi component bị hủy.
+- **Route**: Service theo tính năng, chỉ được load cùng các route cụ thể.
 
-## Library Pattern: `provide*` functions
+## Library Pattern: các hàm `provide*`
 
-Library authors should export functions that return provider arrays to encapsulate configuration:
+Tác giả thư viện nên export các hàm trả về mảng provider để đóng gói cấu hình:
 
 ```ts
 export function provideAnalytics(config: AnalyticsConfig): Provider[] {

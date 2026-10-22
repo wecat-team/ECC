@@ -1,29 +1,29 @@
 ---
 name: golang-patterns
-description: Idiomatic Go patterns, best practices, and conventions for building robust, efficient, and maintainable Go applications. Use when writing or reviewing Go code and idiomatic structure or conventions are in question.
+description: Pattern Go idiomatic, best practice và quy ước để xây dựng ứng dụng Go mạnh mẽ, hiệu quả và dễ bảo trì. Dùng khi viết hoặc review code Go và có thắc mắc về cấu trúc idiomatic hay quy ước.
 metadata:
   origin: ECC
 ---
 
-# Go Development Patterns
+# Pattern phát triển Go
 
-Idiomatic Go patterns and best practices for building robust, efficient, and maintainable applications.
+Các pattern Go idiomatic và best practice để xây dựng ứng dụng mạnh mẽ, hiệu quả và dễ bảo trì.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing new Go code
-- Reviewing Go code
-- Refactoring existing Go code
-- Designing Go packages/modules
+- Viết code Go mới
+- Review code Go
+- Refactor code Go hiện có
+- Thiết kế package/module Go
 
-## Core Principles
+## Nguyên tắc cốt lõi
 
-### 1. Simplicity and Clarity
+### 1. Đơn giản và rõ ràng
 
-Go favors simplicity over cleverness. Code should be obvious and easy to read.
+Go ưu tiên sự đơn giản hơn sự khéo léo. Code phải hiển nhiên và dễ đọc.
 
 ```go
-// Good: Clear and direct
+// Good: Rõ ràng và trực tiếp
 func GetUser(id string) (*User, error) {
     user, err := db.FindUser(id)
     if err != nil {
@@ -32,7 +32,7 @@ func GetUser(id string) (*User, error) {
     return user, nil
 }
 
-// Bad: Overly clever
+// Bad: Quá khéo léo
 func GetUser(id string) (*User, error) {
     return func() (*User, error) {
         if u, e := db.FindUser(id); e == nil {
@@ -44,12 +44,12 @@ func GetUser(id string) (*User, error) {
 }
 ```
 
-### 2. Make the Zero Value Useful
+### 2. Làm cho Zero Value hữu ích
 
-Design types so their zero value is immediately usable without initialization.
+Thiết kế type sao cho zero value của nó dùng được ngay mà không cần khởi tạo.
 
 ```go
-// Good: Zero value is useful
+// Good: Zero value hữu ích
 type Counter struct {
     mu    sync.Mutex
     count int // zero value is 0, ready to use
@@ -61,22 +61,22 @@ func (c *Counter) Inc() {
     c.mu.Unlock()
 }
 
-// Good: bytes.Buffer works with zero value
+// Good: bytes.Buffer hoạt động với zero value
 var buf bytes.Buffer
 buf.WriteString("hello")
 
-// Bad: Requires initialization
+// Bad: Đòi hỏi khởi tạo
 type BadCounter struct {
     counts map[string]int // nil map will panic
 }
 ```
 
-### 3. Accept Interfaces, Return Structs
+### 3. Nhận Interface, trả về Struct
 
-Functions should accept interface parameters and return concrete types.
+Hàm nên nhận tham số là interface và trả về kiểu cụ thể.
 
 ```go
-// Good: Accepts interface, returns concrete type
+// Good: Nhận interface, trả về kiểu cụ thể
 func ProcessData(r io.Reader) (*Result, error) {
     data, err := io.ReadAll(r)
     if err != nil {
@@ -85,18 +85,18 @@ func ProcessData(r io.Reader) (*Result, error) {
     return &Result{Data: data}, nil
 }
 
-// Bad: Returns interface (hides implementation details unnecessarily)
+// Bad: Trả về interface (che giấu chi tiết triển khai một cách không cần thiết)
 func ProcessData(r io.Reader) (io.Reader, error) {
     // ...
 }
 ```
 
-## Error Handling Patterns
+## Pattern xử lý lỗi
 
-### Error Wrapping with Context
+### Bọc lỗi (Error Wrapping) kèm ngữ cảnh
 
 ```go
-// Good: Wrap errors with context
+// Good: Bọc lỗi kèm ngữ cảnh
 func LoadConfig(path string) (*Config, error) {
     data, err := os.ReadFile(path)
     if err != nil {
@@ -112,10 +112,10 @@ func LoadConfig(path string) (*Config, error) {
 }
 ```
 
-### Custom Error Types
+### Kiểu lỗi tùy chỉnh
 
 ```go
-// Define domain-specific errors
+// Định nghĩa lỗi đặc thù theo domain
 type ValidationError struct {
     Field   string
     Message string
@@ -125,7 +125,7 @@ func (e *ValidationError) Error() string {
     return fmt.Sprintf("validation failed on %s: %s", e.Field, e.Message)
 }
 
-// Sentinel errors for common cases
+// Sentinel error cho các trường hợp phổ biến
 var (
     ErrNotFound     = errors.New("resource not found")
     ErrUnauthorized = errors.New("unauthorized")
@@ -133,17 +133,17 @@ var (
 )
 ```
 
-### Error Checking with errors.Is and errors.As
+### Kiểm tra lỗi với errors.Is và errors.As
 
 ```go
 func HandleError(err error) {
-    // Check for specific error
+    // Kiểm tra lỗi cụ thể
     if errors.Is(err, sql.ErrNoRows) {
         log.Println("No records found")
         return
     }
 
-    // Check for error type
+    // Kiểm tra kiểu lỗi
     var validationErr *ValidationError
     if errors.As(err, &validationErr) {
         log.Printf("Validation error on field %s: %s",
@@ -151,28 +151,28 @@ func HandleError(err error) {
         return
     }
 
-    // Unknown error
+    // Lỗi không xác định
     log.Printf("Unexpected error: %v", err)
 }
 ```
 
-### Never Ignore Errors
+### KHÔNG BAO GIỜ bỏ qua lỗi
 
 ```go
-// Bad: Ignoring error with blank identifier
+// Bad: Bỏ qua lỗi bằng blank identifier
 result, _ := doSomething()
 
-// Good: Handle or explicitly document why it's safe to ignore
+// Good: Xử lý hoặc ghi chú rõ ràng lý do vì sao bỏ qua là an toàn
 result, err := doSomething()
 if err != nil {
     return err
 }
 
-// Acceptable: When error truly doesn't matter (rare)
+// Chấp nhận được: Khi lỗi thực sự không quan trọng (hiếm)
 _ = writer.Close() // Best-effort cleanup, error logged elsewhere
 ```
 
-## Concurrency Patterns
+## Pattern Concurrency
 
 ### Worker Pool
 
@@ -195,7 +195,7 @@ func WorkerPool(jobs <-chan Job, results chan<- Result, numWorkers int) {
 }
 ```
 
-### Context for Cancellation and Timeouts
+### Context cho Cancellation và Timeout
 
 ```go
 func FetchWithTimeout(ctx context.Context, url string) ([]byte, error) {
@@ -238,7 +238,7 @@ func GracefulShutdown(server *http.Server) {
 }
 ```
 
-### errgroup for Coordinated Goroutines
+### errgroup để điều phối Goroutine
 
 ```go
 import "golang.org/x/sync/errgroup"
@@ -266,10 +266,10 @@ func FetchAll(ctx context.Context, urls []string) ([][]byte, error) {
 }
 ```
 
-### Avoiding Goroutine Leaks
+### Tránh rò rỉ Goroutine
 
 ```go
-// Bad: Goroutine leak if context is cancelled
+// Bad: Rò rỉ goroutine nếu context bị cancel
 func leakyFetch(ctx context.Context, url string) <-chan []byte {
     ch := make(chan []byte)
     go func() {
@@ -279,7 +279,7 @@ func leakyFetch(ctx context.Context, url string) <-chan []byte {
     return ch
 }
 
-// Good: Properly handles cancellation
+// Good: Xử lý cancellation đúng cách
 func safeFetch(ctx context.Context, url string) <-chan []byte {
     ch := make(chan []byte, 1) // Buffered channel
     go func() {
@@ -296,12 +296,12 @@ func safeFetch(ctx context.Context, url string) <-chan []byte {
 }
 ```
 
-## Interface Design
+## Thiết kế Interface
 
-### Small, Focused Interfaces
+### Interface nhỏ, tập trung
 
 ```go
-// Good: Single-method interfaces
+// Good: Interface một method
 type Reader interface {
     Read(p []byte) (n int, err error)
 }
@@ -314,7 +314,7 @@ type Closer interface {
     Close() error
 }
 
-// Compose interfaces as needed
+// Kết hợp các interface khi cần
 type ReadWriteCloser interface {
     Reader
     Writer
@@ -322,13 +322,13 @@ type ReadWriteCloser interface {
 }
 ```
 
-### Define Interfaces Where They're Used
+### Định nghĩa Interface ở nơi chúng được dùng
 
 ```go
-// In the consumer package, not the provider
+// Trong package của consumer, không phải provider
 package service
 
-// UserStore defines what this service needs
+// UserStore định nghĩa những gì service này cần
 type UserStore interface {
     GetUser(id string) (*User, error)
     SaveUser(user *User) error
@@ -338,11 +338,11 @@ type Service struct {
     store UserStore
 }
 
-// Concrete implementation can be in another package
-// It doesn't need to know about this interface
+// Implementation cụ thể có thể nằm ở package khác
+// Nó không cần biết về interface này
 ```
 
-### Optional Behavior with Type Assertions
+### Hành vi tùy chọn với Type Assertion
 
 ```go
 type Flusher interface {
@@ -354,7 +354,7 @@ func WriteAndFlush(w io.Writer, data []byte) error {
         return err
     }
 
-    // Flush if supported
+    // Flush nếu được hỗ trợ
     if f, ok := w.(Flusher); ok {
         return f.Flush()
     }
@@ -362,9 +362,9 @@ func WriteAndFlush(w io.Writer, data []byte) error {
 }
 ```
 
-## Package Organization
+## Tổ chức Package
 
-### Standard Project Layout
+### Bố cục project chuẩn
 
 ```text
 myproject/
@@ -386,24 +386,24 @@ myproject/
 └── Makefile
 ```
 
-### Package Naming
+### Đặt tên Package
 
 ```go
-// Good: Short, lowercase, no underscores
+// Good: Ngắn, chữ thường, không có dấu gạch dưới
 package http
 package json
 package user
 
-// Bad: Verbose, mixed case, or redundant
+// Bad: Dài dòng, lẫn chữ hoa thường, hoặc thừa
 package httpHandler
 package json_parser
 package userService // Redundant 'Service' suffix
 ```
 
-### Avoid Package-Level State
+### Tránh State ở cấp Package
 
 ```go
-// Bad: Global mutable state
+// Bad: State toàn cục có thể thay đổi
 var db *sql.DB
 
 func init() {
@@ -420,9 +420,9 @@ func NewServer(db *sql.DB) *Server {
 }
 ```
 
-## Struct Design
+## Thiết kế Struct
 
-### Functional Options Pattern
+### Pattern Functional Options
 
 ```go
 type Server struct {
@@ -457,14 +457,14 @@ func NewServer(addr string, opts ...Option) *Server {
     return s
 }
 
-// Usage
+// Cách dùng
 server := NewServer(":8080",
     WithTimeout(60*time.Second),
     WithLogger(customLogger),
 )
 ```
 
-### Embedding for Composition
+### Embedding để Composition
 
 ```go
 type Logger struct {
@@ -487,17 +487,17 @@ func NewServer(addr string) *Server {
     }
 }
 
-// Usage
+// Cách dùng
 s := NewServer(":8080")
 s.Log("Starting...") // Calls embedded Logger.Log
 ```
 
-## Memory and Performance
+## Bộ nhớ và Hiệu năng
 
-### Preallocate Slices When Size is Known
+### Cấp phát trước Slice khi biết kích thước
 
 ```go
-// Bad: Grows slice multiple times
+// Bad: Slice phải tăng nhiều lần
 func processItems(items []Item) []Result {
     var results []Result
     for _, item := range items {
@@ -506,7 +506,7 @@ func processItems(items []Item) []Result {
     return results
 }
 
-// Good: Single allocation
+// Good: Chỉ một lần cấp phát
 func processItems(items []Item) []Result {
     results := make([]Result, 0, len(items))
     for _, item := range items {
@@ -516,7 +516,7 @@ func processItems(items []Item) []Result {
 }
 ```
 
-### Use sync.Pool for Frequent Allocations
+### Dùng sync.Pool cho các cấp phát thường xuyên
 
 ```go
 var bufferPool = sync.Pool{
@@ -533,15 +533,15 @@ func ProcessRequest(data []byte) []byte {
     }()
 
     buf.Write(data)
-    // Process...
+    // Xử lý...
     return buf.Bytes()
 }
 ```
 
-### Avoid String Concatenation in Loops
+### Tránh nối chuỗi trong vòng lặp
 
 ```go
-// Bad: Creates many string allocations
+// Bad: Tạo ra nhiều cấp phát string
 func join(parts []string) string {
     var result string
     for _, p := range parts {
@@ -550,7 +550,7 @@ func join(parts []string) string {
     return result
 }
 
-// Good: Single allocation with strings.Builder
+// Good: Một lần cấp phát với strings.Builder
 func join(parts []string) string {
     var sb strings.Builder
     for i, p := range parts {
@@ -562,18 +562,18 @@ func join(parts []string) string {
     return sb.String()
 }
 
-// Best: Use standard library
+// Best: Dùng thư viện chuẩn
 func join(parts []string) string {
     return strings.Join(parts, ",")
 }
 ```
 
-## Go Tooling Integration
+## Tích hợp công cụ Go
 
-### Essential Commands
+### Lệnh thiết yếu
 
 ```bash
-# Build and run
+# Build và chạy
 go build ./...
 go run ./cmd/myapp
 
@@ -582,21 +582,21 @@ go test ./...
 go test -race ./...
 go test -cover ./...
 
-# Static analysis
+# Phân tích tĩnh
 go vet ./...
 staticcheck ./...
 golangci-lint run
 
-# Module management
+# Quản lý module
 go mod tidy
 go mod verify
 
-# Formatting
+# Định dạng
 gofmt -w .
 goimports -w .
 ```
 
-### Recommended Linter Configuration (.golangci.yml)
+### Cấu hình Linter được khuyến nghị (.golangci.yml)
 
 ```yaml
 linters:
@@ -624,29 +624,29 @@ issues:
   exclude-use-default: false
 ```
 
-## Quick Reference: Go Idioms
+## Tham chiếu nhanh: Go Idiom
 
-| Idiom | Description |
+| Idiom | Mô tả |
 |-------|-------------|
-| Accept interfaces, return structs | Functions accept interface params, return concrete types |
-| Errors are values | Treat errors as first-class values, not exceptions |
-| Don't communicate by sharing memory | Use channels for coordination between goroutines |
-| Make the zero value useful | Types should work without explicit initialization |
-| A little copying is better than a little dependency | Avoid unnecessary external dependencies |
-| Clear is better than clever | Prioritize readability over cleverness |
-| gofmt is no one's favorite but everyone's friend | Always format with gofmt/goimports |
-| Return early | Handle errors first, keep happy path unindented |
+| Accept interfaces, return structs | Hàm nhận tham số interface, trả về kiểu cụ thể |
+| Errors are values | Coi lỗi là giá trị hạng nhất, không phải exception |
+| Don't communicate by sharing memory | Dùng channel để điều phối giữa các goroutine |
+| Make the zero value useful | Type nên hoạt động mà không cần khởi tạo tường minh |
+| A little copying is better than a little dependency | Tránh các dependency bên ngoài không cần thiết |
+| Clear is better than clever | Ưu tiên độ dễ đọc hơn sự khéo léo |
+| gofmt is no one's favorite but everyone's friend | Luôn format bằng gofmt/goimports |
+| Return early | Xử lý lỗi trước, giữ happy path không thụt lề |
 
-## Anti-Patterns to Avoid
+## Anti-Pattern cần tránh
 
 ```go
-// Bad: Naked returns in long functions
+// Bad: Naked return trong hàm dài
 func process() (result int, err error) {
     // ... 50 lines ...
     return // What is being returned?
 }
 
-// Bad: Using panic for control flow
+// Bad: Dùng panic cho control flow
 func GetUser(id string) *User {
     user, err := db.Find(id)
     if err != nil {
@@ -655,22 +655,22 @@ func GetUser(id string) *User {
     return user
 }
 
-// Bad: Passing context in struct
+// Bad: Truyền context trong struct
 type Request struct {
     ctx context.Context // Context should be first param
     ID  string
 }
 
-// Good: Context as first parameter
+// Good: Context là tham số đầu tiên
 func ProcessRequest(ctx context.Context, id string) error {
     // ...
 }
 
-// Bad: Mixing value and pointer receivers
+// Bad: Trộn value receiver và pointer receiver
 type Counter struct{ n int }
 func (c Counter) Value() int { return c.n }    // Value receiver
 func (c *Counter) Increment() { c.n++ }        // Pointer receiver
-// Pick one style and be consistent
+// Chọn một kiểu và nhất quán
 ```
 
-**Remember**: Go code should be boring in the best way - predictable, consistent, and easy to understand. When in doubt, keep it simple.
+**Hãy nhớ**: Code Go nên "nhàm chán" theo nghĩa tốt nhất — dễ đoán, nhất quán và dễ hiểu. Khi phân vân, hãy giữ đơn giản.

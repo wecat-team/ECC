@@ -2,13 +2,13 @@
 paths:
   - "**/*.java"
 ---
-# Java Patterns
+# Pattern Java
 
-> This file extends [common/patterns.md](../common/patterns.md) with Java-specific content.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với nội dung dành riêng cho Java.
 
 ## Repository Pattern
 
-Encapsulate data access behind an interface:
+Đóng gói việc truy cập dữ liệu sau một interface:
 
 ```java
 public interface OrderRepository {
@@ -19,11 +19,11 @@ public interface OrderRepository {
 }
 ```
 
-Concrete implementations handle storage details (JPA, JDBC, in-memory for tests).
+Các triển khai cụ thể xử lý chi tiết lưu trữ (JPA, JDBC, in-memory cho test).
 
-## Service Layer
+## Tầng Service
 
-Business logic in service classes; keep controllers and repositories thin:
+Business logic nằm trong các service class; giữ controller và repository mỏng:
 
 ```java
 public class OrderService {
@@ -46,7 +46,7 @@ public class OrderService {
 
 ## Constructor Injection
 
-Always use constructor injection — never field injection:
+Luôn dùng constructor injection — KHÔNG BAO GIỜ dùng field injection:
 
 ```java
 // GOOD — constructor injection (testable, immutable)
@@ -65,9 +65,9 @@ public class NotificationService {
 }
 ```
 
-## DTO Mapping
+## Ánh xạ DTO
 
-Use records for DTOs. Map at service/controller boundaries:
+Dùng record cho DTO. Ánh xạ tại ranh giới service/controller:
 
 ```java
 public record OrderResponse(Long id, String customer, BigDecimal total) {
@@ -79,7 +79,7 @@ public record OrderResponse(Long id, String customer, BigDecimal total) {
 
 ## Builder Pattern
 
-Use for objects with many optional parameters:
+Dùng cho object có nhiều tham số tùy chọn:
 
 ```java
 public class SearchCriteria {
@@ -110,7 +110,7 @@ public class SearchCriteria {
 }
 ```
 
-## Sealed Types for Domain Models
+## Sealed Type cho Domain Model
 
 ```java
 public sealed interface PaymentResult permits PaymentSuccess, PaymentFailure {
@@ -127,7 +127,7 @@ String message = switch (result) {
 
 ## API Response Envelope
 
-Consistent API responses:
+API response nhất quán:
 
 ```java
 public record ApiResponse<T>(boolean success, T data, String error) {
@@ -140,8 +140,8 @@ public record ApiResponse<T>(boolean success, T data, String error) {
 }
 ```
 
-## References
+## Tham chiếu
 
-See skill: `springboot-patterns` for Spring Boot architecture patterns.
-See skill: `quarkus-patterns` for Quarkus architecture patterns with REST, Panache, and messaging.
-See skill: `jpa-patterns` for entity design and query optimization.
+Xem skill: `springboot-patterns` để có các pattern kiến trúc Spring Boot.
+Xem skill: `quarkus-patterns` để có các pattern kiến trúc Quarkus với REST, Panache và messaging.
+Xem skill: `jpa-patterns` để có thiết kế entity và tối ưu truy vấn.

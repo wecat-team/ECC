@@ -1,53 +1,52 @@
 ---
 name: continuous-learning-v2
-description: Instinct-based learning system that observes sessions via hooks, creates atomic instincts with confidence scoring, and evolves them into skills/commands/agents. v2.1 adds project-scoped instincts to prevent cross-project contamination. Use when capturing lessons from a session, managing instincts, or promoting them into skills, commands, or agents.
+description: Hệ thống học dựa trên instinct, quan sát session qua hook, tạo các instinct nguyên tử (atomic) kèm chấm điểm confidence, và tiến hóa chúng thành skill/command/agent. v2.1 bổ sung instinct theo phạm vi dự án (project-scoped) để ngăn nhiễm chéo giữa các dự án. Dùng khi ghi nhận bài học từ một session, quản lý instinct, hoặc nâng cấp chúng thành skill, command hay agent.
 metadata:
   version: 2.1.0
   origin: ECC
 ---
 
-# Continuous Learning v2.1 - Instinct
--Based Architecture
+# Continuous Learning v2.1 - Kiến trúc dựa trên Instinct
 
-An advanced learning system that turns your Claude Code sessions into reusable knowledge through atomic "instincts" - small learned behaviors with confidence scoring.
+Một hệ thống học nâng cao biến các session Claude Code của bạn thành kiến thức tái sử dụng được thông qua các "instinct" nguyên tử - những hành vi nhỏ đã học được kèm chấm điểm confidence.
 
-**v2.1** adds **project-scoped instincts** — React patterns stay in your React project, Python conventions stay in your Python project, and universal patterns (like "always validate input") are shared globally.
+**v2.1** bổ sung **instinct theo phạm vi dự án (project-scoped)** — pattern React ở lại trong dự án React của bạn, convention Python ở lại trong dự án Python của bạn, và các pattern phổ quát (như "luôn validate input") được chia sẻ toàn cục.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Setting up automatic learning from Claude Code sessions
-- Configuring instinct-based behavior extraction via hooks
-- Tuning confidence thresholds for learned behaviors
-- Reviewing, exporting, or importing instinct libraries
-- Evolving instincts into full skills, commands, or agents
-- Managing project-scoped vs global instincts
-- Promoting instincts from project to global scope
+- Thiết lập học tự động từ các session Claude Code
+- Cấu hình trích xuất hành vi dựa trên instinct qua hook
+- Tinh chỉnh ngưỡng confidence cho các hành vi đã học
+- Review, export hoặc import thư viện instinct
+- Tiến hóa instinct thành skill, command hoặc agent hoàn chỉnh
+- Quản lý instinct project-scoped so với global
+- Nâng cấp instinct từ phạm vi dự án lên toàn cục
 
-## What's New in v2.1
+## Điểm mới trong v2.1
 
-| Feature | v2.0 | v2.1 |
+| Tính năng | v2.0 | v2.1 |
 |---------|------|------|
-| Storage | Global (`~/.claude/homunculus/`) | Project-scoped (`${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus/projects/<hash>/`) |
-| Scope | All instincts apply everywhere | Project-scoped + global |
-| Detection | None | git remote URL / repo path |
-| Promotion | N/A | Project → global when seen in 2+ projects |
-| Commands | 4 (status/evolve/export/import) | 6 (+promote/projects) |
-| Cross-project | Contamination risk | Isolated by default |
+| Lưu trữ | Toàn cục (`~/.claude/homunculus/`) | Theo dự án (`${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus/projects/<hash>/`) |
+| Phạm vi (Scope) | Mọi instinct áp dụng ở mọi nơi | Project-scoped + global |
+| Phát hiện | Không có | git remote URL / đường dẫn repo |
+| Nâng cấp (Promotion) | N/A | Project → global khi thấy ở 2+ dự án |
+| Command | 4 (status/evolve/export/import) | 6 (+promote/projects) |
+| Chéo dự án | Có nguy cơ nhiễm | Mặc định được cô lập |
 
-## What's New in v2 (vs v1)
+## Điểm mới trong v2 (so với v1)
 
-| Feature | v1 | v2 |
+| Tính năng | v1 | v2 |
 |---------|----|----|
-| Observation | Stop hook (session end) | PreToolUse/PostToolUse (100% reliable) |
-| Analysis | Main context | Background agent (Haiku) |
-| Granularity | Full skills | Atomic "instincts" |
-| Confidence | None | 0.3-0.9 weighted |
-| Evolution | Direct to skill | Instincts -> cluster -> skill/command/agent |
-| Sharing | None | Export/import instincts |
+| Quan sát | Stop hook (cuối session) | PreToolUse/PostToolUse (đáng tin cậy 100%) |
+| Phân tích | Context chính | Agent chạy nền (Haiku) |
+| Độ chi tiết | Skill đầy đủ | "Instinct" nguyên tử |
+| Confidence | Không có | 0.3-0.9 có trọng số |
+| Tiến hóa | Trực tiếp thành skill | Instinct -> cluster -> skill/command/agent |
+| Chia sẻ | Không có | Export/import instinct |
 
-## The Instinct Model
+## Mô hình Instinct
 
-An instinct is a small learned behavior:
+Một instinct là một hành vi nhỏ đã học được:
 
 ```yaml
 ---
@@ -71,14 +70,14 @@ Use functional patterns over classes when appropriate.
 - User corrected class-based approach to functional on 2025-01-15
 ```
 
-**Properties:**
-- **Atomic** -- one trigger, one action
-- **Confidence-weighted** -- 0.3 = tentative, 0.9 = near certain
-- **Domain-tagged** -- code-style, testing, git, debugging, workflow, etc.
-- **Evidence-backed** -- tracks what observations created it
-- **Scope-aware** -- `project` (default) or `global`
+**Thuộc tính:**
+- **Nguyên tử (Atomic)** -- một trigger, một action
+- **Có trọng số confidence** -- 0.3 = tentative, 0.9 = gần như chắc chắn
+- **Gắn tag domain** -- code-style, testing, git, debugging, workflow, v.v.
+- **Có bằng chứng hậu thuẫn** -- theo dõi những observation nào đã tạo ra nó
+- **Nhận biết scope** -- `project` (mặc định) hoặc `global`
 
-## How It Works
+## Cách hoạt động
 
 ```
 Session Activity (in a git repo)
@@ -124,42 +123,42 @@ Session Activity (in a git repo)
 +---------------------------------------------+
 ```
 
-## Project Detection
+## Phát hiện dự án
 
-The system automatically detects your current project:
+Hệ thống tự động phát hiện dự án hiện tại của bạn:
 
-1. **`CLAUDE_PROJECT_DIR` env var** (highest priority) -- honored as an explicit override even when the directory is not a git repo (hashed by its absolute path)
-2. **`git remote get-url origin`** -- hashed to create a portable project ID (same repo on different machines gets the same ID)
-3. **`git rev-parse --show-toplevel`** -- fallback using repo path (machine-specific)
-4. **Global fallback** -- if no project is detected, instincts go to global scope
+1. **Biến môi trường `CLAUDE_PROJECT_DIR`** (ưu tiên cao nhất) -- được tôn trọng như một override tường minh ngay cả khi thư mục không phải git repo (được hash theo đường dẫn tuyệt đối của nó)
+2. **`git remote get-url origin`** -- được hash để tạo ID dự án portable (cùng repo trên các máy khác nhau cho cùng một ID)
+3. **`git rev-parse --show-toplevel`** -- dự phòng dùng đường dẫn repo (phụ thuộc máy)
+4. **Dự phòng toàn cục** -- nếu không phát hiện được dự án nào, instinct sẽ vào phạm vi global
 
-Each project gets a 12-character hash ID (e.g., `a1b2c3d4e5f6`). A registry file at `${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus/projects.json` maps IDs to human-readable names.
+Mỗi dự án có một ID hash 12 ký tự (ví dụ `a1b2c3d4e5f6`). Một file registry tại `${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus/projects.json` ánh xạ các ID với tên dễ đọc.
 
-### Data Directory
+### Thư mục dữ liệu
 
-Continuous-learning-v2 stores observer data outside `~/.claude` so Claude Code's sensitive-path guard does not block background instinct writes:
+Continuous-learning-v2 lưu dữ liệu observer bên ngoài `~/.claude` để cơ chế bảo vệ đường dẫn nhạy cảm của Claude Code không chặn việc ghi instinct chạy nền:
 
-1. `CLV2_HOMUNCULUS_DIR` when set to an absolute path
+1. `CLV2_HOMUNCULUS_DIR` khi được đặt thành một đường dẫn tuyệt đối
 2. `$XDG_DATA_HOME/ecc-homunculus`
 3. `$HOME/.local/share/ecc-homunculus`
 
-Existing users with data at `~/.claude/homunculus` can migrate once:
+Người dùng hiện có với dữ liệu tại `~/.claude/homunculus` có thể migrate một lần:
 
 ```bash
 bash skills/continuous-learning-v2/scripts/migrate-homunculus.sh
 ```
 
-## Quick Start
+## Bắt đầu nhanh
 
-### 1. Enable Observation Hooks
+### 1. Bật Observation Hook
 
-**If installed as a plugin** (recommended):
+**Nếu cài dưới dạng plugin** (khuyến nghị):
 
-No extra `settings.json` hook block is required. Claude Code v2.1+ auto-loads the plugin `hooks/hooks.json`, and `observe.sh` is already registered there.
+Không cần thêm khối hook nào trong `settings.json`. Claude Code v2.1+ tự động nạp `hooks/hooks.json` của plugin, và `observe.sh` đã được đăng ký sẵn ở đó.
 
-If you previously copied `observe.sh` into `~/.claude/settings.json`, remove that duplicate `PreToolUse` / `PostToolUse` block. Duplicating the plugin hook causes double execution and `${CLAUDE_PLUGIN_ROOT}` resolution errors because that variable is only available inside plugin-managed `hooks/hooks.json` entries.
+Nếu trước đây bạn đã sao chép `observe.sh` vào `~/.claude/settings.json`, hãy xóa khối `PreToolUse` / `PostToolUse` trùng lặp đó. Việc nhân đôi hook của plugin gây thực thi hai lần và lỗi resolve `${CLAUDE_PLUGIN_ROOT}` vì biến đó chỉ khả dụng bên trong các entry `hooks/hooks.json` do plugin quản lý.
 
-**If installed manually** to `~/.claude/skills`, add this to your `~/.claude/settings.json`:
+**Nếu cài thủ công** vào `~/.claude/skills`, hãy thêm đoạn này vào `~/.claude/settings.json` của bạn:
 
 ```json
 {
@@ -182,9 +181,9 @@ If you previously copied `observe.sh` into `~/.claude/settings.json`, remove tha
 }
 ```
 
-### 2. Initialize Directory Structure
+### 2. Khởi tạo cấu trúc thư mục
 
-The system creates directories automatically on first use, but you can also create them manually:
+Hệ thống tự tạo thư mục ở lần dùng đầu tiên, nhưng bạn cũng có thể tạo thủ công:
 
 ```bash
 # Global directories
@@ -193,7 +192,7 @@ mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/ecc-homunculus"/{instincts/{perso
 # Project directories are auto-created when the hook first runs in a git repo
 ```
 
-### 3. Use the Instinct Commands
+### 3. Dùng các lệnh Instinct
 
 ```bash
 /instinct-status     # Show learned instincts (project + global)
@@ -204,20 +203,20 @@ mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/ecc-homunculus"/{instincts/{perso
 /projects            # List all known projects and their instinct counts
 ```
 
-## Commands
+## Các lệnh
 
-| Command | Description |
+| Lệnh | Mô tả |
 |---------|-------------|
-| `/instinct-status` | Show all instincts (project-scoped + global) with confidence |
-| `/evolve` | Cluster related instincts into skills/commands, suggest promotions |
-| `/instinct-export` | Export instincts (filterable by scope/domain) |
-| `/instinct-import <file>` | Import instincts with scope control |
-| `/promote [id]` | Promote project instincts to global scope |
-| `/projects` | List all known projects and their instinct counts |
+| `/instinct-status` | Hiển thị tất cả instinct (project-scoped + global) kèm confidence |
+| `/evolve` | Gom nhóm các instinct liên quan thành skill/command, đề xuất các lần nâng cấp |
+| `/instinct-export` | Export instinct (có thể lọc theo scope/domain) |
+| `/instinct-import <file>` | Import instinct với kiểm soát scope |
+| `/promote [id]` | Nâng cấp instinct dự án lên phạm vi global |
+| `/projects` | Liệt kê tất cả dự án đã biết và số lượng instinct của chúng |
 
-## Configuration
+## Cấu hình
 
-Edit `config.json` to control the background observer:
+Chỉnh sửa `config.json` để điều khiển observer chạy nền:
 
 ```json
 {
@@ -230,31 +229,31 @@ Edit `config.json` to control the background observer:
 }
 ```
 
-| Key | Default | Description |
+| Key | Mặc định | Mô tả |
 |-----|---------|-------------|
-| `observer.enabled` | `false` | Enable the background observer agent |
-| `observer.run_interval_minutes` | `5` | How often the observer analyzes observations |
-| `observer.min_observations_to_analyze` | `20` | Minimum observations before analysis runs |
+| `observer.enabled` | `false` | Bật agent observer chạy nền |
+| `observer.run_interval_minutes` | `5` | Tần suất observer phân tích các observation |
+| `observer.min_observations_to_analyze` | `20` | Số observation tối thiểu trước khi phân tích chạy |
 
-Other behavior (observation capture, instinct thresholds, project scoping, promotion criteria) is configured via code defaults in `instinct-cli.py` and `observe.sh`.
+Các hành vi khác (ghi nhận observation, ngưỡng instinct, phạm vi dự án, tiêu chí nâng cấp) được cấu hình qua giá trị mặc định trong code của `instinct-cli.py` và `observe.sh`.
 
-### Observer platform support
+### Hỗ trợ nền tảng của Observer
 
-The background observer requires WSL2, Linux, or macOS. On native Windows
-(Git Bash / MSYS2) it starts and reports success, but the process is killed
-when the spawning hook exits and its Job Object closes, so no analysis ever
-runs — setting `observer.enabled: true` there is effectively a no-op
-(see issue #2489).
+Observer chạy nền yêu cầu WSL2, Linux hoặc macOS. Trên Windows gốc
+(Git Bash / MSYS2) nó khởi động và báo thành công, nhưng process bị kill
+khi hook sinh ra nó thoát và Job Object của nó đóng lại, nên không có phân tích nào
+được chạy — đặt `observer.enabled: true` ở đó thực chất là no-op
+(xem issue #2489).
 
-`observe.sh` detects this on the following hook invocation and writes an
-explanatory warning to `observer-start.log` once the observer has failed to
-survive several times in a row.
+`observe.sh` phát hiện điều này ở lần gọi hook tiếp theo và ghi một cảnh báo
+giải thích vào `observer-start.log` sau khi observer đã không thể
+sống sót nhiều lần liên tiếp.
 
-| Env var | Default | Description |
+| Biến môi trường | Mặc định | Mô tả |
 |---------|---------|-------------|
-| `ECC_OBSERVER_NOSURVIVE_WARN_AFTER` | `3` | Consecutive non-survivals before the warning is logged |
+| `ECC_OBSERVER_NOSURVIVE_WARN_AFTER` | `3` | Số lần không sống sót liên tiếp trước khi ghi cảnh báo |
 
-## File Structure
+## Cấu trúc file
 
 ```
 ${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus/
@@ -284,28 +283,28 @@ ${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus/
         +-- ...
 ```
 
-## Scope Decision Guide
+## Hướng dẫn quyết định Scope
 
-| Pattern Type | Scope | Examples |
+| Loại Pattern | Scope | Ví dụ |
 |-------------|-------|---------|
-| Language/framework conventions | **project** | "Use React hooks", "Follow Django REST patterns" |
-| File structure preferences | **project** | "Tests in `__tests__`/", "Components in src/components/" |
+| Convention ngôn ngữ/framework | **project** | "Use React hooks", "Follow Django REST patterns" |
+| Ưu tiên cấu trúc file | **project** | "Tests in `__tests__`/", "Components in src/components/" |
 | Code style | **project** | "Use functional style", "Prefer dataclasses" |
-| Error handling strategies | **project** | "Use Result type for errors" |
-| Security practices | **global** | "Validate user input", "Sanitize SQL" |
-| General best practices | **global** | "Write tests first", "Always handle errors" |
-| Tool workflow preferences | **global** | "Grep before Edit", "Read before Write" |
-| Git practices | **global** | "Conventional commits", "Small focused commits" |
+| Chiến lược xử lý lỗi | **project** | "Use Result type for errors" |
+| Thực hành bảo mật | **global** | "Validate user input", "Sanitize SQL" |
+| Best practice chung | **global** | "Write tests first", "Always handle errors" |
+| Ưu tiên workflow của tool | **global** | "Grep before Edit", "Read before Write" |
+| Thực hành Git | **global** | "Conventional commits", "Small focused commits" |
 
-## Instinct Promotion (Project -> Global)
+## Nâng cấp Instinct (Project -> Global)
 
-When the same instinct appears in multiple projects with high confidence, it's a candidate for promotion to global scope.
+Khi cùng một instinct xuất hiện trong nhiều dự án với confidence cao, nó là ứng viên để nâng cấp lên phạm vi global.
 
-**Auto-promotion criteria:**
-- Same instinct ID in 2+ projects
-- Average confidence >= 0.8
+**Tiêu chí tự động nâng cấp:**
+- Cùng instinct ID trong 2+ dự án
+- Confidence trung bình >= 0.8
 
-**How to promote:**
+**Cách nâng cấp:**
 
 ```bash
 # Promote a specific instinct
@@ -318,60 +317,60 @@ python3 instinct-cli.py promote
 python3 instinct-cli.py promote --dry-run
 ```
 
-The `/evolve` command also suggests promotion candidates.
+Lệnh `/evolve` cũng đề xuất các ứng viên để nâng cấp.
 
-## Confidence Scoring
+## Chấm điểm Confidence
 
-Confidence evolves over time:
+Confidence tiến hóa theo thời gian:
 
-| Score | Meaning | Behavior |
+| Điểm | Ý nghĩa | Hành vi |
 |-------|---------|----------|
-| 0.3 | Tentative | Suggested but not enforced |
-| 0.5 | Moderate | Applied when relevant |
-| 0.7 | Strong | Auto-approved for application |
-| 0.9 | Near-certain | Core behavior |
+| 0.3 | Tentative | Được gợi ý nhưng không bắt buộc |
+| 0.5 | Moderate | Áp dụng khi liên quan |
+| 0.7 | Strong | Tự động được duyệt để áp dụng |
+| 0.9 | Near-certain | Hành vi cốt lõi |
 
-**Confidence increases** when:
-- Pattern is repeatedly observed
-- User doesn't correct the suggested behavior
-- Similar instincts from other sources agree
+**Confidence tăng** khi:
+- Pattern được quan sát lặp lại
+- Người dùng không sửa hành vi được gợi ý
+- Các instinct tương tự từ nguồn khác đồng thuận
 
-**Confidence decreases** when:
-- User explicitly corrects the behavior
-- Pattern isn't observed for extended periods
-- Contradicting evidence appears
+**Confidence giảm** khi:
+- Người dùng sửa hành vi một cách tường minh
+- Pattern không được quan sát trong thời gian dài
+- Xuất hiện bằng chứng mâu thuẫn
 
-## Why Hooks vs Skills for Observation?
+## Tại sao dùng Hook thay vì Skill để quan sát?
 
 > "v1 relied on skills to observe. Skills are probabilistic -- they fire ~50-80% of the time based on Claude's judgment."
 
-Hooks fire **100% of the time**, deterministically. This means:
-- Every tool call is observed
-- No patterns are missed
-- Learning is comprehensive
+Hook kích hoạt **100% thời gian**, một cách xác định. Điều này nghĩa là:
+- Mọi tool call đều được quan sát
+- Không bỏ sót pattern nào
+- Việc học toàn diện
 
-## Backward Compatibility
+## Tương thích ngược
 
-v2.1 is fully compatible with v2.0 and v1:
-- Existing global instincts can be migrated from `~/.claude/homunculus/instincts/` with `scripts/migrate-homunculus.sh`
-- Existing `~/.claude/skills/learned/` skills from v1 still work
-- Stop hook still runs (but now also feeds into v2)
-- Gradual migration: run both in parallel
+v2.1 hoàn toàn tương thích với v2.0 và v1:
+- Instinct global hiện có có thể được migrate từ `~/.claude/homunculus/instincts/` bằng `scripts/migrate-homunculus.sh`
+- Các skill `~/.claude/skills/learned/` hiện có từ v1 vẫn hoạt động
+- Stop hook vẫn chạy (nhưng giờ cũng cấp dữ liệu cho v2)
+- Migrate dần dần: chạy cả hai song song
 
-## Privacy
+## Quyền riêng tư
 
-- Observations stay **local** on your machine
-- Project-scoped instincts are isolated per project
-- Only **instincts** (patterns) can be exported — not raw observations
-- No actual code or conversation content is shared
-- You control what gets exported and promoted
+- Observation ở lại **cục bộ** trên máy của bạn
+- Instinct project-scoped được cô lập theo từng dự án
+- Chỉ **instinct** (pattern) mới có thể được export — không phải observation thô
+- Không có code thực tế hay nội dung hội thoại nào được chia sẻ
+- Bạn kiểm soát những gì được export và nâng cấp
 
-## Related
+## Liên quan
 
-- [ECC-Tools GitHub App](https://github.com/apps/ecc-tools) - Generate instincts from repo history
-- Homunculus - Community project that inspired the v2 instinct-based architecture (atomic observations, confidence scoring, instinct evolution pipeline)
-- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Continuous learning section
+- [ECC-Tools GitHub App](https://github.com/apps/ecc-tools) - Tạo instinct từ lịch sử repo
+- Homunculus - Dự án cộng đồng đã truyền cảm hứng cho kiến trúc dựa trên instinct của v2 (observation nguyên tử, chấm điểm confidence, pipeline tiến hóa instinct)
+- [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Phần Continuous learning
 
 ---
 
-*Instinct-based learning: teaching Claude your patterns, one project at a time.*
+*Học dựa trên instinct: dạy Claude các pattern của bạn, từng dự án một.*

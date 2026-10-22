@@ -3,31 +3,31 @@ paths:
   - "**/*.swift"
   - "**/Package.swift"
 ---
-# Swift Coding Style
+# Coding Style Swift
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with Swift specific content.
+> File này mở rộng [common/coding-style.md](../common/coding-style.md) với nội dung riêng cho Swift.
 
-## Formatting
+## Định dạng
 
-- **SwiftFormat** for auto-formatting, **SwiftLint** for style enforcement
-- `swift-format` is bundled with Xcode 16+ as an alternative
+- **SwiftFormat** để tự động định dạng, **SwiftLint** để thực thi style
+- `swift-format` được đi kèm trong Xcode 16+ như một lựa chọn thay thế
 
-## Immutability
+## Bất biến (Immutability)
 
-- Prefer `let` over `var` — define everything as `let` and only change to `var` if the compiler requires it
-- Use `struct` with value semantics by default; use `class` only when identity or reference semantics are needed
+- Ưu tiên `let` hơn `var` — định nghĩa mọi thứ bằng `let` và chỉ đổi sang `var` nếu compiler yêu cầu
+- Mặc định dùng `struct` với value semantics; chỉ dùng `class` khi cần identity hoặc reference semantics
 
-## Naming
+## Đặt tên
 
-Follow [Apple API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/):
+Tuân theo [Apple API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/):
 
-- Clarity at the point of use — omit needless words
-- Name methods and properties for their roles, not their types
-- Use `static let` for constants over global constants
+- Rõ ràng tại điểm sử dụng — bỏ các từ thừa
+- Đặt tên method và property theo vai trò của chúng, không theo type
+- Dùng `static let` cho hằng số thay vì hằng số toàn cục
 
-## Error Handling
+## Xử lý lỗi
 
-Use typed throws (Swift 6+) and pattern matching:
+Dùng typed throws (Swift 6+) và pattern matching:
 
 ```swift
 func load(id: String) throws(LoadError) -> Item {
@@ -40,8 +40,8 @@ func load(id: String) throws(LoadError) -> Item {
 
 ## Concurrency
 
-Enable Swift 6 strict concurrency checking. Prefer:
+Bật kiểm tra strict concurrency của Swift 6. Ưu tiên:
 
-- `Sendable` value types for data crossing isolation boundaries
-- Actors for shared mutable state
-- Structured concurrency (`async let`, `TaskGroup`) over unstructured `Task {}`
+- Value type `Sendable` cho dữ liệu đi qua ranh giới isolation
+- Actor cho shared mutable state
+- Structured concurrency (`async let`, `TaskGroup`) hơn `Task {}` không có cấu trúc

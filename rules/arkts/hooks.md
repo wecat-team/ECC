@@ -5,13 +5,13 @@ paths:
   - "**/module.json5"
   - "**/oh-package.json5"
 ---
-# HarmonyOS / ArkTS Hooks
+# Hook cho HarmonyOS / ArkTS
 
-> This file extends [common/hooks.md](../common/hooks.md) with HarmonyOS-specific build and validation hooks.
+> File này mở rộng [common/hooks.md](../common/hooks.md) với các hook build và kiểm tra riêng cho HarmonyOS.
 
-## Build Commands
+## Lệnh build
 
-### HAP Package Build
+### Build gói HAP
 
 ```bash
 # Build HAP package (global hvigor environment)
@@ -37,11 +37,11 @@ ohpm install
 ohpm update
 ```
 
-## Recommended PostToolUse Hooks
+## Hook PostToolUse được khuyến nghị
 
-### After Editing .ets/.ts Files
+### Sau khi sửa file .ets/.ts
 
-Run hvigor build to check for ArkTS compilation errors:
+Chạy hvigor build để kiểm tra lỗi biên dịch ArkTS:
 
 ```json
 {
@@ -60,9 +60,9 @@ Run hvigor build to check for ArkTS compilation errors:
 }
 ```
 
-### After Editing module.json5
+### Sau khi sửa module.json5
 
-Validate permission and ability declarations:
+Kiểm tra các khai báo permission và ability:
 
 ```json
 {
@@ -80,9 +80,9 @@ Validate permission and ability declarations:
 }
 ```
 
-### After Editing oh-package.json5
+### Sau khi sửa oh-package.json5
 
-Reinstall dependencies:
+Cài đặt lại dependency:
 
 ```json
 {
@@ -101,11 +101,11 @@ Reinstall dependencies:
 }
 ```
 
-## PreToolUse Hooks
+## Hook PreToolUse
 
-### V1 Decorator Guard
+### Chốt chặn decorator V1
 
-Warn when code contains V1 state management decorators:
+Cảnh báo khi code chứa các decorator quản lý state V1:
 
 ```json
 {
@@ -122,14 +122,14 @@ Warn when code contains V1 state management decorators:
 }
 ```
 
-## Validation Checklist
+## Checklist kiểm tra
 
-After each implementation cycle, verify:
+Sau mỗi chu kỳ triển khai, hãy xác minh:
 
-- [ ] `hvigorw assembleHap` completes without errors
-- [ ] No V1 decorators in new or modified `.ets` files
-- [ ] No `@ohos.router` imports in new or modified files
-- [ ] All API permissions declared in `module.json5`
-- [ ] All dependencies listed in `oh-package.json5`
-- [ ] Resource strings added to all i18n directories
-- [ ] Dark theme colors provided for new color resources
+- [ ] `hvigorw assembleHap` hoàn tất không có lỗi
+- [ ] Không có decorator V1 trong các file `.ets` mới hoặc đã sửa
+- [ ] Không có import `@ohos.router` trong các file mới hoặc đã sửa
+- [ ] Mọi permission của API đều được khai báo trong `module.json5`
+- [ ] Mọi dependency đều được liệt kê trong `oh-package.json5`
+- [ ] Chuỗi resource đã được thêm vào tất cả thư mục i18n
+- [ ] Đã cung cấp màu cho dark theme với các color resource mới

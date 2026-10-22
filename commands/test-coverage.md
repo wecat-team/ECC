@@ -1,58 +1,58 @@
 ---
-description: Analyze coverage, identify gaps, and generate missing tests toward the target threshold.
+description: Phân tích coverage, xác định khoảng trống và tạo các test còn thiếu để đạt ngưỡng mục tiêu.
 ---
 
 # Test Coverage
 
-Analyze test coverage, identify gaps, and generate missing tests to reach 80%+ coverage.
+Phân tích test coverage, xác định khoảng trống và tạo các test còn thiếu để đạt coverage 80%+.
 
-## Step 1: Detect Test Framework
+## Bước 1: Phát hiện Test Framework
 
-| Indicator | Coverage Command |
+| Dấu hiệu | Lệnh coverage |
 |-----------|-----------------|
-| `jest.config.*` or `package.json` jest | `npx jest --coverage --coverageReporters=json-summary` |
+| `jest.config.*` hoặc jest trong `package.json` | `npx jest --coverage --coverageReporters=json-summary` |
 | `vitest.config.*` | `npx vitest run --coverage` |
-| `pytest.ini` / `pyproject.toml` pytest | `pytest --cov=src --cov-report=json` |
+| `pytest.ini` / pytest trong `pyproject.toml` | `pytest --cov=src --cov-report=json` |
 | `Cargo.toml` | `cargo llvm-cov --json` |
-| `pom.xml` with JaCoCo | `mvn test jacoco:report` |
+| `pom.xml` với JaCoCo | `mvn test jacoco:report` |
 | `go.mod` | `go test -coverprofile=coverage.out ./...` |
 
-## Step 2: Analyze Coverage Report
+## Bước 2: Phân tích báo cáo coverage
 
-1. Run the coverage command
-2. Parse the output (JSON summary or terminal output)
-3. List files **below 80% coverage**, sorted worst-first
-4. For each under-covered file, identify:
-   - Untested functions or methods
-   - Missing branch coverage (if/else, switch, error paths)
-   - Dead code that inflates the denominator
+1. Chạy lệnh coverage
+2. Parse đầu ra (JSON summary hoặc đầu ra terminal)
+3. Liệt kê các file **dưới 80% coverage**, sắp xếp từ tệ nhất
+4. Với mỗi file chưa đủ coverage, xác định:
+   - Function hoặc method chưa được test
+   - Thiếu branch coverage (if/else, switch, đường lỗi)
+   - Dead code làm phình mẫu số
 
-## Step 3: Generate Missing Tests
+## Bước 3: Tạo các test còn thiếu
 
-For each under-covered file, generate tests following this priority:
+Với mỗi file chưa đủ coverage, tạo test theo thứ tự ưu tiên sau:
 
-1. **Happy path** — Core functionality with valid inputs
-2. **Error handling** — Invalid inputs, missing data, network failures
-3. **Edge cases** — Empty arrays, null/undefined, boundary values (0, -1, MAX_INT)
-4. **Branch coverage** — Each if/else, switch case, ternary
+1. **Happy path** — Chức năng cốt lõi với đầu vào hợp lệ
+2. **Xử lý lỗi** — Đầu vào không hợp lệ, thiếu dữ liệu, lỗi mạng
+3. **Edge case** — Mảng rỗng, null/undefined, giá trị biên (0, -1, MAX_INT)
+4. **Branch coverage** — Mỗi if/else, case của switch, ternary
 
-### Test Generation Rules
+### Quy tắc tạo test
 
-- Place tests adjacent to source: `foo.ts` → `foo.test.ts` (or project convention)
-- Use existing test patterns from the project (import style, assertion library, mocking approach)
-- Mock external dependencies (database, APIs, file system)
-- Each test should be independent — no shared mutable state between tests
-- Name tests descriptively: `test_create_user_with_duplicate_email_returns_409`
+- Đặt test cạnh source: `foo.ts` → `foo.test.ts` (hoặc theo quy ước của project)
+- Dùng các pattern test hiện có của project (kiểu import, thư viện assertion, cách mock)
+- Mock các dependency bên ngoài (database, API, file system)
+- Mỗi test phải độc lập — không có mutable state dùng chung giữa các test
+- Đặt tên test mô tả rõ: `test_create_user_with_duplicate_email_returns_409`
 
-## Step 4: Verify
+## Bước 4: Xác minh
 
-1. Run the full test suite — all tests must pass
-2. Re-run coverage — verify improvement
-3. If still below 80%, repeat Step 3 for remaining gaps
+1. Chạy toàn bộ test suite — tất cả test phải pass
+2. Chạy lại coverage — xác minh có cải thiện
+3. Nếu vẫn dưới 80%, lặp lại Bước 3 cho các khoảng trống còn lại
 
-## Step 5: Report
+## Bước 5: Báo cáo
 
-Show before/after comparison:
+Hiển thị so sánh trước/sau:
 
 ```
 Coverage Report
@@ -64,10 +64,10 @@ src/utils/validation.ts 32%    82%
 Overall:               67%     84%  PASS:
 ```
 
-## Focus Areas
+## Các vùng cần tập trung
 
-- Functions with complex branching (high cyclomatic complexity)
-- Error handlers and catch blocks
-- Utility functions used across the codebase
-- API endpoint handlers (request → response flow)
-- Edge cases: null, undefined, empty string, empty array, zero, negative numbers
+- Function có phân nhánh phức tạp (cyclomatic complexity cao)
+- Error handler và khối catch
+- Utility function được dùng xuyên suốt codebase
+- Handler của API endpoint (luồng request → response)
+- Edge case: null, undefined, chuỗi rỗng, mảng rỗng, số không, số âm

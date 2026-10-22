@@ -1,44 +1,44 @@
 ---
 name: react-performance
-description: React and Next.js performance optimization patterns adapted from Vercel Engineering's React Best Practices (https://github.com/vercel-labs/agent-skills). Organizes 70+ rules across 8 priority categories — waterfalls, bundle size, server-side, client fetching, re-render, rendering, JS micro-perf, advanced. Use when writing, reviewing, or refactoring React/Next.js code for performance.
+description: Các pattern tối ưu hiệu năng cho React và Next.js, phỏng theo React Best Practices của Vercel Engineering (https://github.com/vercel-labs/agent-skills). Tổ chức hơn 70 rule thành 8 nhóm ưu tiên — waterfall, bundle size, server-side, client fetching, re-render, rendering, JS micro-perf, advanced. Dùng khi viết, review hoặc refactor code React/Next.js về mặt hiệu năng (performance).
 metadata:
   origin: ECC
 ---
 
-# React Performance
+# Hiệu năng React
 
-Performance optimization patterns for React 18/19 and Next.js, adapted from [Vercel Labs `react-best-practices`](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) (MIT, v1.0.0). This skill organizes rules by priority and provides decision-tree guidance for active code review and refactoring.
+Các pattern tối ưu hiệu năng cho React 18/19 và Next.js, phỏng theo [Vercel Labs `react-best-practices`](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) (MIT, v1.0.0). Skill này tổ chức các rule theo mức ưu tiên và cung cấp hướng dẫn dạng cây quyết định cho việc code review và refactor chủ động.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Writing or reviewing React/Next.js code for performance
-- Diagnosing slow page loads, slow interactions, or high CPU on the client
-- Auditing bundle size or Lighthouse Core Web Vitals regressions
-- Removing waterfalls in Server Components / API routes
-- Reducing client-side re-renders
-- Optimizing long lists, animations, or hydration
-- Auditing optimization choices in PRs touching `app/`, `pages/`, `components/`, or data layers
+- Viết hoặc review code React/Next.js về hiệu năng
+- Chẩn đoán trang tải chậm, tương tác chậm hoặc CPU cao ở phía client
+- Audit bundle size hoặc các regression về Lighthouse Core Web Vitals
+- Loại bỏ waterfall trong Server Component / API route
+- Giảm re-render phía client
+- Tối ưu list dài, animation hoặc hydration
+- Audit các lựa chọn tối ưu trong PR đụng đến `app/`, `pages/`, `components/` hoặc data layer
 
-## Priority Index
+## Chỉ mục ưu tiên
 
-| Priority | Category | Prefix | When it matters |
+| Ưu tiên | Nhóm | Tiền tố | Khi nào quan trọng |
 |---|---|---|---|
-| 1 — CRITICAL | Eliminating Waterfalls | `async-` | Anytime `await` is followed by independent `await` |
-| 2 — CRITICAL | Bundle Size Optimization | `bundle-` | First-load JS, route-level imports, third-party libs |
-| 3 — HIGH | Server-Side Performance | `server-` | RSC, Server Actions, API routes, SSR |
-| 4 — MEDIUM-HIGH | Client-Side Data Fetching | `client-` | SWR / TanStack Query / raw `fetch` in hooks |
-| 5 — MEDIUM | Re-render Optimization | `rerender-` | High-frequency state updates, parent-child fan-out |
-| 6 — MEDIUM | Rendering Performance | `rendering-` | Long lists, animations, hydration |
-| 7 — LOW-MEDIUM | JavaScript Performance | `js-` | Hot loops, frequent allocations |
-| 8 — LOW | Advanced Patterns | `advanced-` | Effect-event integration, stable refs |
+| 1 — CRITICAL | Loại bỏ Waterfall | `async-` | Bất cứ khi nào một `await` được theo sau bởi một `await` độc lập |
+| 2 — CRITICAL | Tối ưu Bundle Size | `bundle-` | JS tải lần đầu, import ở cấp route, thư viện bên thứ ba |
+| 3 — HIGH | Hiệu năng phía Server | `server-` | RSC, Server Action, API route, SSR |
+| 4 — MEDIUM-HIGH | Data Fetching phía Client | `client-` | SWR / TanStack Query / `fetch` thuần trong hook |
+| 5 — MEDIUM | Tối ưu Re-render | `rerender-` | Cập nhật state tần suất cao, lan truyền từ cha xuống con |
+| 6 — MEDIUM | Hiệu năng Rendering | `rendering-` | List dài, animation, hydration |
+| 7 — LOW-MEDIUM | Hiệu năng JavaScript | `js-` | Vòng lặp nóng (hot loop), cấp phát bộ nhớ thường xuyên |
+| 8 — LOW | Pattern nâng cao | `advanced-` | Tích hợp effect-event, ref ổn định |
 
-## 1. Eliminating Waterfalls (CRITICAL)
+## 1. Loại bỏ Waterfall (CRITICAL)
 
-> "Waterfalls are the #1 performance killer" — every sequential `await` adds full network latency.
+> "Waterfall là kẻ giết hiệu năng số 1" — mỗi `await` tuần tự cộng thêm đầy đủ độ trễ mạng.
 
-### Cheap conditions before await
+### Kiểm tra điều kiện rẻ trước await
 
-Check sync conditions (props, env, hardcoded flags) before awaiting remote data.
+Kiểm tra các điều kiện đồng bộ (props, env, flag cố định) trước khi await dữ liệu từ xa.
 
 ```ts
 // INCORRECT
@@ -58,9 +58,9 @@ async function Page({ id }: { id: string }) {
 }
 ```
 
-### Defer awaits until used
+### Trì hoãn await cho đến khi cần dùng
 
-Move `await` into the branch that uses it.
+Chuyển `await` vào nhánh thực sự dùng đến nó.
 
 ```ts
 // INCORRECT — awaits before deciding it needs the data
@@ -74,7 +74,7 @@ const user = await getUser(id);
 return renderUser(user);
 ```
 
-### Promise.all for independent work
+### Promise.all cho các công việc độc lập
 
 ```ts
 // INCORRECT — sequential
@@ -90,7 +90,7 @@ const [user, posts, followers] = await Promise.all([
 ]);
 ```
 
-### Partial dependencies — start early, await late
+### Phụ thuộc một phần — khởi chạy sớm, await muộn
 
 ```ts
 // CORRECT — kick off all promises, await only when each result is needed
@@ -101,11 +101,11 @@ if (profile.private) return null;
 const [user, posts] = await Promise.all([userP, postsP]);
 ```
 
-### Suspense for streaming
+### Suspense cho streaming
 
-Push `<Suspense>` boundaries close to the data so the page paints what it can while slower sub-trees stream in. The trade-off: layout shift when content arrives — reserve space (skeleton or `min-height`).
+Đặt các boundary `<Suspense>` gần dữ liệu để trang vẽ được phần có thể vẽ trong khi các cây con chậm hơn được stream về. Đánh đổi: layout shift khi nội dung đến — hãy dành sẵn chỗ (skeleton hoặc `min-height`).
 
-### Server Components: parallel through composition
+### Server Component: song song thông qua composition
 
 ```tsx
 // INCORRECT — sibling awaits run sequentially inside one component
@@ -126,11 +126,11 @@ export default async function Page() {
 }
 ```
 
-## 2. Bundle Size Optimization (CRITICAL)
+## 2. Tối ưu Bundle Size (CRITICAL)
 
-### Direct imports, not barrels
+### Import trực tiếp, không dùng barrel
 
-Barrel `index.ts` files force the bundler to walk the entire module graph even when tree-shaking removes most of it. Direct imports save 200-800ms of first-load JS in many real-world apps.
+Các file barrel `index.ts` buộc bundler phải duyệt toàn bộ module graph ngay cả khi tree-shaking loại bỏ phần lớn. Import trực tiếp tiết kiệm 200-800ms JS tải lần đầu trong nhiều ứng dụng thực tế.
 
 ```ts
 // INCORRECT
@@ -142,9 +142,9 @@ import { Card } from "@/components/Card";
 import { Modal } from "@/components/Modal";
 ```
 
-Next.js 13.5+ has [Optimize Package Imports](https://nextjs.org/docs/app/api-reference/next-config-js/optimizePackageImports) that automates this for listed packages — use it; manual direct imports still required for non-listed libs.
+Next.js 13.5+ có [Optimize Package Imports](https://nextjs.org/docs/app/api-reference/next-config-js/optimizePackageImports) tự động hóa việc này cho các package trong danh sách — hãy dùng nó; với các thư viện không có trong danh sách vẫn cần import trực tiếp thủ công.
 
-### Statically analyzable paths
+### Đường dẫn có thể phân tích tĩnh
 
 ```ts
 // INCORRECT — defeats bundler/trace analysis
@@ -154,7 +154,7 @@ const mod = await import(`./pages/${name}`);
 const mod = name === "home" ? await import("./pages/home") : await import("./pages/about");
 ```
 
-### Dynamic imports for heavy components
+### Dynamic import cho component nặng
 
 ```tsx
 import dynamic from "next/dynamic";
@@ -165,11 +165,11 @@ const HeavyChart = dynamic(() => import("./HeavyChart"), {
 });
 ```
 
-### Defer third-party scripts
+### Trì hoãn script của bên thứ ba
 
-Load analytics, logging, support widgets AFTER hydration. Use `next/script` with `strategy="afterInteractive"` (default) or `"lazyOnload"`.
+Tải analytics, logging, widget hỗ trợ SAU khi hydration. Dùng `next/script` với `strategy="afterInteractive"` (mặc định) hoặc `"lazyOnload"`.
 
-### Conditional module loading
+### Tải module có điều kiện
 
 ```tsx
 if (user.role === "admin") {
@@ -178,15 +178,15 @@ if (user.role === "admin") {
 }
 ```
 
-### Preload on hover/focus
+### Preload khi hover/focus
 
-Trigger `<link rel="preload">` or `import()` on hover so the bundle is in cache by the time the user clicks.
+Kích hoạt `<link rel="preload">` hoặc `import()` khi hover để bundle đã nằm trong cache vào lúc người dùng click.
 
-## 3. Server-Side Performance (HIGH)
+## 3. Hiệu năng phía Server (HIGH)
 
-### Authenticate Server Actions like API routes
+### Xác thực Server Action như API route
 
-Every `"use server"` function is a public endpoint. Authenticate AND authorize inside the action — never rely on the calling Client Component's gating.
+Mọi hàm `"use server"` đều là một endpoint công khai. Hãy authenticate VÀ authorize bên trong action — KHÔNG BAO GIỜ dựa vào việc chặn truy cập của Client Component gọi nó.
 
 ```ts
 "use server";
@@ -201,7 +201,7 @@ export async function deleteUser(formData: FormData) {
 }
 ```
 
-### `React.cache()` for per-request deduplication
+### `React.cache()` để loại trùng lặp theo từng request
 
 ```ts
 import { cache } from "react";
@@ -211,17 +211,17 @@ export const getUser = cache(async (id: string) => {
 });
 ```
 
-`React.cache` dedupes within a single request. Calling `getUser("1")` from three Server Components in the same render = one DB query.
+`React.cache` loại trùng lặp trong phạm vi một request. Gọi `getUser("1")` từ ba Server Component trong cùng một lần render = một DB query.
 
-### LRU cache for cross-request data
+### LRU cache cho dữ liệu dùng chung giữa các request
 
-For data that does NOT change per request (config, lookup tables), cache outside React with an LRU cache or `unstable_cache`.
+Với dữ liệu KHÔNG thay đổi theo từng request (config, bảng tra cứu), hãy cache bên ngoài React bằng LRU cache hoặc `unstable_cache`.
 
-### Avoid duplicate serialization in RSC props
+### Tránh serialize trùng lặp trong prop của RSC
 
-When a Server Component renders the same data into multiple Client Components, the data is serialized once per consumer. Lift the Client Component up and pass children.
+Khi một Server Component render cùng một dữ liệu vào nhiều Client Component, dữ liệu sẽ được serialize một lần cho mỗi consumer. Hãy nâng Client Component lên và truyền children.
 
-### Hoist static I/O to module scope
+### Đưa I/O tĩnh lên module scope
 
 ```ts
 // CORRECT — runs once at module load
@@ -232,15 +232,15 @@ export async function Page() {
 }
 ```
 
-### No mutable module-level state in RSC/SSR
+### Không dùng state mutable ở cấp module trong RSC/SSR
 
-Module state on the server is shared across all requests — a race condition between users. Use request-scoped storage (`headers()`, `cookies()`, async context) instead.
+State ở cấp module trên server được chia sẻ giữa mọi request — gây race condition giữa các người dùng. Thay vào đó hãy dùng storage theo phạm vi request (`headers()`, `cookies()`, async context).
 
-### Minimize data passed to Client Components
+### Giảm thiểu dữ liệu truyền cho Client Component
 
-Only serialize what the Client needs. Strip fields, paginate, project columns at the DB layer.
+Chỉ serialize những gì Client cần. Loại bỏ field thừa, phân trang, chỉ chọn các cột cần thiết (project) ở tầng DB.
 
-### Parallelize nested fetches with Promise.all per item
+### Song song hóa các fetch lồng nhau bằng Promise.all cho từng item
 
 ```ts
 const users = await getUsers();
@@ -249,9 +249,9 @@ const enriched = await Promise.all(
 );
 ```
 
-### Use `after()` for non-blocking work
+### Dùng `after()` cho công việc không chặn
 
-Next.js 15 `after()` runs work after the response is sent — logging, cache warming, analytics.
+`after()` của Next.js 15 chạy công việc sau khi response đã được gửi — logging, làm nóng cache (cache warming), analytics.
 
 ```ts
 import { after } from "next/server";
@@ -262,13 +262,13 @@ export async function GET() {
 }
 ```
 
-## 4. Client-Side Data Fetching (MEDIUM-HIGH)
+## 4. Data Fetching phía Client (MEDIUM-HIGH)
 
-### SWR / TanStack Query for deduplication
+### SWR / TanStack Query để loại trùng lặp
 
-Multiple components calling `useUser(id)` should share one network request and one cache entry. Use SWR or TanStack Query — never roll your own `useEffect` + `fetch` for shared data.
+Nhiều component gọi `useUser(id)` nên dùng chung một network request và một cache entry. Hãy dùng SWR hoặc TanStack Query — KHÔNG BAO GIỜ tự viết `useEffect` + `fetch` cho dữ liệu dùng chung.
 
-### Deduplicate global event listeners
+### Loại trùng lặp global event listener
 
 ```tsx
 // INCORRECT — every component adds its own
@@ -281,22 +281,22 @@ useEffect(() => {
 const useScroll = createScrollHook(); // singleton subject under the hood
 ```
 
-### Passive listeners for scroll
+### Passive listener cho scroll
 
 ```ts
 window.addEventListener("scroll", handler, { passive: true });
 ```
 
-Improves scrolling smoothness; the listener cannot `preventDefault()`.
+Cải thiện độ mượt khi cuộn; listener không thể gọi `preventDefault()`.
 
-### localStorage: version + minimize
+### localStorage: đánh version + tối giản
 
-- Always store a `version` field; bump on schema change and migrate or discard old data
-- Keep payloads small — `localStorage` is synchronous and blocks main thread
+- LUÔN LUÔN lưu một field `version`; tăng version khi schema thay đổi và migrate hoặc bỏ dữ liệu cũ
+- Giữ payload nhỏ — `localStorage` là đồng bộ và chặn main thread
 
-## 5. Re-render Optimization (MEDIUM)
+## 5. Tối ưu Re-render (MEDIUM)
 
-### Don't subscribe to state used only in callbacks
+### Không subscribe state chỉ dùng trong callback
 
 ```tsx
 // INCORRECT — re-renders every time count changes
@@ -310,7 +310,7 @@ const handler = () => {
 };
 ```
 
-### Extract expensive work into memoized components
+### Tách công việc tốn kém vào component được memoize
 
 ```tsx
 // CORRECT — child re-renders only when `items` changes
@@ -319,7 +319,7 @@ const Heavy = memo(function Heavy({ items }: { items: Item[] }) {
 });
 ```
 
-### Hoist default non-primitive props
+### Đưa các prop mặc định không phải primitive ra ngoài
 
 ```tsx
 // INCORRECT — new array each render breaks memo
@@ -330,7 +330,7 @@ const EMPTY: Item[] = [];
 <List items={items ?? EMPTY} />
 ```
 
-### Primitive dependencies in effects
+### Dependency kiểu primitive trong effect
 
 ```tsx
 // INCORRECT — new object identity every render
@@ -340,7 +340,7 @@ useEffect(() => {}, [{ id, name }]);
 useEffect(() => {}, [id, name]);
 ```
 
-### Subscribe to derived booleans, not raw values
+### Subscribe vào boolean dẫn xuất, không subscribe giá trị thô
 
 ```tsx
 // INCORRECT — re-renders for any cart change
@@ -351,7 +351,7 @@ const hasItems = cart.length > 0;
 const hasItems = useStore((s) => s.cart.length > 0);
 ```
 
-### Derive during render, never via `useEffect`
+### Tính toán dẫn xuất trong lúc render, KHÔNG BAO GIỜ qua `useEffect`
 
 ```tsx
 // INCORRECT
@@ -362,24 +362,24 @@ useEffect(() => setFull(`${first} ${last}`), [first, last]);
 const full = `${first} ${last}`;
 ```
 
-### Functional `setState` for stable callbacks
+### `setState` dạng hàm cho callback ổn định
 
 ```tsx
 // CORRECT
 const increment = useCallback(() => setCount((c) => c + 1), []);
 ```
 
-### Lazy state initializer for expensive values
+### Lazy state initializer cho giá trị tốn kém
 
 ```tsx
 const [tree] = useState(() => parseTree(largeInput));
 ```
 
-### Avoid memo for simple primitives
+### Tránh memo cho primitive đơn giản
 
-`useMemo(() => x + 1, [x])` is overhead. Memo earns its keep on object identity and expensive computation.
+`useMemo(() => x + 1, [x])` chỉ là chi phí thừa. Memo chỉ có giá trị với danh tính object (identity) và tính toán tốn kém.
 
-### Split hooks with independent deps
+### Tách hook có dependency độc lập
 
 ```tsx
 // INCORRECT — both selectors re-run if either source changes
@@ -390,29 +390,29 @@ const a = useA(source1);
 const b = useB(source2);
 ```
 
-### Move interaction logic into event handlers
+### Chuyển logic tương tác vào event handler
 
-Event handlers run only on the user action — `useEffect` re-runs whenever deps change.
+Event handler chỉ chạy khi người dùng thao tác — `useEffect` chạy lại mỗi khi dependency thay đổi.
 
-### `startTransition` for non-urgent updates
+### `startTransition` cho cập nhật không khẩn cấp
 
 ```tsx
 const [pending, startTransition] = useTransition();
 startTransition(() => setFilters(newFilters));
 ```
 
-### `useDeferredValue` for expensive renders
+### `useDeferredValue` cho render tốn kém
 
 ```tsx
 const deferredQuery = useDeferredValue(query);
 const results = useMemo(() => expensiveSearch(deferredQuery), [deferredQuery]);
 ```
 
-### `useRef` for transient frequent values
+### `useRef` cho giá trị tạm thời thay đổi thường xuyên
 
-For values that change often but should not trigger re-render (timestamps, last-key, accumulators).
+Dành cho các giá trị thay đổi thường xuyên nhưng không nên kích hoạt re-render (timestamp, phím cuối cùng, biến tích lũy).
 
-### Don't define components inside components
+### Không định nghĩa component bên trong component
 
 ```tsx
 // INCORRECT — Inner is a new component on every Outer render
@@ -422,23 +422,23 @@ function Outer() {
 }
 ```
 
-Each render makes a new `Inner` type, defeating reconciliation and unmounting children.
+Mỗi lần render tạo ra một type `Inner` mới, phá vỡ reconciliation và unmount các con.
 
-## 6. Rendering Performance (MEDIUM)
+## 6. Hiệu năng Rendering (MEDIUM)
 
-### Animate the wrapper, not the SVG
+### Animate wrapper, không animate SVG
 
-Transforming a `<div>` wrapper around an SVG is GPU-accelerated; transforming the SVG itself triggers paint.
+Transform một wrapper `<div>` bao quanh SVG được tăng tốc bằng GPU; transform chính SVG sẽ kích hoạt paint.
 
-### `content-visibility: auto` for long lists
+### `content-visibility: auto` cho list dài
 
 ```css
 .row { content-visibility: auto; contain-intrinsic-size: auto 80px; }
 ```
 
-Browser skips offscreen rendering — major win for lists with hundreds of rows.
+Trình duyệt bỏ qua việc render phần ngoài màn hình — lợi ích lớn cho list có hàng trăm dòng.
 
-### Hoist static JSX
+### Đưa JSX tĩnh ra ngoài
 
 ```tsx
 const STATIC_HEADER = <h1>Title</h1>;
@@ -447,27 +447,27 @@ function Page() {
 }
 ```
 
-### SVG: reduce coordinate precision
+### SVG: giảm độ chính xác của tọa độ
 
-`d="M10.123456,20.654321"` → `d="M10.12,20.65"`. Each digit costs bytes; the visual difference is sub-pixel.
+`d="M10.123456,20.654321"` → `d="M10.12,20.65"`. Mỗi chữ số tốn thêm byte; khác biệt thị giác chỉ ở mức dưới pixel.
 
-### Hydration no-flicker via inline script
+### Hydration không nhấp nháy bằng inline script
 
-For values needed before hydration (theme, locale), inline a `<script>` that sets `document.documentElement.dataset.*` before React mounts.
+Với các giá trị cần có trước hydration (theme, locale), hãy inline một `<script>` đặt `document.documentElement.dataset.*` trước khi React mount.
 
-### Suppress expected hydration mismatches narrowly
+### Chỉ chặn các hydration mismatch đã dự kiến trong phạm vi hẹp
 
 ```tsx
 <time suppressHydrationWarning>{new Date().toLocaleString()}</time>
 ```
 
-Use ONLY for known-divergent leaf nodes — never on a tree containing other children.
+CHỈ dùng cho các node lá đã biết là sẽ khác nhau — KHÔNG BAO GIỜ dùng trên cây có chứa các con khác.
 
-### `<Activity>` for show/hide instead of mount/unmount
+### `<Activity>` để hiện/ẩn thay vì mount/unmount
 
-React 19 `<Activity mode="visible|hidden">` keeps tree state and effects mounted but hides — cheaper than unmount/remount for tabs and accordions.
+`<Activity mode="visible|hidden">` của React 19 giữ state của cây và effect ở trạng thái mounted nhưng ẩn đi — rẻ hơn unmount/remount cho tab và accordion.
 
-### Ternary over `&&` for conditional render
+### Dùng ternary thay vì `&&` khi render có điều kiện
 
 ```tsx
 // INCORRECT — `0` renders as text node
@@ -477,11 +477,11 @@ React 19 `<Activity mode="visible|hidden">` keeps tree state and effects mounted
 {count > 0 ? <Badge>{count}</Badge> : null}
 ```
 
-### `useTransition` for loading states
+### `useTransition` cho trạng thái loading
 
-Pair `startTransition` with the action; React shows the previous UI as `isPending` while the next state computes.
+Kết hợp `startTransition` với action; React giữ hiển thị UI trước đó với `isPending` trong khi state tiếp theo đang được tính.
 
-### React DOM resource hints
+### Resource hint của React DOM
 
 ```tsx
 import { preload, preconnect } from "react-dom";
@@ -489,36 +489,36 @@ preload("/api/critical", { as: "fetch" });
 preconnect("https://api.example.com");
 ```
 
-### `defer` / `async` on `<script>` tags
+### `defer` / `async` trên thẻ `<script>`
 
-`defer` for ordered execution after DOMContentLoaded; `async` for fire-and-forget.
+`defer` để thực thi theo thứ tự sau DOMContentLoaded; `async` cho kiểu fire-and-forget.
 
-## 7. JavaScript Performance (LOW-MEDIUM)
+## 7. Hiệu năng JavaScript (LOW-MEDIUM)
 
-- **Batch DOM/CSS changes** — apply via class swap or `cssText`, not property-by-property
-- **`Map` for repeated lookups** — `O(1)` vs `O(n)` linear scan
-- **Cache property access in loops** — `const len = arr.length`
-- **Memoize pure functions** — module-level `Map<key, result>`
-- **Cache `localStorage` reads** — sync API; one read per render
-- **Combine `filter().map()` into one pass** — `flatMap` or single `for`
-- **Check array length first** before expensive comparisons
-- **Early return** from functions
-- **Hoist RegExp** out of loops — compilation is not free
-- **Loop for min/max** instead of `sort()` — `O(n)` vs `O(n log n)`
-- **`Set`/`Map` for membership** — `O(1)` vs `Array.includes` `O(n)`
-- **`toSorted()` over mutation** when immutability matters
-- **`flatMap` to map and filter in one pass**
-- **`requestIdleCallback`** for non-critical work
+- **Gộp thay đổi DOM/CSS theo lô (batch)** — áp dụng bằng cách đổi class hoặc `cssText`, không đổi từng property một
+- **Dùng `Map` cho các lần tra cứu lặp lại** — `O(1)` so với quét tuyến tính `O(n)`
+- **Cache việc truy cập property trong vòng lặp** — `const len = arr.length`
+- **Memoize các hàm thuần** — `Map<key, result>` ở cấp module
+- **Cache các lần đọc `localStorage`** — API đồng bộ; mỗi lần render chỉ đọc một lần
+- **Gộp `filter().map()` thành một lượt duyệt** — `flatMap` hoặc một vòng `for`
+- **Kiểm tra độ dài array trước** khi so sánh tốn kém
+- **Early return** trong hàm
+- **Đưa RegExp ra ngoài vòng lặp** — việc biên dịch không miễn phí
+- **Dùng vòng lặp để tìm min/max** thay vì `sort()` — `O(n)` so với `O(n log n)`
+- **Dùng `Set`/`Map` để kiểm tra membership** — `O(1)` so với `Array.includes` `O(n)`
+- **Dùng `toSorted()` thay vì thay đổi trực tiếp (mutation)** khi tính bất biến (immutability) quan trọng
+- **`flatMap` để map và filter trong một lượt duyệt**
+- **`requestIdleCallback`** cho công việc không quan trọng
 
-## 8. Advanced Patterns (LOW)
+## 8. Pattern nâng cao (LOW)
 
-### `useEffectEvent` deps
+### Dependency của `useEffectEvent`
 
-Values from `useEffectEvent` are stable — do NOT add them to effect deps.
+Các giá trị từ `useEffectEvent` là ổn định — KHÔNG thêm chúng vào dependency của effect.
 
-### Event handler refs
+### Ref cho event handler
 
-For stable callbacks passed to memoized children:
+Cho các callback ổn định được truyền xuống con đã memoize:
 
 ```tsx
 const handlerRef = useRef(handler);
@@ -526,11 +526,11 @@ useEffect(() => { handlerRef.current = handler; });
 const stable = useCallback((arg) => handlerRef.current(arg), []);
 ```
 
-### Init once per app load
+### Khởi tạo một lần cho mỗi lần tải app
 
-For module-level singletons (telemetry, logger), guard with a module-scope flag — not `useEffect`.
+Với các singleton ở cấp module (telemetry, logger), hãy bảo vệ bằng một flag ở module scope — không dùng `useEffect`.
 
-### `useLatest` for stable callback refs
+### `useLatest` cho ref callback ổn định
 
 ```tsx
 function useLatest<T>(value: T) {
@@ -540,36 +540,36 @@ function useLatest<T>(value: T) {
 }
 ```
 
-## Automated Tools
+## Công cụ tự động
 
-Many of these rules are now automated:
+Nhiều rule trong số này hiện đã được tự động hóa:
 
-- **Next.js 13.5+ Optimize Package Imports** — barrel import optimization
-- **React Compiler** (RFC, in canary) — auto-memoization
-- **Turbopack** — faster builds, better tree-shaking
-- **Bundle Analyzer** (`@next/bundle-analyzer`) — visualize first-load JS
+- **Next.js 13.5+ Optimize Package Imports** — tối ưu barrel import
+- **React Compiler** (RFC, ở bản canary) — tự động memoize
+- **Turbopack** — build nhanh hơn, tree-shaking tốt hơn
+- **Bundle Analyzer** (`@next/bundle-analyzer`) — trực quan hóa JS tải lần đầu
 
-When the project ships React Compiler, demote `rerender-*` manual memoization rules to "review-only" — the compiler handles them. Manual `useMemo`/`useCallback` becomes unnecessary noise.
+Khi dự án đã dùng React Compiler, hãy hạ các rule memoize thủ công `rerender-*` xuống mức "chỉ review" — compiler đã xử lý chúng. `useMemo`/`useCallback` thủ công trở thành nhiễu không cần thiết.
 
-## Lighthouse / Web Vitals Mapping
+## Ánh xạ Lighthouse / Web Vitals
 
-| Metric | Most relevant categories |
+| Metric | Các nhóm liên quan nhất |
 |---|---|
-| **LCP** (Largest Contentful Paint) | Waterfalls, Bundle Size, Resource Hints |
+| **LCP** (Largest Contentful Paint) | Waterfall, Bundle Size, Resource Hint |
 | **INP** (Interaction to Next Paint) | Re-render, Rendering, JavaScript |
-| **CLS** (Cumulative Layout Shift) | Rendering (Suspense placement, image dimensions) |
-| **TBT** (Total Blocking Time) | Bundle Size, JavaScript, Defer Third-Party |
-| **FID** (legacy) | Bundle Size, Hydration |
+| **CLS** (Cumulative Layout Shift) | Rendering (vị trí đặt Suspense, kích thước ảnh) |
+| **TBT** (Total Blocking Time) | Bundle Size, JavaScript, Trì hoãn script bên thứ ba |
+| **FID** (cũ) | Bundle Size, Hydration |
 
-## Related
+## Liên quan
 
 - Skills: [react-patterns](../react-patterns/SKILL.md), [react-testing](../react-testing/SKILL.md), [frontend-patterns](../frontend-patterns/SKILL.md), [accessibility](../accessibility/SKILL.md), [nextjs-turbopack](../nextjs-turbopack/SKILL.md)
 - Rules: [rules/react/](../../rules/react/)
-- Agents: `react-reviewer` enforces these rules in code review; `react-build-resolver` handles related build failures
+- Agents: `react-reviewer` áp dụng các rule này trong code review; `react-build-resolver` xử lý các lỗi build liên quan
 - Commands: `/react-review`, `/react-build`, `/react-test`
 
-## Attribution
+## Ghi công
 
-Adapted from Vercel Labs `react-best-practices` skill (MIT License, copyright Vercel Engineering, v1.0.0 January 2026). Source: [https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices).
+Phỏng theo skill `react-best-practices` của Vercel Labs (MIT License, bản quyền Vercel Engineering, v1.0.0 tháng 1/2026). Nguồn: [https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices).
 
-This skill restructures and adapts the original 70-rule catalog into a single navigable reference. For the full original ruleset with extended examples, see the upstream repository.
+Skill này cấu trúc lại và điều chỉnh bộ danh mục 70 rule gốc thành một tài liệu tham khảo duy nhất, dễ điều hướng. Để xem bộ rule gốc đầy đủ kèm ví dụ mở rộng, hãy xem repo upstream.

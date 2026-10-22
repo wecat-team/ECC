@@ -1,185 +1,185 @@
 ---
 name: frontend-slides
-description: Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a talk/pitch. Helps non-designers discover their aesthetic through visual exploration rather than abstract choices.
+description: Tạo bài thuyết trình HTML ấn tượng, giàu animation từ đầu hoặc bằng cách chuyển đổi file PowerPoint. Dùng khi người dùng muốn xây dựng presentation, chuyển PPT/PPTX sang web, hoặc tạo slide cho bài talk/pitch. Giúp người không phải designer khám phá phong cách thẩm mỹ của mình qua khám phá trực quan thay vì các lựa chọn trừu tượng.
 metadata:
   origin: ECC
 ---
 
 # Frontend Slides
 
-Create zero-dependency, animation-rich HTML presentations that run entirely in the browser.
+Tạo bài thuyết trình HTML không dependency, giàu animation, chạy hoàn toàn trong trình duyệt.
 
-Inspired by the visual exploration approach showcased in work by zarazhangrui (credit: @zarazhangrui).
+Lấy cảm hứng từ cách tiếp cận khám phá trực quan được thể hiện trong tác phẩm của zarazhangrui (ghi công: @zarazhangrui).
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Creating a talk deck, pitch deck, workshop deck, or internal presentation
-- Converting `.ppt` or `.pptx` slides into an HTML presentation
-- Improving an existing HTML presentation's layout, motion, or typography
-- Exploring presentation styles with a user who does not know their design preference yet
+- Tạo talk deck, pitch deck, workshop deck hoặc bài thuyết trình nội bộ
+- Chuyển slide `.ppt` hoặc `.pptx` thành bài thuyết trình HTML
+- Cải thiện layout, chuyển động hoặc typography của bài thuyết trình HTML hiện có
+- Khám phá các phong cách thuyết trình cùng người dùng chưa biết sở thích thiết kế của mình
 
-## Non-Negotiables
+## Nguyên tắc bất di bất dịch
 
-1. **Zero dependencies**: default to one self-contained HTML file with inline CSS and JS.
-2. **Viewport fit is mandatory**: every slide must fit inside one viewport with no internal scrolling.
-3. **Show, don't tell**: use visual previews instead of abstract style questionnaires.
-4. **Distinctive design**: avoid generic purple-gradient, Inter-on-white, template-looking decks.
-5. **Production quality**: keep code commented, accessible, responsive, and performant.
+1. **Không dependency**: mặc định là một file HTML tự chứa với CSS và JS inline.
+2. **Vừa khít viewport là bắt buộc**: mọi slide phải nằm gọn trong một viewport, không có cuộn bên trong.
+3. **Show, don't tell**: dùng bản xem trước trực quan thay vì bảng câu hỏi phong cách trừu tượng.
+4. **Thiết kế khác biệt**: tránh các deck gradient tím chung chung, Inter-trên-nền-trắng, trông như template.
+5. **Chất lượng production**: giữ code có comment, accessible, responsive và hiệu năng tốt.
 
-Before generating, read `STYLE_PRESETS.md` for the viewport-safe CSS base, density limits, preset catalog, and CSS gotchas.
+Trước khi tạo, hãy đọc `STYLE_PRESETS.md` để nắm CSS nền an toàn cho viewport, giới hạn mật độ, danh mục preset và các cạm bẫy CSS.
 
 ## Workflow
 
-### 1. Detect Mode
+### 1. Xác định chế độ
 
-Choose one path:
-- **New presentation**: user has a topic, notes, or full draft
-- **PPT conversion**: user has `.ppt` or `.pptx`
-- **Enhancement**: user already has HTML slides and wants improvements
+Chọn một hướng:
+- **Bài thuyết trình mới**: người dùng có chủ đề, ghi chú hoặc bản nháp đầy đủ
+- **Chuyển đổi PPT**: người dùng có `.ppt` hoặc `.pptx`
+- **Cải tiến**: người dùng đã có slide HTML và muốn cải thiện
 
-### 2. Discover Content
+### 2. Khám phá nội dung
 
-Ask only the minimum needed:
-- purpose: pitch, teaching, conference talk, internal update
-- length: short (5-10), medium (10-20), long (20+)
-- content state: finished copy, rough notes, topic only
+Chỉ hỏi những gì tối thiểu cần thiết:
+- mục đích: pitch, giảng dạy, talk hội nghị, cập nhật nội bộ
+- độ dài: ngắn (5-10), vừa (10-20), dài (20+)
+- trạng thái nội dung: copy hoàn chỉnh, ghi chú thô, chỉ có chủ đề
 
-If the user has content, ask them to paste it before styling.
+Nếu người dùng đã có nội dung, hãy yêu cầu họ dán vào trước khi tạo kiểu.
 
-### 3. Discover Style
+### 3. Khám phá phong cách
 
-Default to visual exploration.
+Mặc định là khám phá trực quan.
 
-If the user already knows the desired preset, skip previews and use it directly.
+Nếu người dùng đã biết preset mong muốn, bỏ qua bản xem trước và dùng thẳng.
 
-Otherwise:
-1. Ask what feeling the deck should create: impressed, energized, focused, inspired.
-2. Generate **3 single-slide preview files** in `.ecc-design/slide-previews/`.
-3. Each preview must be self-contained, show typography/color/motion clearly, and stay under roughly 100 lines of slide content.
-4. Ask the user which preview to keep or what elements to mix.
+Nếu không:
+1. Hỏi deck nên tạo ra cảm giác gì: ấn tượng, tràn năng lượng, tập trung, truyền cảm hứng.
+2. Tạo **3 file xem trước một-slide** trong `.ecc-design/slide-previews/`.
+3. Mỗi bản xem trước phải tự chứa, thể hiện rõ typography/màu sắc/chuyển động, và giữ dưới khoảng 100 dòng nội dung slide.
+4. Hỏi người dùng muốn giữ bản xem trước nào hoặc muốn trộn những yếu tố nào.
 
-Use the preset guide in `STYLE_PRESETS.md` when mapping mood to style.
+Dùng hướng dẫn preset trong `STYLE_PRESETS.md` khi ánh xạ tâm trạng sang phong cách.
 
-### 4. Build the Presentation
+### 4. Xây dựng bài thuyết trình
 
-Output either:
+Đầu ra là một trong hai:
 - `presentation.html`
 - `[presentation-name].html`
 
-Use an `assets/` folder only when the deck contains extracted or user-supplied images.
+Chỉ dùng thư mục `assets/` khi deck chứa ảnh đã trích xuất hoặc do người dùng cung cấp.
 
-Required structure:
-- semantic slide sections
-- a viewport-safe CSS base from `STYLE_PRESETS.md`
-- CSS custom properties for theme values
-- a presentation controller class for keyboard, wheel, and touch navigation
-- Intersection Observer for reveal animations
-- reduced-motion support
+Cấu trúc bắt buộc:
+- các section slide ngữ nghĩa
+- CSS nền an toàn cho viewport từ `STYLE_PRESETS.md`
+- CSS custom property cho các giá trị theme
+- một class presentation controller cho điều hướng bằng bàn phím, wheel và touch
+- Intersection Observer cho animation reveal
+- hỗ trợ reduced-motion
 
-### 5. Enforce Viewport Fit
+### 5. Bắt buộc vừa khít Viewport
 
-Treat this as a hard gate.
+Hãy coi đây là cổng kiểm soát cứng.
 
-Rules:
-- every `.slide` must use `height: 100vh; height: 100dvh; overflow: hidden;`
-- all type and spacing must scale with `clamp()`
-- when content does not fit, split into multiple slides
-- never solve overflow by shrinking text below readable sizes
-- never allow scrollbars inside a slide
+Quy tắc:
+- mọi `.slide` phải dùng `height: 100vh; height: 100dvh; overflow: hidden;`
+- mọi cỡ chữ và khoảng cách phải co giãn bằng `clamp()`
+- khi nội dung không vừa, hãy tách thành nhiều slide
+- không bao giờ xử lý tràn bằng cách thu nhỏ chữ dưới kích thước đọc được
+- không bao giờ cho phép thanh cuộn bên trong slide
 
-Use the density limits and mandatory CSS block in `STYLE_PRESETS.md`.
+Dùng giới hạn mật độ và khối CSS bắt buộc trong `STYLE_PRESETS.md`.
 
-### 6. Validate
+### 6. Xác thực
 
-Check the finished deck at these sizes:
+Kiểm tra deck hoàn chỉnh ở các kích thước sau:
 - 1920x1080
 - 1280x720
 - 768x1024
 - 375x667
 - 667x375
 
-If browser automation is available, use it to verify no slide overflows and that keyboard navigation works.
+Nếu có browser automation, hãy dùng nó để xác minh không slide nào bị tràn và điều hướng bàn phím hoạt động.
 
-### 7. Deliver
+### 7. Bàn giao
 
-At handoff:
-- delete temporary preview files unless the user wants to keep them
-- open the deck with the platform-appropriate opener when useful
-- summarize file path, preset used, slide count, and easy theme customization points
+Khi bàn giao:
+- xóa các file xem trước tạm thời trừ khi người dùng muốn giữ
+- mở deck bằng lệnh mở phù hợp với nền tảng khi hữu ích
+- tóm tắt đường dẫn file, preset đã dùng, số lượng slide và các điểm tùy chỉnh theme dễ dàng
 
-Use the correct opener for the current OS:
+Dùng lệnh mở đúng cho hệ điều hành hiện tại:
 - macOS: `open file.html`
 - Linux: `xdg-open file.html`
 - Windows: `start "" file.html`
 
-## PPT / PPTX Conversion
+## Chuyển đổi PPT / PPTX
 
-For PowerPoint conversion:
-1. Prefer `python3` with `python-pptx` to extract text, images, and notes.
-2. If `python-pptx` is unavailable, ask whether to install it or fall back to a manual/export-based workflow.
-3. Preserve slide order, speaker notes, and extracted assets.
-4. After extraction, run the same style-selection workflow as a new presentation.
+Với việc chuyển đổi PowerPoint:
+1. Ưu tiên `python3` với `python-pptx` để trích xuất văn bản, ảnh và ghi chú.
+2. Nếu không có `python-pptx`, hãy hỏi xem có nên cài nó hay chuyển sang workflow thủ công/dựa trên export.
+3. Giữ nguyên thứ tự slide, speaker note và các asset đã trích xuất.
+4. Sau khi trích xuất, chạy cùng workflow chọn phong cách như với bài thuyết trình mới.
 
-Keep conversion cross-platform. Do not rely on macOS-only tools when Python can do the job.
+Giữ việc chuyển đổi đa nền tảng. Không dựa vào công cụ chỉ có trên macOS khi Python làm được việc đó.
 
-## Implementation Requirements
+## Yêu cầu triển khai
 
 ### HTML / CSS
 
-- Use inline CSS and JS unless the user explicitly wants a multi-file project.
-- Fonts may come from Google Fonts or Fontshare.
-- Prefer atmospheric backgrounds, strong type hierarchy, and a clear visual direction.
-- Use abstract shapes, gradients, grids, noise, and geometry rather than illustrations.
+- Dùng CSS và JS inline trừ khi người dùng muốn rõ ràng một project nhiều file.
+- Font có thể đến từ Google Fonts hoặc Fontshare.
+- Ưu tiên nền khí quyển, phân cấp chữ mạnh và định hướng thị giác rõ ràng.
+- Dùng hình khối trừu tượng, gradient, lưới, noise và hình học thay vì hình minh họa.
 
 ### JavaScript
 
-Include:
-- keyboard navigation
-- touch / swipe navigation
-- mouse wheel navigation
-- progress indicator or slide index
-- reveal-on-enter animation triggers
+Bao gồm:
+- điều hướng bằng bàn phím
+- điều hướng touch / swipe
+- điều hướng bằng wheel chuột
+- chỉ báo tiến độ hoặc chỉ mục slide
+- trigger animation reveal-on-enter
 
 ### Accessibility
 
-- use semantic structure (`main`, `section`, `nav`)
-- keep contrast readable
-- support keyboard-only navigation
-- respect `prefers-reduced-motion`
+- dùng cấu trúc ngữ nghĩa (`main`, `section`, `nav`)
+- giữ độ tương phản dễ đọc
+- hỗ trợ điều hướng chỉ bằng bàn phím
+- tôn trọng `prefers-reduced-motion`
 
-## Content Density Limits
+## Giới hạn mật độ nội dung
 
-Use these maxima unless the user explicitly asks for denser slides and readability still holds:
+Dùng các mức tối đa này trừ khi người dùng yêu cầu rõ ràng slide dày hơn và khả năng đọc vẫn đảm bảo:
 
-| Slide type | Limit |
+| Loại slide | Giới hạn |
 |------------|-------|
-| Title | 1 heading + 1 subtitle + optional tagline |
-| Content | 1 heading + 4-6 bullets or 2 short paragraphs |
-| Feature grid | 6 cards max |
-| Code | 8-10 lines max |
-| Quote | 1 quote + attribution |
-| Image | 1 image constrained by viewport |
+| Title | 1 heading + 1 subtitle + tagline tùy chọn |
+| Content | 1 heading + 4-6 bullet hoặc 2 đoạn ngắn |
+| Feature grid | tối đa 6 card |
+| Code | tối đa 8-10 dòng |
+| Quote | 1 trích dẫn + ghi nguồn |
+| Image | 1 ảnh bị giới hạn bởi viewport |
 
-## Anti-Patterns
+## Anti-Pattern
 
-- generic startup gradients with no visual identity
-- system-font decks unless intentionally editorial
-- long bullet walls
-- code blocks that need scrolling
-- fixed-height content boxes that break on short screens
-- invalid negated CSS functions like `-clamp(...)`
+- gradient startup chung chung không có bản sắc thị giác
+- deck dùng system font trừ khi cố ý theo phong cách biên tập
+- tường bullet dài
+- khối code cần cuộn
+- hộp nội dung chiều cao cố định bị vỡ trên màn hình thấp
+- hàm CSS phủ định không hợp lệ như `-clamp(...)`
 
-## Related ECC Skills
+## Skill ECC liên quan
 
-- `frontend-patterns` for component and interaction patterns around the deck
-- `liquid-glass-design` when a presentation intentionally borrows Apple glass aesthetics
-- `e2e-testing` if you need automated browser verification for the final deck
+- `frontend-patterns` cho pattern component và tương tác quanh deck
+- `liquid-glass-design` khi bài thuyết trình cố ý mượn thẩm mỹ kính của Apple
+- `e2e-testing` nếu bạn cần browser verification tự động cho deck cuối cùng
 
-## Deliverable Checklist
+## Checklist bàn giao
 
-- presentation runs from a local file in a browser
-- every slide fits the viewport without scrolling
-- style is distinctive and intentional
-- animation is meaningful, not noisy
-- reduced motion is respected
-- file paths and customization points are explained at handoff
+- bài thuyết trình chạy từ file cục bộ trong trình duyệt
+- mọi slide vừa viewport mà không cần cuộn
+- phong cách khác biệt và có chủ đích
+- animation có ý nghĩa, không gây nhiễu
+- reduced motion được tôn trọng
+- đường dẫn file và các điểm tùy chỉnh được giải thích khi bàn giao

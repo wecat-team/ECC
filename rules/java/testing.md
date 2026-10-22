@@ -2,18 +2,18 @@
 paths:
   - "**/*.java"
 ---
-# Java Testing
+# Kiểm thử Java
 
-> This file extends [common/testing.md](../common/testing.md) with Java-specific content.
+> File này mở rộng [common/testing.md](../common/testing.md) với nội dung dành riêng cho Java.
 
 ## Test Framework
 
 - **JUnit 5** (`@Test`, `@ParameterizedTest`, `@Nested`, `@DisplayName`)
-- **AssertJ** for fluent assertions (`assertThat(result).isEqualTo(expected)`)
-- **Mockito** for mocking dependencies
-- **Testcontainers** for integration tests requiring databases or services
+- **AssertJ** cho fluent assertion (`assertThat(result).isEqualTo(expected)`)
+- **Mockito** để mock dependency
+- **Testcontainers** cho integration test cần database hoặc service
 
-## Test Organization
+## Tổ chức Test
 
 ```
 src/test/java/com/example/app/
@@ -23,9 +23,9 @@ src/test/java/com/example/app/
   integration/       # Cross-layer integration tests
 ```
 
-Mirror the `src/main/java` package structure in `src/test/java`.
+Phản chiếu cấu trúc package `src/main/java` trong `src/test/java`.
 
-## Unit Test Pattern
+## Pattern Unit Test
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -65,7 +65,7 @@ class OrderServiceTest {
 }
 ```
 
-## Parameterized Tests
+## Parameterized Test
 
 ```java
 @ParameterizedTest
@@ -80,9 +80,9 @@ void applyDiscount(BigDecimal price, int pct, BigDecimal expected) {
 }
 ```
 
-## Integration Tests
+## Integration Test
 
-Use Testcontainers for real database integration:
+Dùng Testcontainers để tích hợp với database thật:
 
 ```java
 @Testcontainers
@@ -111,23 +111,23 @@ class OrderRepositoryIT {
 }
 ```
 
-For Spring Boot integration tests, see skill: `springboot-tdd`.
-For Quarkus integration tests, see skill: `quarkus-tdd`.
+Với integration test Spring Boot, xem skill: `springboot-tdd`.
+Với integration test Quarkus, xem skill: `quarkus-tdd`.
 
-## Test Naming
+## Đặt tên Test
 
-Use descriptive names with `@DisplayName`:
-- `methodName_scenario_expectedBehavior()` for method names
-- `@DisplayName("human-readable description")` for reports
+Dùng tên mô tả với `@DisplayName`:
+- `methodName_scenario_expectedBehavior()` cho tên method
+- `@DisplayName("human-readable description")` cho báo cáo
 
 ## Coverage
 
-- Target 80%+ line coverage
-- Use JaCoCo for coverage reporting
-- Focus on service and domain logic — skip trivial getters/config classes
+- Mục tiêu line coverage 80%+
+- Dùng JaCoCo để báo cáo coverage
+- Tập trung vào service và domain logic — bỏ qua getter đơn giản/class cấu hình
 
-## References
+## Tham chiếu
 
-See skill: `springboot-tdd` for Spring Boot TDD patterns with MockMvc and Testcontainers.
-See skill: `quarkus-tdd` for Quarkus TDD patterns with REST Assured and Dev Services.
-See skill: `java-coding-standards` for testing expectations.
+Xem skill: `springboot-tdd` để có các pattern TDD Spring Boot với MockMvc và Testcontainers.
+Xem skill: `quarkus-tdd` để có các pattern TDD Quarkus với REST Assured và Dev Services.
+Xem skill: `java-coding-standards` để biết các kỳ vọng về kiểm thử.

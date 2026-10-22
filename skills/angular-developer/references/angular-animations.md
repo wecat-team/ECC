@@ -1,17 +1,17 @@
 # Angular Animations
 
-When animating elements in Angular, **first analyze the project's Angular version** in `package.json`.
-For modern applications (**Angular v20.2 and above**), prefer using native CSS with `animate.enter` and `animate.leave`. For older applications, you may need to use the deprecated `@angular/animations` package.
+Khi tạo animation cho các phần tử trong Angular, **trước tiên hãy phân tích phiên bản Angular của dự án** trong `package.json`.
+Với các ứng dụng hiện đại (**Angular v20.2 trở lên**), ưu tiên dùng CSS native với `animate.enter` và `animate.leave`. Với các ứng dụng cũ hơn, bạn có thể phải dùng package `@angular/animations` đã bị deprecated.
 
-## 1. Native CSS Animations (v20.2+ Recommended)
+## 1. Native CSS Animations (khuyến nghị cho v20.2+)
 
-Modern Angular provides `animate.enter` and `animate.leave` to animate elements as they enter or leave the DOM. They apply CSS classes at the appropriate times.
+Angular hiện đại cung cấp `animate.enter` và `animate.leave` để tạo animation cho phần tử khi chúng vào hoặc rời khỏi DOM. Chúng áp dụng các CSS class vào đúng thời điểm.
 
 ### `animate.enter` and `animate.leave`
 
-Use these directly on elements to apply CSS classes during the enter or leave phase. Angular automatically removes the enter classes when the animation completes. For `animate.leave`, Angular waits for the animation to finish before removing the element from the DOM.
+Dùng trực tiếp chúng trên phần tử để áp dụng CSS class trong pha enter hoặc leave. Angular tự động gỡ các class enter khi animation hoàn tất. Với `animate.leave`, Angular chờ animation kết thúc rồi mới gỡ phần tử khỏi DOM.
 
-`animate.enter` example:
+Ví dụ `animate.enter`:
 
 ```html
 @if (isShown()) {
@@ -48,11 +48,11 @@ Use these directly on elements to apply CSS classes during the enter or leave ph
 }
 ```
 
-_Note: `animate.leave` may be added to child elements being removed._
+_Lưu ý: `animate.leave` có thể được thêm vào các phần tử con đang bị gỡ._
 
-### Event Bindings and Third-party Libraries
+### Event Binding và thư viện bên thứ ba
 
-You can bind to `(animate.enter)` and `(animate.leave)` to call functions or use JS libraries like GSAP.
+Bạn có thể bind tới `(animate.enter)` và `(animate.leave)` để gọi hàm hoặc dùng các thư viện JS như GSAP.
 
 ```html
 @if(show()) {
@@ -64,19 +64,19 @@ You can bind to `(animate.enter)` and `(animate.leave)` to call functions or use
 import { AnimationCallbackEvent } from '@angular/core';
 
 onLeave(event: AnimationCallbackEvent) {
-  // Custom animation logic here
-  // CRITICAL: You MUST call animationComplete() when done so Angular removes the element!
+  // Logic animation tùy chỉnh đặt ở đây
+  // CRITICAL: PHẢI gọi animationComplete() khi xong để Angular gỡ phần tử!
   event.animationComplete();
 }
 ```
 
-## 2. Advanced CSS Animations
+## 2. CSS Animation nâng cao
 
-CSS offers robust tools for advanced animation sequences.
+CSS cung cấp các công cụ mạnh mẽ cho các chuỗi animation nâng cao.
 
-### Animating State and Styles
+### Animate State và Style
 
-Toggle CSS classes on elements using property binding to trigger transitions.
+Bật/tắt CSS class trên phần tử bằng property binding để kích hoạt transition.
 
 ```html
 <div [class.open]="isOpen">...</div>
@@ -92,9 +92,9 @@ div.open {
 }
 ```
 
-### Animating Auto Height
+### Animate tới Auto Height
 
-You can use `css-grid` to animate to auto height.
+Bạn có thể dùng `css-grid` để animate tới chiều cao auto.
 
 ```css
 .container {
@@ -110,14 +110,14 @@ You can use `css-grid` to animate to auto height.
 }
 ```
 
-### Staggering and Parallel Animations
+### Animation so le (Staggering) và song song
 
-- **Staggering**: Use `animation-delay` or `transition-delay` with different values for items in a list.
-- **Parallel**: Apply multiple animations in the `animation` shorthand (e.g., `animation: rotate 3s, fade-in 2s;`).
+- **Staggering**: Dùng `animation-delay` hoặc `transition-delay` với các giá trị khác nhau cho các mục trong danh sách.
+- **Song song (Parallel)**: Áp dụng nhiều animation trong shorthand `animation` (ví dụ `animation: rotate 3s, fade-in 2s;`).
 
-### Programmatic Control
+### Điều khiển bằng code (Programmatic Control)
 
-Retrieve animations directly using standard Web APIs:
+Lấy các animation trực tiếp bằng Web API chuẩn:
 
 ```ts
 const animations = element.getAnimations();
@@ -126,11 +126,11 @@ animations.forEach((anim) => anim.pause());
 
 ## 3. Legacy Animations DSL (Deprecated)
 
-For older projects (pre v20.2 or where `@angular/animations` is already heavily used), you use the component metadata DSL.
+Với các dự án cũ hơn (trước v20.2 hoặc nơi `@angular/animations` đã được dùng nhiều), bạn dùng DSL trong metadata của component.
 
-**Important:** Do not mix legacy animations and `animate.enter`/`leave` in the same component.
+**Quan trọng:** Không trộn legacy animation và `animate.enter`/`leave` trong cùng một component.
 
-### Setup
+### Thiết lập
 
 ```ts
 bootstrapApplication(App, {
@@ -138,7 +138,7 @@ bootstrapApplication(App, {
 });
 ```
 
-### Defining Transitions
+### Định nghĩa Transition
 
 ```ts
 import {signal} from '@angular/core';

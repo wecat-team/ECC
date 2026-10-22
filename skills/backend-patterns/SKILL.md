@@ -1,27 +1,27 @@
 ---
 name: backend-patterns
-description: Backend architecture patterns, API design, database optimization, and server-side best practices for Node.js, Express, and Next.js API routes. Use when building or reviewing Node.js, Express, or Next.js API routes and their data access.
+description: Các pattern kiến trúc backend, thiết kế API, tối ưu database và best practice phía server cho Node.js, Express và Next.js API route. Dùng khi xây dựng hoặc review Node.js, Express hoặc Next.js API route cùng phần truy cập dữ liệu của chúng.
 metadata:
   origin: ECC
 ---
 
-# Backend Development Patterns
+# Các Pattern phát triển Backend
 
-Backend architecture patterns and best practices for scalable server-side applications.
+Các pattern kiến trúc backend và best practice cho ứng dụng phía server có khả năng mở rộng.
 
-## When to Activate
+## Khi nào kích hoạt
 
-- Designing REST or GraphQL API endpoints
-- Implementing repository, service, or controller layers
-- Optimizing database queries (N+1, indexing, connection pooling)
-- Adding caching (Redis, in-memory, HTTP cache headers)
-- Setting up background jobs or async processing
-- Structuring error handling and validation for APIs
-- Building middleware (auth, logging, rate limiting)
+- Thiết kế REST hoặc GraphQL API endpoint
+- Triển khai các tầng repository, service hoặc controller
+- Tối ưu database query (N+1, indexing, connection pooling)
+- Thêm caching (Redis, in-memory, HTTP cache header)
+- Thiết lập background job hoặc xử lý bất đồng bộ
+- Tổ chức xử lý lỗi và validation cho API
+- Xây dựng middleware (auth, logging, rate limiting)
 
-## API Design Patterns
+## Các Pattern thiết kế API
 
-### RESTful API Structure
+### Cấu trúc RESTful API
 
 ```typescript
 // PASS: Resource-based URLs
@@ -127,9 +127,9 @@ export default withAuth(async (req, res) => {
 })
 ```
 
-## Database Patterns
+## Các Pattern Database
 
-### Query Optimization
+### Tối ưu Query
 
 ```typescript
 // PASS: GOOD: Select only needed columns
@@ -146,7 +146,7 @@ const { data } = await supabase
   .select('*')
 ```
 
-### N+1 Query Prevention
+### Ngăn chặn N+1 Query
 
 ```typescript
 // FAIL: BAD: N+1 query problem
@@ -204,9 +204,9 @@ END;
 $$;
 ```
 
-## Caching Strategies
+## Các chiến lược Caching
 
-### Redis Caching Layer
+### Tầng Redis Caching
 
 ```typescript
 class CachedMarketRepository implements MarketRepository {
@@ -262,9 +262,9 @@ async function getMarketWithCache(id: string): Promise<Market> {
 }
 ```
 
-## Error Handling Patterns
+## Các Pattern xử lý lỗi
 
-### Centralized Error Handler
+### Error Handler tập trung
 
 ```typescript
 class ApiError extends Error {
@@ -314,7 +314,7 @@ export async function GET(request: Request) {
 }
 ```
 
-### Retry with Exponential Backoff
+### Retry với Exponential Backoff
 
 ```typescript
 async function fetchWithRetry<T>(
@@ -346,7 +346,7 @@ const data = await fetchWithRetry(() => fetchFromAPI())
 
 ## Authentication & Authorization
 
-### JWT Token Validation
+### Validate JWT Token
 
 ```typescript
 import jwt from 'jsonwebtoken'
@@ -431,16 +431,16 @@ export const DELETE = requirePermission('delete')(
 
 ## Rate Limiting
 
-Rate limiting must use a shared store such as Redis, a gateway, or the
-platform's native limiter. Do not use per-process in-memory counters for
-production APIs: they reset on deploy, split across replicas, and fail open in
-serverless or multi-instance environments.
+Rate limiting PHẢI dùng một store dùng chung như Redis, một gateway, hoặc
+limiter có sẵn của nền tảng. KHÔNG dùng bộ đếm in-memory theo từng process cho
+API production: chúng bị reset khi deploy, bị chia nhỏ giữa các replica, và
+fail open trong môi trường serverless hoặc nhiều instance.
 
-Keep the backend layer responsible for choosing the integration point and error
-shape; use `api-design` for the HTTP contract and `security-review` for abuse
-case review.
+Hãy để tầng backend chịu trách nhiệm chọn điểm tích hợp và hình dạng của lỗi;
+dùng `api-design` cho HTTP contract và `security-review` để review các
+trường hợp lạm dụng (abuse case).
 
-## Background Jobs & Queues
+## Background Job & Queue
 
 ### Simple Queue Pattern
 
@@ -559,4 +559,4 @@ export async function GET(request: Request) {
 }
 ```
 
-**Remember**: Backend patterns enable scalable, maintainable server-side applications. Choose patterns that fit your complexity level.
+**Hãy nhớ**: Các backend pattern giúp xây dựng ứng dụng phía server có khả năng mở rộng và bảo trì. Hãy chọn pattern phù hợp với mức độ phức tạp của bạn.

@@ -1,66 +1,66 @@
 ---
-description: Detect the project build system and incrementally fix build/type errors with minimal safe changes.
+description: Phát hiện hệ thống build của dự án và sửa dần dần các lỗi build/type bằng những thay đổi tối thiểu, an toàn.
 ---
 
-# Build and Fix
+# Build và Fix
 
-Incrementally fix build and type errors with minimal, safe changes.
+Sửa dần dần các lỗi build và type bằng những thay đổi tối thiểu, an toàn.
 
-## Step 1: Detect Build System
+## Bước 1: Phát hiện hệ thống build
 
-Identify the project's build tool and run the build:
+Xác định công cụ build của dự án và chạy build:
 
-| Indicator | Build Command |
+| Dấu hiệu | Lệnh build |
 |-----------|---------------|
-| `package.json` with `build` script | `npm run build` or `pnpm build` |
-| `tsconfig.json` (TypeScript only) | `npx tsc --noEmit` |
+| `package.json` có script `build` | `npm run build` hoặc `pnpm build` |
+| `tsconfig.json` (chỉ TypeScript) | `npx tsc --noEmit` |
 | `Cargo.toml` | `cargo build 2>&1` |
 | `pom.xml` | `mvn compile` |
 | `build.gradle` | `./gradlew compileJava` |
 | `go.mod` | `go build ./...` |
-| `pyproject.toml` | `python -m compileall -q .` or `mypy .` |
+| `pyproject.toml` | `python -m compileall -q .` hoặc `mypy .` |
 
-## Step 2: Parse and Group Errors
+## Bước 2: Phân tích và nhóm lỗi
 
-1. Run the build command and capture stderr
-2. Group errors by file path
-3. Sort by dependency order (fix imports/types before logic errors)
-4. Count total errors for progress tracking
+1. Chạy lệnh build và bắt stderr
+2. Nhóm lỗi theo đường dẫn file
+3. Sắp xếp theo thứ tự dependency (sửa import/type trước lỗi logic)
+4. Đếm tổng số lỗi để theo dõi tiến độ
 
-## Step 3: Fix Loop (One Error at a Time)
+## Bước 3: Vòng lặp sửa (mỗi lần một lỗi)
 
-For each error:
+Với mỗi lỗi:
 
-1. **Read the file** — Use Read tool to see error context (10 lines around the error)
-2. **Diagnose** — Identify root cause (missing import, wrong type, syntax error)
-3. **Fix minimally** — Use Edit tool for the smallest change that resolves the error
-4. **Re-run build** — Verify the error is gone and no new errors introduced
-5. **Move to next** — Continue with remaining errors
+1. **Đọc file** — Dùng tool Read để xem context của lỗi (10 dòng xung quanh lỗi)
+2. **Chẩn đoán** — Xác định nguyên nhân gốc (thiếu import, sai type, lỗi cú pháp)
+3. **Sửa tối thiểu** — Dùng tool Edit cho thay đổi nhỏ nhất giải quyết được lỗi
+4. **Chạy lại build** — Xác minh lỗi đã hết và không phát sinh lỗi mới
+5. **Chuyển sang lỗi tiếp theo** — Tiếp tục với các lỗi còn lại
 
-## Step 4: Guardrails
+## Bước 4: Rào chắn (Guardrails)
 
-Stop and ask the user if:
-- A fix introduces **more errors than it resolves**
-- The **same error persists after 3 attempts** (likely a deeper issue)
-- The fix requires **architectural changes** (not just a build fix)
-- Build errors stem from **missing dependencies** (need `npm install`, `cargo add`, etc.)
+Dừng lại và hỏi người dùng nếu:
+- Một cách sửa gây ra **nhiều lỗi hơn số lỗi giải quyết được**
+- **Cùng một lỗi vẫn còn sau 3 lần thử** (có thể là vấn đề sâu hơn)
+- Cách sửa đòi hỏi **thay đổi kiến trúc** (không chỉ là sửa build)
+- Lỗi build xuất phát từ **thiếu dependency** (cần `npm install`, `cargo add`, v.v.)
 
-## Step 5: Summary
+## Bước 5: Tóm tắt
 
-Show results:
-- Errors fixed (with file paths)
-- Errors remaining (if any)
-- New errors introduced (should be zero)
-- Suggested next steps for unresolved issues
+Hiển thị kết quả:
+- Các lỗi đã sửa (kèm đường dẫn file)
+- Các lỗi còn lại (nếu có)
+- Các lỗi mới phát sinh (phải bằng không)
+- Đề xuất các bước tiếp theo cho những vấn đề chưa giải quyết
 
-## Recovery Strategies
+## Chiến lược khôi phục
 
-| Situation | Action |
+| Tình huống | Hành động |
 |-----------|--------|
-| Missing module/import | Check if package is installed; suggest install command |
-| Type mismatch | Read both type definitions; fix the narrower type |
-| Circular dependency | Identify cycle with import graph; suggest extraction |
-| Version conflict | Check `package.json` / `Cargo.toml` for version constraints |
-| Build tool misconfiguration | Read config file; compare with working defaults |
+| Thiếu module/import | Kiểm tra package đã được cài chưa; gợi ý lệnh cài đặt |
+| Type không khớp | Đọc cả hai định nghĩa type; sửa type hẹp hơn |
+| Circular dependency | Xác định vòng bằng import graph; gợi ý tách ra |
+| Xung đột phiên bản | Kiểm tra `package.json` / `Cargo.toml` để xem ràng buộc phiên bản |
+| Cấu hình sai công cụ build | Đọc file config; so sánh với mặc định đang hoạt động |
 
-Fix one error at a time for safety. Prefer minimal diffs over refactoring.
+Sửa từng lỗi một để đảm bảo an toàn. Ưu tiên diff tối thiểu hơn là refactor.

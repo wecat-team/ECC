@@ -10,15 +10,15 @@ paths:
   - "**/*.vue"
   - "**/*.svelte"
 ---
-> This file extends [common/patterns.md](../common/patterns.md) with web-specific patterns.
+> File này mở rộng [common/patterns.md](../common/patterns.md) với các pattern riêng cho web.
 
-# Web Patterns
+# Pattern Web
 
-## Component Composition
+## Composition của Component
 
-### Compound Components
+### Compound Component
 
-Use compound components when related UI shares state and interaction semantics:
+Dùng compound component khi các UI liên quan chia sẻ state và ngữ nghĩa tương tác:
 
 ```tsx
 <Tabs defaultValue="overview">
@@ -31,61 +31,61 @@ Use compound components when related UI shares state and interaction semantics:
 </Tabs>
 ```
 
-- Parent owns state
-- Children consume via context
-- Prefer this over prop drilling for complex widgets
+- Component cha sở hữu state
+- Component con dùng qua context
+- Ưu tiên cách này hơn prop drilling cho các widget phức tạp
 
-### Render Props / Slots
+### Render Props / Slot
 
-- Use render props or slot patterns when behavior is shared but markup must vary
-- Keep keyboard handling, ARIA, and focus logic in the headless layer
+- Dùng pattern render props hoặc slot khi hành vi được chia sẻ nhưng markup phải khác nhau
+- Giữ xử lý bàn phím, ARIA và logic focus trong tầng headless
 
-### Container / Presentational Split
+### Tách Container / Presentational
 
-- Container components own data loading and side effects
-- Presentational components receive props and render UI
-- Presentational components should stay pure
+- Container component sở hữu việc tải dữ liệu và side effect
+- Presentational component nhận props và render UI
+- Presentational component nên giữ thuần (pure)
 
-## State Management
+## Quản lý State
 
-Treat these separately:
+Hãy xử lý các loại sau một cách riêng biệt:
 
-| Concern | Tooling |
+| Mối quan tâm | Công cụ |
 |---------|---------|
 | Server state | TanStack Query, SWR, tRPC |
 | Client state | Zustand, Jotai, signals |
-| URL state | search params, route segments |
-| Form state | React Hook Form or equivalent |
+| URL state | search params, route segment |
+| Form state | React Hook Form hoặc tương đương |
 
-- Do not duplicate server state into client stores
-- Derive values instead of storing redundant computed state
+- Không nhân đôi server state vào client store
+- Suy ra giá trị thay vì lưu computed state dư thừa
 
-## URL As State
+## URL như là State
 
-Persist shareable state in the URL:
-- filters
-- sort order
-- pagination
-- active tab
-- search query
+Lưu state có thể chia sẻ trong URL:
+- bộ lọc
+- thứ tự sắp xếp
+- phân trang
+- tab đang hoạt động
+- truy vấn tìm kiếm
 
-## Data Fetching
+## Fetch dữ liệu
 
 ### Stale-While-Revalidate
 
-- Return cached data immediately
-- Revalidate in the background
-- Prefer existing libraries instead of rolling this by hand
+- Trả về dữ liệu đã cache ngay lập tức
+- Revalidate ở chế độ nền
+- Ưu tiên dùng thư viện có sẵn thay vì tự viết tay
 
-### Optimistic Updates
+### Optimistic Update
 
-- Snapshot current state
-- Apply optimistic update
-- Roll back on failure
-- Emit visible error feedback when rolling back
+- Chụp snapshot state hiện tại
+- Áp dụng optimistic update
+- Rollback khi thất bại
+- Hiển thị phản hồi lỗi rõ ràng khi rollback
 
-### Parallel Loading
+### Tải song song
 
-- Fetch independent data in parallel
-- Avoid parent-child request waterfalls
-- Prefetch likely next routes or states when justified
+- Fetch dữ liệu độc lập song song
+- Tránh waterfall request cha-con
+- Prefetch các route hoặc state có khả năng là bước tiếp theo khi có lý do chính đáng

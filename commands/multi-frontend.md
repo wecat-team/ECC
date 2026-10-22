@@ -1,14 +1,14 @@
 ---
-description: Run a frontend-focused multi-model workflow for components, layouts, animation, and UI polish.
+description: Chạy workflow đa model tập trung vào frontend cho component, layout, animation và trau chuốt UI.
 ---
 
-# Frontend - Frontend-Focused Development
+# Frontend - Phát triển tập trung vào Frontend
 
-Frontend-focused workflow (Research → Ideation → Plan → Execute → Optimize → Review), Antigravity-led.
+Workflow tập trung vào frontend (Research → Ideation → Plan → Execute → Optimize → Review), do Antigravity dẫn dắt.
 
-> **Prerequisite:** Requires the external `ccg-workflow` runtime, which is **not** part of the base ECC install. Initialize it with `npx ccg-workflow` to provision `~/.claude/bin/codeagent-wrapper` and the `~/.claude/.ccg/prompts/*` role files this command depends on. Without that runtime, this command will not run correctly.
+> **Điều kiện tiên quyết:** Yêu cầu runtime `ccg-workflow` bên ngoài, runtime này **không** nằm trong bản cài ECC cơ bản. Khởi tạo nó bằng `npx ccg-workflow` để cấp phát `~/.claude/bin/codeagent-wrapper` và các file vai trò `~/.claude/.ccg/prompts/*` mà command này phụ thuộc. Nếu không có runtime đó, command này sẽ không chạy đúng.
 
-## Usage
+## Cách dùng
 
 ```bash
 /frontend <UI task description>
@@ -16,24 +16,24 @@ Frontend-focused workflow (Research → Ideation → Plan → Execute → Optimi
 
 ## Context
 
-- Frontend task: $ARGUMENTS
-- Antigravity-led, Codex for auxiliary reference
-- Applicable: Component design, responsive layout, UI animations, style optimization
+- Tác vụ frontend: $ARGUMENTS
+- Antigravity dẫn dắt, Codex để tham khảo bổ trợ
+- Áp dụng cho: thiết kế component, layout responsive, animation UI, tối ưu style
 
-## Your Role
+## Vai trò của bạn
 
-You are the **Frontend Orchestrator**, coordinating multi-model collaboration for UI/UX tasks (Research → Ideation → Plan → Execute → Optimize → Review).
+Bạn là **Frontend Orchestrator**, điều phối sự cộng tác đa model cho các tác vụ UI/UX (Research → Ideation → Plan → Execute → Optimize → Review).
 
-**Collaborative Models**:
-- **Antigravity** – Frontend UI/UX (**Frontend authority, trustworthy**)
-- **Codex** – Backend perspective (**Frontend opinions for reference only**)
-- **Claude (self)** – Orchestration, planning, execution, delivery
+**Các model cộng tác**:
+- **Antigravity** – UI/UX frontend (**Thẩm quyền về frontend, đáng tin cậy**)
+- **Codex** – Góc nhìn backend (**Ý kiến về frontend chỉ để tham khảo**)
+- **Claude (chính bạn)** – Điều phối, lập kế hoạch, thực thi, bàn giao
 
 ---
 
-## Multi-Model Call Specification
+## Đặc tả gọi đa model
 
-**Call Syntax**:
+**Cú pháp gọi**:
 
 ```
 # New session call
@@ -67,98 +67,98 @@ EOF",
 })
 ```
 
-**Role Prompts**:
+**Role Prompt**:
 
-| Phase | Antigravity |
+| Giai đoạn | Antigravity |
 |-------|--------|
-| Analysis | `~/.claude/.ccg/prompts/antigravity/analyzer.md` |
-| Planning | `~/.claude/.ccg/prompts/antigravity/architect.md` |
+| Phân tích | `~/.claude/.ccg/prompts/antigravity/analyzer.md` |
+| Lập kế hoạch | `~/.claude/.ccg/prompts/antigravity/architect.md` |
 | Review | `~/.claude/.ccg/prompts/antigravity/reviewer.md` |
 
-**Session Reuse**: Each call returns `SESSION_ID: xxx`, use `resume xxx` for subsequent phases. Save `ANTIGRAVITY_SESSION` in Phase 2, use `resume` in Phases 3 and 5.
+**Tái sử dụng session**: Mỗi lần gọi trả về `SESSION_ID: xxx`, dùng `resume xxx` cho các giai đoạn tiếp theo. Lưu `ANTIGRAVITY_SESSION` ở Giai đoạn 2, dùng `resume` ở Giai đoạn 3 và 5.
 
 ---
 
-## Communication Guidelines
+## Hướng dẫn giao tiếp
 
-1. Start responses with mode label `[Mode: X]`, initial is `[Mode: Research]`
-2. Follow strict sequence: `Research → Ideation → Plan → Execute → Optimize → Review`
-3. Use `AskUserQuestion` tool for user interaction when needed (e.g., confirmation/selection/approval)
+1. Bắt đầu phản hồi bằng nhãn chế độ `[Mode: X]`, ban đầu là `[Mode: Research]`
+2. Tuân thủ nghiêm ngặt thứ tự: `Research → Ideation → Plan → Execute → Optimize → Review`
+3. Dùng tool `AskUserQuestion` để tương tác với người dùng khi cần (ví dụ: xác nhận/lựa chọn/phê duyệt)
 
 ---
 
-## Core Workflow
+## Workflow cốt lõi
 
-### Phase 0: Prompt Enhancement (Optional)
+### Giai đoạn 0: Cải thiện prompt (Tùy chọn)
 
-`[Mode: Prepare]` - If ace-tool MCP available, call `mcp__ace-tool__enhance_prompt`, **replace original $ARGUMENTS with enhanced result for subsequent Antigravity calls**. If unavailable, use `$ARGUMENTS` as-is.
+`[Mode: Prepare]` - Nếu ace-tool MCP khả dụng, gọi `mcp__ace-tool__enhance_prompt`, **thay $ARGUMENTS gốc bằng kết quả đã cải thiện cho các lần gọi Antigravity tiếp theo**. Nếu không khả dụng, dùng nguyên `$ARGUMENTS`.
 
-### Phase 1: Research
+### Giai đoạn 1: Nghiên cứu (Research)
 
-`[Mode: Research]` - Understand requirements and gather context
+`[Mode: Research]` - Hiểu yêu cầu và thu thập context
 
-1. **Code Retrieval** (if ace-tool MCP available): Call `mcp__ace-tool__search_context` to retrieve existing components, styles, design system. If unavailable, use built-in tools: `Glob` for file discovery, `Grep` for component/style search, `Read` for context gathering, `Task` (Explore agent) for deeper exploration.
-2. Requirement completeness score (0-10): >=7 continue, <7 stop and supplement
+1. **Truy xuất code** (nếu ace-tool MCP khả dụng): Gọi `mcp__ace-tool__search_context` để truy xuất các component, style, design system hiện có. Nếu không khả dụng, dùng các tool có sẵn: `Glob` để tìm file, `Grep` để tìm component/style, `Read` để thu thập context, `Task` (Explore agent) để khám phá sâu hơn.
+2. Điểm đầy đủ của yêu cầu (0-10): >=7 tiếp tục, <7 dừng lại và bổ sung
 
-### Phase 2: Ideation
+### Giai đoạn 2: Ý tưởng (Ideation)
 
-`[Mode: Ideation]` - Antigravity-led analysis
+`[Mode: Ideation]` - Phân tích do Antigravity dẫn dắt
 
-**MUST call Antigravity** (follow call specification above):
+**PHẢI gọi Antigravity** (theo đặc tả gọi ở trên):
 - ROLE_FILE: `~/.claude/.ccg/prompts/antigravity/analyzer.md`
-- Requirement: Enhanced requirement (or $ARGUMENTS if not enhanced)
-- Context: Project context from Phase 1
-- OUTPUT: UI feasibility analysis, recommended solutions (at least 2), UX evaluation
+- Requirement: Yêu cầu đã được cải thiện (hoặc $ARGUMENTS nếu chưa cải thiện)
+- Context: Context dự án từ Giai đoạn 1
+- OUTPUT: Phân tích tính khả thi của UI, các giải pháp đề xuất (ít nhất 2), đánh giá UX
 
-**Save SESSION_ID** (`ANTIGRAVITY_SESSION`) for subsequent phase reuse.
+**Lưu SESSION_ID** (`ANTIGRAVITY_SESSION`) để tái sử dụng ở các giai đoạn sau.
 
-Output solutions (at least 2), wait for user selection.
+Xuất các giải pháp (ít nhất 2), chờ người dùng lựa chọn.
 
-### Phase 3: Planning
+### Giai đoạn 3: Lập kế hoạch (Planning)
 
-`[Mode: Plan]` - Antigravity-led planning
+`[Mode: Plan]` - Lập kế hoạch do Antigravity dẫn dắt
 
-**MUST call Antigravity** (use `resume <ANTIGRAVITY_SESSION>` to reuse session):
+**PHẢI gọi Antigravity** (dùng `resume <ANTIGRAVITY_SESSION>` để tái sử dụng session):
 - ROLE_FILE: `~/.claude/.ccg/prompts/antigravity/architect.md`
-- Requirement: User's selected solution
-- Context: Analysis results from Phase 2
-- OUTPUT: Component structure, UI flow, styling approach
+- Requirement: Giải pháp người dùng đã chọn
+- Context: Kết quả phân tích từ Giai đoạn 2
+- OUTPUT: Cấu trúc component, luồng UI, hướng tiếp cận styling
 
-Claude synthesizes plan, save to `.claude/plan/task-name.md` after user approval.
+Claude tổng hợp kế hoạch, lưu vào `.claude/plan/task-name.md` sau khi người dùng phê duyệt.
 
-### Phase 4: Implementation
+### Giai đoạn 4: Triển khai (Implementation)
 
-`[Mode: Execute]` - Code development
+`[Mode: Execute]` - Phát triển code
 
-- Strictly follow approved plan
-- Follow existing project design system and code standards
-- Ensure responsiveness, accessibility
+- Tuân thủ nghiêm ngặt kế hoạch đã được duyệt
+- Tuân theo design system và chuẩn code hiện có của dự án
+- Đảm bảo tính responsive, accessibility
 
-### Phase 5: Optimization
+### Giai đoạn 5: Tối ưu (Optimization)
 
-`[Mode: Optimize]` - Antigravity-led review
+`[Mode: Optimize]` - Review do Antigravity dẫn dắt
 
 **MUST call Antigravity** (follow call specification above):
 - ROLE_FILE: `~/.claude/.ccg/prompts/antigravity/reviewer.md`
-- Requirement: Review the following frontend code changes
-- Context: git diff or code content
-- OUTPUT: Accessibility, responsiveness, performance, design consistency issues list
+- Requirement: Review các thay đổi code frontend sau
+- Context: git diff hoặc nội dung code
+- OUTPUT: Danh sách vấn đề về accessibility, responsive, hiệu năng, tính nhất quán của thiết kế
 
-Integrate review feedback, execute optimization after user confirmation.
+Tích hợp phản hồi review, thực hiện tối ưu sau khi người dùng xác nhận.
 
-### Phase 6: Quality Review
+### Giai đoạn 6: Review chất lượng
 
-`[Mode: Review]` - Final evaluation
+`[Mode: Review]` - Đánh giá cuối cùng
 
-- Check completion against plan
-- Verify responsiveness and accessibility
-- Report issues and recommendations
+- Đối chiếu mức độ hoàn thành với kế hoạch
+- Xác minh tính responsive và accessibility
+- Báo cáo các vấn đề và khuyến nghị
 
 ---
 
-## Key Rules
+## Quy tắc chính
 
-1. **Antigravity frontend opinions are trustworthy**
-2. **Codex frontend opinions for reference only**
-3. External models have **zero filesystem write access**
-4. Claude handles all code writes and file operations
+1. **Ý kiến frontend của Antigravity đáng tin cậy**
+2. **Ý kiến frontend của Codex chỉ để tham khảo**
+3. Các model bên ngoài **không có quyền ghi filesystem**
+4. Claude xử lý mọi thao tác ghi code và file

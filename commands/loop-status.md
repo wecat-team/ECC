@@ -1,77 +1,77 @@
 ---
-description: Inspect active loop state, progress, failure signals, and recommended intervention.
+description: Kiểm tra trạng thái vòng lặp đang hoạt động, tiến độ, tín hiệu lỗi và can thiệp được đề xuất.
 ---
 
-# Loop Status Command
+# Lệnh Loop Status
 
-Inspect active loop state, progress, and failure signals.
+Kiểm tra trạng thái vòng lặp đang hoạt động, tiến độ và tín hiệu lỗi.
 
-This slash command can only run after the current session dequeues it. If you
-need to inspect a wedged or sibling session, run the packaged CLI from another
-terminal:
+Slash command này chỉ có thể chạy sau khi phiên hiện tại lấy nó ra khỏi hàng đợi. Nếu
+bạn cần kiểm tra một phiên bị treo hoặc một phiên anh em, hãy chạy CLI đóng gói từ một
+terminal khác:
 
 ```bash
 npx --package ecc-universal ecc loop-status --json
 ```
 
-The CLI scans local Claude transcript JSONL files under
-`~/.claude/projects/**` and reports stale `ScheduleWakeup` calls or `Bash`
-tool calls that have no matching `tool_result`.
+CLI quét các file transcript JSONL cục bộ của Claude dưới
+`~/.claude/projects/**` và báo cáo các lời gọi `ScheduleWakeup` đã cũ (stale) hoặc các lời gọi
+tool `Bash` không có `tool_result` tương ứng.
 
-## Usage
+## Cách dùng
 
 `/loop-status [--watch]`
 
-## What to Report
+## Cần báo cáo gì
 
-- active loop pattern
-- current phase and last successful checkpoint
-- failing checks (if any)
-- estimated time/cost drift
-- recommended intervention (continue/pause/stop)
+- pattern vòng lặp đang hoạt động
+- pha hiện tại và checkpoint thành công gần nhất
+- các kiểm tra thất bại (nếu có)
+- độ lệch thời gian/chi phí ước tính
+- can thiệp được đề xuất (continue/pause/stop)
 
-## Cross-Session CLI
+## CLI xuyên phiên
 
-- `ecc loop-status --json` emits machine-readable status for recent local
-  Claude transcripts.
-- `ecc loop-status --home <dir>` scans a different home directory when
-  inspecting another local profile or mounted workspace.
-- `ecc loop-status --transcript <session.jsonl>` inspects one transcript
-  directly.
-- `ecc loop-status --bash-timeout-seconds 1800` adjusts the stale Bash
-  threshold.
-- `ecc loop-status --exit-code` exits `2` when stale loop or tool signals are
-  found, or `1` when transcripts cannot be scanned.
-- `--exit-code` with `--watch` requires `--watch-count` so watchdog scripts do
-  not wait forever for a process exit.
-- `ecc loop-status --watch` refreshes status until interrupted.
-- `ecc loop-status --watch --watch-count 3 --exit-code` refreshes a bounded
-  number of times, then exits with the highest status seen.
-- `ecc loop-status --watch --watch-count 3` emits a bounded watch stream for
-  scripts and handoffs.
-- `ecc loop-status --watch --write-dir ~/.claude/loops` maintains
-  `index.json` and per-session JSON snapshots for sibling terminals or
-  watchdog scripts.
+- `ecc loop-status --json` xuất trạng thái dạng máy đọc được cho các transcript
+  Claude cục bộ gần đây.
+- `ecc loop-status --home <dir>` quét một thư mục home khác khi
+  kiểm tra một profile cục bộ khác hoặc workspace được mount.
+- `ecc loop-status --transcript <session.jsonl>` kiểm tra trực tiếp một
+  transcript.
+- `ecc loop-status --bash-timeout-seconds 1800` điều chỉnh ngưỡng
+  Bash bị stale.
+- `ecc loop-status --exit-code` thoát với mã `2` khi phát hiện tín hiệu
+  vòng lặp hoặc tool bị stale, hoặc mã `1` khi không thể quét transcript.
+- `--exit-code` kết hợp `--watch` yêu cầu `--watch-count` để các script watchdog
+  không phải chờ mãi một process thoát.
+- `ecc loop-status --watch` làm mới trạng thái cho đến khi bị ngắt.
+- `ecc loop-status --watch --watch-count 3 --exit-code` làm mới một số lần
+  giới hạn, rồi thoát với trạng thái cao nhất đã thấy.
+- `ecc loop-status --watch --watch-count 3` phát ra một luồng watch có giới hạn cho
+  script và bàn giao.
+- `ecc loop-status --watch --write-dir ~/.claude/loops` duy trì
+  `index.json` và các snapshot JSON theo từng phiên cho các terminal anh em hoặc
+  script watchdog.
 
-## Watch Mode
+## Chế độ Watch
 
-When `--watch` is present, refresh status periodically. With `--json`, each
-refresh is emitted as one JSON object per line so another terminal or script can
-consume the stream.
+Khi có `--watch`, làm mới trạng thái định kỳ. Với `--json`, mỗi
+lần làm mới được phát ra dưới dạng một đối tượng JSON mỗi dòng để một terminal hoặc script khác có thể
+tiêu thụ luồng này.
 
-## Snapshot Files
+## File snapshot
 
-Use `--write-dir <dir>` when a separate process needs to inspect loop state
-without waiting for the current Claude session to dequeue `/loop-status`. The
-CLI writes:
+Dùng `--write-dir <dir>` khi một process riêng cần kiểm tra trạng thái vòng lặp
+mà không phải chờ phiên Claude hiện tại lấy `/loop-status` ra khỏi hàng đợi. CLI
+ghi:
 
-- `index.json` with one row per inspected session.
-- `<session-id>.json` with the full status payload for that session.
+- `index.json` với một dòng cho mỗi phiên được kiểm tra.
+- `<session-id>.json` với toàn bộ payload trạng thái của phiên đó.
 
-These files are snapshots of local transcript analysis. They do not control or
-timeout Claude Code runtime tool calls.
+Các file này là snapshot của phân tích transcript cục bộ. Chúng không điều khiển hay
+làm timeout các lời gọi tool của runtime Claude Code.
 
-## Arguments
+## Đối số
 
 $ARGUMENTS:
-- `--watch` optional
+- `--watch` tùy chọn

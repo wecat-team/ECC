@@ -1,55 +1,55 @@
 ---
-description: Comprehensive Rust code review for ownership, lifetimes, error handling, unsafe usage, and idiomatic patterns. Invokes the rust-reviewer agent.
+description: Code review Rust toàn diện về ownership, lifetime, xử lý lỗi, việc dùng unsafe và các pattern idiomatic. Gọi agent rust-reviewer.
 ---
 
 # Rust Code Review
 
-This command invokes the **rust-reviewer** agent for comprehensive Rust-specific code review.
+Lệnh này gọi agent **rust-reviewer** để thực hiện code review toàn diện dành riêng cho Rust.
 
-## What This Command Does
+## Lệnh này làm gì
 
-1. **Verify Automated Checks**: Run `cargo check`, `cargo clippy -- -D warnings`, `cargo fmt --check`, and `cargo test` — stop if any fail
-2. **Identify Rust Changes**: Find modified `.rs` files via `git diff HEAD~1` (or `git diff main...HEAD` for PRs)
-3. **Run Security Audit**: Execute `cargo audit` if available
-4. **Security Scan**: Check for unsafe usage, command injection, hardcoded secrets
-5. **Ownership Review**: Analyze unnecessary clones, lifetime issues, borrowing patterns
-6. **Generate Report**: Categorize issues by severity
+1. **Xác minh các kiểm tra tự động**: Chạy `cargo check`, `cargo clippy -- -D warnings`, `cargo fmt --check` và `cargo test` — dừng nếu bất kỳ cái nào thất bại
+2. **Xác định thay đổi Rust**: Tìm các file `.rs` đã sửa qua `git diff HEAD~1` (hoặc `git diff main...HEAD` cho PR)
+3. **Chạy audit bảo mật**: Thực thi `cargo audit` nếu có
+4. **Quét bảo mật**: Kiểm tra việc dùng unsafe, command injection, secret hardcode
+5. **Review ownership**: Phân tích clone không cần thiết, vấn đề lifetime, pattern borrow
+6. **Tạo báo cáo**: Phân loại vấn đề theo mức độ nghiêm trọng
 
-## When to Use
+## Khi nào dùng
 
-Use `/rust-review` when:
-- After writing or modifying Rust code
-- Before committing Rust changes
-- Reviewing pull requests with Rust code
-- Onboarding to a new Rust codebase
-- Learning idiomatic Rust patterns
+Dùng `/rust-review` khi:
+- Sau khi viết hoặc sửa code Rust
+- Trước khi commit các thay đổi Rust
+- Review pull request có code Rust
+- Làm quen với một codebase Rust mới
+- Học các pattern Rust idiomatic
 
-## Review Categories
+## Các nhóm review
 
-### CRITICAL (Must Fix)
-- Unchecked `unwrap()`/`expect()` in production code paths
-- `unsafe` without `// SAFETY:` comment documenting invariants
-- SQL injection via string interpolation in queries
-- Command injection via unvalidated input in `std::process::Command`
-- Hardcoded credentials
-- Use-after-free via raw pointers
+### CRITICAL (Phải sửa)
+- `unwrap()`/`expect()` không kiểm tra trong các đường code production
+- `unsafe` không có comment `// SAFETY:` ghi lại các invariant
+- SQL injection qua nội suy chuỗi trong query
+- Command injection qua đầu vào chưa kiểm tra trong `std::process::Command`
+- Credential hardcode
+- Use-after-free qua raw pointer
 
-### HIGH (Should Fix)
-- Unnecessary `.clone()` to satisfy borrow checker
-- `String` parameter where `&str` or `impl AsRef<str>` suffices
-- Blocking in async context (`std::thread::sleep`, `std::fs`)
-- Missing `Send`/`Sync` bounds on shared types
-- Wildcard `_ =>` match on business-critical enums
-- Large functions (>50 lines)
+### HIGH (Nên sửa)
+- `.clone()` không cần thiết chỉ để thỏa borrow checker
+- Tham số `String` trong khi `&str` hoặc `impl AsRef<str>` là đủ
+- Blocking trong ngữ cảnh async (`std::thread::sleep`, `std::fs`)
+- Thiếu ràng buộc `Send`/`Sync` trên các type dùng chung
+- Match wildcard `_ =>` trên các enum quan trọng với nghiệp vụ
+- Function lớn (>50 dòng)
 
-### MEDIUM (Consider)
-- Unnecessary allocation in hot paths
-- Missing `with_capacity` when size is known
-- Suppressed clippy warnings without justification
-- Public API without `///` documentation
-- Consider `#[must_use]` on non-`must_use` return types where ignoring values is likely a bug
+### MEDIUM (Cân nhắc)
+- Cấp phát không cần thiết trong hot path
+- Thiếu `with_capacity` khi đã biết kích thước
+- Tắt cảnh báo clippy mà không có lý do
+- API public không có tài liệu `///`
+- Cân nhắc `#[must_use]` trên các return type chưa có `must_use` mà việc bỏ qua giá trị có khả năng là bug
 
-## Automated Checks Run
+## Các kiểm tra tự động được chạy
 
 ```bash
 # Build gate (must pass before review)
@@ -68,7 +68,7 @@ cargo test
 if command -v cargo-audit >/dev/null; then cargo audit; else echo "cargo-audit not installed"; fi
 ```
 
-## Example Usage
+## Ví dụ sử dụng
 
 ````text
 User: /rust-review
@@ -121,22 +121,22 @@ use_user(&user, result);
 Recommendation: Block merge until CRITICAL issue is fixed
 ````
 
-## Approval Criteria
+## Tiêu chí phê duyệt
 
-| Status | Condition |
+| Trạng thái | Điều kiện |
 |--------|-----------|
-| Approve | No CRITICAL or HIGH issues |
-| Warning | Only MEDIUM issues (merge with caution) |
-| Block | CRITICAL or HIGH issues found |
+| Approve | Không có vấn đề CRITICAL hoặc HIGH |
+| Warning | Chỉ có vấn đề MEDIUM (merge cần thận trọng) |
+| Block | Phát hiện vấn đề CRITICAL hoặc HIGH |
 
-## Integration with Other Commands
+## Tích hợp với các lệnh khác
 
-- Use `/rust-test` first to ensure tests pass
-- Use `/rust-build` if build errors occur
-- Use `/rust-review` before committing
-- Use `/code-review` for non-Rust-specific concerns
+- Dùng `/rust-test` trước để đảm bảo test pass
+- Dùng `/rust-build` nếu xảy ra lỗi build
+- Dùng `/rust-review` trước khi commit
+- Dùng `/code-review` cho các mối quan tâm không đặc thù Rust
 
-## Related
+## Liên quan
 
 - Agent: `agents/rust-reviewer.md`
 - Skills: `skills/rust-patterns/`, `skills/rust-testing/`

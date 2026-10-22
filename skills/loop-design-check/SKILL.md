@@ -1,143 +1,143 @@
 ---
 name: loop-design-check
-description: "Design a goal-oriented agent loop or review one for failure modes: spinning, Goodhart-gaming the verifier, or running a wrong answer to completion. Covers machine-decidable goals, loop types, plan/build/judge skeletons, and runaway prevention; mechanism wiring lives in autonomous-loops. Use when designing, writing, or checking an agent loop. 中文触发：写 loop、设计 loop、做一个 loop、检查 loop 对不对、loop 体检、loop 会不会跑飞、可判定目标、五个崩法、plan build judge。"
+description: "Thiết kế một agent loop hướng mục tiêu hoặc review một loop để tìm các kiểu hỏng: quay vòng vô ích (spinning), lách verifier theo Goodhart, hoặc chạy một đáp án sai đến cùng. Bao gồm mục tiêu máy có thể phán định, các loại loop, khung plan/build/judge và cách phòng ngừa loop chạy mất kiểm soát; phần nối cơ chế nằm ở autonomous-loops. Dùng khi thiết kế, viết hoặc kiểm tra một agent loop. 中文触发：写 loop、设计 loop、做一个 loop、检查 loop 对不对、loop 体检、loop 会不会跑飞、可判定目标、五个崩法、plan build judge。"
 metadata:
   origin: ECC
 ---
 
-# Loop Design + Review
+# Thiết kế + Review Loop
 
-> **Premise.** An LLM is a feed-forward system: prompt in → tokens out, with no built-in "steer toward the goal" across turns. To make it *behave* like a goal-oriented system, you wrap a feedback loop around it. This skill helps you **write** that loop correctly and **review** it so it won't run away.
+> **Tiền đề.** LLM là một hệ thống feed-forward: prompt vào → token ra, không có sẵn cơ chế "lái về phía mục tiêu" xuyên suốt các lượt. Để nó *hành xử* như một hệ thống hướng mục tiêu, bạn bọc quanh nó một vòng phản hồi (feedback loop). Skill này giúp bạn **viết** loop đó cho đúng và **review** nó để nó không chạy mất kiểm soát.
 
-## When to use / not
+## Khi nào dùng / không dùng
 
-**Use it when:**
-- You want to hand a repeating task to an agent that runs over and over (write→test, test→fix, fix→verify…).
-- You already have a loop and worry it spins, cheats, or runs a wrong answer to completion.
+**Dùng khi:**
+- Bạn muốn giao một tác vụ lặp lại cho agent chạy đi chạy lại (viết→test, test→fix, fix→verify…).
+- Bạn đã có một loop và lo nó quay vòng vô ích, gian lận, hoặc chạy một đáp án sai đến cùng.
 
-**Don't use it for:**
-- A one-off task → just do it; don't wrap a loop around it.
-- A plain timer / poll → use `/loop`; no design needed.
-- *How to wire the loop architecture* (pipelines → DAGs, long-run recovery) → that's the mechanism layer; see `autonomous-loops` / `continuous-agent-loop`. **This skill only covers "is the goal right, and will it run away" — it does not re-explain mechanism.**
+**Không dùng cho:**
+- Tác vụ làm một lần → cứ làm luôn; đừng bọc loop quanh nó.
+- Timer / poll đơn thuần → dùng `/loop`; không cần thiết kế.
+- *Cách nối kiến trúc loop* (pipeline → DAG, khôi phục khi chạy dài) → đó là tầng cơ chế; xem `autonomous-loops` / `continuous-agent-loop`. **Skill này chỉ bàn "mục tiêu đã đúng chưa, và nó có chạy mất kiểm soát không" — không giải thích lại cơ chế.**
 
-## Red-line premise: two levels of feedback
+## Tiền đề lằn ranh đỏ: hai tầng phản hồi
 
-| Level | Who owns it | What it does |
+| Tầng | Ai sở hữu | Làm gì |
 |---|---|---|
-| **Execution** (low) | machine / agent | Measures "how far from the literal goal" and grinds it to zero. The machine is strong here. |
-| **Judgment** (high) | **human** | Decides "is this goal itself right, should it change, should it stop." The machine can't step outside its own loop to question the goal. |
+| **Thực thi** (thấp) | máy / agent | Đo "còn cách mục tiêu theo nghĩa đen bao xa" và mài cho về 0. Máy mạnh ở đây. |
+| **Phán đoán** (cao) | **con người** | Quyết định "bản thân mục tiêu này có đúng không, có nên đổi không, có nên dừng không." Máy không thể bước ra khỏi vòng của chính nó để đặt câu hỏi về mục tiêu. |
 
-> A thermostat can feed back "how far from 26°C," but when you have a fever and want 28°C it can't judge whether 26 is the *right* target — it just grinds toward 26. **"What to set today" is always the human's call.**
-> Handing judgment / sign-off / the last switch to the machine = removing the high-level feedback = it sprints, fast and hard, toward a goal no one questioned → wrong output.
+> Một bộ điều nhiệt có thể phản hồi "còn cách 26°C bao xa", nhưng khi bạn bị sốt và muốn 28°C thì nó không thể phán đoán 26 có phải mục tiêu *đúng* hay không — nó chỉ cứ mài về 26. **"Hôm nay đặt bao nhiêu" luôn là quyết định của con người.**
+> Giao việc phán đoán / ký duyệt / công tắc cuối cùng cho máy = gỡ bỏ phản hồi tầng cao = nó lao nhanh và mạnh về một mục tiêu không ai đặt câu hỏi → đầu ra sai.
 
 ---
 
-## Action 1 — Write a loop (5 steps)
+## Hành động 1 — Viết một loop (5 bước)
 
-### Step 0 · Subtract first: should you even build it? (4-condition gate, any miss = veto)
+### Bước 0 · Trừ bớt trước: có nên xây nó không? (cổng 4 điều kiện, thiếu bất kỳ điều nào = phủ quyết)
 
-① the task repeats weekly or more　② verification can be automated　③ the token budget can take it　④ the agent has tools that actually *run and see the result*
+① tác vụ lặp lại hàng tuần hoặc thường xuyên hơn　② verification có thể tự động hóa　③ ngân sách token chịu được　④ agent có tool thực sự *chạy và thấy kết quả*
 
-Miss any one → **don't build a loop**; do it by hand or another way.
-> What stops most people isn't "can I write a loop," it's "does my repo deserve one." A repo that deserves a loop has a reconciliation baseline (golden sample / upstream total) + tests + a lint guard. **A repo that doesn't deserve a loop will only have its errors amplified by one.**
+Thiếu bất kỳ điều nào → **đừng xây loop**; hãy làm thủ công hoặc cách khác.
+> Thứ chặn hầu hết mọi người không phải "tôi có viết được loop không", mà là "repo của tôi có xứng đáng có một loop không". Một repo xứng đáng có loop thì có baseline đối soát (golden sample / tổng nguồn upstream) + test + lint guard. **Một repo không xứng đáng có loop thì loop chỉ khuếch đại lỗi của nó.**
 
-### Step 1 · Define a *machine-decidable* goal (the hard part — the loop lives or dies here)
+### Bước 1 · Định nghĩa một mục tiêu *máy có thể phán định* (phần khó — loop sống hay chết ở đây)
 
-The whole loop rides on the comparator's "is it done yet?" **The comparator can only work if your exit condition can be judged yes/no by a machine.**
+Cả loop dựa vào câu hỏi "xong chưa?" của bộ so sánh (comparator). **Comparator chỉ hoạt động được nếu điều kiện thoát của bạn có thể được máy phán định có/không.**
 
-- Bad: Vague ("make it good," "write it sharper") → the comparator can't judge → either it never passes (stuck retrying) or it guesses (passes/blocks at random).
-- Good: Decidable ("all 96 unit tests green AND a change-list is produced," "module-02 fields filled, pytest passes, business logic untouched") → one check settles it; the loop converges cleanly.
+- Tệ: Mơ hồ ("làm cho tốt", "viết sắc hơn") → comparator không phán định được → hoặc không bao giờ pass (kẹt ở retry) hoặc đoán mò (pass/block ngẫu nhiên).
+- Tốt: Phán định được ("toàn bộ 96 unit test xanh VÀ có sinh ra danh sách thay đổi", "các trường của module-02 đã điền, pytest pass, business logic không bị đụng tới") → một lần kiểm tra là chốt; loop hội tụ gọn gàng.
 
-**Five-point goal framework:**
-1. **Done-criterion is machine-verifiable.**
-2. **Boundary conditions defined alongside the done-criterion** ("what it must NOT do") — anti-Goodhart; missing boundaries = a license to cheat.
-3. **Has a failure fallback** — retry cap N + escalate to a human when exceeded.
-4. **Goal is layered.**
-5. **Prefer reconciliation over assertion for the done-criterion** — anchor to external fact (golden sample / upstream total / financial tie-out / platform back-office numbers) before your own assertions. "All tests pass" can be gamed (loosen asserts, fake mocks, swallow exceptions); "diff vs the reference < 0.01" can't.
+**Khung mục tiêu năm điểm:**
+1. **Tiêu chí hoàn thành có thể được máy verify.**
+2. **Điều kiện biên được định nghĩa cùng với tiêu chí hoàn thành** ("nó KHÔNG ĐƯỢC làm gì") — chống Goodhart; thiếu biên = giấy phép để gian lận.
+3. **Có phương án dự phòng khi thất bại** — giới hạn retry N + chuyển cho con người khi vượt quá.
+4. **Mục tiêu được phân tầng.**
+5. **Ưu tiên đối soát hơn khẳng định cho tiêu chí hoàn thành** — neo vào sự thật bên ngoài (golden sample / tổng nguồn upstream / đối chiếu tài chính / số liệu back-office của nền tảng) trước các khẳng định của chính bạn. "Mọi test đều pass" có thể bị lách (nới assert, mock giả, nuốt exception); "chênh lệch so với bản tham chiếu < 0.01" thì không.
 
-> **Self-check:** read the goal to someone who doesn't know the domain — can they run one command and tell whether it's done? If not, it isn't decidable enough. Go back.
+> **Tự kiểm tra:** đọc mục tiêu cho một người không biết lĩnh vực đó — họ có chạy được một lệnh và biết đã xong hay chưa không? Nếu không, nó chưa đủ khả năng phán định. Quay lại.
 
-### Step 2 · Pick the loop type
+### Bước 2 · Chọn loại loop
 
-| Your task | Loop type (cybernetic) | How it stops |
+| Tác vụ của bạn | Loại loop (điều khiển học) | Cách dừng |
 |---|---|---|
-| Has a clear "done" test (write to done / a batch of images processed) | **servo** (`/goal`-style closed-loop) | stops on reaching the goal |
-| No endpoint, must keep maintaining a state (inventory alert / scheduled health check) | **regulator** (`/loop`-style thermostat) | never stops; acts only on change (dead-band suppresses noise) |
-| Periodic sampling, stop on a condition (watch a PR until CI is green) | **regulator with an exit** | stops when the exit condition holds |
-| Must "ensure something happens on time" | wrap the above in `/schedule` | cron fires it |
+| Có phép thử "xong" rõ ràng (viết cho xong / xử lý xong một loạt ảnh) | **servo** (vòng kín kiểu `/goal`) | dừng khi đạt mục tiêu |
+| Không có điểm kết thúc, phải liên tục duy trì một trạng thái (cảnh báo tồn kho / health check theo lịch) | **regulator** (bộ điều nhiệt kiểu `/loop`) | không bao giờ dừng; chỉ hành động khi có thay đổi (dead-band loại bỏ nhiễu) |
+| Lấy mẫu định kỳ, dừng theo điều kiện (theo dõi một PR đến khi CI xanh) | **regulator có lối thoát** | dừng khi điều kiện thoát thỏa |
+| Phải "đảm bảo việc gì đó xảy ra đúng giờ" | bọc các loại trên trong `/schedule` | cron kích hoạt |
 
-> Rule of thumb: clear "done" test → servo; must keep maintaining, no endpoint → regulator; must "happen on time" → wrap a regulator in schedule.
+> Quy tắc ngón tay cái: có phép thử "xong" rõ ràng → servo; phải liên tục duy trì, không có điểm kết thúc → regulator; phải "xảy ra đúng giờ" → bọc một regulator trong schedule.
 
-### Step 3 · Pick a skeleton
+### Bước 3 · Chọn một khung (skeleton)
 
-**Maintenance type (tend something that exists) → document-driven dispatch.**
-The loop isn't "run a fixed check on a timer," it's **"read a doc on a timer, and dispatch only when the doc changed."** The doc is the task queue + state machine + human interface.
-Three disciplines: ① the problem column is human-write-only, the result column is loop-write-only, **state advances one-way and never rolls back**; ② **the exit code is final** (if the script says exit 1, the script wins); ③ state advances only as far as "awaiting verification" — **the "done" cell is flipped by a human only.** The loop is the worker, not the acceptance officer.
+**Loại bảo trì (chăm sóc thứ đã tồn tại) → điều phối dựa trên tài liệu (document-driven dispatch).**
+Loop không phải "chạy một lần kiểm tra cố định theo timer", mà là **"đọc một tài liệu theo timer, và chỉ điều phối khi tài liệu thay đổi."** Tài liệu là hàng đợi tác vụ + máy trạng thái + giao diện với con người.
+Ba kỷ luật: ① cột vấn đề chỉ con người được ghi, cột kết quả chỉ loop được ghi, **trạng thái chỉ tiến một chiều và không bao giờ lùi lại**; ② **exit code là quyết định cuối** (nếu script nói exit 1 thì script thắng); ③ trạng thái chỉ tiến tới mức "chờ verify" — **ô "xong" chỉ do con người lật.** Loop là người thợ, không phải người nghiệm thu.
 
-**Greenfield type (build from scratch) → plan / build / judge, three roles.**
+**Loại greenfield (xây từ đầu) → plan / build / judge, ba vai trò.**
 
-| Role | Does | Key |
+| Vai trò | Làm gì | Điểm mấu chốt |
 |---|---|---|
-| **Plan** | break the goal into a spec + **decidable acceptance conditions** | acceptance must be script-judgeable |
-| **Build** | write to the spec | **must not change the acceptance conditions** |
-| **Judge** | run acceptance **independently**; pass → stop, fail → return with the failure reason to Build | **independent + deterministic** |
+| **Plan** | chia mục tiêu thành spec + **điều kiện nghiệm thu có thể phán định** | nghiệm thu phải do script phán định được |
+| **Build** | viết theo spec | **không được thay đổi điều kiện nghiệm thu** |
+| **Judge** | chạy nghiệm thu **một cách độc lập**; pass → dừng, fail → trả về Build kèm lý do thất bại | **độc lập + xác định (deterministic)** |
 
-Three iron rules (all bet on the judge): ① **the judge must be independent** — not the same agent as Build (grading your own homework always inflates); ② **deterministic rules** — pytest / reconciliation diff / type check / diff, never "looks right"; ③ **Build may not edit the acceptance conditions to pass**. Three failed retries → escalate to a human.
+Ba quy tắc sắt (đều đặt cược vào judge): ① **judge phải độc lập** — không phải cùng agent với Build (tự chấm bài mình luôn bị thổi phồng); ② **quy tắc xác định** — pytest / diff đối soát / kiểm tra type / diff, không bao giờ là "trông có vẻ đúng"; ③ **Build không được sửa điều kiện nghiệm thu để qua mặt**. Thất bại retry ba lần → chuyển cho con người.
 
-### Step 4 · Add damping (against oscillation / runaway)
+### Bước 4 · Thêm giảm chấn (damping) (chống dao động / chạy mất kiểm soát)
 
-Retry cap, hard stop, human flips the last switch = damping. **Negative feedback with no damping oscillates** (the Ralph-Wiggum loop: spinning in place, burning tokens).
+Giới hạn retry, dừng cứng, con người lật công tắc cuối = giảm chấn. **Phản hồi âm không có giảm chấn sẽ dao động** (loop kiểu Ralph-Wiggum: quay tại chỗ, đốt token).
 
-### Step 5 · Land in three stages (don't go fully automatic on day one)
+### Bước 5 · Triển khai theo ba giai đoạn (đừng tự động hoàn toàn ngay ngày đầu)
 
-① **Run it once by hand** (forces you to state exactly "how the judge decides") → ② harden into a skill / Claude Code sub-agents (a main Claude loops, dispatching plan/build/judge) → ③ hang it on cron for full automation.
+① **Chạy thủ công một lần** (buộc bạn phải nói rõ "judge quyết định như thế nào") → ② đóng cứng thành skill / sub-agent của Claude Code (một Claude chính lặp vòng, điều phối plan/build/judge) → ③ treo lên cron để tự động hoàn toàn.
 
 ---
 
-## Action 2 — Review a loop (checklist = five failure modes)
+## Hành động 2 — Review một loop (checklist = năm kiểu hỏng)
 
-> Run the loop past each row. **Hitting any one = this loop will misfire; send it back.** These five are negative experience (gotchas) — worth more than positive rules.
+> Cho loop chạy qua từng dòng. **Dính bất kỳ một dòng nào = loop này sẽ hỏng; trả nó về.** Năm điều này là kinh nghiệm tiêu cực (gotcha) — đáng giá hơn các quy tắc tích cực.
 
-| # | Failure mode (how it breaks) | Review question (a hit = red) | Antibody |
+| # | Kiểu hỏng (hỏng thế nào) | Câu hỏi review (dính = đỏ) | Kháng thể |
 |---|---|---|---|
-| 1 | Goal is a correct platitude → **spins, burns money** | Can the exit condition be machine-judged yes/no? Or is it "manage it well / make it good"? | Replace with a decidable result condition (Action 1·Step 1) |
-| 2 | "Verification" written as "check if it looks ok" → **agent confidently says fine and stops** | Is the judge the defendant itself? Does verification rest on "looks right" or deterministic rules? | Reconcile + exit code rules + independent judge |
-| 3 | (worst) Only gates on "all tests pass" → **agent deletes the tests** | Is there a boundary ("what it must NOT do")? Or only a done-criterion? | Done-criterion **+ boundary** together (the Goodhart antibody) |
-| 4 | Counts on the agent asking mid-run → **it won't; it runs the wrong answer to the end** | Is there any "clarify only at runtime" point? | **Front-load every clarification**; settle it once before launch |
-| 5 | Bloated CLAUDE.md + stale memory → **the faster it loops, the more it errs** | Are the docs/memory it depends on fresh? Who maintains them? | Layered memory + periodic lint |
+| 1 | Mục tiêu là một lời sáo rỗng đúng đắn → **quay vòng, đốt tiền** | Điều kiện thoát có được máy phán định có/không không? Hay nó là "quản lý cho tốt / làm cho tốt"? | Thay bằng điều kiện kết quả có thể phán định (Hành động 1·Bước 1) |
+| 2 | "Verification" viết thành "kiểm tra xem có ổn không" → **agent tự tin nói ổn rồi dừng** | Judge có phải chính bị cáo không? Verification dựa vào "trông đúng" hay quy tắc xác định? | Đối soát + quy tắc exit code + judge độc lập |
+| 3 | (tệ nhất) Chỉ chặn bằng "mọi test pass" → **agent xóa test** | Có điều kiện biên ("không được làm gì") không? Hay chỉ có tiêu chí hoàn thành? | Tiêu chí hoàn thành **+ điều kiện biên** cùng nhau (kháng thể Goodhart) |
+| 4 | Trông chờ agent hỏi giữa chừng → **nó sẽ không; nó chạy đáp án sai đến cuối** | Có điểm nào "chỉ làm rõ khi đang chạy" không? | **Dồn mọi việc làm rõ lên trước**; chốt một lần trước khi khởi chạy |
+| 5 | CLAUDE.md phình to + memory lỗi thời → **loop càng nhanh, sai càng nhiều** | Tài liệu/memory mà nó phụ thuộc có còn mới không? Ai bảo trì? | Memory phân tầng + lint định kỳ |
 
-**Plus three red lines (violate any = not allowed to go automatic):**
-- **Keep judgment with the human.** Acceptance / the "done" cell is flipped by a human; the loop is not the acceptance officer.
-- **Responsibility doesn't transfer.** Anything whose failure you can't afford (merge the wrong PR / publish the wrong thing / misallocate money) → **don't hand over the authority automatically.**
-- **Counter-intuitive warning.** The more "self-improving / rewrites-its-own-rules" a loop is, the **stricter the human review it needs** (to see what it rewrote the rules into) — not looser. The machine is too fast to intercept after the fact, so the human's judgment must sit **before the action** (a hard gate), not as a post-hoc patch.
-
----
-
-## Worked example — reviewing a "nightly green-keeper" loop
-
-You want a loop that runs every night and fixes whatever tests are failing.
-
-- **Naive goal:** "make all tests pass." → Step-1 self-check fails: this is the bait for failure mode #3.
-- **Decidable goal (fixed):** "all tests green **AND** no test file deleted or weakened **AND** coverage not lowered **AND** a change-list produced." Boundary now defined alongside the done-criterion.
-- **Type:** servo with a retry cap of 3 (Step 2 + Step 4).
-- **Skeleton:** plan/build/judge — the **judge is CI run independently**, never the fixing agent (Step 3).
-
-Now run the **review checklist**, and it catches what the naive version would have missed:
-- **#3 hit** → the naive "all tests pass" lets the agent delete a failing test to "win." Fixed by the boundary "no test file deleted/weakened."
-- **#2 hit** → if the fixing agent also judged its own fix, it would pass itself. Fixed by "judge = independent CI, deterministic."
-- **#4 hit** → if a fix is ambiguous, the agent won't stop to ask at 2 a.m.; it'll commit a guess. Fixed by front-loading: ambiguous fixes are left for the human, not guessed.
-- **Red line** → the loop opens a PR but **does not auto-merge**; the human flips the last switch (responsibility doesn't transfer).
-
-The naive loop and the reviewed loop differ by four lines of constraint — and that's the difference between "wakes you to a deleted test suite" and "wakes you to a clean PR."
+**Cộng thêm ba lằn ranh đỏ (vi phạm bất kỳ điều nào = không được phép chạy tự động):**
+- **Giữ phán đoán cho con người.** Nghiệm thu / ô "xong" do con người lật; loop không phải người nghiệm thu.
+- **Trách nhiệm không chuyển giao được.** Bất cứ thứ gì mà bạn không gánh nổi nếu hỏng (merge nhầm PR / publish nhầm thứ / phân bổ sai tiền) → **đừng tự động giao quyền đó.**
+- **Cảnh báo phản trực giác.** Một loop càng "tự cải tiến / tự viết lại quy tắc của chính nó" thì càng cần **con người review nghiêm ngặt hơn** (để xem nó đã viết lại quy tắc thành cái gì) — chứ không phải lỏng hơn. Máy quá nhanh để chặn sau sự việc, nên phán đoán của con người phải nằm **trước hành động** (cổng cứng), không phải bản vá sau đó.
 
 ---
 
-## One-line close
+## Ví dụ thực tế — review một loop "nightly green-keeper"
 
-> The hard part of writing a loop isn't "can I write a loop," it's **defining a goal a machine can reconcile** — decidable, bounded, reconciliation-based. The controller must be deterministic and external; keep judgment and the standard with the human; the system tends toward entropy, so maintain it.
-> **A loop only rewards someone who has already thought it through. Count on it to think for you, and it will happily think wrong, with you, at scale.**
+Bạn muốn một loop chạy mỗi đêm và sửa bất cứ test nào đang fail.
+
+- **Mục tiêu ngây thơ:** "làm cho mọi test pass." → Tự kiểm tra ở Bước 1 thất bại: đây là mồi nhử cho kiểu hỏng #3.
+- **Mục tiêu phán định được (đã sửa):** "mọi test xanh **VÀ** không có file test nào bị xóa hoặc làm yếu đi **VÀ** coverage không giảm **VÀ** có sinh ra danh sách thay đổi." Điều kiện biên giờ đã được định nghĩa cùng với tiêu chí hoàn thành.
+- **Loại:** servo với giới hạn retry 3 (Bước 2 + Bước 4).
+- **Khung:** plan/build/judge — **judge là CI chạy độc lập**, không bao giờ là agent đang sửa (Bước 3).
+
+Giờ chạy **checklist review**, và nó bắt được những gì phiên bản ngây thơ bỏ sót:
+- **Dính #3** → "mọi test pass" ngây thơ cho phép agent xóa một test đang fail để "thắng." Sửa bằng điều kiện biên "không xóa/làm yếu file test."
+- **Dính #2** → nếu agent sửa cũng tự judge bản sửa của mình, nó sẽ tự cho mình qua. Sửa bằng "judge = CI độc lập, xác định."
+- **Dính #4** → nếu một bản sửa mơ hồ, agent sẽ không dừng lại hỏi lúc 2 giờ sáng; nó sẽ commit một phỏng đoán. Sửa bằng cách dồn lên trước: các bản sửa mơ hồ để lại cho con người, không đoán.
+- **Lằn ranh đỏ** → loop mở PR nhưng **không tự động merge**; con người lật công tắc cuối (trách nhiệm không chuyển giao).
+
+Loop ngây thơ và loop đã được review khác nhau bốn dòng ràng buộc — và đó là khác biệt giữa "thức dậy thấy bộ test bị xóa" và "thức dậy thấy một PR sạch."
 
 ---
 
-> Lineage: Wiener's two-level feedback (*The Human Use of Human Beings*, 1950) for the judgment/execution split and red lines; the plan/build/judge pattern from Anatoli's *Loops explained* and Addy's *Loop Engineering*.
-> Mechanism layer (how to wire the loop architecture): see `autonomous-loops` / `continuous-agent-loop`. This skill does not re-implement mechanism; it covers goal definition and runaway prevention only.
+## Kết một dòng
+
+> Phần khó của việc viết loop không phải "tôi có viết được loop không", mà là **định nghĩa một mục tiêu mà máy có thể đối soát** — phán định được, có biên, dựa trên đối soát. Bộ điều khiển phải xác định (deterministic) và nằm bên ngoài; giữ phán đoán và tiêu chuẩn cho con người; hệ thống có xu hướng tăng entropy, nên hãy bảo trì nó.
+> **Loop chỉ thưởng cho người đã suy nghĩ thấu đáo từ trước. Trông chờ nó nghĩ thay bạn, nó sẽ vui vẻ nghĩ sai, cùng bạn, ở quy mô lớn.**
+
+---
+
+> Nguồn gốc: phản hồi hai tầng của Wiener (*The Human Use of Human Beings*, 1950) cho việc tách phán đoán/thực thi và các lằn ranh đỏ; mẫu plan/build/judge từ *Loops explained* của Anatoli và *Loop Engineering* của Addy.
+> Tầng cơ chế (cách nối kiến trúc loop): xem `autonomous-loops` / `continuous-agent-loop`. Skill này không triển khai lại cơ chế; nó chỉ bao gồm việc định nghĩa mục tiêu và phòng ngừa loop chạy mất kiểm soát.

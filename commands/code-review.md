@@ -1,147 +1,147 @@
 ---
-description: Code review — local uncommitted changes or GitHub PR (pass PR number/URL for PR mode). Use for a step-by-step PRP-style checklist review; for a multi-agent pass use /review-pr, and for the adversarially-verified Workflow pass use /orch-review.
+description: Code review — các thay đổi local chưa commit hoặc GitHub PR (truyền số PR/URL để vào chế độ PR). Dùng cho review theo checklist từng bước kiểu PRP; để chạy nhiều agent dùng /review-pr, và để chạy Workflow có xác minh đối kháng (adversarially-verified) dùng /orch-review.
 argument-hint: "[pr-number | pr-url | blank for local review]"
 ---
 
 # Code Review
 
-> PR review mode adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
+> Chế độ PR review được phỏng theo PRPs-agentic-eng của Wirasm. Thuộc chuỗi workflow PRP.
 
-**Input**: $ARGUMENTS
+**Đầu vào**: $ARGUMENTS
 
 ---
 
-## Mode Selection
+## Chọn chế độ
 
-If `$ARGUMENTS` contains a PR number, PR URL, or `--pr`:
-→ Jump to **PR Review Mode** below.
+Nếu `$ARGUMENTS` chứa số PR, URL PR hoặc `--pr`:
+→ Chuyển đến **PR Review Mode** bên dưới.
 
-Otherwise:
-→ Use **Local Review Mode**.
+Nếu không:
+→ Dùng **Local Review Mode**.
 
 ---
 
 ## Local Review Mode
 
-Comprehensive security and quality review of uncommitted changes.
+Review toàn diện về bảo mật và chất lượng cho các thay đổi chưa commit.
 
-### Phase 1 — GATHER
+### Giai đoạn 1 — GATHER
 
 ```bash
 git diff --name-only HEAD
 ```
 
-If no changed files, stop: "Nothing to review."
+Nếu không có file thay đổi, hãy dừng: "Nothing to review."
 
-### Phase 2 — REVIEW
+### Giai đoạn 2 — REVIEW
 
-Read each changed file in full. Check for:
+Đọc toàn bộ từng file đã thay đổi. Kiểm tra:
 
-**Security Issues (CRITICAL):**
-- Hardcoded credentials, API keys, tokens
-- SQL injection vulnerabilities
-- XSS vulnerabilities
-- Missing input validation
-- Insecure dependencies
-- Path traversal risks
+**Vấn đề bảo mật (CRITICAL):**
+- Thông tin xác thực, API key, token bị hardcode
+- Lỗ hổng SQL injection
+- Lỗ hổng XSS
+- Thiếu kiểm tra đầu vào (input validation)
+- Dependency không an toàn
+- Rủi ro path traversal
 
-**Code Quality (HIGH):**
-- Functions > 50 lines
-- Files > 800 lines
-- Nesting depth > 4 levels
-- Missing error handling
-- console.log statements
-- TODO/FIXME comments
-- Missing JSDoc for public APIs
+**Chất lượng code (HIGH):**
+- Function > 50 dòng
+- File > 800 dòng
+- Độ sâu lồng > 4 cấp
+- Thiếu xử lý lỗi
+- Câu lệnh console.log
+- Comment TODO/FIXME
+- Thiếu JSDoc cho public API
 
-**Best Practices (MEDIUM):**
-- Mutation patterns (use immutable instead)
-- Emoji usage in code/comments
-- Missing tests for new code
-- Accessibility issues (a11y)
+**Best Practice (MEDIUM):**
+- Pattern mutation (dùng bất biến (immutable) thay thế)
+- Dùng emoji trong code/comment
+- Thiếu test cho code mới
+- Vấn đề accessibility (a11y)
 
-### Phase 3 — REPORT
+### Giai đoạn 3 — REPORT
 
-Generate report with:
-- Severity: CRITICAL, HIGH, MEDIUM, LOW
-- File location and line numbers
-- Issue description
-- Suggested fix
+Tạo báo cáo gồm:
+- Mức độ nghiêm trọng: CRITICAL, HIGH, MEDIUM, LOW
+- Vị trí file và số dòng
+- Mô tả vấn đề
+- Đề xuất cách sửa
 
-Block commit if CRITICAL or HIGH issues found.
-Never approve code with security vulnerabilities.
+Chặn commit nếu phát hiện issue CRITICAL hoặc HIGH.
+KHÔNG BAO GIỜ phê duyệt code có lỗ hổng bảo mật.
 
 ---
 
 ## PR Review Mode
 
-Comprehensive GitHub PR review — fetches diff, reads full files, runs validation, posts review.
+Review GitHub PR toàn diện — lấy diff, đọc toàn bộ file, chạy validation, đăng review.
 
-### Phase 1 — FETCH
+### Giai đoạn 1 — FETCH
 
-Parse input to determine PR:
+Phân tích đầu vào để xác định PR:
 
-| Input | Action |
+| Đầu vào | Hành động |
 |---|---|
-| Number (e.g. `42`) | Use as PR number |
-| URL (`github.com/.../pull/42`) | Extract PR number |
-| Branch name | Find PR via `gh pr list --head <branch>` |
+| Số (ví dụ `42`) | Dùng làm số PR |
+| URL (`github.com/.../pull/42`) | Trích xuất số PR |
+| Tên branch | Tìm PR qua `gh pr list --head <branch>` |
 
 ```bash
 gh pr view <NUMBER> --json number,title,body,author,baseRefName,headRefName,changedFiles,additions,deletions
 gh pr diff <NUMBER>
 ```
 
-If PR not found, stop with error. Store PR metadata for later phases.
+Nếu không tìm thấy PR, hãy dừng và báo lỗi. Lưu metadata của PR cho các giai đoạn sau.
 
-### Phase 2 — CONTEXT
+### Giai đoạn 2 — CONTEXT
 
-Build review context:
+Dựng context cho review:
 
-1. **Project rules** — Read `CLAUDE.md`, `.claude/docs/`, and any contributing guidelines
-2. **Planning artifacts** — Check `.claude/prds/`, `.claude/plans/`, `.claude/reviews/`, and legacy `.claude/PRPs/{prds,plans,reports,reviews}/` for context related to this PR
-3. **PR intent** — Parse PR description for goals, linked issues, test plans
-4. **Changed files** — List all modified files and categorize by type (source, test, config, docs)
+1. **Quy tắc dự án** — Đọc `CLAUDE.md`, `.claude/docs/` và mọi hướng dẫn đóng góp (contributing guideline)
+2. **Artifact lập kế hoạch** — Kiểm tra `.claude/prds/`, `.claude/plans/`, `.claude/reviews/` và `.claude/PRPs/{prds,plans,reports,reviews}/` cũ để lấy context liên quan đến PR này
+3. **Ý định của PR** — Phân tích mô tả PR để lấy mục tiêu, issue được liên kết, kế hoạch test
+4. **File đã thay đổi** — Liệt kê mọi file đã sửa và phân loại theo kiểu (source, test, config, docs)
 
-### Phase 3 — REVIEW
+### Giai đoạn 3 — REVIEW
 
-Read each changed file **in full** (not just the diff hunks — you need surrounding context).
+Đọc **toàn bộ** từng file đã thay đổi (không chỉ các hunk của diff — bạn cần context xung quanh).
 
-For PR reviews, fetch the full file contents at the PR head revision:
+Với PR review, lấy toàn bộ nội dung file tại revision head của PR:
 ```bash
 gh pr diff <NUMBER> --name-only | while IFS= read -r file; do
   gh api "repos/{owner}/{repo}/contents/$file?ref=<head-branch>" --jq '.content' | base64 -d
 done
 ```
 
-Apply the review checklist across 7 categories:
+Áp dụng checklist review qua 7 hạng mục:
 
-| Category | What to Check |
+| Hạng mục | Cần kiểm tra gì |
 |---|---|
-| **Correctness** | Logic errors, off-by-ones, null handling, edge cases, race conditions |
-| **Type Safety** | Type mismatches, unsafe casts, `any` usage, missing generics |
-| **Pattern Compliance** | Matches project conventions (naming, file structure, error handling, imports) |
-| **Security** | Injection, auth gaps, secret exposure, SSRF, path traversal, XSS |
-| **Performance** | N+1 queries, missing indexes, unbounded loops, memory leaks, large payloads |
-| **Completeness** | Missing tests, missing error handling, incomplete migrations, missing docs |
-| **Maintainability** | Dead code, magic numbers, deep nesting, unclear naming, missing types |
+| **Correctness** | Lỗi logic, off-by-one, xử lý null, edge case, race condition |
+| **Type Safety** | Type không khớp, ép kiểu không an toàn, dùng `any`, thiếu generic |
+| **Pattern Compliance** | Khớp quy ước dự án (đặt tên, cấu trúc file, xử lý lỗi, import) |
+| **Security** | Injection, lỗ hổng auth, lộ secret, SSRF, path traversal, XSS |
+| **Performance** | N+1 query, thiếu index, vòng lặp không giới hạn, rò rỉ bộ nhớ, payload lớn |
+| **Completeness** | Thiếu test, thiếu xử lý lỗi, migration chưa hoàn chỉnh, thiếu tài liệu |
+| **Maintainability** | Dead code, magic number, lồng sâu, đặt tên không rõ, thiếu type |
 
-Assign severity to each finding:
+Gán mức độ nghiêm trọng cho từng phát hiện:
 
-| Severity | Meaning | Action |
+| Mức độ nghiêm trọng | Ý nghĩa | Hành động |
 |---|---|---|
-| **CRITICAL** | Security vulnerability or data loss risk | Must fix before merge |
-| **HIGH** | Bug or logic error likely to cause issues | Should fix before merge |
-| **MEDIUM** | Code quality issue or missing best practice | Fix recommended |
-| **LOW** | Style nit or minor suggestion | Optional |
+| **CRITICAL** | Lỗ hổng bảo mật hoặc rủi ro mất dữ liệu | Phải sửa trước khi merge |
+| **HIGH** | Bug hoặc lỗi logic có khả năng gây vấn đề | Nên sửa trước khi merge |
+| **MEDIUM** | Vấn đề chất lượng code hoặc thiếu best practice | Khuyến nghị sửa |
+| **LOW** | Góp ý nhỏ về style hoặc gợi ý nhỏ | Tùy chọn |
 
-### Phase 4 — VALIDATE
+### Giai đoạn 4 — VALIDATE
 
-Run available validation commands:
+Chạy các lệnh validation có sẵn:
 
-Detect the project type from config files (`package.json`, `Cargo.toml`, `go.mod`, `pyproject.toml`, etc.), then run the appropriate commands:
+Phát hiện loại dự án từ các file config (`package.json`, `Cargo.toml`, `go.mod`, `pyproject.toml`, v.v.), rồi chạy các lệnh phù hợp:
 
-**Node.js / TypeScript** (has `package.json`):
+**Node.js / TypeScript** (có `package.json`):
 ```bash
 npm run typecheck 2>/dev/null || npx tsc --noEmit 2>/dev/null  # Type check
 npm run lint                                                    # Lint
@@ -149,46 +149,46 @@ npm test                                                        # Tests
 npm run build                                                   # Build
 ```
 
-**Rust** (has `Cargo.toml`):
+**Rust** (có `Cargo.toml`):
 ```bash
 cargo clippy -- -D warnings  # Lint
 cargo test                   # Tests
 cargo build                  # Build
 ```
 
-**Go** (has `go.mod`):
+**Go** (có `go.mod`):
 ```bash
 go vet ./...    # Lint
 go test ./...   # Tests
 go build ./...  # Build
 ```
 
-**Python** (has `pyproject.toml` / `setup.py`):
+**Python** (có `pyproject.toml` / `setup.py`):
 ```bash
 pytest  # Tests
 ```
 
-Run only the commands that apply to the detected project type. Record pass/fail for each.
+Chỉ chạy các lệnh áp dụng cho loại dự án đã phát hiện. Ghi lại pass/fail cho từng lệnh.
 
-### Phase 5 — DECIDE
+### Giai đoạn 5 — DECIDE
 
-Form recommendation based on findings:
+Đưa ra khuyến nghị dựa trên các phát hiện:
 
-| Condition | Decision |
+| Điều kiện | Quyết định |
 |---|---|
-| Zero CRITICAL/HIGH issues, validation passes | **APPROVE** |
-| Only MEDIUM/LOW issues, validation passes | **APPROVE** with comments |
-| Any HIGH issues or validation failures | **REQUEST CHANGES** |
-| Any CRITICAL issues | **BLOCK** — must fix before merge |
+| Không có issue CRITICAL/HIGH, validation pass | **APPROVE** |
+| Chỉ có issue MEDIUM/LOW, validation pass | **APPROVE** kèm comment |
+| Có bất kỳ issue HIGH hoặc validation thất bại | **REQUEST CHANGES** |
+| Có bất kỳ issue CRITICAL | **BLOCK** — phải sửa trước khi merge |
 
-Special cases:
-- Draft PR → Always use **COMMENT** (not approve/block)
-- Only docs/config changes → Lighter review, focus on correctness
-- Explicit `--approve` or `--request-changes` flag → Override decision (but still report all findings)
+Trường hợp đặc biệt:
+- Draft PR → Luôn dùng **COMMENT** (không approve/block)
+- Chỉ thay đổi docs/config → Review nhẹ hơn, tập trung vào tính đúng đắn
+- Flag `--approve` hoặc `--request-changes` tường minh → Ghi đè quyết định (nhưng vẫn báo cáo mọi phát hiện)
 
-### Phase 6 — REPORT
+### Giai đoạn 6 — REPORT
 
-Create review artifact at `.claude/reviews/pr-<NUMBER>-review.md` unless the repo already uses legacy `.claude/PRPs/reviews/` for this workstream:
+Tạo artifact review tại `.claude/reviews/pr-<NUMBER>-review.md` trừ khi repo đã dùng `.claude/PRPs/reviews/` cũ cho workstream này:
 
 ```markdown
 # PR Review: #<NUMBER> — <TITLE>
@@ -228,9 +228,9 @@ Create review artifact at `.claude/reviews/pr-<NUMBER>-review.md` unless the rep
 <list of files with change type: Added/Modified/Deleted>
 ```
 
-### Phase 7 — PUBLISH
+### Giai đoạn 7 — PUBLISH
 
-Post the review to GitHub:
+Đăng review lên GitHub:
 
 ```bash
 # If APPROVE
@@ -243,7 +243,7 @@ gh pr review <NUMBER> --request-changes --body "<summary with required fixes>"
 gh pr review <NUMBER> --comment --body "<summary>"
 ```
 
-For inline comments on specific lines, use the GitHub review comments API:
+Với comment inline trên các dòng cụ thể, dùng API review comments của GitHub:
 ```bash
 gh api "repos/{owner}/{repo}/pulls/<NUMBER>/comments" \
   -f body="<comment>" \
@@ -253,7 +253,7 @@ gh api "repos/{owner}/{repo}/pulls/<NUMBER>/comments" \
   -f commit_id="$(gh pr view <NUMBER> --json headRefOid --jq .headRefOid)"
 ```
 
-Alternatively, post a single review with multiple inline comments at once:
+Hoặc đăng một review duy nhất với nhiều comment inline cùng lúc:
 ```bash
 gh api "repos/{owner}/{repo}/pulls/<NUMBER>/reviews" \
   -f event="COMMENT" \
@@ -261,9 +261,9 @@ gh api "repos/{owner}/{repo}/pulls/<NUMBER>/reviews" \
   --input comments.json  # [{"path": "file", "line": N, "body": "comment"}, ...]
 ```
 
-### Phase 8 — OUTPUT
+### Giai đoạn 8 — OUTPUT
 
-Report to user:
+Báo cáo cho người dùng:
 
 ```
 PR #<NUMBER>: <TITLE>
@@ -282,8 +282,8 @@ Next steps:
 
 ---
 
-## Edge Cases
+## Edge Case
 
-- **No `gh` CLI**: Fall back to local-only review (read the diff, skip GitHub publish). Warn user.
-- **Diverged branches**: Suggest `git fetch origin && git rebase origin/<base>` before review.
-- **Large PRs (>50 files)**: Warn about review scope. Focus on source changes first, then tests, then config/docs.
+- **Không có `gh` CLI**: Dự phòng bằng review chỉ ở local (đọc diff, bỏ qua bước đăng lên GitHub). Cảnh báo người dùng.
+- **Branch bị phân kỳ (diverged)**: Gợi ý `git fetch origin && git rebase origin/<base>` trước khi review.
+- **PR lớn (>50 file)**: Cảnh báo về phạm vi review. Tập trung vào thay đổi source trước, rồi test, rồi config/docs.
