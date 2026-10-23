@@ -1,6 +1,6 @@
 ---
 name: blueprint
-description: "Turn a one-line objective into a step-by-step construction plan for multi-session, multi-agent engineering projects: one-PR-sized steps with self-contained context briefs, dependency graph with parallel-step detection, adversarial review gate, and plan mutation protocol. Use when planning a large feature, refactor, or roadmap that spans multiple PRs or sessions; not for single-PR tasks or when the user says \"just do it\"."
+description: "Biến một mục tiêu một dòng thành kế hoạch xây dựng từng bước cho các dự án kỹ thuật nhiều phiên, nhiều agent: các bước cỡ một PR kèm context brief tự chứa, đồ thị dependency có phát hiện bước song song, cổng review đối kháng và giao thức chỉnh sửa kế hoạch. Dùng khi lập kế hoạch cho một tính năng lớn, refactor hoặc roadmap trải dài nhiều PR hoặc nhiều phiên; không dùng cho tác vụ một PR hoặc khi người dùng nói \"just do it\"."
 metadata:
   origin: community
 ---

@@ -1,6 +1,6 @@
 ---
 name: safety-guard
-description: "Guard against destructive operations with three modes: Careful intercepts dangerous commands (rm -rf, git push --force, DROP TABLE) for confirmation, Freeze locks writes to one directory, and Guard combines both via PreToolUse hooks. Use when working on production systems, running agents autonomously, restricting edits to a directory, or during migrations, deploys, and data changes."
+description: "Bảo vệ khỏi các thao tác phá hủy với ba chế độ: Careful chặn các lệnh nguy hiểm (rm -rf, git push --force, DROP TABLE) để xác nhận, Freeze khóa việc ghi vào một thư mục, và Guard kết hợp cả hai qua hook PreToolUse. Dùng khi làm việc trên hệ thống production, chạy agent tự trị, giới hạn việc chỉnh sửa trong một thư mục, hoặc trong quá trình migration, deploy và thay đổi dữ liệu."
 metadata:
   origin: ECC
 ---

@@ -1,6 +1,6 @@
 ---
 name: kubernetes-patterns
-description: Kubernetes workload patterns, resource management, RBAC, probes, autoscaling, ConfigMap/Secret handling, and kubectl debugging for production-grade deployments. Use when writing or reviewing Kubernetes manifests, or debugging probes, RBAC, autoscaling, or resource limits.
+description: Các pattern workload Kubernetes, quản lý tài nguyên, RBAC, probe, autoscaling, xử lý ConfigMap/Secret và debug bằng kubectl cho deploy cấp production. Dùng khi viết hoặc review manifest Kubernetes, hoặc debug probe, RBAC, autoscaling hay resource limit.
 metadata:
   origin: ECC
 ---

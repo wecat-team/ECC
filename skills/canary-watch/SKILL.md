@@ -1,6 +1,6 @@
 ---
 name: canary-watch
-description: Use this skill to monitor and verify a deployed URL after releases — checks HTTP endpoints, SSE streams, static assets, console errors, and performance regressions after deploys, merges, or dependency upgrades. Smoke / canary / post-deploy verification.
+description: Dùng skill này để giám sát và xác minh một URL đã deploy sau các bản release — kiểm tra HTTP endpoint, SSE stream, static asset, lỗi console và regression hiệu năng sau khi deploy, merge hoặc nâng cấp dependency. Xác minh smoke / canary / sau deploy.
 metadata:
   origin: ECC
 ---

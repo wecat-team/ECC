@@ -1,6 +1,6 @@
 ---
 name: test-collaboration
-description: "Inventory and govern a project's test assets. Connect requirements, business rules, risks, bugs, and cross-boundary contracts to stable TEST-IDs and executable evidence in the repository's existing test registry or TESTS.md. Use for test inventory, test gap analysis, unit/integration/contract/E2E/smoke classification, bug-to-test regression protection, consumer/provider contract testing, test-necessity review, and pre-delivery evidence review."
+description: Kiểm kê và quản trị các test asset của dự án. Liên kết yêu cầu, business rule, rủi ro, bug và contract xuyên ranh giới với các TEST-ID ổn định và bằng chứng có thể thực thi trong test registry hiện có của repository hoặc TESTS.md. Dùng cho kiểm kê test, phân tích khoảng trống test, phân loại unit/integration/contract/E2E/smoke, bảo vệ regression từ bug thành test, contract testing consumer/provider, review mức độ cần thiết của test và review bằng chứng trước khi bàn giao.
 ---
 
 # Test Collaboration Governance

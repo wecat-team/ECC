@@ -1,6 +1,6 @@
 ---
 name: mle-workflow
-description: Production machine-learning engineering workflow for data contracts, reproducible training, model evaluation, deployment, monitoring, and rollback. Use when building, reviewing, or hardening ML systems beyond one-off notebooks.
+description: Workflow machine-learning engineering cho production về data contract, training có thể tái lập, đánh giá model, deploy, monitoring và rollback. Dùng khi xây dựng, review hoặc gia cố hệ thống ML vượt ra ngoài các notebook dùng một lần.
 license: MIT
 metadata:
   origin: ECC

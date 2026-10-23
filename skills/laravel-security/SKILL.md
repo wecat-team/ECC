@@ -1,6 +1,6 @@
 ---
 name: laravel-security
-description: Laravel security best practices — authentication, authorization, Eloquent safety, CSRF, XSS prevention, API security, and secure deployment configurations. Use when reviewing Laravel auth, Eloquent safety, CSRF, XSS, API security, or deployment configuration.
+description: Best practice bảo mật Laravel — authentication, authorization, an toàn Eloquent, CSRF, ngăn XSS, bảo mật API và cấu hình deploy an toàn. Dùng khi review auth, an toàn Eloquent, CSRF, XSS, bảo mật API hoặc cấu hình deploy của Laravel.
 metadata:
   origin: ECC
 ---

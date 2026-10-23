@@ -1,6 +1,6 @@
 ---
 name: gateguard
-description: "PreToolUse fact-forcing gate that denies the first Edit/Write/Bash (including MultiEdit and NotebookEdit) attempt until the agent presents concrete facts (importers, data schemas, verbatim user instruction), then allows retry; A/B-tested at +2.25 quality points. Use when enabling or configuring the GateGuard hook, exempting paths via env vars, or handling first-touch denials."
+description: Cổng PreToolUse buộc đưa ra dữ kiện, từ chối lần thử Edit/Write/Bash đầu tiên (kể cả MultiEdit và NotebookEdit) cho đến khi agent trình bày dữ kiện cụ thể (importer, data schema, nguyên văn chỉ dẫn của người dùng), rồi cho phép thử lại; đã A/B test với mức +2.25 điểm chất lượng. Dùng khi bật hoặc cấu hình hook GateGuard, miễn trừ đường dẫn qua env var, hoặc xử lý các lần từ chối ở lần chạm đầu tiên.
 metadata:
   origin: community
 ---

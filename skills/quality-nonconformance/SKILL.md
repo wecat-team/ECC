@@ -1,6 +1,6 @@
 ---
 name: quality-nonconformance
-description: "Quality control and non-conformance management for regulated manufacturing (FDA 21 CFR 820, IATF 16949, AS9100): NCR lifecycle and disposition, 5-Why/Ishikawa/fault-tree/8D root cause analysis, CAPA systems, SPC interpretation, AQL sampling, and supplier quality audits. Use when investigating non-conformances, performing root cause analysis, managing CAPAs, interpreting SPC data, or handling supplier quality issues."
+description: "Kiểm soát chất lượng và quản lý sự không phù hợp (non-conformance) cho sản xuất có quản lý (FDA 21 CFR 820, IATF 16949, AS9100): vòng đời và xử lý NCR, phân tích nguyên nhân gốc bằng 5-Why/Ishikawa/fault-tree/8D, hệ thống CAPA, diễn giải SPC, lấy mẫu AQL và audit chất lượng nhà cung cấp. Dùng khi điều tra sự không phù hợp, phân tích nguyên nhân gốc, quản lý CAPA, diễn giải dữ liệu SPC hoặc xử lý vấn đề chất lượng của nhà cung cấp."
 license: Apache-2.0
 homepage: https://github.com/affaan-m/ECC
 metadata:

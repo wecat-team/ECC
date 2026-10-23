@@ -1,6 +1,6 @@
 ---
 name: llm-trading-agent-security
-description: Security patterns for autonomous trading agents with wallet or transaction authority. Covers prompt injection, spend limits, pre-send simulation, circuit breakers, MEV protection, and key handling. Use when an autonomous agent holds wallet or transaction authority and its limits, simulation, or key handling need review.
+description: Các pattern bảo mật cho agent giao dịch tự động có quyền với ví hoặc giao dịch. Bao gồm prompt injection, giới hạn chi tiêu, mô phỏng trước khi gửi, circuit breaker, bảo vệ MEV và xử lý key. Dùng khi một agent tự động nắm quyền với ví hoặc giao dịch và cần review giới hạn, mô phỏng hoặc cách xử lý key của nó.
 metadata:
   version: "1.0.0"
   origin: ECC direct-port adaptation

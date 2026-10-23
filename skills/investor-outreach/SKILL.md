@@ -1,6 +1,6 @@
 ---
 name: investor-outreach
-description: Draft cold emails, warm intro blurbs, follow-ups, update emails, and investor communications for fundraising. Use when the user wants outreach to angels, VCs, strategic investors, or accelerators and needs concise, personalized, investor-facing messaging.
+description: Soạn cold email, đoạn giới thiệu warm intro, follow-up, email cập nhật và các thông điệp gửi nhà đầu tư khi gọi vốn. Dùng khi người dùng muốn tiếp cận angel, VC, nhà đầu tư chiến lược hoặc accelerator và cần thông điệp ngắn gọn, cá nhân hóa, hướng đến nhà đầu tư.
 metadata:
   origin: ECC
 ---

@@ -1,6 +1,6 @@
 ---
 name: agent-payment-x402
-description: Add x402 payment execution to AI agents with per-task budgets, spending controls, and non-custodial wallets. Supports Base through agentwallet-sdk, X Layer through OKX Payments / OKX Agent Payments Protocol, and Solana plus multi-network EVM through the upstream x402 packages with facilitator-based settlement. Use when an agent must pay for something itself and needs per-task budgets, spending controls, and a non-custodial wallet.
+description: Bổ sung khả năng thực thi thanh toán x402 cho AI agent với ngân sách theo từng tác vụ, kiểm soát chi tiêu và ví non-custodial. Hỗ trợ Base qua agentwallet-sdk, X Layer qua OKX Payments / OKX Agent Payments Protocol, và Solana cùng EVM đa mạng qua các package x402 upstream với cơ chế settlement dựa trên facilitator. Dùng khi một agent phải tự thanh toán cho thứ gì đó và cần ngân sách theo từng tác vụ, kiểm soát chi tiêu và ví non-custodial.
 metadata:
   origin: community
 ---

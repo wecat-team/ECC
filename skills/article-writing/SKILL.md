@@ -1,6 +1,6 @@
 ---
 name: article-writing
-description: Write articles, guides, blog posts, tutorials, newsletter issues, and other long-form content in a distinctive voice derived from supplied examples or brand guidance. Use when the user wants polished written content longer than a paragraph, especially when voice consistency, structure, and credibility matter.
+description: Viết bài báo, hướng dẫn, blog post, tutorial, số newsletter và các nội dung dài khác với giọng văn riêng biệt rút ra từ ví dụ được cung cấp hoặc hướng dẫn thương hiệu. Dùng khi người dùng muốn nội dung viết trau chuốt dài hơn một đoạn văn, đặc biệt khi tính nhất quán của giọng văn, cấu trúc và độ tin cậy là quan trọng.
 metadata:
   origin: ECC
 ---

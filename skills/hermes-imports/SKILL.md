@@ -1,6 +1,6 @@
 ---
 name: hermes-imports
-description: Convert local Hermes operator workflows into sanitized ECC skills and release-pack artifacts. Use when preparing a Hermes workflow for public ECC reuse without leaking private workspace state, credentials, or local-only paths.
+description: Chuyển đổi các workflow vận hành Hermes cục bộ thành skill ECC đã làm sạch và artifact release-pack. Dùng khi chuẩn bị một workflow Hermes để tái sử dụng công khai trong ECC mà không làm rò rỉ trạng thái workspace riêng tư, credential hoặc đường dẫn chỉ có ở local.
 metadata:
   origin: ECC
 ---

@@ -1,6 +1,6 @@
 ---
 name: project-flow-ops
-description: Operate execution flow across GitHub and Linear by triaging issues and pull requests, linking active work, and keeping GitHub public-facing while Linear remains the internal execution layer. Use when the user wants backlog control, PR triage, or GitHub-to-Linear coordination.
+description: Vận hành luồng thực thi trên GitHub và Linear bằng cách triage issue và pull request, liên kết công việc đang làm, và giữ GitHub làm bề mặt công khai trong khi Linear là lớp thực thi nội bộ. Dùng khi người dùng muốn kiểm soát backlog, triage PR hoặc điều phối GitHub-sang-Linear.
 metadata:
   origin: ECC
 ---

@@ -1,6 +1,6 @@
 ---
 name: agent-eval
-description: Head-to-head comparison of coding agents (Claude Code, Aider, Codex, etc.) on custom tasks with pass rate, cost, time, and consistency metrics. Use when choosing between coding agents, or when a change to an agent setup needs measured pass rate, cost, and time rather than an impression.
+description: So sánh trực tiếp các coding agent (Claude Code, Aider, Codex, v.v.) trên các tác vụ tùy chỉnh với các chỉ số pass rate, chi phí, thời gian và độ nhất quán. Dùng khi chọn giữa các coding agent, hoặc khi một thay đổi trong thiết lập agent cần pass rate, chi phí và thời gian được đo đạc thay vì chỉ cảm tính.
 license: MIT
 metadata:
   origin: ECC

@@ -1,6 +1,6 @@
 ---
 name: marketing-campaign
-description: End-to-end marketing campaign planning and execution. Covers audience research, positioning, campaign angle definition, landing page copy, email sequences, social posts, ad copy, short-form video scripts, and content calendars. Use as the orchestration layer for multi-channel product launches. Use when planning or executing a multi-channel product launch, or producing landing page, email, social, or ad copy.
+description: Lập kế hoạch và thực thi chiến dịch marketing từ đầu đến cuối. Bao gồm nghiên cứu đối tượng, định vị (positioning), xác định góc tiếp cận chiến dịch, copy cho landing page, chuỗi email, bài đăng mạng xã hội, ad copy, kịch bản video ngắn và content calendar. Dùng làm lớp điều phối cho các đợt ra mắt sản phẩm đa kênh. Dùng khi lập kế hoạch hoặc thực thi một đợt ra mắt sản phẩm đa kênh, hoặc khi viết copy cho landing page, email, mạng xã hội hay quảng cáo.
 metadata:
   origin: ECC
 ---

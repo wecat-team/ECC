@@ -1,6 +1,6 @@
 ---
 name: github-ops
-description: GitHub repository operations, automation, and management. Issue triage, PR management, CI/CD operations, release management, and security monitoring using the gh CLI. Use when the user wants to manage GitHub issues, PRs, CI status, releases, contributors, stale items, or any GitHub operational task beyond simple git commands.
+description: Vận hành, tự động hóa và quản lý repository GitHub. Triage issue, quản lý PR, vận hành CI/CD, quản lý release và giám sát bảo mật bằng gh CLI. Dùng khi người dùng muốn quản lý issue, PR, trạng thái CI, release, contributor, mục stale trên GitHub, hoặc bất kỳ tác vụ vận hành GitHub nào vượt ra ngoài các lệnh git đơn giản.
 metadata:
   origin: ECC
 ---

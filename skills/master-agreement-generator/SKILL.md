@@ -1,6 +1,6 @@
 ---
 name: master-agreement-generator
-description: Generate review drafts of counterparty master agreements from one template plus a JSON spec, with role-selected clauses and a Schedule A workflow limited to the executed agreement's notice authority. Use when you need reproducible drafting and separately reviewed execution preparation.
+description: Sinh bản nháp để review cho các hợp đồng khung (master agreement) với đối tác từ một template cùng một JSON spec, với các điều khoản được chọn theo vai trò và workflow Schedule A giới hạn trong thẩm quyền thông báo của hợp đồng đã ký. Dùng khi cần soạn thảo có thể tái lập và chuẩn bị ký kết được review riêng.
 ---
 
 # Master Agreement Generator

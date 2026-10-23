@@ -1,6 +1,6 @@
 ---
 name: videodb
-description: Ingest, index, search, edit, and monitor video and audio with the VideoDB Python SDK — upload from files, URLs, or RTSP feeds, build spoken and scene indexes with timestamped search and playable clips, transcode and reframe, do timeline edits (subtitles, overlays, dubbing), and run real-time alerts on live streams or desktop capture. Use when working with video search, transcription, clipping, transcoding, streaming, or live video alerts.
+description: Ingest, index, tìm kiếm, edit và giám sát video và audio bằng VideoDB Python SDK — upload từ file, URL hoặc luồng RTSP, xây dựng index lời nói và cảnh với tìm kiếm theo timestamp và clip phát được, transcode và reframe, edit timeline (phụ đề, overlay, lồng tiếng), và chạy cảnh báo thời gian thực trên livestream hoặc quay màn hình desktop. Dùng khi làm việc với tìm kiếm video, chuyển lời thành văn bản (transcription), cắt clip, transcode, streaming hoặc cảnh báo video trực tiếp.
 metadata:
   origin: ECC
 allowed-tools: Read Grep Glob Bash(python:*)

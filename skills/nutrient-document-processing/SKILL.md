@@ -1,6 +1,6 @@
 ---
 name: nutrient-document-processing
-description: Process, convert, OCR, extract, redact, sign, and fill documents using the Nutrient DWS API. Works with PDFs, DOCX, XLSX, PPTX, HTML, and images. Use when converting, OCRing, extracting from, redacting, signing, or filling documents via the Nutrient DWS API.
+description: Xử lý, chuyển đổi, OCR, trích xuất, che thông tin (redact), ký và điền tài liệu bằng Nutrient DWS API. Hoạt động với PDF, DOCX, XLSX, PPTX, HTML và hình ảnh. Dùng khi chuyển đổi, OCR, trích xuất, redact, ký hoặc điền tài liệu qua Nutrient DWS API.
 metadata:
   origin: ECC
 ---

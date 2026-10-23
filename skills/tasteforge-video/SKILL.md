@@ -1,6 +1,6 @@
 ---
 name: tasteforge-video
-description: Use for file-driven multimodal image, video, and 3D-asset discovery; taste interviews; distill or apply workflows; style-pack validation; editable EDL/FCPXML export; provenance audits; and offline planning that must fail closed before provider generation.
+description: Dùng cho việc khám phá image, video và 3D asset đa phương thức dựa trên file; phỏng vấn về taste; workflow distill hoặc apply; validation style pack; export EDL/FCPXML có thể chỉnh sửa; audit nguồn gốc (provenance); và lập kế hoạch offline phải fail closed trước khi gọi provider để sinh.
 metadata:
   origin: ECC
 ---

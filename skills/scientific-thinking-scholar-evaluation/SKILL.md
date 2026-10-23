@@ -1,6 +1,6 @@
 ---
 name: scientific-thinking-scholar-evaluation
-description: Structured scholarly-work evaluation for papers, proposals, literature reviews, methods sections, evidence quality, citation support, and research-writing feedback. Use when evaluating academic or scientific work — papers, proposals, methods sections, or evidence quality — against a repeatable rubric.
+description: Đánh giá có cấu trúc các công trình học thuật cho bài báo, đề xuất nghiên cứu, tổng quan tài liệu, phần phương pháp, chất lượng bằng chứng, mức độ hỗ trợ của trích dẫn và phản hồi về viết nghiên cứu. Dùng khi đánh giá công trình học thuật hoặc khoa học — bài báo, đề xuất, phần phương pháp hoặc chất lượng bằng chứng — theo một rubric có thể lặp lại.
 metadata:
   origin: community
 ---

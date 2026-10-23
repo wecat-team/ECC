@@ -1,6 +1,6 @@
 ---
 name: enterprise-agent-ops
-description: Operational controls for long-lived or cloud-hosted agent systems — runtime lifecycle (start, pause, stop, restart), observability (logs, metrics, traces), least-privilege safety scopes and kill switches, and rollout/rollback change management with audit logs and success/cost metrics. Use when running production agent fleets on PM2, systemd, or containers that need monitoring, incident response, or deployment gates.
+description: Các biện pháp kiểm soát vận hành cho hệ thống agent chạy lâu dài hoặc host trên cloud — vòng đời runtime (start, pause, stop, restart), observability (log, metric, trace), phạm vi an toàn theo least-privilege và kill switch, và quản lý thay đổi rollout/rollback với audit log cùng metric thành công/chi phí. Dùng khi chạy đội agent production trên PM2, systemd hoặc container cần monitoring, ứng phó sự cố hoặc deployment gate.
 metadata:
   origin: ECC
 ---

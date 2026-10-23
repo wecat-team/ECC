@@ -1,6 +1,6 @@
 ---
 name: parallel-execution-optimizer
-description: Speed up a task by turning it into a dependency graph of parallel lanes with a lane matrix, batched reads and checks, write surfaces isolated by file, worktree, branch, or service, and a final verification table. Use when the user wants a task done much faster through parallel work, concurrent agents, batched tool calls, isolated worktrees, or many independent verification lanes without losing correctness.
+description: Tăng tốc một tác vụ bằng cách biến nó thành đồ thị dependency gồm các lane song song với ma trận lane, đọc và kiểm tra theo batch, các bề mặt ghi được cô lập theo file, worktree, branch hoặc service, và một bảng xác minh cuối cùng. Dùng khi người dùng muốn hoàn thành tác vụ nhanh hơn nhiều nhờ làm việc song song, agent chạy đồng thời, tool call theo batch, worktree cô lập hoặc nhiều lane xác minh độc lập mà không mất tính đúng đắn.
 license: MIT
 metadata:
   origin: ECC

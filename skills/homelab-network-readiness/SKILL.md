@@ -1,6 +1,6 @@
 ---
 name: homelab-network-readiness
-description: Readiness checklist for homelab VLAN segmentation, local DNS filtering (Pi-hole, AdGuard Home), and WireGuard-style remote access. Use when planning or reviewing home network changes — splitting a flat network into trusted, IoT, guest, or management VLANs, moving DHCP to a local resolver, or adding VPN access — before changing router, firewall, DHCP, or VPN configuration.
+description: Checklist sẵn sàng cho phân đoạn VLAN homelab, lọc DNS cục bộ (Pi-hole, AdGuard Home) và truy cập từ xa kiểu WireGuard. Dùng khi lập kế hoạch hoặc review thay đổi mạng gia đình — tách một mạng phẳng thành các VLAN trusted, IoT, guest hoặc management, chuyển DHCP sang resolver cục bộ, hoặc thêm truy cập VPN — trước khi thay đổi cấu hình router, firewall, DHCP hoặc VPN.
 metadata:
   origin: community
 ---

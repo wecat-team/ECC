@@ -1,6 +1,6 @@
 ---
 name: regex-vs-llm-structured-text
-description: Decision framework for parsing structured text (quizzes, forms, invoices, receipts, tables) with a hybrid regex-first pipeline — regex extraction handles 95%+ cheaply, a confidence scorer flags low-confidence items, and an LLM validator fixes only the edge cases. Use when choosing between regex and LLM for text extraction, building a cheap document parser, or optimizing extraction cost and accuracy.
+description: Framework ra quyết định để parse văn bản có cấu trúc (bài quiz, biểu mẫu, hóa đơn, biên lai, bảng) bằng pipeline lai ưu tiên regex — trích xuất bằng regex xử lý 95%+ với chi phí thấp, một bộ chấm điểm độ tin cậy đánh dấu các mục có độ tin cậy thấp, và một LLM validator chỉ sửa các edge case. Dùng khi chọn giữa regex và LLM cho việc trích xuất văn bản, xây dựng một document parser chi phí thấp hoặc tối ưu chi phí và độ chính xác của việc trích xuất.
 metadata:
   origin: ECC
 ---

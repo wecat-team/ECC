@@ -1,6 +1,6 @@
 ---
 name: nanoclaw-repl
-description: Operate and extend NanoClaw, ECC's zero-dependency session-aware REPL, with persistent markdown-backed sessions and slash commands for model switching, skill loading, session branching, cross-session search, history compaction, and export. Use when running or extending scripts/claw.js, or when resuming, branching, compacting, searching, or exporting a NanoClaw session.
+description: Vận hành và mở rộng NanoClaw, REPL không dependency và nhận biết session của ECC, với các session lưu bền vững dạng markdown và slash command để chuyển model, nạp skill, phân nhánh session, tìm kiếm xuyên session, nén lịch sử và export. Dùng khi chạy hoặc mở rộng scripts/claw.js, hoặc khi tiếp tục, phân nhánh, nén, tìm kiếm hay export một session NanoClaw.
 metadata:
   origin: ECC
 ---

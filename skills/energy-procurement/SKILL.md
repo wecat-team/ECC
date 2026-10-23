@@ -1,6 +1,6 @@
 ---
 name: energy-procurement
-description: "Procure electricity and natural gas for commercial and industrial facilities: tariff and rate-schedule optimization, demand-charge mitigation, supplier RFPs, fixed/index/block-and-index hedging, renewable PPA and REC evaluation, and sustainability reporting. Use when procuring energy, optimizing utility tariffs, managing demand charges, evaluating PPAs, or building energy budgets and hedge strategies."
+description: "Mua điện và khí tự nhiên cho cơ sở thương mại và công nghiệp: tối ưu biểu giá và lịch biểu giá, giảm phí công suất (demand charge), RFP nhà cung cấp, phòng ngừa rủi ro (hedging) theo giá cố định/chỉ số/block-and-index, đánh giá PPA năng lượng tái tạo và REC, và báo cáo phát triển bền vững. Dùng khi mua năng lượng, tối ưu biểu giá tiện ích, quản lý demand charge, đánh giá PPA, hoặc lập ngân sách năng lượng và chiến lược hedging."
 license: Apache-2.0
 homepage: https://github.com/affaan-m/ECC
 metadata:

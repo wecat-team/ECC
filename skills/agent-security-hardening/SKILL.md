@@ -1,6 +1,6 @@
 ---
 name: agent-security-hardening
-description: Security hardening guidance for AI agent frameworks that process untrusted content, invoke tools, write workspace files, manage runtime identifiers, or handle credentials. Use when building or reviewing an agent runtime, autonomous worker, tool gateway, memory service, or multi-tenant agent deployment. Do not use for general web application security or offensive testing.
+description: Hướng dẫn hardening bảo mật cho các framework AI agent xử lý nội dung không đáng tin cậy, gọi tool, ghi file trong workspace, quản lý định danh runtime hoặc xử lý credential. Dùng khi xây dựng hoặc review một agent runtime, worker tự trị, tool gateway, memory service hoặc triển khai agent multi-tenant. KHÔNG dùng cho bảo mật ứng dụng web nói chung hoặc kiểm thử tấn công (offensive testing).
 metadata:
   origin: ECC
 ---

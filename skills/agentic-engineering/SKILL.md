@@ -1,6 +1,6 @@
 ---
 name: agentic-engineering
-description: Operate as an agentic engineer using eval-first execution, decomposition, and cost-aware model routing. Use when planning or executing engineering work that agents will carry out end to end.
+description: Làm việc như một agentic engineer với cách thực thi eval-first, phân rã tác vụ và định tuyến model có tính đến chi phí. Dùng khi lập kế hoạch hoặc thực thi công việc kỹ thuật mà agent sẽ đảm nhận từ đầu đến cuối.
 metadata:
   origin: ECC
 ---

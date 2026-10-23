@@ -1,6 +1,6 @@
 ---
 name: inventory-demand-planning
-description: "Codified demand planning expertise for multi-location retailers: demand forecasting method selection, ABC/XYZ segmentation, safety stock and reorder-point optimization, promotional lift and post-promo dip estimation, and seasonal transition and markdown timing. Use when forecasting demand, setting safety stock, planning replenishment, managing promotions, or optimizing inventory levels."
+description: "Chuyên môn hoạch định nhu cầu được hệ thống hóa cho nhà bán lẻ nhiều địa điểm: lựa chọn phương pháp dự báo nhu cầu, phân khúc ABC/XYZ, tối ưu tồn kho an toàn và điểm đặt hàng lại, ước tính mức tăng do khuyến mãi và mức sụt sau khuyến mãi, cùng thời điểm chuyển mùa và giảm giá. Dùng khi dự báo nhu cầu, đặt mức tồn kho an toàn, lập kế hoạch bổ sung hàng, quản lý khuyến mãi hoặc tối ưu mức tồn kho."
 license: Apache-2.0
 homepage: https://github.com/affaan-m/ECC
 metadata:

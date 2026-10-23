@@ -1,6 +1,6 @@
 ---
 name: uncloud
-description: Use when managing an Uncloud cluster — deploying services, configuring Caddy ingress, adding static proxy routes for non-cluster devices, publishing ports, scaling, inspecting logs, or managing machines and volumes with the `uc` CLI.
+description: Dùng khi quản lý một cluster Uncloud — deploy service, cấu hình Caddy ingress, thêm static proxy route cho các thiết bị ngoài cluster, publish port, scale, xem log, hoặc quản lý machine và volume bằng CLI `uc`.
 metadata:
   origin: ECC
 ---

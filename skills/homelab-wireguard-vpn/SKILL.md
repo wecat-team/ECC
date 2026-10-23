@@ -1,6 +1,6 @@
 ---
 name: homelab-wireguard-vpn
-description: WireGuard VPN server setup, peer configuration, key generation, split tunneling vs full tunnel routing, and remote access to a home network from mobile and laptop clients. Use when setting up WireGuard for remote access to a home network, or deciding between split and full tunnel routing.
+description: Thiết lập VPN server WireGuard, cấu hình peer, sinh key, định tuyến split tunnel so với full tunnel, và truy cập từ xa vào mạng gia đình từ client di động và laptop. Dùng khi thiết lập WireGuard để truy cập từ xa vào mạng gia đình, hoặc khi cân nhắc giữa định tuyến split tunnel và full tunnel.
 metadata:
   origin: community
 ---

@@ -1,6 +1,6 @@
 ---
 name: healthcare-emr-patterns
-description: EMR/EHR development patterns for healthcare applications. Clinical safety, encounter workflows, prescription generation, clinical decision support integration, and accessibility-first UI for medical data entry. Use when building EMR or EHR features such as encounter workflows, prescription generation, or clinical data entry UI.
+description: Các pattern phát triển EMR/EHR cho ứng dụng y tế. An toàn lâm sàng, workflow lượt khám (encounter), tạo đơn thuốc, tích hợp hỗ trợ quyết định lâm sàng và UI ưu tiên accessibility cho nhập liệu y khoa. Dùng khi xây dựng tính năng EMR hoặc EHR như workflow lượt khám, tạo đơn thuốc hoặc UI nhập dữ liệu lâm sàng.
 metadata:
   version: "1.0.0"
   origin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel

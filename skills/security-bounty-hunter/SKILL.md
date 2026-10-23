@@ -1,6 +1,6 @@
 ---
 name: security-bounty-hunter
-description: Hunt for exploitable, bounty-worthy security issues in repositories. Focuses on remotely reachable vulnerabilities that qualify for real reports instead of noisy local-only findings. Use when hunting reportable, remotely reachable vulnerabilities in a repository.
+description: Săn các lỗ hổng bảo mật có thể khai thác, đáng nhận bounty trong repository. Tập trung vào các lỗ hổng có thể tiếp cận từ xa, đủ điều kiện để báo cáo thực sự thay vì các phát hiện chỉ cục bộ gây nhiễu. Dùng khi săn các lỗ hổng có thể báo cáo, tiếp cận được từ xa trong một repository.
 metadata:
   version: "1.0.0"
   origin: ECC direct-port adaptation

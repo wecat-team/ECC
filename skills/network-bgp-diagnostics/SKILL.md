@@ -1,6 +1,6 @@
 ---
 name: network-bgp-diagnostics
-description: Diagnostics-only BGP troubleshooting patterns for neighbor state, route exchange, prefix policy, AS path inspection, and safe evidence collection. Use when a BGP neighbor is down, routes are missing, or prefix policy and AS path need inspection.
+description: Các pattern troubleshooting BGP chỉ chẩn đoán cho trạng thái neighbor, trao đổi route, prefix policy, kiểm tra AS path và thu thập bằng chứng an toàn. Dùng khi một BGP neighbor bị down, thiếu route, hoặc cần kiểm tra prefix policy và AS path.
 metadata:
   origin: community
 ---

@@ -1,6 +1,6 @@
 ---
 name: customs-trade-compliance
-description: Codified customs and trade compliance expertise — HS/HTS tariff classification with GRI rules, commercial invoices and entry documentation, Incoterms 2020, FTA qualification and duty optimization (USMCA, RCEP, FTZs, drawback), denied-party screening, and penalty mitigation across US, EU, UK, and APAC jurisdictions. Use when classifying goods, preparing import/export documentation, screening restricted parties, responding to customs audits or CF-28/penalty notices, or optimizing duties.
+description: Chuyên môn hải quan và tuân thủ thương mại được hệ thống hóa — phân loại mã thuế HS/HTS theo quy tắc GRI, hóa đơn thương mại và chứng từ khai báo nhập khẩu, Incoterms 2020, đáp ứng điều kiện FTA và tối ưu thuế (USMCA, RCEP, FTZ, hoàn thuế drawback), sàng lọc đối tượng bị cấm (denied-party screening) và giảm nhẹ hình phạt tại các khu vực pháp lý US, EU, UK và APAC. Dùng khi phân loại hàng hóa, chuẩn bị chứng từ xuất nhập khẩu, sàng lọc đối tượng bị hạn chế, phản hồi audit hải quan hoặc thông báo CF-28/phạt, hoặc tối ưu thuế.
 license: Apache-2.0
 homepage: https://github.com/affaan-m/ECC
 metadata:

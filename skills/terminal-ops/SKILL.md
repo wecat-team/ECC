@@ -1,6 +1,6 @@
 ---
 name: terminal-ops
-description: Evidence-first repo execution workflow for ECC. Use when the user wants a command run, a repo checked, a CI failure debugged, or a narrow fix pushed with exact proof of what was executed and verified.
+description: Workflow thực thi trên repo ưu tiên bằng chứng cho ECC. Dùng khi người dùng muốn chạy một lệnh, kiểm tra repo, debug lỗi CI hoặc push một bản sửa nhỏ kèm bằng chứng chính xác về những gì đã được thực thi và xác minh.
 metadata:
   origin: ECC
 ---

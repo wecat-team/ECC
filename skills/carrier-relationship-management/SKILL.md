@@ -1,6 +1,6 @@
 ---
 name: carrier-relationship-management
-description: "Manage truckload, LTL, and intermodal carrier portfolios: sourcing and FMCSA vetting, freight rate and fuel-surcharge negotiation, RFPs and routing guides, carrier scorecards, allocation, and renewals. Use when onboarding carriers, running freight RFPs, negotiating rates, evaluating carrier performance, reallocating freight, or building freight strategy."
+description: "Quản lý danh mục nhà vận chuyển truckload, LTL và intermodal: tìm nguồn và thẩm định FMCSA, đàm phán cước vận chuyển và phụ phí nhiên liệu, RFP và routing guide, scorecard nhà vận chuyển, phân bổ và gia hạn hợp đồng. Dùng khi onboard nhà vận chuyển, chạy RFP vận tải, đàm phán cước, đánh giá hiệu suất nhà vận chuyển, phân bổ lại hàng hoặc xây dựng chiến lược vận tải."
 license: Apache-2.0
 homepage: https://github.com/affaan-m/ECC
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: agent-runtime-gateway-smoke-test
-description: Verify a local agent API, temporary gateway tunnel, and remote sandbox callback with a tool-free task, then restore the original app connection.
+description: Xác minh một agent API local, một gateway tunnel tạm thời và callback từ sandbox từ xa bằng một tác vụ không dùng tool, sau đó khôi phục kết nối app ban đầu.
 metadata:
   origin: ECC
 ---

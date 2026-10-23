@@ -1,6 +1,6 @@
 ---
 name: terminal-opener
-description: Open an executable and its argument array in a visible terminal window through a reusable, shell-free launch plan with dry-run, JSON, capability detection, detached fallback, and standalone recovery modes. Use when Codex needs to open an interactive CLI, SSH session, local development process, sandbox, or other argv-based command in a new host terminal; diagnose whether a supported terminal is available; or provide an actionable plan when the requested terminal is unsupported.
+description: Mở một executable cùng mảng đối số của nó trong một cửa sổ terminal hiển thị thông qua một launch plan có thể tái sử dụng, không qua shell, với các chế độ dry-run, JSON, phát hiện khả năng (capability detection), fallback detached và khôi phục độc lập. Dùng khi Codex cần mở một CLI tương tác, phiên SSH, tiến trình phát triển cục bộ, sandbox hoặc lệnh dựa trên argv khác trong một terminal mới của máy host; chẩn đoán xem có terminal được hỗ trợ hay không; hoặc đưa ra kế hoạch có thể hành động khi terminal được yêu cầu không được hỗ trợ.
 ---
 
 # Terminal Opener

@@ -1,6 +1,6 @@
 ---
 name: latency-critical-systems
-description: Optimize and verify latency-sensitive systems — realtime dashboards, market data feeds, streaming agents, execution gateways, queues, and caches — by tracking p50/p95/p99 latency, freshness age, and queue depth, mapping hot paths, and running live readbacks. Use when p95 latency, throughput, or data freshness matters.
+description: Tối ưu và xác minh các hệ thống nhạy cảm với độ trễ — dashboard realtime, luồng dữ liệu thị trường, agent streaming, execution gateway, queue và cache — bằng cách theo dõi latency p50/p95/p99, độ tươi của dữ liệu (freshness age) và độ sâu queue, lập bản đồ hot path và chạy readback trực tiếp. Dùng khi latency p95, throughput hoặc độ tươi của dữ liệu là quan trọng.
 license: MIT
 metadata:
   origin: ECC

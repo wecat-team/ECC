@@ -1,6 +1,6 @@
 ---
 name: search-first
-description: "Research-before-coding workflow: search npm/PyPI, MCP servers, skills, and GitHub for existing tools before writing custom code, then adopt, extend, or build. Launches the researcher agent for non-trivial needs. Use when starting a feature, adding a dependency or integration, or about to write a utility that may already exist."
+description: "Workflow nghiên cứu trước khi code: tìm trên npm/PyPI, MCP server, skill và GitHub các công cụ có sẵn trước khi viết code tùy chỉnh, rồi chọn dùng lại, mở rộng hoặc tự xây dựng. Khởi chạy agent researcher cho các nhu cầu không tầm thường. Dùng khi bắt đầu một tính năng, thêm dependency hoặc tích hợp, hoặc sắp viết một tiện ích có thể đã tồn tại."
 metadata:
   origin: ECC
 ---

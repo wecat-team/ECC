@@ -1,6 +1,6 @@
 ---
 name: market-research
-description: Conduct market research, competitive analysis, investor due diligence, and industry intelligence with source attribution and decision-oriented summaries. Use when the user wants market sizing, competitor comparisons, fund research, technology scans, or research that informs business decisions.
+description: Thực hiện nghiên cứu thị trường, phân tích cạnh tranh, due diligence cho nhà đầu tư và thu thập thông tin ngành, kèm ghi nguồn và tóm tắt hướng tới ra quyết định. Dùng khi người dùng muốn ước tính quy mô thị trường, so sánh đối thủ, nghiên cứu quỹ, khảo sát công nghệ hoặc nghiên cứu phục vụ quyết định kinh doanh.
 metadata:
   origin: ECC
 ---

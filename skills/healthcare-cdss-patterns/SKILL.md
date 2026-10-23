@@ -1,6 +1,6 @@
 ---
 name: healthcare-cdss-patterns
-description: Clinical Decision Support System (CDSS) development patterns. Drug interaction checking, dose validation, clinical scoring (NEWS2, qSOFA), alert severity classification, and integration into EMR workflows. Use when building clinical decision support — drug interaction checks, dose validation, clinical scoring, or alert severity.
+description: Các pattern phát triển Hệ thống Hỗ trợ Quyết định Lâm sàng (CDSS). Kiểm tra tương tác thuốc, xác thực liều, chấm điểm lâm sàng (NEWS2, qSOFA), phân loại mức độ nghiêm trọng của cảnh báo và tích hợp vào workflow EMR. Dùng khi xây dựng hỗ trợ quyết định lâm sàng — kiểm tra tương tác thuốc, xác thực liều, chấm điểm lâm sàng hoặc mức độ nghiêm trọng của cảnh báo.
 metadata:
   version: "1.0.0"
   origin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel

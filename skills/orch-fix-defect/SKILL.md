@@ -1,6 +1,6 @@
 ---
 name: orch-fix-defect
-description: Orchestrate fixing a bug — reproduce it as a failing regression test, fix to green, review, and gated commit — by delegating each phase to the matching ECC agent. Use when existing behavior is broken or wrong.
+description: Điều phối việc sửa một bug — tái hiện nó bằng một regression test thất bại, sửa đến khi xanh, review và commit có cổng kiểm soát — bằng cách ủy quyền từng giai đoạn cho agent ECC tương ứng. Dùng khi hành vi hiện có bị hỏng hoặc sai.
 metadata:
   origin: ECC
 ---

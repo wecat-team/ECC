@@ -1,6 +1,6 @@
 ---
 name: healthcare-phi-compliance
-description: "Protected Health Information (PHI) and PII compliance patterns for healthcare applications: data classification, row-level access control, tamper-proof audit trails, schema tagging, and common leak vectors such as logs, URLs, and browser storage. Use when code touches patient or clinician data, when implementing HIPAA or GDPR access controls, or when auditing a healthcare system for data exposure."
+description: "Các pattern tuân thủ Thông tin Sức khỏe được Bảo vệ (PHI) và PII cho ứng dụng y tế: phân loại dữ liệu, kiểm soát truy cập theo dòng (row-level), audit trail chống giả mạo, gắn tag schema và các đường rò rỉ phổ biến như log, URL và browser storage. Dùng khi code chạm đến dữ liệu bệnh nhân hoặc nhân viên lâm sàng, khi triển khai kiểm soát truy cập theo HIPAA hoặc GDPR, hoặc khi audit một hệ thống y tế về rò rỉ dữ liệu."
 metadata:
   version: "1.0.0"
   origin: Health1 Super Speciality Hospitals — contributed by Dr. Keyur Patel

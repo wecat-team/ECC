@@ -1,6 +1,6 @@
 ---
 name: orch-build-mvp
-description: Orchestrate bootstrapping a working MVP from a design or spec document — ingest the SDD/PRD, plan thin vertical slices, scaffold the first end-to-end slice, then drive a generator-evaluator build loop with review and gated feat commits. Use when a design or spec document must become a running MVP through planned vertical slices.
+description: Điều phối việc khởi tạo một MVP chạy được từ tài liệu thiết kế hoặc spec — tiếp nhận SDD/PRD, lập kế hoạch các lát cắt dọc mỏng (thin vertical slice), scaffold lát cắt end-to-end đầu tiên, rồi chạy vòng lặp build generator-evaluator kèm review và các commit feat có cổng kiểm soát. Dùng khi một tài liệu thiết kế hoặc spec cần trở thành MVP chạy được qua các lát cắt dọc đã lên kế hoạch.
 metadata:
   origin: ECC
 ---
