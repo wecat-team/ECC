@@ -1,6 +1,6 @@
 ---
 name: unified-notifications-ops
-description: Operate notifications as one ECC-native workflow across GitHub, Linear, desktop alerts, hooks, and connected communication surfaces. Use when the real problem is alert routing, deduplication, escalation, or inbox collapse.
+description: Vận hành thông báo như một workflow thống nhất kiểu ECC trên GitHub, Linear, cảnh báo desktop, hook và các kênh giao tiếp được kết nối. Dùng khi vấn đề thực sự là định tuyến cảnh báo, loại bỏ trùng lặp, escalation hoặc dồn gọn hộp thư.
 metadata:
   origin: ECC
 ---

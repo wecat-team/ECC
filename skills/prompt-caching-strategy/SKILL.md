@@ -1,14 +1,6 @@
 ---
 name: prompt-caching-strategy
-description: >-
-  Optimize LLM prompt caching hit rate to reduce API costs and improve latency.
-  Analyzes prompt structure, identifies cacheable vs non-cacheable content,
-  and recommends restructuring to maximize cache reuse.
-  TRIGGER when: user says "prompt cache", "cache hit rate", "reduce LLM cost",
-  "optimize token usage", "cheaper LLM calls", or asks about prompt caching
-  strategies for OpenAI/Anthropic/other providers.
-  DO NOT TRIGGER when: user just wants to optimize a single prompt's quality
-  (use prompt-optimizer instead), or asks about general caching infrastructure.
+description: "Tối ưu tỷ lệ cache hit của LLM prompt caching để giảm chi phí API và cải thiện độ trễ. Phân tích cấu trúc prompt, xác định nội dung có thể cache và không thể cache, và đề xuất tái cấu trúc để tối đa hóa việc tái sử dụng cache. KÍCH HOẠT khi: người dùng nói \"prompt cache\", \"cache hit rate\", \"reduce LLM cost\", \"optimize token usage\", \"cheaper LLM calls\", hoặc hỏi về chiến lược prompt caching cho OpenAI/Anthropic/nhà cung cấp khác. KHÔNG KÍCH HOẠT khi: người dùng chỉ muốn tối ưu chất lượng của một prompt đơn lẻ (dùng prompt-optimizer thay thế), hoặc hỏi về hạ tầng cache nói chung."
 metadata:
   origin: community
   author: cyberspace-cs

@@ -1,6 +1,6 @@
 ---
 name: jira-integration
-description: Use this skill when retrieving Jira tickets, analyzing requirements, updating ticket status, adding comments, or transitioning issues. Provides Jira API patterns via MCP or direct REST calls.
+description: Dùng skill này khi lấy ticket Jira, phân tích yêu cầu, cập nhật trạng thái ticket, thêm comment hoặc chuyển trạng thái issue. Cung cấp các pattern Jira API qua MCP hoặc gọi REST trực tiếp.
 metadata:
   origin: ECC
 ---

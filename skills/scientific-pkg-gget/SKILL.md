@@ -1,6 +1,6 @@
 ---
 name: scientific-pkg-gget
-description: gget CLI and Python workflow for quick genomic database queries, sequence lookup, BLAST-style searches, enrichment checks, and reproducible bioinformatics evidence logs. Use when a task needs quick bioinformatics lookup across genomic reference databases with the gget CLI or Python package.
+description: Workflow gget CLI và Python cho query nhanh cơ sở dữ liệu gen, tra cứu trình tự, tìm kiếm kiểu BLAST, kiểm tra enrichment và log bằng chứng tin sinh học có thể tái lập. Dùng khi tác vụ cần tra cứu tin sinh học nhanh trên các cơ sở dữ liệu tham chiếu gen bằng gget CLI hoặc package Python.
 metadata:
   origin: community
 ---

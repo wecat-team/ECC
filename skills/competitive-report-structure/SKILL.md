@@ -1,6 +1,6 @@
 ---
 name: competitive-report-structure
-description: Assemble scored competitor profile cards (from benchmark-methodology) into a decision-grade competitive report with landscape map, competitor tiers, benchmarking matrix, white-space analysis, strategic recommendations, and team alignment trigger questions. Use when presenting competitive findings to leadership or a board, writing a competitive landscape report, or as the final step of the competitive analysis pipeline.
+description: Tổng hợp các profile card đối thủ đã chấm điểm (từ benchmark-methodology) thành một báo cáo cạnh tranh đủ chất lượng để ra quyết định, gồm bản đồ bối cảnh, các tầng đối thủ, ma trận benchmark, phân tích khoảng trống thị trường (white-space), khuyến nghị chiến lược và các câu hỏi gợi mở để thống nhất team. Dùng khi trình bày kết quả cạnh tranh cho ban lãnh đạo hoặc hội đồng quản trị, viết báo cáo bối cảnh cạnh tranh, hoặc làm bước cuối của pipeline phân tích cạnh tranh.
 ---
 
 # Competitive Report Structure

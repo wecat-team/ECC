@@ -1,6 +1,6 @@
 ---
 name: defi-amm-security
-description: Security checklist for Solidity AMM contracts, liquidity pools, and swap flows. Covers reentrancy, CEI ordering, donation or inflation attacks, oracle manipulation, slippage, admin controls, and integer math. Use when auditing or writing Solidity AMM, liquidity pool, or swap code.
+description: Checklist bảo mật cho smart contract AMM Solidity, liquidity pool và luồng swap. Bao gồm reentrancy, thứ tự CEI, tấn công donation hoặc inflation, thao túng oracle, slippage, quyền kiểm soát admin và toán số nguyên. Dùng khi audit hoặc viết code AMM, liquidity pool hoặc swap bằng Solidity.
 metadata:
   version: "1.0.0"
   origin: ECC direct-port adaptation

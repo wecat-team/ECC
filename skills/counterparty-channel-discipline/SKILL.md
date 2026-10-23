@@ -1,6 +1,6 @@
 ---
 name: counterparty-channel-discipline
-description: Per-channel strict prompts, mention gating, silent observation, and a communication autonomy policy for agents that sit in shared channels with external counterparties. Use when an agent joins group chats, shared channels, or DMs where outsiders can read every message and you need it to speak only when addressed, never leak internal context, and route risky content to draft-only approval.
+description: Prompt nghiêm ngặt theo từng kênh, chặn theo mention, quan sát im lặng và chính sách tự chủ giao tiếp cho các agent ở trong kênh chung với đối tác bên ngoài. Dùng khi một agent tham gia group chat, kênh chung hoặc DM nơi người ngoài đọc được mọi tin nhắn và bạn cần nó chỉ lên tiếng khi được gọi, không bao giờ làm lộ context nội bộ, và chuyển nội dung rủi ro sang chế độ chỉ soạn nháp chờ duyệt.
 ---
 
 # Counterparty Channel Discipline

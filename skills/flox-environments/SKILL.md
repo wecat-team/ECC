@@ -1,6 +1,6 @@
 ---
 name: flox-environments
-description: "Create reproducible, cross-platform (macOS/Linux) development environments with Flox, a declarative Nix-based environment manager. Use when setting up project toolchains, installing system-level dependencies (compilers, databases, native libs), pinning exact package versions for a team, onboarding developers, running local services (PostgreSQL, Redis, Kafka), or solving 'works on my machine' problems — including agent/vibe-coding setups that need project-scoped tools without sudo. Also use when the user mentions .flox/, manifest.toml, flox activate, or FloxHub."
+description: Tạo môi trường phát triển tái lập được, đa nền tảng (macOS/Linux) với Flox, một trình quản lý môi trường khai báo dựa trên Nix. Dùng khi thiết lập toolchain cho dự án, cài dependency cấp hệ thống (compiler, database, native lib), cố định chính xác phiên bản package cho team, onboarding developer, chạy service local (PostgreSQL, Redis, Kafka), hoặc giải quyết vấn đề 'works on my machine' — bao gồm cả các setup agent/vibe-coding cần công cụ theo phạm vi dự án mà không cần sudo. Cũng dùng khi người dùng nhắc đến .flox/, manifest.toml, flox activate hoặc FloxHub.
 metadata:
   origin: Flox
 ---

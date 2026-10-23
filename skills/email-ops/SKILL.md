@@ -1,6 +1,6 @@
 ---
 name: email-ops
-description: Evidence-first mailbox triage, drafting, send verification, and sent-mail-safe follow-up workflow for ECC. Use when the user wants to organize email, draft or send through the real mail surface, or prove what landed in Sent.
+description: Workflow phân loại (triage) hộp thư, soạn nháp, xác minh việc gửi và follow-up an toàn với thư đã gửi cho ECC, theo hướng bằng chứng trước tiên. Dùng khi người dùng muốn sắp xếp email, soạn hoặc gửi qua giao diện mail thực, hoặc chứng minh những gì đã vào mục Sent.
 metadata:
   origin: ECC
 ---

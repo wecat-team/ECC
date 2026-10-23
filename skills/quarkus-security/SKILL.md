@@ -1,6 +1,6 @@
 ---
 name: quarkus-security
-description: "Quarkus security implementation patterns: JWT and OIDC authentication, @RolesAllowed RBAC and SecurityIdentity checks, Bean Validation and custom validators, parameterized Panache queries, BCrypt password hashing, CORS and security headers, rate limiting, audit logging, Vault or environment-variable secrets, and dependency CVE scanning. Use when adding authentication or authorization, validating input, managing secrets, or hardening a Quarkus application."
+description: "Các pattern triển khai bảo mật Quarkus: xác thực JWT và OIDC, RBAC với @RolesAllowed và kiểm tra SecurityIdentity, Bean Validation và validator tùy chỉnh, query Panache tham số hóa, hash mật khẩu bằng BCrypt, CORS và security header, rate limiting, audit logging, secret qua Vault hoặc biến môi trường, và quét CVE của dependency. Dùng khi thêm authentication hoặc authorization, validate đầu vào, quản lý secret hoặc gia cố một ứng dụng Quarkus."
 metadata:
   origin: ECC
 ---

@@ -1,6 +1,6 @@
 ---
 name: security-review
-description: Use this skill when adding authentication, handling user input, working with secrets, creating API endpoints, or implementing payment/sensitive features. Provides comprehensive security checklist and patterns.
+description: Dùng skill này khi thêm authentication, xử lý đầu vào của người dùng, làm việc với secret, tạo API endpoint hoặc triển khai tính năng thanh toán/nhạy cảm. Cung cấp checklist và pattern bảo mật toàn diện.
 metadata:
   origin: ECC
 ---

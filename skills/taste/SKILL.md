@@ -1,6 +1,6 @@
 ---
 name: taste
-description: Creative-direction layer for music videos and short-form edits in the angelcore / cloud-trance / hyperpop family — a named-genre aesthetic vocabulary, mood + color + light system, beat-synced editing grammar, and a pipeline chaining ECC's video skills from b-roll generation to distribution. Use when a video must feel intentional rather than merely functional — music videos, fancams, moodboard-driven reels, or giving AI-generated b-roll a coherent visual direction.
+description: Lớp định hướng sáng tạo cho music video và bản edit ngắn thuộc dòng angelcore / cloud-trance / hyperpop — bộ từ vựng thẩm mỹ theo tên thể loại, hệ thống mood + màu sắc + ánh sáng, ngữ pháp edit khớp nhịp (beat-synced) và một pipeline nối các skill video của ECC từ tạo b-roll đến phân phối. Dùng khi một video phải mang cảm giác có chủ đích thay vì chỉ đơn thuần dùng được — music video, fancam, reel dựa trên moodboard, hoặc tạo định hướng hình ảnh nhất quán cho b-roll do AI sinh ra.
 origin: ECC
 ---
 

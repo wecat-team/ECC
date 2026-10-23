@@ -1,6 +1,6 @@
 ---
 name: manim-video
-description: Build reusable Manim explainers for technical concepts, graphs, system diagrams, and product walkthroughs, then hand off to the wider ECC video stack if needed. Use when the user wants a clean animated explainer rather than a generic talking-head script.
+description: Xây dựng video giải thích bằng Manim có thể tái sử dụng cho các khái niệm kỹ thuật, đồ thị, sơ đồ hệ thống và walkthrough sản phẩm, rồi chuyển giao cho bộ công cụ video rộng hơn của ECC nếu cần. Dùng khi người dùng muốn một video giải thích dạng animation gọn gàng thay vì một kịch bản talking-head chung chung.
 metadata:
   origin: ECC
 ---

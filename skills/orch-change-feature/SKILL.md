@@ -1,6 +1,6 @@
 ---
 name: orch-change-feature
-description: Orchestrate altering an existing, working feature to new desired behavior — update its tests to the new spec, change the implementation to match, review, and gated commit. Use when behavior is not broken but should be different.
+description: Điều phối việc thay đổi một tính năng hiện có, đang hoạt động sang hành vi mong muốn mới — cập nhật test theo spec mới, sửa phần triển khai cho khớp, review và commit có cổng kiểm soát. Dùng khi hành vi không bị hỏng nhưng cần khác đi.
 metadata:
   origin: ECC
 ---

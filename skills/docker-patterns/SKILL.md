@@ -1,6 +1,6 @@
 ---
 name: docker-patterns
-description: Docker and Docker Compose patterns for local development, hardened CLI installer harnesses, container security, networking, volumes, and multi-service orchestration. Use when creating or reviewing Dockerfiles and Compose services, testing installers across Linux distributions, or planning accurate native macOS and Windows validation.
+description: Các pattern Docker và Docker Compose cho phát triển local, harness cài đặt CLI được gia cố (hardened), bảo mật container, networking, volume và điều phối nhiều service. Dùng khi tạo hoặc review Dockerfile và service Compose, test installer trên nhiều bản phân phối Linux, hoặc lập kế hoạch xác thực chính xác trên macOS và Windows native.
 ---
 
 # Docker Patterns

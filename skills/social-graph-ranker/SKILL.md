@@ -1,6 +1,6 @@
 ---
 name: social-graph-ranker
-description: Weighted social-graph ranking for warm intro discovery, bridge scoring, and network gap analysis across X and LinkedIn. Use when the user wants the reusable graph-ranking engine itself, not the broader outreach or network-maintenance workflow layered on top of it.
+description: Xếp hạng social graph có trọng số để tìm cơ hội giới thiệu qua người quen (warm intro), chấm điểm cầu nối và phân tích khoảng trống mạng lưới trên X và LinkedIn. Dùng khi người dùng muốn chính engine xếp hạng graph có thể tái sử dụng, chứ không phải workflow outreach hay duy trì mạng lưới rộng hơn được xây bên trên nó.
 metadata:
   origin: ECC
 ---

@@ -1,6 +1,6 @@
 ---
 name: operator-approval-loop
-description: Operator approval contract with internal filing notices for agent-drafted outbound messages, hashed drafts, epoch-keyed decisions, durable delivery claims and receipts, and a pre-draft baseline gate. Use when an agent drafts messages to external counterparties and a human operator must approve, reject, or steer each send before it leaves.
+description: Contract phê duyệt của operator với thông báo lưu hồ sơ nội bộ cho các tin nhắn gửi ra ngoài do agent soạn, bản nháp được hash, quyết định gắn khóa theo epoch, xác nhận gửi và biên nhận lưu bền vững, cùng một cổng baseline trước khi soạn nháp. Dùng khi agent soạn tin nhắn gửi đối tác bên ngoài và một operator là người phải phê duyệt, từ chối hoặc điều chỉnh từng lần gửi trước khi tin nhắn đi.
 ---
 
 # Operator Approval Loop

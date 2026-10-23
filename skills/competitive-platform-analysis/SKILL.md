@@ -1,6 +1,6 @@
 ---
 name: competitive-platform-analysis
-description: Use when scoping a competitive landscape — identifying, categorising, and score-filtering a competitor set before any benchmarking begins. Decides who counts as a competitor, which tier they belong to, and which sources to mine. First step in the three-skill competitive pipeline; precedes benchmark-methodology.
+description: Dùng khi khoanh vùng bối cảnh cạnh tranh — xác định, phân loại và lọc theo điểm một tập đối thủ trước khi bắt đầu benchmark. Quyết định ai được tính là đối thủ, họ thuộc tầng nào và nên khai thác những nguồn nào. Bước đầu tiên trong pipeline cạnh tranh ba skill; đi trước benchmark-methodology.
 ---
 
 # Competitive Platform Analysis

@@ -1,6 +1,6 @@
 ---
 name: returns-reverse-logistics
-description: Codified expertise for returns authorization, receipt and inspection, disposition decisions, refund processing, fraud detection, and warranty claims management. Informed by returns operations managers with 15+ years experience. Includes grading frameworks, disposition economics, fraud pattern recognition, and vendor recovery processes. Use when handling product returns, reverse logistics, refund decisions, return fraud detection, or warranty claims.
+description: Chuyên môn được hệ thống hóa cho việc cấp phép trả hàng, tiếp nhận và kiểm tra, quyết định xử lý (disposition), xử lý hoàn tiền, phát hiện gian lận và quản lý yêu cầu bảo hành. Được đúc kết từ các quản lý vận hành trả hàng có hơn 15 năm kinh nghiệm. Bao gồm framework phân loại, kinh tế học của việc xử lý hàng trả, nhận diện pattern gian lận và quy trình thu hồi từ nhà cung cấp. Dùng khi xử lý hàng trả lại, logistics ngược, quyết định hoàn tiền, phát hiện gian lận trả hàng hoặc yêu cầu bảo hành.
 license: Apache-2.0
 homepage: https://github.com/affaan-m/ECC
 metadata:

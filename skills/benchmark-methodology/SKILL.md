@@ -1,6 +1,6 @@
 ---
 name: benchmark-methodology
-description: "Score a scoped competitor set into comparable profile cards: nine weighted dimensions (positioning, voice, visual craft, offer packaging, evidence, enterprise-readiness, thought leadership, pricing, client tension) with 1-5 evidence-anchored rubrics and a tension 2x2 plot. Use when benchmarking or scoring competitors, building a competitive comparison matrix, or grading rival positioning before assembling the report; runs after competitive-platform-analysis and before competitive-report-structure."
+description: "Chấm điểm một tập đối thủ đã khoanh vùng thành các profile card có thể so sánh: chín chiều có trọng số (định vị, giọng văn, chất lượng thị giác, đóng gói offer, bằng chứng, mức sẵn sàng cho enterprise, thought leadership, định giá, client tension) với rubric 1-5 neo vào bằng chứng và biểu đồ tension 2x2. Dùng khi benchmark hoặc chấm điểm đối thủ, xây dựng ma trận so sánh cạnh tranh hoặc đánh giá định vị của đối thủ trước khi lập báo cáo; chạy sau competitive-platform-analysis và trước competitive-report-structure."
 license: MIT
 ---
 

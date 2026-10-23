@@ -1,6 +1,6 @@
 ---
 name: documentation-lookup
-description: Use up-to-date library and framework docs via Context7 MCP instead of training data. Activates for setup questions, API references, code examples, or when the user names a framework (e.g. React, Next.js, Prisma).
+description: Dùng tài liệu thư viện và framework cập nhật qua Context7 MCP thay vì dữ liệu huấn luyện. Kích hoạt cho câu hỏi về setup, tham chiếu API, ví dụ code, hoặc khi người dùng nêu tên một framework (ví dụ React, Next.js, Prisma).
 metadata:
   origin: ECC
 ---

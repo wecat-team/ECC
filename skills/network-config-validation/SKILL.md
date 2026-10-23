@@ -1,6 +1,6 @@
 ---
 name: network-config-validation
-description: Pre-deployment checks for router and switch configuration, including dangerous commands, duplicate addresses, subnet overlaps, stale references, management-plane risk, and IOS-style security hygiene. Use when reviewing a router or switch configuration before deployment.
+description: Kiểm tra trước khi deploy cho cấu hình router và switch, gồm lệnh nguy hiểm, địa chỉ trùng lặp, subnet chồng lấn, tham chiếu cũ (stale), rủi ro management-plane và vệ sinh bảo mật kiểu IOS. Dùng khi review cấu hình router hoặc switch trước khi deploy.
 metadata:
   origin: community
 ---

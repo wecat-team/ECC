@@ -1,6 +1,6 @@
 ---
 name: homelab-network-setup
-description: Practical home and homelab network planning for gateways, switches, access points, IP ranges, DHCP reservations, DNS, cabling, and common beginner mistakes. Use when planning or fixing a home or homelab network — gateway, switch, AP, IP ranges, DHCP, DNS, or cabling.
+description: Lập kế hoạch thực tế cho mạng gia đình và homelab về gateway, switch, access point, dải IP, DHCP reservation, DNS, đi dây và các lỗi phổ biến của người mới. Dùng khi lập kế hoạch hoặc sửa mạng gia đình hay homelab — gateway, switch, AP, dải IP, DHCP, DNS hoặc đi dây.
 metadata:
   origin: community
 ---

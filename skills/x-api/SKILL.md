@@ -1,6 +1,6 @@
 ---
 name: x-api
-description: X/Twitter API integration for posting tweets, threads, reading timelines, search, and analytics. Covers OAuth auth patterns, rate limits, and platform-native content posting. Use when the user wants to interact with X programmatically.
+description: Tích hợp X/Twitter API để đăng tweet, thread, đọc timeline, tìm kiếm và analytics. Bao quát các pattern xác thực OAuth, rate limit và đăng nội dung theo kiểu native của nền tảng. Dùng khi người dùng muốn tương tác với X bằng lập trình.
 metadata:
   origin: ECC
 ---

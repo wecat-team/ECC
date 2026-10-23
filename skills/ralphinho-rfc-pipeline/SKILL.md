@@ -1,6 +1,6 @@
 ---
 name: ralphinho-rfc-pipeline
-description: Split an RFC into a multi-agent execution DAG — decompose into work units with dependencies and acceptance tests, run research, plan, implement, test, and review per unit, then merge through a queue with re-based branches and final system verification. Use when a feature is too large for a single agent pass, orchestrating RFC-driven multi-agent execution, or managing merge queues across agent-built units.
+description: Chia một RFC thành DAG thực thi đa agent — phân rã thành các đơn vị công việc có dependency và acceptance test, chạy nghiên cứu, lập kế hoạch, triển khai, test và review cho từng đơn vị, rồi merge qua một hàng đợi với các branch đã rebase và xác minh toàn hệ thống cuối cùng. Dùng khi một tính năng quá lớn cho một lượt agent đơn lẻ, khi điều phối thực thi đa agent dựa trên RFC, hoặc khi quản lý merge queue giữa các đơn vị do agent xây dựng.
 metadata:
   origin: ECC
 ---

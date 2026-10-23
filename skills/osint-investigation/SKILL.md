@@ -1,6 +1,6 @@
 ---
 name: osint-investigation
-description: Sparse-clue OSINT investigation methodology for extracting overlooked leads, connecting fragmented evidence, and testing explanations across sources. Use for multi-step CTF challenges, image/video geolocation, event reconstruction, public-account and entity verification, artifact interpretation, infrastructure research, or stalled investigations.
+description: Phương pháp điều tra OSINT từ manh mối thưa thớt để khai thác các đầu mối bị bỏ sót, kết nối bằng chứng rời rạc và kiểm chứng các giả thuyết qua nhiều nguồn. Dùng cho thử thách CTF nhiều bước, xác định vị trí địa lý từ ảnh/video, tái dựng sự kiện, xác minh tài khoản công khai và thực thể, diễn giải artifact, nghiên cứu hạ tầng, hoặc các cuộc điều tra đang bế tắc.
 license: CC-BY-SA-4.0
 metadata:
   origin: Adapted from shoyann/RZK-The-Hunter

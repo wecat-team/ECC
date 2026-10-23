@@ -1,6 +1,6 @@
 ---
 name: prompt-optimizer
-description: Analyze draft prompts, detect intent and missing context, match ECC commands, skills, and agents, and output a ready-to-paste optimized prompt with diagnosis and rationale — advisory only, never executes the task. Use when the user says 'optimize prompt', 'improve my prompt', 'rewrite this prompt', 'help me prompt', 优化prompt, 改进prompt, 怎么写prompt, or 帮我优化这个指令; not for requests to optimize code or performance.
+description: Phân tích prompt nháp, phát hiện ý định và context còn thiếu, đối chiếu với command, skill và agent của ECC, và xuất ra prompt đã tối ưu sẵn sàng để dán kèm chẩn đoán và lý do — chỉ tư vấn, không bao giờ thực thi tác vụ. Dùng khi người dùng nói 'optimize prompt', 'improve my prompt', 'rewrite this prompt', 'help me prompt', 优化prompt, 改进prompt, 怎么写prompt hoặc 帮我优化这个指令; không dùng cho yêu cầu tối ưu code hoặc hiệu năng.
 metadata:
   origin: community
   author: YannJY02

@@ -1,6 +1,6 @@
 ---
 name: esign-field-placement
-description: Deterministic method for placing signature, date, and text fields in a web e-signature composer through a browser automation session, using a fixed signature page, numeric Location panel coordinates instead of drag, and a save-as-draft default. Use when automating envelope preparation for generated agreements and you need repeatable field positions, correct per-recipient ownership, and a hard gate before anything is sent or signed.
+description: Phương pháp xác định (deterministic) để đặt trường chữ ký, ngày và văn bản trong trình soạn chữ ký điện tử trên web thông qua một phiên browser automation, dùng trang chữ ký cố định, tọa độ số trong panel Location thay vì kéo thả, và mặc định lưu bản nháp. Dùng khi tự động hóa việc chuẩn bị envelope cho các thỏa thuận được sinh ra và cần vị trí trường lặp lại được, quyền sở hữu đúng theo từng người nhận, và một chốt chặn cứng trước khi bất cứ thứ gì được gửi hoặc ký.
 ---
 
 # E-Signature Field Placement

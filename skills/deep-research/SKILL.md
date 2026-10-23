@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: Produce cited research reports from multiple web sources using firecrawl and exa MCP tools — plan sub-questions, search and deep-read sources, then synthesize findings with inline citations and confidence levels. Use when the user asks to research a topic in depth, run a deep dive or investigation, or do competitive analysis, technology evaluation, market sizing, or due diligence on a company.
+description: Tạo báo cáo nghiên cứu có trích dẫn từ nhiều nguồn web bằng các MCP tool firecrawl và exa — lập các câu hỏi con, tìm kiếm và đọc sâu các nguồn, rồi tổng hợp kết quả kèm trích dẫn inline và mức độ tin cậy. Dùng khi người dùng yêu cầu nghiên cứu sâu một chủ đề, đào sâu hoặc điều tra, hoặc làm phân tích cạnh tranh, đánh giá công nghệ, ước tính quy mô thị trường hay due diligence về một công ty.
 metadata:
   origin: ECC
 ---

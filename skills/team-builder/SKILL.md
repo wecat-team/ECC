@@ -1,6 +1,6 @@
 ---
 name: team-builder
-description: Interactive picker that discovers available agent personas via the claude agents command and agents/ markdown globs, groups them into domains, has the user select up to five, dispatches them in parallel on one task, and synthesizes agreements and conflicts into a unified report. Use when composing a team of agents, browsing available agent personas, or running several specialist agents in parallel.
+description: Bộ chọn tương tác phát hiện các agent persona có sẵn qua lệnh claude agents và các glob markdown agents/, nhóm chúng theo lĩnh vực, cho người dùng chọn tối đa năm agent, giao chúng chạy song song trên một tác vụ, và tổng hợp các điểm đồng thuận và mâu thuẫn thành một báo cáo thống nhất. Dùng khi lập một đội agent, duyệt các agent persona có sẵn hoặc chạy nhiều agent chuyên gia song song.
 metadata:
   origin: community
 ---

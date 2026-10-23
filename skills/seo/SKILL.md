@@ -1,6 +1,6 @@
 ---
 name: seo
-description: Audit, plan, and implement SEO improvements across technical SEO, on-page optimization, structured data, Core Web Vitals, and content strategy. Use when the user wants better search visibility, SEO remediation, schema markup, sitemap/robots work, or keyword mapping.
+description: Audit, lập kế hoạch và triển khai các cải tiến SEO trên SEO kỹ thuật, tối ưu on-page, structured data, Core Web Vitals và chiến lược nội dung. Dùng khi người dùng muốn tăng khả năng hiển thị trên công cụ tìm kiếm, khắc phục SEO, schema markup, xử lý sitemap/robots hoặc keyword mapping.
 metadata:
   origin: ECC
 ---

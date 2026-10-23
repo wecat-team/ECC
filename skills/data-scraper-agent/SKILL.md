@@ -1,6 +1,6 @@
 ---
 name: data-scraper-agent
-description: Build a fully automated AI-powered data collection agent for any public source — job boards, prices, news, GitHub, sports, anything. Runs on a schedule, enriches data with a free LLM (Gemini Flash), stores results in Notion/Sheets/Supabase, and learns from user feedback. Runs 100% free on GitHub Actions. Use when the user wants to monitor, collect, or track any public data automatically.
+description: Xây dựng một agent thu thập dữ liệu chạy bằng AI, tự động hoàn toàn cho bất kỳ nguồn công khai nào — trang tuyển dụng, giá cả, tin tức, GitHub, thể thao, bất cứ thứ gì. Chạy theo lịch, làm giàu dữ liệu bằng một LLM miễn phí (Gemini Flash), lưu kết quả vào Notion/Sheets/Supabase và học từ phản hồi của người dùng. Chạy miễn phí 100% trên GitHub Actions. Dùng khi người dùng muốn giám sát, thu thập hoặc theo dõi bất kỳ dữ liệu công khai nào một cách tự động.
 metadata:
   origin: community
 ---

@@ -1,6 +1,6 @@
 ---
 name: ai-first-engineering
-description: Engineering operating model for teams where AI agents generate a large share of implementation output. Use when setting team process, review gates, or ownership rules for a codebase largely written by agents.
+description: Mô hình vận hành kỹ thuật cho các team mà AI agent tạo ra phần lớn output triển khai. Dùng khi thiết lập quy trình team, review gate hoặc quy tắc ownership cho một codebase phần lớn do agent viết.
 metadata:
   origin: ECC
 ---

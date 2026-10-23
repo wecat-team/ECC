@@ -1,6 +1,6 @@
 ---
 name: orch-pipeline
-description: Shared orchestration engine behind the orch-* skill family — the gated Research-Plan-TDD-Review-Commit pipeline, size classifier, agent and command map, and two human gates (plan approval, commit confirmation) that orch-* operation skills delegate to. Use indirectly via orch-add-feature, orch-fix-defect, orch-change-feature, orch-refine-code, or orch-build-mvp; read directly only when adding an orch operation or tuning shared phases.
+description: Engine điều phối dùng chung phía sau họ skill orch-* — pipeline Research-Plan-TDD-Review-Commit có cổng kiểm soát, bộ phân loại kích thước, bản đồ agent và command, cùng hai cổng con người (phê duyệt kế hoạch, xác nhận commit) mà các skill thao tác orch-* ủy quyền tới. Dùng gián tiếp qua orch-add-feature, orch-fix-defect, orch-change-feature, orch-refine-code hoặc orch-build-mvp; chỉ đọc trực tiếp khi thêm một thao tác orch hoặc tinh chỉnh các giai đoạn dùng chung.
 metadata:
   origin: ECC
 ---

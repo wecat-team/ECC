@@ -1,6 +1,6 @@
 ---
 name: autonomous-loops
-description: "Patterns and architectures for autonomous Claude Code loops — from simple sequential pipelines to RFC-driven multi-agent DAG systems. Retained for compatibility only: when new autonomous loop guidance is needed, use continuous-agent-loop instead."
+description: "Các pattern và kiến trúc cho vòng lặp Claude Code tự trị — từ pipeline tuần tự đơn giản đến hệ thống DAG multi-agent dẫn dắt bởi RFC. Chỉ giữ lại để tương thích: khi cần hướng dẫn mới về vòng lặp tự trị, hãy dùng continuous-agent-loop thay thế."
 metadata:
   origin: ECC
 ---

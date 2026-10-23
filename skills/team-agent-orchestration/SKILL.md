@@ -1,6 +1,6 @@
 ---
 name: team-agent-orchestration
-description: "Run team-based orchestration for agent squads: work items with owners and scope, agent Kanban state, branch isolation, control pane visibility, and merge gates. Use when coordinating multiple agents in parallel across branches or worktrees — multi-agent fan-out, agent Kanban, squad coordination, or merging agent output into one product."
+description: "Chạy điều phối theo nhóm cho các đội agent: work item có người sở hữu và phạm vi, trạng thái Kanban của agent, cô lập branch, khả năng quan sát qua control pane và merge gate. Dùng khi điều phối nhiều agent song song trên các branch hoặc worktree — fan-out đa agent, Kanban cho agent, điều phối đội, hoặc merge đầu ra của các agent thành một sản phẩm."
 metadata:
   origin: ECC
 ---

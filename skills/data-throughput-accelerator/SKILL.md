@@ -1,6 +1,6 @@
 ---
 name: data-throughput-accelerator
-description: Diagnose and accelerate large data movement — ingestion, backfill, export, ETL, warehouse loading, manifest catch-up, and table synchronization — by isolating the true bottleneck, benchmarking variants, and codifying the fastest path with a hard accounting block proving rows and timestamps cohere. Use when a pipeline or backfill is too slow and must get faster without losing data correctness.
+description: Chẩn đoán và tăng tốc việc di chuyển dữ liệu lớn — ingestion, backfill, export, ETL, nạp vào warehouse, bắt kịp manifest và đồng bộ bảng — bằng cách cô lập bottleneck thực sự, benchmark các biến thể và hệ thống hóa đường đi nhanh nhất kèm một khối đối soát chặt chẽ chứng minh số dòng và timestamp khớp nhau. Dùng khi một pipeline hoặc backfill quá chậm và phải nhanh hơn mà không mất tính đúng đắn của dữ liệu.
 license: MIT
 metadata:
   origin: ECC

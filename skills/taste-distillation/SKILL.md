@@ -1,6 +1,6 @@
 ---
 name: taste-distillation
-description: Measure a set of reference videos into a reusable style pack - colour grade as a 3D LUT, cut rhythm as a shot-length distribution, hero stills, screen-blend overlay plates, and a text spec for a generative model. Use when the user wants to capture the look of reference footage, build a repeatable look, mint assets from references, or reproduce someone's grade and pacing.
+description: Đo một tập video tham chiếu thành một style pack có thể tái sử dụng - chỉnh màu dưới dạng 3D LUT, nhịp cắt dưới dạng phân phối độ dài cảnh quay, hero still, overlay plate dạng screen-blend và một text spec cho model sinh. Dùng khi người dùng muốn nắm bắt look của footage tham chiếu, xây dựng một look có thể lặp lại, tạo asset từ video tham chiếu, hoặc tái tạo cách chỉnh màu và nhịp độ của ai đó.
 metadata:
   origin: ECC
 ---

@@ -1,6 +1,6 @@
 ---
 name: cost-aware-llm-pipeline
-description: Cost optimization patterns for LLM API usage — model routing by task complexity, budget tracking, retry logic, and prompt caching. Use when LLM spend needs to come down, or when routing tasks across model tiers and budgets.
+description: Các pattern tối ưu chi phí khi dùng LLM API — định tuyến model theo độ phức tạp tác vụ, theo dõi ngân sách, logic retry và prompt caching. Dùng khi cần giảm chi tiêu cho LLM, hoặc khi định tuyến tác vụ qua các tầng model và ngân sách.
 metadata:
   origin: ECC
 ---

@@ -1,7 +1,6 @@
 ---
 name: change-impact
-description: >-
-  Perform evidence-backed impact analysis before changing code, data, interfaces, or governance documents, then compare the planned impact with the actual diff after implementation. Covers call paths, data and schema, API contracts, tests, documentation, ADRs, deployment, migration, and rollback. Use for cross-module or high-risk changes, database migrations, authentication, public interfaces, blast-radius questions, pre-change checks, and post-implementation alignment.
+description: Phân tích tác động dựa trên bằng chứng trước khi thay đổi code, dữ liệu, interface hoặc tài liệu quản trị, rồi so sánh tác động dự kiến với diff thực tế sau khi triển khai. Bao gồm call path, dữ liệu và schema, API contract, test, tài liệu, ADR, deploy, migration và rollback. Dùng cho các thay đổi xuyên module hoặc rủi ro cao, database migration, authentication, public interface, câu hỏi về phạm vi ảnh hưởng (blast radius), kiểm tra trước khi thay đổi và đối chiếu sau khi triển khai.
 ---
 
 # Change Impact Analysis

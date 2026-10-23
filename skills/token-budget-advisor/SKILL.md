@@ -1,6 +1,6 @@
 ---
 name: token-budget-advisor
-description: Offer a choice of response depth (25%/50%/75%/100%) with token estimates before answering, then answer at that level. Use when the user asks to control response length or token budget, such as 'token budget', 'short version', 'brief answer', 'respuesta corta vs larga', 'cuántos tokens', 'ahorrar tokens', 'responde al 50%', 'dame la versión corta', 'quiero controlar cuánto usas'. Skip if depth is already set this session or 'token' means an auth/payment token.
+description: Đưa ra lựa chọn độ sâu câu trả lời (25%/50%/75%/100%) kèm ước tính token trước khi trả lời, rồi trả lời ở mức đó. Dùng khi người dùng muốn kiểm soát độ dài câu trả lời hoặc token budget, chẳng hạn 'token budget', 'short version', 'brief answer', 'respuesta corta vs larga', 'cuántos tokens', 'ahorrar tokens', 'responde al 50%', 'dame la versión corta', 'quiero controlar cuánto usas'. Bỏ qua nếu độ sâu đã được đặt trong phiên này hoặc 'token' nghĩa là token xác thực/thanh toán.
 metadata:
   origin: community
 ---

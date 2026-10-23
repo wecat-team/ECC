@@ -1,7 +1,6 @@
 ---
 name: module-regression
-description: >-
-  Govern cross-module regression in large repositories with a REGRESSION.md ledger that records each module's downstream consumers and executable acceptance command. After a change, run the changed module and every affected downstream command, and use observed exit codes as regression evidence under the project's delivery policy. Use for module regression, regression ledgers, impact audits, downstream verification, and changes where modifying A may break B.
+description: Quản lý regression xuyên module trong các repository lớn bằng một sổ ghi REGRESSION.md, ghi lại các consumer downstream của từng module và lệnh acceptance có thể thực thi. Sau một thay đổi, chạy module đã thay đổi cùng mọi lệnh downstream bị ảnh hưởng, và dùng exit code quan sát được làm bằng chứng regression theo chính sách delivery của dự án. Dùng cho regression module, sổ ghi regression, audit tác động, xác minh downstream và các thay đổi mà sửa A có thể làm hỏng B.
 metadata:
   origin: ECC
 ---

@@ -1,6 +1,6 @@
 ---
 name: scientific-thinking-literature-review
-description: Systematic literature-review workflow for academic, biomedical, technical, and scientific topics, including search planning, source screening, synthesis, citation checks, and evidence logging. Use when the task is to find, screen, synthesize, and cite a body of academic or technical literature.
+description: Workflow tổng quan tài liệu có hệ thống cho các chủ đề học thuật, y sinh, kỹ thuật và khoa học, gồm lập kế hoạch tìm kiếm, sàng lọc nguồn, tổng hợp, kiểm tra trích dẫn và ghi log bằng chứng. Dùng khi tác vụ là tìm, sàng lọc, tổng hợp và trích dẫn một tập tài liệu học thuật hoặc kỹ thuật.
 metadata:
   origin: community
 ---

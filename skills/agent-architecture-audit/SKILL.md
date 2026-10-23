@@ -1,6 +1,6 @@
 ---
 name: agent-architecture-audit
-description: Full-stack diagnostic for agent and LLM applications. Audits the 12-layer agent stack for wrapper regression, memory pollution, tool discipline failures, hidden repair loops, and rendering corruption. Produces severity-ranked findings with code-first fixes. Essential for developers building agent applications, autonomous loops, or any LLM-powered feature. Use when an agent or LLM feature misbehaves and the failing layer is unknown, or before shipping an agent stack.
+description: Chẩn đoán full-stack cho ứng dụng agent và LLM. Audit 12 tầng của agent stack để tìm wrapper regression, ô nhiễm memory, lỗi kỷ luật khi dùng tool, vòng lặp sửa lỗi ẩn và lỗi hiển thị (rendering corruption). Tạo các phát hiện xếp theo mức độ nghiêm trọng kèm bản sửa ưu tiên code. Thiết yếu cho developer xây dựng ứng dụng agent, vòng lặp tự trị hoặc bất kỳ tính năng nào chạy bằng LLM. Dùng khi một agent hoặc tính năng LLM hoạt động sai mà chưa rõ tầng nào hỏng, hoặc trước khi ship một agent stack.
 metadata:
   origin: oh-my-agent-check
 tools: Read, Write, Edit, Bash, Grep, Glob

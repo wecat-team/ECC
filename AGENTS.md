@@ -1,6 +1,7 @@
 # ECC — Hướng dẫn cho Agent
 
 Đây là một **plugin AI coding sẵn sàng cho production**, cung cấp 71 agent chuyên biệt, 311 skill, 97 command và các workflow hook tự động cho phát triển phần mềm.
+<!-- Dòng cho scripts/ci/catalog.js (giữ nguyên tiếng Anh): providing 71 specialized agents, 311 skills, 97 commands -->
 
 **Phiên bản:** 2.2.3
 

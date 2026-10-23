@@ -1,6 +1,6 @@
 ---
 name: docs-governance
-description: Route broad documentation-governance requests to existing ECC skills and run an opt-in, read-only audit of mapped documentation roles, links, ADR indexes, and evidence references. Use when a user asks for documentation governance, project-knowledge organization, documentation integrity, or a deterministic docs audit without naming a narrower skill.
+description: Định tuyến các yêu cầu quản trị tài liệu (documentation governance) chung đến các skill ECC hiện có và chạy một audit chỉ đọc, tùy chọn bật (opt-in), về vai trò tài liệu đã ánh xạ, liên kết, chỉ mục ADR và tham chiếu bằng chứng. Dùng khi người dùng yêu cầu documentation governance, tổ chức tri thức dự án, tính toàn vẹn tài liệu hoặc một audit docs xác định (deterministic) mà không nêu tên skill hẹp hơn.
 metadata:
   origin: ECC
 ---

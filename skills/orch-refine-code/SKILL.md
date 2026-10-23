@@ -1,6 +1,6 @@
 ---
 name: orch-refine-code
-description: Orchestrate a behavior-preserving refactor — confirm tests are green, restructure without changing behavior, keep tests green, review, and gated commit. Use when the structure should improve but behavior must not change.
+description: Điều phối một refactor bảo toàn hành vi — xác nhận test đang xanh, tái cấu trúc mà không đổi hành vi, giữ test xanh, review và commit có cổng kiểm soát. Dùng khi cấu trúc cần cải thiện nhưng hành vi không được thay đổi.
 metadata:
   origin: ECC
 ---

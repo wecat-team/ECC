@@ -1,6 +1,6 @@
 ---
 name: benchmark
-description: Measure performance baselines and detect regressions across browser Core Web Vitals (LCP, INP, CLS, page weight), API endpoint latency percentiles, and build/test feedback times, with before/after comparison stored in git-tracked .ecc/benchmarks JSON. Use when checking page speed, responding to 'it feels slow' reports, verifying launch performance targets, or comparing stack alternatives.
+description: Đo baseline hiệu năng và phát hiện regression trên Core Web Vitals của trình duyệt (LCP, INP, CLS, page weight), percentile độ trễ của API endpoint và thời gian phản hồi của build/test, với so sánh trước/sau được lưu trong JSON .ecc/benchmarks được git theo dõi. Dùng khi kiểm tra tốc độ trang, phản hồi các báo cáo 'it feels slow', xác minh mục tiêu hiệu năng khi launch hoặc so sánh các lựa chọn stack.
 license: MIT
 metadata:
   origin: ECC

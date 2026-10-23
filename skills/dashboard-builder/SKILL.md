@@ -1,6 +1,6 @@
 ---
 name: dashboard-builder
-description: Build monitoring dashboards that answer real operator questions for Grafana, SigNoz, and similar platforms. Use when turning metrics into a working dashboard instead of a vanity board.
+description: Xây dựng dashboard giám sát trả lời được các câu hỏi thực tế của người vận hành cho Grafana, SigNoz và các nền tảng tương tự. Dùng khi biến metrics thành một dashboard thực sự hữu dụng thay vì dashboard chỉ để trưng.
 metadata:
   version: "1.0.0"
   origin: ECC direct-port adaptation

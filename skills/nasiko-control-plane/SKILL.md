@@ -1,6 +1,6 @@
 ---
 name: nasiko-control-plane
-description: Manage the experimental Nasiko CLI lifecycle through ECC — read-only status checks, consent-gated install of the pinned qualified version with dry-run preview, and ownership-checked uninstall, under explicit telemetry and secrets boundaries. Use when the user asks to install, inspect, or remove the Nasiko CLI or check whether it is present.
+description: Quản lý vòng đời Nasiko CLI (thử nghiệm) thông qua ECC — kiểm tra trạng thái chỉ đọc, cài đặt phiên bản đã pin và được kiểm định khi có sự đồng ý kèm xem trước dry-run, và gỡ cài đặt có kiểm tra quyền sở hữu, trong ranh giới tường minh về telemetry và secret. Dùng khi người dùng yêu cầu cài đặt, kiểm tra hoặc gỡ bỏ Nasiko CLI, hoặc kiểm tra xem nó có hiện diện không.
 ---
 
 # Nasiko CLI Lifecycle Bridge

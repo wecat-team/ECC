@@ -1,6 +1,6 @@
 ---
 name: brand-discovery
-description: Run a structured, resumable multi-session brand identity interview across 8 modules (purpose, positioning, audience, personality, voice, narrative, founder tension) using laddering, 5 Whys, and projective techniques, persisting answers to disk and producing a master brandbook (90_SYNTHESIS.md). Use when creating or repositioning a brand, briefing designers or writers, or making implicit founder knowledge explicit.
+description: Thực hiện một cuộc phỏng vấn nhận diện thương hiệu có cấu trúc, nhiều phiên và có thể tiếp tục, qua 8 module (mục đích, định vị, đối tượng, tính cách, giọng văn, câu chuyện, founder tension) bằng kỹ thuật laddering, 5 Whys và kỹ thuật phóng chiếu (projective), lưu câu trả lời xuống đĩa và tạo ra một brandbook tổng (90_SYNTHESIS.md). Dùng khi tạo mới hoặc tái định vị thương hiệu, brief cho designer hoặc người viết, hoặc biến hiểu biết ngầm của founder thành tường minh.
 ---
 
 # Brand Discovery

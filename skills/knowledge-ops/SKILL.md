@@ -1,6 +1,6 @@
 ---
 name: knowledge-ops
-description: Knowledge base management, ingestion, sync, and retrieval across multiple storage layers (local files, MCP memory, vector stores, Git repos). Use when the user wants to save, organize, sync, deduplicate, or search across their knowledge systems.
+description: Quản lý knowledge base, nạp dữ liệu (ingestion), đồng bộ và truy xuất trên nhiều tầng lưu trữ (file local, MCP memory, vector store, Git repo). Dùng khi người dùng muốn lưu, sắp xếp, đồng bộ, loại bỏ trùng lặp hoặc tìm kiếm trên các hệ thống tri thức của mình.
 metadata:
   origin: ECC
 ---

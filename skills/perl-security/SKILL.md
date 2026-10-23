@@ -1,6 +1,6 @@
 ---
 name: perl-security
-description: Comprehensive Perl security covering taint mode, input validation, safe process execution, DBI parameterized queries, web security (XSS/SQLi/CSRF), and perlcritic security policies. Use when reviewing Perl input handling, process execution, DBI queries, or web-facing code.
+description: Bảo mật Perl toàn diện gồm taint mode, validate đầu vào, thực thi process an toàn, query tham số hóa với DBI, bảo mật web (XSS/SQLi/CSRF) và các chính sách bảo mật perlcritic. Dùng khi review việc xử lý đầu vào, thực thi process, query DBI hoặc code hướng web trong Perl.
 metadata:
   origin: ECC
 ---

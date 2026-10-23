@@ -1,6 +1,6 @@
 ---
 name: continuous-agent-loop
-description: Patterns for continuous autonomous agent loops with quality gates, evals, and recovery controls. Use when running an agent loop that must self-check, gate on evals, and recover from failures.
+description: Các pattern cho vòng lặp agent tự trị liên tục với quality gate, eval và cơ chế phục hồi. Dùng khi chạy một vòng lặp agent phải tự kiểm tra, chặn theo eval và phục hồi sau lỗi.
 metadata:
   origin: ECC
 ---

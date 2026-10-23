@@ -1,6 +1,6 @@
 ---
 name: recursive-decision-ledger
-description: Run repeated rollouts ("Prime Gauss" style recursive prompting) while keeping an append-only decision ledger of trials, marks, coherence checks, and promotion gates, so recursive confidence never auto-approves live trading, deploy, or destructive actions. Use when the user asks for repeated rollouts, marked decision processes, high-dimensional search, stochastic optimization, local-optima exploration, ensemble comparison, or recursive reasoning with a visible evidence trail.
+description: Chạy các rollout lặp lại (prompting đệ quy kiểu "Prime Gauss") đồng thời duy trì một decision ledger chỉ-ghi-thêm (append-only) gồm các lượt thử, điểm đánh dấu, kiểm tra tính nhất quán và promotion gate, để độ tin cậy đệ quy không bao giờ tự động phê duyệt giao dịch thật, deploy hoặc các hành động phá hủy. Dùng khi người dùng yêu cầu rollout lặp lại, quy trình ra quyết định có đánh dấu, tìm kiếm nhiều chiều, tối ưu ngẫu nhiên (stochastic optimization), khám phá cực trị cục bộ, so sánh ensemble hoặc lập luận đệ quy có dấu vết bằng chứng rõ ràng.
 license: MIT
 metadata:
   origin: ECC

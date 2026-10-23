@@ -1,6 +1,6 @@
 ---
 name: taste-application
-description: Generate new video against a distilled style pack and cut it into a finished piece - plan takes from the reference's cut rhythm, generate on fal, grade with the pack's measured LUT, cut at the measured cadence, weave in existing footage, composite overlay plates, mint 3D props, and verify the result numerically. Use when the user wants to make a video in a captured style, supplement existing footage, or assemble generated clips into a real edit.
+description: Tạo video mới theo một style pack đã chắt lọc và dựng thành một sản phẩm hoàn chỉnh - lên kế hoạch các cảnh quay dựa trên nhịp cắt của video tham chiếu, sinh trên fal, chỉnh màu bằng LUT đã đo của pack, cắt theo nhịp đã đo, đan xen footage có sẵn, ghép các overlay plate, tạo 3D prop và xác minh kết quả bằng số liệu. Dùng khi người dùng muốn làm video theo một style đã nắm bắt, bổ sung cho footage có sẵn, hoặc ghép các clip được sinh ra thành một bản edit thực sự.
 metadata:
   origin: ECC
 ---

@@ -1,6 +1,6 @@
 ---
 name: logistics-exception-management
-description: Codified freight-exception handling expertise for shipment delays, damages, losses, shortages, and carrier disputes, with escalation protocols, carrier-specific behaviors by mode, claims procedures, and eat-the-cost vs fight-the-claim judgment frameworks. Use when handling shipping exceptions, freight claims, delivery issues, or carrier disputes.
+description: Chuyên môn đã được hệ thống hóa về xử lý ngoại lệ vận tải cho hàng bị trễ, hư hỏng, thất lạc, thiếu hụt và tranh chấp với hãng vận chuyển, gồm quy trình escalation, hành vi đặc thù của từng hãng theo phương thức vận tải, thủ tục khiếu nại bồi thường và framework phán đoán nên tự chịu chi phí hay theo đuổi khiếu nại. Dùng khi xử lý ngoại lệ vận chuyển, khiếu nại hàng hóa, sự cố giao hàng hoặc tranh chấp với hãng vận chuyển.
 license: Apache-2.0
 homepage: https://github.com/affaan-m/ECC
 metadata:

@@ -1,6 +1,6 @@
 ---
 name: homelab-pihole-dns
-description: Pi-hole installation, blocklist management, DNS-over-HTTPS setup, DHCP integration, local DNS records, and troubleshooting broken DNS resolution on a home network. Use when the task explicitly involves Pi-hole — installing it, managing blocklists, configuring DoH or DHCP, adding local DNS records, or diagnosing DNS resolution with Pi-hole in the path.
+description: Cài đặt Pi-hole, quản lý blocklist, thiết lập DNS-over-HTTPS, tích hợp DHCP, bản ghi DNS cục bộ và khắc phục lỗi phân giải DNS trên mạng gia đình. Dùng khi tác vụ liên quan rõ ràng đến Pi-hole — cài đặt, quản lý blocklist, cấu hình DoH hoặc DHCP, thêm bản ghi DNS cục bộ, hoặc chẩn đoán phân giải DNS khi có Pi-hole trên đường đi.
 metadata:
   origin: community
 ---

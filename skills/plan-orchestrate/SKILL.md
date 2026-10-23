@@ -1,6 +1,6 @@
 ---
 name: plan-orchestrate
-description: Read a plan document, decompose it into steps, classify each step, and emit the ready-to-paste ECC slash command for that step, carrying the step identifier and scope in the command's own documented argument form. Generative only — never invokes commands itself and never claims to control what a command runs internally. Steps whose command cannot carry plan scope fail closed instead of being emitted. Use when the user has a multi-step plan and wants the right command for each step without picking it by hand.
+description: Đọc một tài liệu kế hoạch, chia thành các bước, phân loại từng bước và xuất ra slash command ECC sẵn sàng để dán cho bước đó, mang theo định danh bước và phạm vi theo đúng dạng đối số đã được tài liệu hóa của command. Chỉ sinh ra — không bao giờ tự gọi command và không bao giờ tuyên bố kiểm soát những gì command chạy bên trong. Các bước mà command không thể mang phạm vi kế hoạch sẽ fail closed thay vì được xuất ra. Dùng khi người dùng có kế hoạch nhiều bước và muốn có đúng command cho từng bước mà không phải tự chọn.
 metadata:
   origin: ECC
 ---

@@ -1,6 +1,6 @@
 ---
 name: benchmark-optimization-loop
-description: Convert 'make it faster' requests into a bounded measured optimization loop — baseline first, generate one-hypothesis variants, benchmark each against a correctness gate, and promote the fastest safe variant with reproducible commands. Use when asked to speed something up, try many variants, run recursive optimization, benchmark latency/throughput/cost, or pick the best implementation by repeated measured tests.
+description: Chuyển các yêu cầu 'make it faster' thành một vòng lặp tối ưu có giới hạn và được đo đạc — đo baseline trước, tạo các biến thể mỗi cái một giả thuyết, benchmark từng biến thể qua một cổng kiểm tra tính đúng đắn, và chọn biến thể an toàn nhanh nhất kèm các lệnh có thể tái lập. Dùng khi được yêu cầu tăng tốc thứ gì đó, thử nhiều biến thể, chạy tối ưu đệ quy, benchmark latency/throughput/chi phí, hoặc chọn bản triển khai tốt nhất qua các lần test đo đạc lặp lại.
 license: MIT
 metadata:
   origin: ECC
